@@ -11,6 +11,7 @@ from import_data.leagues.year_data import get_year_data
 def driver(year):
     print('\n\n' + str(year))
     populate_teams_table(year)
+    get_year_data(year)
 
 
 driver(2018)

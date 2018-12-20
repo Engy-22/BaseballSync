@@ -2,16 +2,14 @@ from utilities.DB_Connect import DB_Connect
 import urllib.request
 from bs4 import BeautifulSoup as bs
 from collections import Counter
+import threading
+import time
 
 
 def get_year_data(data_year):
     print('adding to years: league averages and totals')
-    mlb_schedule = str(bs(urllib.request.urlopen('https://www.baseball-reference.com/leagues/MLB/' + str(data_year)
-                                                 + '-schedule.shtml'), 'html.parser'))
-    opening_date = mlb_schedule.split('<h3>')[1].split('</h3>')[0]
-    months = {'March': '03', 'April': '04'}
-    opening_day = months[opening_date.split(', ')[1].split(' ')[0]] + '-'\
-                  + opening_date.split(', ')[1].split(' ')[1].split(',')[0]
+    start_time = time.time()
+    opening_day = get_opening_day(data_year)
     batting_list = ['PA', 'AB', 'R', 'H', '2B', '3B', 'HR', 'RBI', 'SB', 'BB', 'SO', 'batting_avg', 'onbase_perc',
                     'slugging_perc', 'onbase_plus_slugging']
     pitching_list = ['earned_run_avg', 'whip', 'strikeouts_per_nine', 'strikeouts_per_base_on_balls']
@@ -42,13 +40,11 @@ def get_year_data(data_year):
                 continue
             for stat in stats:
                 if handedness == "R":
-                    location[stat_translate[stat] + '_' + r_location[row.split('data-stat="split_name" '
-                                                                               + '>')[1].split('-')[0]]] += \
-                    int(row.split('data-stat="' + stat + '" >')[1].split('<')[0])
+                    location[stat_translate[stat] + '_' + r_location[row.split('data-stat="split_name" >')[1]\
+                        .split('-')[0]]] += int(row.split('data-stat="' + stat + '" >')[1].split('<')[0])
                 else:
-                    location[stat_translate[stat] + '_' + l_location[row.split('data-stat="split_name" '
-                                                                               + '>')[1].split('-')[0]]] += \
-                    int(row.split('data-stat="' + stat + '" >')[1].split('<')[0])
+                    location[stat_translate[stat] + '_' + l_location[row.split('data-stat="split_name" >')[1]\
+                        .split('-')[0]]] += int(row.split('data-stat="' + stat + '" >')[1].split('<')[0])
     except IndexError:
         location = {'AB_centerfield': -1, 'AB_leftfield': -1, 'AB_rightfield': -1,
                     'H_centerfield': -1, 'H_leftfield': -1, 'H_rightfield': -1,
@@ -68,6 +64,7 @@ def get_year_data(data_year):
                                      batting_list) + "," + er + "," + ip + leg_work(data_year, "pitching", pitching_list)
                                      + leg_work(data_year, "fielding", fielding_list) + ", " + value_list[:-2] + ");")
     DB_Connect.close(db)
+    print(time.time() - start_time)
 
 
 def leg_work(year, stat_type, guide_dictionary):
@@ -89,7 +86,16 @@ def leg_work(year, stat_type, guide_dictionary):
     return this_string
 
 
+def get_opening_day(data_year):
+    mlb_schedule = str(bs(urllib.request.urlopen('https://www.baseball-reference.com/leagues/MLB/' + str(data_year)
+                                                 + '-schedule.shtml'), 'html.parser'))
+    opening_date = mlb_schedule.split('<h3>')[1].split('</h3>')[0]
+    months = {'March': '03', 'April': '04'}
+    return months[opening_date.split(', ')[1].split(' ')[0]] + '-' + opening_date.split(', ')[1].split(' ')[1]\
+                  .split(',')[0]
+
+
 # for year in range(2018, 1875, -1):
 #     print(str(year))
 #     league_averages_and_totals(year)
-# get_year_data(2018)
+get_year_data(2018)
