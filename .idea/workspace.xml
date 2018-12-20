@@ -164,7 +164,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.year_data">
+  <component name="RunManager" selected="Python.reset_database">
     <configuration name="driver" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="baseball-sync" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -235,8 +235,8 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.year_data" />
         <item itemvalue="Python.reset_database" />
+        <item itemvalue="Python.year_data" />
         <item itemvalue="Python.driver" />
       </list>
     </recent_temporary>
