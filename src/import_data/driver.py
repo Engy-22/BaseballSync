@@ -5,6 +5,7 @@
 
 import threading
 from import_data.team_data.populate_teams_table import populate_teams_table
+from import_data.leagues.year_data import get_year_data
 
 
 def driver(year):
