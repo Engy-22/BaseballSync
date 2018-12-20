@@ -10,3 +10,15 @@ INFO:root:		Complete: time = 3.75 seconds
 INFO:root:	Overall process completed: time = 14.2 seconds
 
 
+INFO:root:	Beginning year_data download for 2018 || Timestamp: 2018-12-20 16:16:10
+INFO:root:	Getting date of opening day
+INFO:root:		Complete: time = 2.77 seconds
+INFO:root:	Getting year batting stats
+INFO:root:		Complete: time = 4.33 seconds
+INFO:root:	Getting year pitching stats
+INFO:root:		Complete: time = 3.59 seconds
+INFO:root:	Getting year fielding stats
+INFO:root:		Complete: time = 3.32 seconds
+INFO:root:	Overall process completed: time = 14.06 seconds
+
+
