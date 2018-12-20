@@ -10,8 +10,8 @@ def get_year_data(year):
                                                  + '-schedule.shtml'), 'html.parser'))
     opening_date = mlb_schedule.split('<h3>')[1].split('</h3>')[0]
     months = {'March': '03', 'April': '04'}
-    opening_day = months[opening_date.split(', ')[1].split(' ')[0]] + '-'\
-                  + opening_date.split(', ')[1].split(' ')[1].split(',')[0]
+    opening_day = months[opening_date.split(', ')[1].split(' ')[0]] + '-' + opening_date.split(', ')[1]\
+                  .split(' ')[1].split(',')[0]
     batting_list = ['PA', 'AB', 'R', 'H', '2B', '3B', 'HR', 'RBI', 'SB', 'BB', 'SO', 'batting_avg', 'onbase_perc',
                     'slugging_perc', 'onbase_plus_slugging']
     pitching_list = ['earned_run_avg', 'whip', 'strikeouts_per_nine', 'strikeouts_per_base_on_balls']
