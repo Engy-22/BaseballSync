@@ -12,8 +12,8 @@ logging.basicConfig(filename="..\\..\\..\\logs\\import_data\\year_data.log", lev
 
 def get_year_data(year):
     start_time = time.time()
-    logging.info('\tBeginning year_data download for ' + str(year) + ' at '
-                 + datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S'))
+    logging.info('\tBeginning year_data download for ' + str(year) + ' || Timestamp: ' + datetime.datetime.today()\
+                 .strftime('%Y-%m-%d %H:%M:%S'))
     batting_list = {'PA': 'pa', 'AB': 'ab', 'R': 'r', 'H': 'h', '2B': '2b', '3B': '3b', 'HR': 'hr', 'RBI': 'rbi',
                     'SB': 'sb', 'BB': 'bb', 'SO': 'so', 'batting_avg': 'ba', 'onbase_perc': 'obp',
                     'slugging_perc': 'slg', 'onbase_plus_slugging': 'ops'}
@@ -26,6 +26,11 @@ def get_year_data(year):
     if len(DB_Connect.read(cursor, 'select * from years where year = ' + str(year) + ';')) == 0:
         DB_Connect.write(db, cursor, 'insert into years (year) values (' + str(year) + ');')
     write_opening_day(year, db, cursor)
+    pool = multiprocessing.Pool()
+    num_processes = multiprocessing.cpu_count()
+    for _ in range(num_processes):
+        
+
     for i in range(len(stat_types)):
         assemble_stats(year, db, cursor, stat_types[i], stat_list[i])
     DB_Connect.close(db)
