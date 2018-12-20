@@ -1,5 +1,5 @@
-from Model.DB_Connect import DB_Connect
-import web.py
+from utilities.DB_Connect import DB_Connect
+
 
 class Player:
     

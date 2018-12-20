@@ -1,5 +1,5 @@
 from utilities.DB_Connect import DB_Connect
-from src.import_data.utilities.translate_team_name import translate_team_name
+from utilities.translate_team_name import translate_team_name
 
 
 def populate_teams_table(year):
