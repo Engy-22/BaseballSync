@@ -20,19 +20,17 @@ def get_year_data(year):
     pitching_list = {'earned_run_avg': 'era', 'whip': 'whip', 'strikeouts_per_nine': 'k_9',
                      'strikeouts_per_base_on_balls': 'k_bb'}
     fielding_list = {'E_def': 'e', 'fielding_perc': 'f_percent'}
-    stat_list = [batting_list, pitching_list, fielding_list]
-    stat_types = ["batting", "pitching", "fielding"]
+    stat_list = {"batting": batting_list, "pitching": pitching_list, "fielding": fielding_list}
     db, cursor = DB_Connect.grab("baseballData")
     if len(DB_Connect.read(cursor, 'select * from years where year = ' + str(year) + ';')) == 0:
         DB_Connect.write(db, cursor, 'insert into years (year) values (' + str(year) + ');')
     write_opening_day(year, db, cursor)
-    pool = multiprocessing.Pool()
-    num_processes = multiprocessing.cpu_count()
-    for _ in range(num_processes):
-        
+    # pool = multiprocessing.Pool()
+    # num_processes = multiprocessing.cpu_count()
+    # for _ in range(num_processes):
 
-    for i in range(len(stat_types)):
-        assemble_stats(year, db, cursor, stat_types[i], stat_list[i])
+    for key, dictionary in stat_list.items():
+        assemble_stats(year, db, cursor, key, dictionary)
     DB_Connect.close(db)
     total_time = round(time.time() - start_time, 2)
     logging.info('\tOverall process completed: time = ' + str(total_time) + ' seconds\n\n')
@@ -60,7 +58,7 @@ def assemble_stats(year, db, cursor, stat_type, stats):
         this_string = 'g = ' + str(games) + ', ' + this_string
     DB_Connect.write(db, cursor, 'update years set ' + this_string[:-2] + ' where year = ' + str(year) + ';')
     total_time = round(time.time() - start_time, 2)
-    logging.info('\t\tComplete: time = ' + str(total_time) + ' seconds')
+    logging.info('\t\tCompleted (' + stat_type + '): time = ' + str(total_time) + ' seconds')
 
 
 def write_opening_day(year, db, cursor):
@@ -74,7 +72,7 @@ def write_opening_day(year, db, cursor):
                   .split(',')[0]
     DB_Connect.write(db, cursor, 'update years set opening_day = "' + opening_day + '" where year = ' + str(year) + ';')
     total_time = round(time.time() - start_time, 2)
-    logging.info('\t\tComplete: time = ' + str(total_time) + ' seconds')
+    logging.info('\t\tComplete (opening day): time = ' + str(total_time) + ' seconds')
 
 
 get_year_data(2018)
