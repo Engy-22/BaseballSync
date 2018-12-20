@@ -14,4 +14,5 @@ def driver(year):
     get_year_data(year)
 
 
-driver(2018)
+if __name__ == '__main__':
+    driver(2018)
