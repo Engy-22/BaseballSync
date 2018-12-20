@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="d8a74621-0067-4fd9-a532-54885cc58d7f" name="Default Changelist" comment="new table defs file">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-    </list>
+    <list default="true" id="d8a74621-0067-4fd9-a532-54885cc58d7f" name="Default Changelist" comment="new table defs file" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -69,7 +67,11 @@
       </file>
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/background/table_definitions.txt">
-          <provider selected="true" editor-type-id="text-editor" />
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="68">
+              <caret line="4" selection-start-line="4" selection-end-line="4" />
+            </state>
+          </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
@@ -130,11 +132,6 @@
             <path>
               <item name="baseball-sync" type="b2602c69:ProjectViewProjectNode" />
               <item name="baseball-sync" type="462c0819:PsiDirectoryNode" />
-              <item name="background" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="baseball-sync" type="b2602c69:ProjectViewProjectNode" />
-              <item name="baseball-sync" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -176,7 +173,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.year_data">
+  <component name="RunManager" selected="Python.reset_database">
     <configuration name="driver" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="baseball-sync" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -247,9 +244,9 @@
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.reset_database" />
         <item itemvalue="Python.year_data" />
         <item itemvalue="Python.driver" />
-        <item itemvalue="Python.reset_database" />
       </list>
     </recent_temporary>
   </component>
@@ -438,7 +435,11 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/background/table_definitions.txt">
-      <provider selected="true" editor-type-id="text-editor" />
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="68">
+          <caret line="4" selection-start-line="4" selection-end-line="4" />
+        </state>
+      </provider>
     </entry>
   </component>
 </project>
