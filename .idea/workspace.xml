@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="d8a74621-0067-4fd9-a532-54885cc58d7f" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/logs/import_data/populate_teams_table.log" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/import_data/leagues/year_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/import_data/leagues/year_data.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/import_data/team_data/populate_teams_table.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/import_data/team_data/populate_teams_table.py" afterDir="false" />
-    </list>
+    <list default="true" id="d8a74621-0067-4fd9-a532-54885cc58d7f" name="Default Changelist" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -25,7 +21,7 @@
         <counts>
           <entry key="HTML" value="1" />
           <entry key="Image" value="2" />
-          <entry key="PLAIN_TEXT" value="13" />
+          <entry key="PLAIN_TEXT" value="14" />
           <entry key="Python" value="20" />
           <entry key="XML" value="1" />
         </counts>
@@ -33,7 +29,7 @@
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="PLAIN_TEXT" value="234" />
-          <entry key="Python" value="4304" />
+          <entry key="Python" value="4318" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.vcs.git.usages">
@@ -57,7 +53,7 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/import_data/leagues/year_data.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="389">
@@ -66,29 +62,6 @@
                 <element signature="e#1828#3055#0" />
                 <element signature="e#3127#3812#0" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/import_data/team_data/populate_teams_table.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="338">
-              <caret line="28" lean-forward="true" selection-start-line="28" selection-end-line="28" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/logs/import_data/populate_teams_table.log">
-          <provider selected="true" editor-type-id="text-editor" />
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/logs/import_data/year_data.log">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="385">
-              <caret line="54" lean-forward="true" selection-start-line="54" selection-end-line="54" />
             </state>
           </provider>
         </entry>
@@ -135,8 +108,8 @@
         <option value="$PROJECT_DIR$/src/import_data/driver.py" />
         <option value="$PROJECT_DIR$/logs/import_data/year_data.log" />
         <option value="$PROJECT_DIR$/src/utilities/clear_logs.py" />
-        <option value="$PROJECT_DIR$/src/import_data/team_data/populate_teams_table.py" />
         <option value="$PROJECT_DIR$/src/import_data/leagues/year_data.py" />
+        <option value="$PROJECT_DIR$/src/import_data/team_data/populate_teams_table.py" />
       </list>
     </option>
   </component>
@@ -157,35 +130,6 @@
               <item name="baseball-sync" type="b2602c69:ProjectViewProjectNode" />
               <item name="baseball-sync" type="462c0819:PsiDirectoryNode" />
             </path>
-            <path>
-              <item name="baseball-sync" type="b2602c69:ProjectViewProjectNode" />
-              <item name="baseball-sync" type="462c0819:PsiDirectoryNode" />
-              <item name="logs" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="baseball-sync" type="b2602c69:ProjectViewProjectNode" />
-              <item name="baseball-sync" type="462c0819:PsiDirectoryNode" />
-              <item name="logs" type="462c0819:PsiDirectoryNode" />
-              <item name="import_data" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="baseball-sync" type="b2602c69:ProjectViewProjectNode" />
-              <item name="baseball-sync" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="baseball-sync" type="b2602c69:ProjectViewProjectNode" />
-              <item name="baseball-sync" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="import_data" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="baseball-sync" type="b2602c69:ProjectViewProjectNode" />
-              <item name="baseball-sync" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="import_data" type="462c0819:PsiDirectoryNode" />
-              <item name="team_data" type="462c0819:PsiDirectoryNode" />
-            </path>
           </expand>
           <select />
         </subPane>
@@ -202,10 +146,10 @@
       <recent name="C:\Users\Anthony Raimondo\PycharmProjects\baseball-sync\src\utilities" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Anthony Raimondo\PycharmProjects\baseball-sync\background" />
       <recent name="C:\Users\Anthony Raimondo\PycharmProjects\baseball-sync\src\model" />
       <recent name="C:\Users\Anthony Raimondo\PycharmProjects\baseball-sync\src\utilities" />
       <recent name="C:\Users\Anthony Raimondo\PycharmProjects\baseball-sync\src\import_data\utilities" />
-      <recent name="C:\Users\Anthony Raimondo\PycharmProjects\baseball-sync\background" />
       <recent name="C:\Users\Anthony Raimondo\PycharmProjects\baseball-sync\images" />
     </key>
   </component>
@@ -409,6 +353,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.15069398" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -477,9 +422,6 @@
     <entry file="file://$PROJECT_DIR$/background/team_finder.txt">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/background/yearTeams.txt">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/utilities/DB_Connect.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="408">
@@ -498,13 +440,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state>
           <caret selection-end-line="23" selection-end-column="342" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/background/table_definitions.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="68">
-          <caret line="4" column="681" selection-start-line="4" selection-start-column="681" selection-end-line="4" selection-end-column="681" />
         </state>
       </provider>
     </entry>
@@ -572,10 +507,30 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/background/yearTeams.txt">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/logs/import_data/populate_teams_table.log">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
     <entry file="file://$PROJECT_DIR$/logs/import_data/year_data.log">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="385">
-          <caret line="54" lean-forward="true" selection-start-line="54" selection-end-line="54" />
+        <state>
+          <caret lean-forward="true" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/background/table_definitions.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="68">
+          <caret line="4" column="681" selection-start-line="4" selection-start-column="681" selection-end-line="4" selection-end-column="681" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/import_data/team_data/populate_teams_table.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="372">
+          <caret line="30" lean-forward="true" selection-start-line="30" selection-end-line="30" />
         </state>
       </provider>
     </entry>
@@ -587,16 +542,6 @@
             <element signature="e#1828#3055#0" />
             <element signature="e#3127#3812#0" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/logs/import_data/populate_teams_table.log">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/import_data/team_data/populate_teams_table.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="338">
-          <caret line="28" lean-forward="true" selection-start-line="28" selection-end-line="28" />
         </state>
       </provider>
     </entry>
