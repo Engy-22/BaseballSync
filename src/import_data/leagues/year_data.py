@@ -40,7 +40,7 @@ def get_year_data(year):
         # assemble_stats(year, db, cursor, key, dictionary)
     DB_Connect.close(db)
     total_time = round(time.time() - start_time, 2)
-    logging.info('\tOverall process completed: time = ' + str(total_time) + ' seconds\n\n')
+    logging.info('\tyear_data download completed: time = ' + str(total_time) + ' seconds\n\n')
 
 
 def assemble_stats(year, db, cursor, stat_type, stats):
@@ -82,4 +82,4 @@ def write_opening_day(year, db, cursor):
     logging.info('\t\tComplete (opening day): time = ' + str(total_time) + ' seconds')
 
 
-get_year_data(2018)
+# get_year_data(2018)
