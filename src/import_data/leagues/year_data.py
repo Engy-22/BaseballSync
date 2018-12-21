@@ -25,19 +25,8 @@ def get_year_data(year):
     if len(DB_Connect.read(cursor, 'select * from years where year = ' + str(year) + ';')) == 0:
         DB_Connect.write(db, cursor, 'insert into years (year) values (' + str(year) + ');')
     write_opening_day(year, db, cursor)
-    # pool = multiprocessing.Pool()
-    # num_processes = multiprocessing.cpu_count()
-    # for _ in range(num_processes):
-
-    # processes = []
     for key, dictionary in stat_list.items():
         assemble_stats(year, db, cursor, key, dictionary)
-        # p = multiprocessing.Process(target=assemble_stats, args=(year, db, cursor, key, dictionary,))
-        # p.start()
-        # processes.append(p)
-    # for process in processes:
-    #     process.join()
-        # assemble_stats(year, db, cursor, key, dictionary)
     DB_Connect.close(db)
     total_time = round(time.time() - start_time, 2)
     logging.info('\tyear_data download completed: time = ' + str(total_time) + ' seconds\n\n')
