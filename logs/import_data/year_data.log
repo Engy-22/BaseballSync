@@ -22,3 +22,33 @@ INFO:root:		Completed (fielding): time = 4.1 seconds
 INFO:root:	Overall process completed: time = 14.38 seconds
 
 
+INFO:root:	Beginning year_data download for 2018 || Timestamp: 2018-12-20 19:35:24
+INFO:root:	Getting date of opening day
+INFO:root:		Complete (opening day): time = 1.84 seconds
+INFO:root:	Beginning year_data download for 2018 || Timestamp: 2018-12-20 19:36:01
+INFO:root:	Getting date of opening day
+INFO:root:		Complete (opening day): time = 1.92 seconds
+INFO:root:	Getting year batting stats
+INFO:root:		Completed (batting): time = 1.33 seconds
+INFO:root:	Getting year pitching stats
+INFO:root:		Completed (pitching): time = 1.61 seconds
+INFO:root:	Getting year fielding stats
+INFO:root:		Completed (fielding): time = 1.48 seconds
+INFO:root:	Overall process completed: time = 6.38 seconds
+
+
+INFO:root:	Beginning year_data download for 2018 || Timestamp: 2018-12-20 19:43:40
+INFO:root:	Getting date of opening day
+INFO:root:		Complete (opening day): time = 2.04 seconds
+INFO:root:	Beginning year_data download for 2018 || Timestamp: 2018-12-20 19:44:14
+INFO:root:	Getting date of opening day
+INFO:root:		Complete (opening day): time = 2.02 seconds
+INFO:root:	Getting year batting stats
+INFO:root:		Completed (batting): time = 2.49 seconds
+INFO:root:	Getting year pitching stats
+INFO:root:		Completed (pitching): time = 2.33 seconds
+INFO:root:	Getting year fielding stats
+INFO:root:		Completed (fielding): time = 2.04 seconds
+INFO:root:	Overall process completed: time = 8.92 seconds
+
+
