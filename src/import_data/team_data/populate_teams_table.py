@@ -4,15 +4,16 @@ import logging
 import datetime
 import time
 
-logging.basicConfig(filename="..\\..\\..\\logs\\import_data\\populate_teams_table.log", level=logging.DEBUG)
+logging.basicConfig(filename="C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\"
+                             "populate_teams_table.log", level=logging.DEBUG)
 
 
 def populate_teams_table(year):
+    print("populating teams table")
     start_time = time.time()
     logging.info('\tBegin populating teams table for ' + str(year) + ' || Timestamp: ' + datetime.datetime.today()\
                  .strftime('%Y-%m-%d %H:%M:%S'))
-    print("populating teams table")
-    with open('..\\..\\..\\background\\yearTeams.txt', 'rt') as file:
+    with open('C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\background\\yearTeams.txt', 'rt') as file:
         db, cursor = DB_Connect.grab("baseballData")
         for line in file:
             if str(year) in line:
