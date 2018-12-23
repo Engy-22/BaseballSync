@@ -1,0 +1,26 @@
+INFO:root:	Begin populating teams table for 2018 || Timestamp: 2018-12-22 20:25:49
+INFO:root:	populating teams table completed: 1.8 seconds
+
+
+INFO:root:	Beginning year_data download for 2018 || Timestamp: 2018-12-22 20:25:51
+INFO:root:	Getting date of opening day
+INFO:root:		Complete (opening day): time = 2.32 seconds
+INFO:root:	making HTTP requests for year data
+INFO:root:	downloading batting data
+INFO:root:	downloading pitching data
+INFO:root:	downloading fielding data
+INFO:root:		done making HTTP requests: time = 3.27
+INFO:root:	Assembling year batting stats
+INFO:root:		Completed (batting): time = 0.01 seconds
+INFO:root:	Assembling year pitching stats
+INFO:root:		Completed (pitching): time = 0.01 seconds
+INFO:root:	Assembling year fielding stats
+INFO:root:		Completed (fielding): time = 0.01 seconds
+INFO:root:	writing to database
+INFO:root:	writing batting stats to database
+INFO:root:	writing pitching stats to database
+INFO:root:	writing fielding stats to database
+INFO:root:		done writing to database: time = 0.21
+INFO:root:	year_data download completed: time = 6.61 seconds
+
+
