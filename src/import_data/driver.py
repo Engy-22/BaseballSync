@@ -6,12 +6,14 @@
 import threading
 from import_data.team_data.populate_teams_table import populate_teams_table
 from import_data.leagues.year_data import get_year_data
+from import_data.team_data.ballpark_and_manager_data import ballpark_and_manager_data
 
 
 def driver(year):
     print(str(year))
     populate_teams_table(year)
     get_year_data(year)
+    ballpark_and_manager_data(year)
 
 
 if __name__ == '__main__':
