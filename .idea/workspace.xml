@@ -2,11 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d8a74621-0067-4fd9-a532-54885cc58d7f" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/logs/import_data/ballpark_and_manager_data.log" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/import_data/team_data/ballpark_and_manager_data.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/import_data/driver.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/import_data/driver.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/import_data/leagues/year_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/import_data/leagues/year_data.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/import_data/team_data/ballpark_and_manager_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/import_data/team_data/ballpark_and_manager_data.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -35,7 +31,7 @@
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="PLAIN_TEXT" value="306" />
-          <entry key="Python" value="8710" />
+          <entry key="Python" value="9429" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.vcs.git.usages">
@@ -63,8 +59,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/import_data/team_data/ballpark_and_manager_data.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="799">
-              <caret line="53" lean-forward="true" selection-start-line="53" selection-end-line="53" />
+            <state relative-caret-position="321">
+              <caret line="160" lean-forward="true" selection-start-line="160" selection-end-line="160" />
             </state>
           </provider>
         </entry>
@@ -157,13 +153,7 @@
             <path>
               <item name="baseball-sync" type="b2602c69:ProjectViewProjectNode" />
               <item name="baseball-sync" type="462c0819:PsiDirectoryNode" />
-              <item name="logs" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="baseball-sync" type="b2602c69:ProjectViewProjectNode" />
-              <item name="baseball-sync" type="462c0819:PsiDirectoryNode" />
-              <item name="logs" type="462c0819:PsiDirectoryNode" />
-              <item name="import_data" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -388,6 +378,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.15069398" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -607,8 +598,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/import_data/team_data/ballpark_and_manager_data.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="799">
-          <caret line="53" lean-forward="true" selection-start-line="53" selection-end-line="53" />
+        <state relative-caret-position="321">
+          <caret line="160" lean-forward="true" selection-start-line="160" selection-end-line="160" />
         </state>
       </provider>
     </entry>
