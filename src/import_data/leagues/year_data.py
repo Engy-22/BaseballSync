@@ -31,15 +31,16 @@ def get_year_data(year):
     write_opening_day(year)
     download_start = time.time()
     logger.log("making HTTP requests for year data")
-    with ThreadPoolExecutor() as executor1:
+    with ThreadPoolExecutor(3) as executor1:
         for key, value in stat_list.items():
             executor1.submit(load_url, year, key)
     logger.log("\tdone making HTTP requests: time = " + str(round(time.time() - download_start, 2)))
+    global pages
     for key, dictionary in stat_list.items():
         assemble_stats(key, dictionary, pages[key])
     write_start = time.time()
     logger.log("writing to database")
-    with ThreadPoolExecutor() as executor2:
+    with ThreadPoolExecutor(3) as executor2:
         for key, value in stat_list.items():
             executor2.submit(write_to_db, year, strings[key], key)
     logger.log("\tdone writing to database: time = " + str(round(time.time() - write_start, 2)))
@@ -49,6 +50,7 @@ def get_year_data(year):
 
 def load_url(year, stat_type):
     logger.log("downloading " + stat_type + " data")
+    global pages
     pages[stat_type] = BeautifulSoup(urlopen("https://www.baseball-reference.com/leagues/MLB/" + str(year)
                                              + "-standard-" + stat_type + ".shtml"), 'html.parser')
 
