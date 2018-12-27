@@ -1,11 +1,13 @@
-Beginning year_data download for 2018 || Timestamp: 2018-12-26 19:30:30
+Beginning year_data download for 2018 || Timestamp: 2018-12-26 23:35:21
 Getting date of opening day
-	Complete (opening day): time = 3.99 seconds
+Beginning year_data download for 2018 || Timestamp: 2018-12-26 23:35:43
+Getting date of opening day
+	Complete (opening day): time = 2.93 seconds
 making HTTP requests for year data
 downloading batting data
 downloading pitching data
 downloading fielding data
-	done making HTTP requests: time = 9.19
+	done making HTTP requests: time = 7.72 seconds
 Assembling year batting stats
 	Completed (batting): time = 0.01 seconds
 Assembling year pitching stats
@@ -16,7 +18,47 @@ writing to database
 writing batting stats to database
 writing pitching stats to database
 writing fielding stats to database
-	done writing to database: time = 0.51
-year_data download completed: time = 14.56 seconds
+Beginning year_data download for 2018 || Timestamp: 2018-12-26 23:36:20
+Getting date of opening day
+	Complete (opening day): time = 8.12 seconds
+making HTTP requests for year data
+downloading batting data
+downloading pitching data
+downloading fielding data
+	done making HTTP requests: time = 14.85 seconds
+Assembling year batting stats
+	Completed (batting): time = 0.02 seconds
+Assembling year pitching stats
+	Completed (pitching): time = 0.01 seconds
+Assembling year fielding stats
+	Completed (fielding): time = 0.01 seconds
+writing to database
+writing batting stats to database
+writing pitching stats to database
+writing fielding stats to database
+	done writing to database: time = 
+year_data download completed: time = 23.86 seconds
+
+
+Beginning year_data download for 2018 || Timestamp: 2018-12-26 23:37:04
+Getting date of opening day
+	Complete (opening day): time = 3.62 seconds
+making HTTP requests for year data
+downloading batting data
+downloading pitching data
+downloading fielding data
+	done making HTTP requests: time = 6.93 seconds
+Assembling year batting stats
+	Completed (batting): time = 
+Assembling year pitching stats
+	Completed (pitching): time = 
+Assembling year fielding stats
+	Completed (fielding): time = 
+writing to database
+writing batting stats to database
+writing pitching stats to database
+writing fielding stats to database
+	done writing to database: time = 
+year_data download completed: time = 11.3 seconds
 
 
