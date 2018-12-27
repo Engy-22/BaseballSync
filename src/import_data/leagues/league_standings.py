@@ -1,7 +1,7 @@
 import time
 import datetime
-import urllib.request
-from bs4 import BeautifulSoup as bs
+from urllib.request import urlopen
+from bs4 import BeautifulSoup
 from utilities.DB_Connect import DB_Connect
 from utilities.translate_team_id import translate_team_id
 from utilities.Logger import Logger
@@ -16,8 +16,8 @@ def league_standings(year, driver_logger):
     start_time = time.time()
     logger.log('Begin organizing league standings for ' + str(year) + ' || Timestamp: ' + datetime.datetime.today().\
                strftime('%Y-%m-%d %H:%M:%S'))
-    page = str(bs(urllib.request.urlopen("https://www.baseball-reference.com/leagues/MLB/" + str(year)
-                                         + "-standings.shtml"), "html.parser"))
+    page = str(BeautifulSoup(urlopen("https://www.baseball-reference.com/leagues/MLB/" + str(year)
+                                     + "-standings.shtml"), "html.parser"))
     try:
         playoffs = page.split('<h2>Postseason</h2>')[1].split('</tbody></table>')[0]
     except IndexError:
