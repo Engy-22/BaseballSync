@@ -1,3 +1,4 @@
+import os
 from utilities.Logger import Logger
 import time
 import datetime
@@ -29,18 +30,16 @@ def ballpark_and_manager_data(year):
                 break
     logger.log('Begin downloading team pages')
     download_time = time.time()
-    with ThreadPoolExecutor() as executor1:
+    with ThreadPoolExecutor(os.cpu_count()) as executor1:
         for team_key, team_id in teams.items():
             executor1.submit(load_url, year, team_key)
     logger.log('\tDone downloading team pages: time = ' + str(round(time.time() - download_time, 2)))
-    logger.log("Calculating and writing ballpark numbers and downloading manager images")
+    logger.log("Calculating and writing ballpark numbers and downloading images")
     calc_and_download_time = time.time()
     team_count = len(teams)
-    # with ThreadPoolExecutor() as executor2:
-    #     for team_key, team_id in teams.items():
-    #         executor2.submit(gather_team_home_numbers, team_id, team_key, year, team_count)
-    for team_key, team_id in teams.items():
-        gather_team_home_numbers(team_id, team_key, year, team_count)
+    with ThreadPoolExecutor(os.cpu_count()) as executor2:
+        for team_key, team_id in teams.items():
+            executor2.submit(gather_team_home_numbers, team_id, team_key, year, team_count)
     logger.log("\tDone calculating and writing ballpark numbers and downloading manager data: time = "
                + str(round(time.time() - calc_and_download_time, 2)))
     logger.log('Ballpark and manager data download completed: time = ' + str(round(time.time() - start_time, 2))
@@ -48,11 +47,11 @@ def ballpark_and_manager_data(year):
 
 
 def gather_team_home_numbers(team_id, team_key, year, team_count):
-    logger.log("Calculating home numbers and downloading manager data: " + team_id)
-    this_time = time.time()
+    logger.log("\tCalculating home numbers and downloading manager data: " + team_id)
     db, cursor = DB_Connect.grab("baseballData")
     if len(DB_Connect.read(cursor, 'select BY_uniqueidentifier from ballpark_years where teamId = "' + team_id
                                    + '" and year = ' + str(year) + ';')) == 0:
+        global pages
         table = str(pages[team_key])
         manager_ids = {}
         try:
@@ -128,14 +127,16 @@ def gather_team_home_numbers(team_id, team_key, year, team_count):
                                                  .split('.shtml')[0] + '.shtml'), 'html.parser'))
         try:
             manager_pic_url = manager_page.split('<img class="" src="')[1].split('"')[0]
-            urlretrieve(manager_pic_url, "../images/managers/" + manager_data[0].split('.shtml')[0] + ".jpg")
+            urlretrieve(manager_pic_url, "C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\images\\"
+                                         "managers\\" + manager_data[0].split('.shtml')[0] + ".jpg")
         except IndexError:
             pass
         team_pic_url = table.split('<div class="media-item logo loader">')[1].split('<')[1].split('src="')[1].split('"')[0]
         try:
-            urlretrieve(team_pic_url, "../images/teams/" + team_id + str(year) + ".jpg")
-        except urllib.error.HTTPError:
-            pass
+            urlretrieve(team_pic_url, "C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\images\\teams\\"
+                                      + team_id + str(year) + ".jpg")
+        except Exception as e:
+            print(e)
         for i in manager_data:
             manager_ids[i.split('.shtml')[0]] = i.split('(')[1].split(')')[0]
         try:
@@ -143,11 +144,11 @@ def gather_team_home_numbers(team_id, team_key, year, team_count):
         except IndexError:
             park_name = "No Home Field"
         write_to_db(team_id, location, trajectory, manager_ids, year, park_name)
-    logger.log("\tDone with " + team_id + ": time = " + str(round(time.time() - this_time, 2)))
 
 
 def load_url(year, team_key):
-    logger.log("downloading " + team_key + " data")
+    logger.log("\tDownloading " + team_key + " data")
+    global pages
     pages[team_key] = BeautifulSoup(urlopen('https://www.baseball-reference.com/teams/split.cgi?t=p&team=' + team_key
                                             + '&year=' + str(year)), 'html.parser')
 
@@ -185,4 +186,4 @@ def write_to_db(team_id, stats, trajectory, manager_ids, year, park_name):
     DB_Connect.close(db)
 
 
-ballpark_and_manager_data(2018)
+# ballpark_and_manager_data(2018)
