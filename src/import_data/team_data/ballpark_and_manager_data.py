@@ -3,17 +3,20 @@ from utilities.Logger import Logger
 import time
 import datetime
 from utilities.DB_Connect import DB_Connect
+from utilities.time_converter import time_converter
 from concurrent.futures import ThreadPoolExecutor
 from urllib.request import urlopen, urlretrieve
 from bs4 import BeautifulSoup
 
 
 pages = {}
+driver_logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\driver.log")
 logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\"
                 "ballpark_and_manager_data.log")
 
 
 def ballpark_and_manager_data(year):
+    driver_logger.log('Gathering ballpark and manager data')
     print("Gathering ballpark and manager data")
     start_time = time.time()
     logger.log('Beginning ballpark and manager data download for ' + str(year) + ' || Timestamp: '
@@ -33,7 +36,7 @@ def ballpark_and_manager_data(year):
     with ThreadPoolExecutor(os.cpu_count()) as executor1:
         for team_key, team_id in teams.items():
             executor1.submit(load_url, year, team_key)
-    logger.log('\tDone downloading team pages: time = ' + str(round(time.time() - download_time, 2)))
+    logger.log('\tDone downloading team pages: time = ' + time_converter(time.time() - download_time))
     logger.log("Calculating and writing ballpark numbers and downloading images")
     calc_and_download_time = time.time()
     team_count = len(teams)
@@ -41,9 +44,10 @@ def ballpark_and_manager_data(year):
         for team_key, team_id in teams.items():
             executor2.submit(gather_team_home_numbers, team_id, team_key, year, team_count)
     logger.log("\tDone calculating and writing ballpark numbers and downloading manager data: time = "
-               + str(round(time.time() - calc_and_download_time, 2)))
-    logger.log('Ballpark and manager data download completed: time = ' + str(round(time.time() - start_time, 2))
-               + ' seconds\n\n')
+               + time_converter(time.time() - calc_and_download_time))
+    total_time = time_converter(time.time() - start_time)
+    logger.log('Ballpark and manager data download completed: time = ' + total_time + '\n\n')
+    driver_logger.log('\tTime = ' + total_time)
 
 
 def gather_team_home_numbers(team_id, team_key, year, team_count):
@@ -185,4 +189,4 @@ def write_to_db(team_id, stats, trajectory, manager_ids, year, park_name):
     DB_Connect.close(db)
 
 
-# ballpark_and_manager_data(2018)
+ballpark_and_manager_data(2018)
