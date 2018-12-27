@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="d8a74621-0067-4fd9-a532-54885cc58d7f" name="Default Changelist" comment="">
+    <list default="true" id="d8a74621-0067-4fd9-a532-54885cc58d7f" name="Default Changelist" comment="concurrency working finally">
       <change beforePath="$PROJECT_DIR$/logs/import_data/ballpark_and_manager_data.log" beforeDir="false" afterPath="$PROJECT_DIR$/logs/import_data/ballpark_and_manager_data.log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/logs/import_data/populate_teams_table.log" beforeDir="false" afterPath="$PROJECT_DIR$/logs/import_data/populate_teams_table.log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/logs/import_data/year_data.log" beforeDir="false" afterPath="$PROJECT_DIR$/logs/import_data/year_data.log" afterDir="false" />
@@ -36,7 +36,7 @@
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="PLAIN_TEXT" value="462" />
+          <entry key="PLAIN_TEXT" value="489" />
           <entry key="Python" value="10672" />
         </counts>
       </usages-collector>
@@ -65,8 +65,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/background/to_do_list.txt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="330">
-              <caret line="101" lean-forward="true" selection-start-line="101" selection-end-line="101" />
+            <state relative-caret-position="381">
+              <caret line="104" lean-forward="true" selection-start-line="104" selection-end-line="104" />
             </state>
           </provider>
         </entry>
@@ -381,6 +381,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.15069398" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -546,13 +547,6 @@
     <entry file="file://$PROJECT_DIR$/logs/import_data/year_data.log">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/background/table_definitions.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="68">
-          <caret line="4" selection-start-line="4" selection-end-line="4" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/import_data/pitch_fx.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="338">
@@ -676,10 +670,17 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/background/table_definitions.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="68">
+          <caret line="4" selection-start-line="4" selection-end-line="4" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/background/to_do_list.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="330">
-          <caret line="101" lean-forward="true" selection-start-line="101" selection-end-line="101" />
+        <state relative-caret-position="381">
+          <caret line="104" lean-forward="true" selection-start-line="104" selection-end-line="104" />
         </state>
       </provider>
     </entry>
