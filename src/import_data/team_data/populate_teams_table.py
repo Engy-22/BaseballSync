@@ -9,10 +9,10 @@ logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\lo
 
 
 def populate_teams_table(year):
-    print("populating teams table")
+    print("Populating teams table")
     start_time = time.time()
-    logger.log('\tBegin populating teams table for ' + str(year) + ' || Timestamp: ' + datetime.datetime.today()\
-                 .strftime('%Y-%m-%d %H:%M:%S'))
+    logger.log('Begin populating teams table for ' + str(year) + ' || Timestamp: ' + datetime.datetime.today()\
+               .strftime('%Y-%m-%d %H:%M:%S'))
     with open('C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\background\\yearTeams.txt', 'rt') as file:
         db, cursor = DB_Connect.grab("baseballData")
         for line in file:
@@ -25,7 +25,7 @@ def populate_teams_table(year):
                 break
     DB_Connect.close(db)
     total_time = round(time.time() - start_time, 2)
-    logger.log('\tpopulating teams table completed: ' + str(total_time) + ' seconds\n\n')
+    logger.log('Populating teams table completed: ' + str(total_time) + ' seconds\n\n')
 
 
 # populate_teams_table(2018)
