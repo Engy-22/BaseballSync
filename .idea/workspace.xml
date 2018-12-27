@@ -2,18 +2,19 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d8a74621-0067-4fd9-a532-54885cc58d7f" name="Default Changelist" comment="concurrency working finally">
-      <change afterPath="$PROJECT_DIR$/logs/import_data/pitch_fx.log" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/import_data/player_data/pitch_fx.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/logs/import_data/ballpark_and_manager_data.log" beforeDir="false" afterPath="$PROJECT_DIR$/logs/import_data/ballpark_and_manager_data.log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/logs/import_data/driver.log" beforeDir="false" afterPath="$PROJECT_DIR$/logs/import_data/driver.log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/logs/import_data/dump.log" beforeDir="false" afterPath="$PROJECT_DIR$/logs/import_data/dump.log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/logs/import_data/league_standings.log" beforeDir="false" afterPath="$PROJECT_DIR$/logs/import_data/league_standings.log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/logs/import_data/league_table_constructor.log" beforeDir="false" afterPath="$PROJECT_DIR$/logs/import_data/league_table_constructor.log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/logs/import_data/manager_table_constructor.log" beforeDir="false" afterPath="$PROJECT_DIR$/logs/import_data/manager_table_constructor.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/logs/import_data/pitch_fx.log" beforeDir="false" afterPath="$PROJECT_DIR$/logs/import_data/pitch_fx.log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/logs/import_data/populate_teams_table.log" beforeDir="false" afterPath="$PROJECT_DIR$/logs/import_data/populate_teams_table.log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/logs/import_data/team_defensive_statistics.log" beforeDir="false" afterPath="$PROJECT_DIR$/logs/import_data/team_defensive_statistics.log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/logs/import_data/team_offensive_statistics.log" beforeDir="false" afterPath="$PROJECT_DIR$/logs/import_data/team_offensive_statistics.log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/logs/import_data/year_data.log" beforeDir="false" afterPath="$PROJECT_DIR$/logs/import_data/year_data.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/import_data/player_data/pitch_fx.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/import_data/player_data/pitch_fx.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -35,15 +36,15 @@
         <counts>
           <entry key="HTML" value="1" />
           <entry key="Image" value="2" />
-          <entry key="PLAIN_TEXT" value="49" />
+          <entry key="PLAIN_TEXT" value="50" />
           <entry key="Python" value="122" />
           <entry key="XML" value="1" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="PLAIN_TEXT" value="594" />
-          <entry key="Python" value="14466" />
+          <entry key="PLAIN_TEXT" value="595" />
+          <entry key="Python" value="14984" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.vcs.git.usages">
@@ -71,18 +72,19 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/import_data/player_data/pitch_fx.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="253">
-              <caret line="46" column="8" lean-forward="true" selection-start-line="46" selection-start-column="8" selection-end-line="46" selection-end-column="8" />
-              <folding>
-                <element signature="e#0#9#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="-17">
+              <caret line="6" column="15" selection-start-line="6" selection-start-column="15" selection-end-line="6" selection-end-column="15" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/logs/import_data/pitch_fx.log">
-          <provider selected="true" editor-type-id="text-editor" />
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="374">
+              <caret line="22" lean-forward="true" selection-start-line="22" selection-end-line="22" />
+            </state>
+          </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
@@ -191,6 +193,7 @@
         <option value="$PROJECT_DIR$/src/import_data/team_data/team_defensive_statistics.py" />
         <option value="$PROJECT_DIR$/src/import_data/driver.py" />
         <option value="$PROJECT_DIR$/src/import_data/team_data/team_offensive_statistics.py" />
+        <option value="$PROJECT_DIR$/logs/import_data/pitch_fx.log" />
         <option value="$PROJECT_DIR$/src/import_data/player_data/pitch_fx.py" />
       </list>
     </option>
@@ -247,7 +250,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.driver">
+  <component name="RunManager" selected="Python.pitch_fx">
     <configuration name="clear_logs" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="baseball-sync" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -282,6 +285,27 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/import_data/driver.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="pitch_fx" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="baseball-sync" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/src/import_data/player_data" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/import_data/player_data/pitch_fx.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -332,41 +356,20 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="team_offensive_statistics" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="baseball-sync" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/src/import_data/team_data" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/import_data/team_data/team_offensive_statistics.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
     <list>
       <item itemvalue="Python.driver" />
       <item itemvalue="Python.reset_database" />
       <item itemvalue="Python.clear_logs" />
-      <item itemvalue="Python.team_offensive_statistics" />
       <item itemvalue="Python.team_defensive_statistics" />
+      <item itemvalue="Python.pitch_fx" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.pitch_fx" />
         <item itemvalue="Python.driver" />
         <item itemvalue="Python.clear_logs" />
         <item itemvalue="Python.reset_database" />
         <item itemvalue="Python.team_defensive_statistics" />
-        <item itemvalue="Python.team_offensive_statistics" />
       </list>
     </recent_temporary>
   </component>
@@ -689,13 +692,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/logs/import_data/dump.log">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="68">
-          <caret line="4" lean-forward="true" selection-start-line="4" selection-end-line="4" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/logs/import_data/team_defensive_statistics.log">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="317">
@@ -734,6 +730,20 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/logs/import_data/driver.log">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="357">
+          <caret line="21" lean-forward="true" selection-start-line="21" selection-end-line="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/logs/import_data/dump.log">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret lean-forward="true" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/import_data/driver.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="153">
@@ -744,23 +754,17 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/logs/import_data/driver.log">
+    <entry file="file://$PROJECT_DIR$/logs/import_data/pitch_fx.log">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="357">
-          <caret line="21" lean-forward="true" selection-start-line="21" selection-end-line="21" />
+        <state relative-caret-position="374">
+          <caret line="22" lean-forward="true" selection-start-line="22" selection-end-line="22" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/logs/import_data/pitch_fx.log">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/import_data/player_data/pitch_fx.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="253">
-          <caret line="46" column="8" lean-forward="true" selection-start-line="46" selection-start-column="8" selection-end-line="46" selection-end-column="8" />
-          <folding>
-            <element signature="e#0#9#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="-17">
+          <caret line="6" column="15" selection-start-line="6" selection-start-column="15" selection-end-line="6" selection-end-column="15" />
         </state>
       </provider>
     </entry>
