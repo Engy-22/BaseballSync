@@ -24,8 +24,8 @@ def driver(year, driver_log):
     get_year_data(year, driver_log)
     ballpark_and_manager_data(year, driver_log)
     league_standings(year, driver_log)
-    team_offensive_statistics(year, driver_log)
-    team_defensive_statistics(year, driver_log)
+    # team_offensive_statistics(year, driver_log)
+    # team_defensive_statistics(year, driver_log)
 
 
 if __name__ == '__main__':
