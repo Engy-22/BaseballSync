@@ -102,3 +102,4 @@
 
 -Restart everything with concurrency, and make it clean in terms of folder hierarchy.
     *Add a driver.log and have each program write their times to it and get an overall time.
+    *investigate line 115 of ballpark_and_manager
