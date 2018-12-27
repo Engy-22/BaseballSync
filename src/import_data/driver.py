@@ -14,6 +14,8 @@ from import_data.team_data.populate_teams_table import populate_teams_table
 from import_data.leagues.year_data import get_year_data
 from import_data.team_data.ballpark_and_manager_data import ballpark_and_manager_data
 from import_data.leagues.league_standings import league_standings
+from import_data.team_data.team_offensive_statistics import team_offensive_statistics
+from import_data.team_data.team_defensive_statistics import team_defensive_statistics
 
 
 def driver(year, driver_log):
@@ -22,6 +24,8 @@ def driver(year, driver_log):
     get_year_data(year, driver_log)
     ballpark_and_manager_data(year, driver_log)
     league_standings(year, driver_log)
+    team_offensive_statistics(year, driver_log)
+    team_defensive_statistics(year, driver_log)
 
 
 if __name__ == '__main__':
