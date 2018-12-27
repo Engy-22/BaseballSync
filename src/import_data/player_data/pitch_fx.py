@@ -1,7 +1,6 @@
 import os
 import time
 import datetime
-from bs4 import BeautifulSoup
 # from utilities.translate_pitchfx import translate_pitch_type, translate_pitch_outcome, determine_swing_or_take
 from utilities.Logger import Logger
 from utilities.DB_Connect import DB_Connect
@@ -39,14 +38,42 @@ def get_pitch_fx_data(year, driver_logger):
                     this_month = str(month)
                 get_day_data(this_day, this_month, str(year))
     total_time = time_converter(time.time() - start_time)
-    logger.log("Done fetching " + str(year) + " pitch fx data: time = " + total_time)
+    logger.log("Done fetching " + str(year) + " pitch fx data: time = " + total_time + '\n\n')
     driver_logger.log("\t\tTime = " + total_time)
 
 
 def get_day_data(day, month, year):
+    logger.log("\tDownloading data for " + month + '-' + day + '-' + year)
+    day_time = time.time()
     home_page_url = 'http://gd2.mlb.com/components/game/mlb/year_' + year + '/month_' + month + '/day_' + day
     home_page = str(BeautifulSoup(urlopen(home_page_url), 'html.parser')).split('<li>')
+    for line in home_page:
+        try:
+            if str(line.split('"day_' + str(day) + '/')[1])[:3] == 'gid':
+                game_time = time.time()
+                logger.log("\t\tDonwloading data for game: " + line.split('gid_')[1].split('_')[3] + '_'
+                           + line.split('gid_')[1].split('_')[4])
+                innings_url = home_page_url[:-6] + line.split('<a href="')[1].split('">')[0] + 'inning/'
+                innings_page = str(BeautifulSoup(urlopen(innings_url), 'html.parser')).split('<li>')
+                for inning in innings_page:
+                    try:
+                        if inning.split('<a href="inning_')[1].split('.')[0].isdigit():
+                            individual_inning_url = inning.split('.xml"> ')[1].split('</a>')[0]
+                            print(innings_url + individual_inning_url)
+                            individual_inning_page = str(BeautifulSoup(urlopen(innings_url + individual_inning_url),
+                                                                       'html.parser'))
+                            # parse_inning(individual_inning_page, year)
+                    except IndexError:
+                        continue
+                logger.log("\t\t\tTime = " + time_converter(time.time() - game_time))
+        except IndexError:
+            continue
+        except urllib.error.HTTPError:
+            continue
+    logger.log("\tDone downloading data for " + month + '-' + day + '-' + year + ": time = "
+               + time_converter(time.time() - day_time))
 
 
 # get_pitch_fx_data(2018, Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\"
 #                                "dump.log"))
+get_day_data('10', '05', '2018')
