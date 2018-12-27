@@ -10,13 +10,12 @@ from bs4 import BeautifulSoup
 
 
 pages = {}
-driver_logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\driver.log")
 logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\"
                 "ballpark_and_manager_data.log")
 
 
-def ballpark_and_manager_data(year):
-    driver_logger.log('Gathering ballpark and manager data')
+def ballpark_and_manager_data(year, driver_logger):
+    driver_logger.log('\tGathering ballpark and manager data')
     print("Gathering ballpark and manager data")
     start_time = time.time()
     logger.log('Beginning ballpark and manager data download for ' + str(year) + ' || Timestamp: '
@@ -47,7 +46,7 @@ def ballpark_and_manager_data(year):
                + time_converter(time.time() - calc_and_download_time))
     total_time = time_converter(time.time() - start_time)
     logger.log('Ballpark and manager data download completed: time = ' + total_time + '\n\n')
-    driver_logger.log('\tTime = ' + total_time)
+    driver_logger.log('\t\tTime = ' + total_time)
 
 
 def gather_team_home_numbers(team_id, team_key, year, team_count):
