@@ -99,4 +99,6 @@
             *determine fields
             *determine directions
     *Find out when mlbam data is updated, if in real time then I can created a real time view similar to fantasycast.
+
 -Restart everything with concurrency, and make it clean in terms of folder hierarchy.
+    *Add a driver.log and have each program write their times to it and get an overall time.
