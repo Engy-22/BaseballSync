@@ -2,9 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d8a74621-0067-4fd9-a532-54885cc58d7f" name="Default Changelist" comment="concurrency working finally">
-      <change afterPath="$PROJECT_DIR$/logs/import_data/league_standings.log" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/import_data/leagues/league_standings.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/utilities/translate_team_id.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/logs/import_data/team_defensive_statistics.log" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/logs/import_data/team_offensive_statistics.log" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/import_data/team_data/team_defensive_statistics.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/import_data/team_data/team_offensive_statistics.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/logs/import_data/ballpark_and_manager_data.log" beforeDir="false" afterPath="$PROJECT_DIR$/logs/import_data/ballpark_and_manager_data.log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/logs/import_data/driver.log" beforeDir="false" afterPath="$PROJECT_DIR$/logs/import_data/driver.log" afterDir="false" />
@@ -13,12 +14,6 @@
       <change beforePath="$PROJECT_DIR$/logs/import_data/populate_teams_table.log" beforeDir="false" afterPath="$PROJECT_DIR$/logs/import_data/populate_teams_table.log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/logs/import_data/year_data.log" beforeDir="false" afterPath="$PROJECT_DIR$/logs/import_data/year_data.log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/import_data/driver.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/import_data/driver.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/import_data/leagues/league_table_constructor.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/import_data/leagues/league_table_constructor.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/import_data/leagues/year_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/import_data/leagues/year_data.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/import_data/team_data/ballpark_and_manager_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/import_data/team_data/ballpark_and_manager_data.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/import_data/team_data/manager_table_constructor.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/import_data/team_data/manager_table_constructor.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/import_data/team_data/populate_teams_table.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/import_data/team_data/populate_teams_table.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/utilities/get_most_recent_year.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/utilities/get_most_recent_year.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -39,15 +34,15 @@
         <counts>
           <entry key="HTML" value="1" />
           <entry key="Image" value="2" />
-          <entry key="PLAIN_TEXT" value="39" />
-          <entry key="Python" value="114" />
+          <entry key="PLAIN_TEXT" value="41" />
+          <entry key="Python" value="116" />
           <entry key="XML" value="1" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="PLAIN_TEXT" value="592" />
-          <entry key="Python" value="13359" />
+          <entry key="PLAIN_TEXT" value="593" />
+          <entry key="Python" value="13480" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.vcs.git.usages">
@@ -63,8 +58,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/import_data/driver.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="321">
-              <caret line="41" lean-forward="true" selection-start-line="41" selection-end-line="41" />
+            <state relative-caret-position="510">
+              <caret line="45" lean-forward="true" selection-start-line="45" selection-end-line="45" />
               <folding>
                 <element signature="e#0#126#1" />
               </folding>
@@ -73,10 +68,19 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/logs/import_data/driver.log">
+        <entry file="file://$PROJECT_DIR$/src/import_data/team_data/team_offensive_statistics.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="289">
-              <caret line="17" lean-forward="true" selection-start-line="17" selection-end-line="17" />
+            <state relative-caret-position="136">
+              <caret line="8" lean-forward="true" selection-start-line="8" selection-end-line="8" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/import_data/team_data/team_defensive_statistics.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="85">
+              <caret line="5" selection-start-line="5" selection-end-line="5" />
             </state>
           </provider>
         </entry>
@@ -84,8 +88,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/background/to_do_list.txt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="381">
-              <caret line="104" lean-forward="true" selection-start-line="104" selection-end-line="104" />
+            <state relative-caret-position="364">
+              <caret line="103" lean-forward="true" selection-start-line="103" selection-end-line="103" />
             </state>
           </provider>
         </entry>
@@ -162,7 +166,6 @@
         <option value="$PROJECT_DIR$/logs/import_data/driver.log.py" />
         <option value="$PROJECT_DIR$/logs/import_data/ballpark_and_manager_data.log" />
         <option value="$PROJECT_DIR$/src/utilities/time_converter.py" />
-        <option value="$PROJECT_DIR$/background/to_do_list.txt" />
         <option value="$PROJECT_DIR$/src/utilities/translate_team_id.py" />
         <option value="$PROJECT_DIR$/logs/import_data/league_standings.log" />
         <option value="$PROJECT_DIR$/logs/import_data/driver.log" />
@@ -172,8 +175,11 @@
         <option value="$PROJECT_DIR$/src/import_data/team_data/populate_teams_table.py" />
         <option value="$PROJECT_DIR$/src/import_data/leagues/year_data.py" />
         <option value="$PROJECT_DIR$/src/import_data/team_data/ballpark_and_manager_data.py" />
-        <option value="$PROJECT_DIR$/src/import_data/driver.py" />
         <option value="$PROJECT_DIR$/src/import_data/leagues/league_standings.py" />
+        <option value="$PROJECT_DIR$/background/to_do_list.txt" />
+        <option value="$PROJECT_DIR$/src/import_data/driver.py" />
+        <option value="$PROJECT_DIR$/src/import_data/team_data/team_defensive_statistics.py" />
+        <option value="$PROJECT_DIR$/src/import_data/team_data/team_offensive_statistics.py" />
       </list>
     </option>
   </component>
@@ -419,12 +425,12 @@
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.15069398" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.15069398" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.3286119" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.49966952" visible="true" weight="0.3286119" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49966952" visible="true" weight="0.3286119" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -683,27 +689,47 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/background/to_do_list.txt">
+    <entry file="file://$PROJECT_DIR$/logs/import_data/driver.log">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="381">
-          <caret line="104" lean-forward="true" selection-start-line="104" selection-end-line="104" />
+        <state relative-caret-position="289">
+          <caret line="17" lean-forward="true" selection-start-line="17" selection-end-line="17" />
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/background/to_do_list.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="364">
+          <caret line="103" lean-forward="true" selection-start-line="103" selection-end-line="103" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/logs/import_data/team_offensive_statistics.log">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/logs/import_data/team_defensive_statistics.log">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/import_data/driver.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="321">
-          <caret line="41" lean-forward="true" selection-start-line="41" selection-end-line="41" />
+        <state relative-caret-position="510">
+          <caret line="45" lean-forward="true" selection-start-line="45" selection-end-line="45" />
           <folding>
             <element signature="e#0#126#1" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/logs/import_data/driver.log">
+    <entry file="file://$PROJECT_DIR$/src/import_data/team_data/team_defensive_statistics.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="289">
-          <caret line="17" lean-forward="true" selection-start-line="17" selection-end-line="17" />
+        <state relative-caret-position="85">
+          <caret line="5" selection-start-line="5" selection-end-line="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/import_data/team_data/team_offensive_statistics.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="136">
+          <caret line="8" lean-forward="true" selection-start-line="8" selection-end-line="8" />
         </state>
       </provider>
     </entry>
