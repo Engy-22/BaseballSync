@@ -14,8 +14,6 @@ from import_data.team_data.populate_teams_table import populate_teams_table
 from import_data.leagues.year_data import get_year_data
 from import_data.team_data.ballpark_and_manager_data import ballpark_and_manager_data
 
-logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\driver.log")
-
 
 def driver(year):
     print('\n\n' + str(year))
@@ -25,7 +23,8 @@ def driver(year):
 
 
 if __name__ == '__main__':
-    logger.log('Begin Driver || Timestamp: ' + datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S'))
+    main_logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\driver.log")
+    main_logger.log('Begin Driver || Timestamp: ' + datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S'))
     start_time = time.time()
     try:
         most_recent_year = get_most_recent_year()
@@ -37,4 +36,4 @@ if __name__ == '__main__':
     # if most_recent_year > 1997:
     #     comparisons_driver()
     # hof_finder()
-    logger.log('\nDriver complete: time = ' + time_converter(time.time() - start_time))
+    main_logger.log('\nDriver complete: time = ' + time_converter(time.time() - start_time))
