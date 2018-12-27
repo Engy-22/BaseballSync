@@ -1,104 +1,17 @@
-Gathering ballpark and manager data
-Gathering ballpark and manager data
-Gathering ballpark and manager data
-Gathering ballpark and manager data
-Gathering ballpark and manager data
-Gathering ballpark and manager data
-Begin Driver || Timestamp: 2018-12-27 12:48:59
-Begin Driver || Timestamp: 2018-12-27 12:48:59
-Begin Driver || Timestamp: 2018-12-27 12:48:59
-Begin Driver || Timestamp: 2018-12-27 12:48:59
-Begin Driver || Timestamp: 2018-12-27 12:48:59
-Begin Driver || Timestamp: 2018-12-27 12:48:59
-Begin Driver || Timestamp: 2018-12-27 12:48:59
-Getting most recent year listed in the database
-Getting most recent year listed in the database
-Getting most recent year listed in the database
-Getting most recent year listed in the database
-Getting most recent year listed in the database
-Getting most recent year listed in the database
-Getting most recent year listed in the database
-Populating leagues table (all-time)
-Populating leagues table (all-time)
-Populating leagues table (all-time)
-Populating leagues table (all-time)
-Populating leagues table (all-time)
-Populating leagues table (all-time)
-Populating leagues table (all-time)
-	Populating leagues table completed
-	Populating leagues table completed
-	Populating leagues table completed
-	Populating leagues table completed
-	Populating leagues table completed
-	Populating leagues table completed
-	Populating leagues table completed
-Gathering manager data (all-time)
-Gathering manager data (all-time)
-Gathering manager data (all-time)
-Gathering manager data (all-time)
-Gathering manager data (all-time)
-Gathering manager data (all-time)
-Gathering manager data (all-time)
-	Time = 33.39 seconds
-	Time = 33.39 seconds
-	Time = 33.39 seconds
-	Time = 33.39 seconds
-	Time = 33.39 seconds
-	Time = 33.39 seconds
-	Time = 33.39 seconds
-Populating teams table
-Populating teams table
-Populating teams table
-Populating teams table
-Populating teams table
-Populating teams table
-Populating teams table
-	Time = 1.69 seconds
-	Time = 1.69 seconds
-	Time = 1.69 seconds
-	Time = 1.69 seconds
-	Time = 1.69 seconds
-	Time = 1.69 seconds
-	Time = 1.69 seconds
-Gathering year data
-Gathering year data
-Gathering year data
-Gathering year data
-Gathering year data
-Gathering year data
-Gathering year data
-	Time = 21.72 seconds seconds
-	Time = 21.72 seconds seconds
-	Time = 21.72 seconds seconds
-	Time = 21.72 seconds seconds
-	Time = 21.72 seconds seconds
-	Time = 21.72 seconds seconds
-	Time = 21.72 seconds seconds
-Gathering ballpark and manager data
-Gathering ballpark and manager data
-Gathering ballpark and manager data
-Gathering ballpark and manager data
-Gathering ballpark and manager data
-Gathering ballpark and manager data
-Gathering ballpark and manager data
-	Time = 1 minute 19.15 seconds
-	Time = 1 minute 19.15 seconds
-	Time = 1 minute 19.15 seconds
-	Time = 1 minute 19.15 seconds
-	Time = 1 minute 19.15 seconds
-	Time = 1 minute 19.15 seconds
-	Time = 1 minute 19.15 seconds
+Begin Driver || Timestamp: 2018-12-27 14:57:03
+	Getting most recent year listed in the database
+	Populating leagues table (all-time)
+		Populating leagues table completed
+	Gathering manager data (all-time)
+		Time = 29.44 seconds
+	Populating teams table
+		Time = 2.02 seconds
+	Gathering year data
+		Time = 14.33 seconds seconds
+	Gathering ballpark and manager data
+		Time = 48.68 seconds
+	Adding to team_years (standings)
+		Time = 5.57 seconds
+Driver complete: time = 1 minute 40.66 seconds
 
-Driver complete: time = 2 minutes 16.79 seconds
 
-Driver complete: time = 2 minutes 16.79 seconds
-
-Driver complete: time = 2 minutes 16.79 seconds
-
-Driver complete: time = 2 minutes 16.79 seconds
-
-Driver complete: time = 2 minutes 16.79 seconds
-
-Driver complete: time = 2 minutes 16.79 seconds
-
-Driver complete: time = 2 minutes 16.79 seconds
