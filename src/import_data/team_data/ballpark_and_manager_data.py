@@ -111,8 +111,10 @@ def gather_team_home_numbers(team_id, team_key, year, team_count):
             for row in hit_trajectory_table:
                 for key, value in trajectory.items():
                     if key.split('_')[0] + ' ' + key.split('_')[1] in row:
-                        trajectory[key] = int(row.split('data-stat="' + key.split('_')[2] + '" >')[1].split('<')[0])\
-                                          * home_percent[stat]
+                        stat = key.split('_')[-1]
+                        if stat != 'PA':
+                            trajectory[key] = int(row.split('data-stat="' + key.split('_')[2] + '" >')[1].\
+                                                  split('<')[0]) * home_percent[stat]
         except IndexError:
             table = str(BeautifulSoup(urlopen('https://www.baseball-reference.com/teams/' + team_key + '/' + str(year)
                                               + '.shtml'), 'html.parser'))
@@ -189,4 +191,4 @@ def write_to_db(team_id, stats, trajectory, manager_ids, year, park_name):
     DB_Connect.close(db)
 
 
-ballpark_and_manager_data(2018)
+# ballpark_and_manager_data(2018)
