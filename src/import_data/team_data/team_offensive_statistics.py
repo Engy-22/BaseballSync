@@ -1,4 +1,3 @@
-import os
 import time
 import datetime
 from utilities.Logger import Logger
@@ -7,7 +6,6 @@ from bs4 import BeautifulSoup
 from utilities.DB_Connect import DB_Connect
 from utilities.translate_team_id import translate_team_id
 from utilities.time_converter import time_converter
-from concurrent.futures import ThreadPoolExecutor
 
 logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\"
                 "team_offensive_statistics.log")
@@ -28,7 +26,7 @@ def team_offensive_statistics(year, driver_logger):
                                  split('<tbody>')[1].split('</tbody>')[0].split('<tr>')
     extract_data(standard_batting_rows, stats, year)
     total_time = time_converter(time.time() - start_time)
-    logger.log("Done downloading team offensive data for " + str(year) + ': time = ' + total_time + '\n\n')
+    logger.log("Done donwloading team offensive data for " + str(year) + ': time = ' + total_time + '\n\n')
     driver_logger.log('\t\tTime = ' + total_time)
 
 
@@ -47,19 +45,15 @@ def extract_data(data, stats, year):
 
 def write_to_file(team_data, year):
     db, cursor = DB_Connect.grab("baseballData")
-    with ThreadPoolExecutor(os.cpu_count()) as executor:
-        for team, data in team_data.items():
-            executor.submit(write_data, team, data, year, db, cursor)
+    for team, data in team_data.items():
+        logger.log("\tWriting " + team + " data to database")
+        sets = ''
+        for field, value in data.items():
+            sets += field + ' = ' + value + ', '
+        DB_Connect.write(db, cursor, 'update team_years set ' + sets[:-2] + ' where teamid = "' + team + '" and year = '
+                                     + str(year) + ';')
     DB_Connect.close(db)
 
 
-def write_data(team, data, year, db, cursor):
-    logger.log("\tWriting " + team + " data to database")
-    sets = ''
-    for field, value in data.items():
-        sets += field + ' = ' + value + ', '
-    DB_Connect.write(db, cursor, 'update team_years set ' + sets[:-2] + ' where teamid = "' + team + '" and year = '
-                                 + str(year) + ';')
-
-team_offensive_statistics(2018, Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data"
-                                       "\\dump.log"))
+# team_offensive_statistics(2018, Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data"
+#                                        "\\dump.log"))
