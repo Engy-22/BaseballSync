@@ -6,13 +6,16 @@ import time
 import datetime
 from utilities.DB_Connect import DB_Connect
 from utilities.Logger import Logger
+from utilities.time_converter import time_converter
 
 pages = {}
 strings = {}
+driver_logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\driver.log")
 logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\year_data.log")
 
 
 def get_year_data(year):
+    driver_logger.log('Gathering year data')
     print("Gathering year data")
     start_time = time.time()
     logger.log('Beginning year_data download for ' + str(year) + ' || Timestamp: ' + datetime.datetime.today()\
@@ -34,7 +37,7 @@ def get_year_data(year):
     with ThreadPoolExecutor(3) as executor1:
         for key, value in stat_list.items():
             executor1.submit(load_url, year, key)
-    logger.log("\tdone making HTTP requests: time = " + str(round(time.time() - download_start, 2)))
+    logger.log("\tdone making HTTP requests: time = " + time_converter(time.time() - download_start))
     global pages
     for key, dictionary in stat_list.items():
         assemble_stats(key, dictionary, pages[key])
@@ -43,9 +46,10 @@ def get_year_data(year):
     with ThreadPoolExecutor(3) as executor2:
         for key, value in stat_list.items():
             executor2.submit(write_to_db, year, strings[key], key)
-    logger.log("\tdone writing to database: time = " + str(round(time.time() - write_start, 2)))
-    total_time = round(time.time() - start_time, 2)
-    logger.log('year_data download completed: time = ' + str(total_time) + ' seconds\n\n')
+    logger.log("\tdone writing to database: time = " + time_converter(time.time() - write_start))
+    total_time = time_converter(time.time() - start_time)
+    logger.log('year_data download completed: time = ' + total_time + '\n\n')
+    driver_logger.log('\tTime = ' + total_time + ' seconds')
 
 
 def load_url(year, stat_type):
@@ -66,9 +70,8 @@ def write_opening_day(year):
     opening_day = months[opening_date.split(', ')[1].split(' ')[0]] + '-' + opening_date.split(', ')[1].split(' ')[1]\
                   .split(',')[0]
     DB_Connect.write(db, cursor, 'update years set opening_day = "' + opening_day + '" where year = ' + str(year) + ';')
-    total_time = round(time.time() - start_time, 2)
     DB_Connect.close(db)
-    logger.log('\tComplete (opening day): time = ' + str(total_time) + ' seconds')
+    logger.log('\tComplete (opening day): time = ' + time_converter(time.time() - start_time))
 
 
 def assemble_stats(stat_type, stats, page):
@@ -91,8 +94,7 @@ def assemble_stats(stat_type, stats, page):
         games = Counter(games_list).most_common(1)[0][0]
         this_string = 'g = ' + str(games) + ', ' + this_string
     strings[stat_type] = this_string
-    total_time = round(time.time() - start_time, 2)
-    logger.log('\tCompleted (' + stat_type + '): time = ' + str(total_time) + ' seconds')
+    logger.log('\tCompleted (' + stat_type + '): time = ' + time_converter(time.time() - start_time))
     strings[stat_type] = this_string
 
 
