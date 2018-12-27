@@ -9,6 +9,7 @@ from concurrent.futures import ThreadPoolExecutor
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
 
+innings = {}
 logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\logs\\import_data\\pitch_fx.log")
 
 
@@ -50,30 +51,39 @@ def get_day_data(day, month, year):
     for line in home_page:
         try:
             if str(line.split('"day_' + str(day) + '/')[1])[:3] == 'gid':
+                global innings
+                innings = {}
                 game_time = time.time()
-                logger.log("\t\tDonwloading data for game: " + line.split('gid_')[1].split('_')[3] + '_'
+                logger.log("\t\tDownloading data for game: " + line.split('gid_')[1].split('_')[3] + '_'
                            + line.split('gid_')[1].split('_')[4])
                 innings_url = home_page_url[:-6] + line.split('<a href="')[1].split('">')[0] + 'inning/'
                 innings_page = str(BeautifulSoup(urlopen(innings_url), 'html.parser')).split('<li>')
-                for inning in innings_page:
-                    try:
-                        if inning.split('<a href="inning_')[1].split('.')[0].isdigit():
-                            individual_inning_url = inning.split('.xml"> ')[1].split('</a>')[0]
-                            print(innings_url + individual_inning_url)
-                            individual_inning_page = str(BeautifulSoup(urlopen(innings_url + individual_inning_url),
-                                                                       'html.parser'))
-                            # parse_inning(individual_inning_page, year)
-                    except IndexError:
-                        continue
+                with ThreadPoolExecutor(os.cpu_count()) as executor:
+                    for inning in innings_page:
+                        try:
+                            if inning.split('<a href="inning_')[1].split('.')[0].isdigit():
+                                individual_inning_url = inning.split('.xml"> ')[1].split('</a>')[0]
+                            # parse_inning(innings_url + individual_inning_url,
+                            #              individual_inning_url.split('_')[1].split('.xml')[0], year)
+                                executor.submit(parse_inning, innings_url + individual_inning_url,
+                                                individual_inning_url.split('_')[1].split('.xml')[0], year)
+                        except IndexError:
+                            continue
                 logger.log("\t\t\tTime = " + time_converter(time.time() - game_time))
         except IndexError:
             continue
-        except urllib.error.HTTPError:
+        except Exception as e:
+            logger.log("ERROR: " + str(e))
             continue
     logger.log("\tDone downloading data for " + month + '-' + day + '-' + year + ": time = "
-               + time_converter(time.time() - day_time))
+               + time_converter(time.time() - day_time) + '\n\n')
 
 
-# get_pitch_fx_data(2018, Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\"
-#                                "dump.log"))
-get_day_data('10', '05', '2018')
+def parse_inning(inning_url, inning_num, year):
+    global innings
+    innings[inning_num] = BeautifulSoup(urlopen(inning_url), 'html.parser')
+
+
+get_pitch_fx_data(2018, Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\"
+                               "dump.log"))
+# get_day_data('10', '05', '2018')
