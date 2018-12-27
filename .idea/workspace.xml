@@ -2,22 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d8a74621-0067-4fd9-a532-54885cc58d7f" name="Default Changelist" comment="concurrency working finally">
-      <change afterPath="$PROJECT_DIR$/logs/import_data/driver.log" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/utilities/time_converter.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/background/to_do_list.txt" beforeDir="false" afterPath="$PROJECT_DIR$/background/to_do_list.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/import_data/ballpark_and_manager_data.log" beforeDir="false" afterPath="$PROJECT_DIR$/logs/import_data/ballpark_and_manager_data.log" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/import_data/league_table_constructor.log" beforeDir="false" afterPath="$PROJECT_DIR$/logs/import_data/league_table_constructor.log" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/import_data/manager_table_constructor.log" beforeDir="false" afterPath="$PROJECT_DIR$/logs/import_data/manager_table_constructor.log" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/import_data/populate_teams_table.log" beforeDir="false" afterPath="$PROJECT_DIR$/logs/import_data/populate_teams_table.log" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/import_data/year_data.log" beforeDir="false" afterPath="$PROJECT_DIR$/logs/import_data/year_data.log" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/import_data/driver.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/import_data/driver.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/import_data/leagues/league_table_constructor.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/import_data/leagues/league_table_constructor.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/import_data/leagues/year_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/import_data/leagues/year_data.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/import_data/team_data/ballpark_and_manager_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/import_data/team_data/ballpark_and_manager_data.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/import_data/team_data/manager_table_constructor.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/import_data/team_data/manager_table_constructor.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/import_data/team_data/populate_teams_table.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/import_data/team_data/populate_teams_table.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/utilities/get_most_recent_year.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/utilities/get_most_recent_year.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/logs/import_data/driver.log" beforeDir="false" afterPath="$PROJECT_DIR$/logs/import_data/driver.log" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -51,10 +36,14 @@
       <usages-collector id="statistics.file.types.edit">
         <counts>
 <<<<<<< HEAD
+<<<<<<< HEAD
           <entry key="PLAIN_TEXT" value="489" />
           <entry key="Python" value="10703" />
 =======
           <entry key="PLAIN_TEXT" value="537" />
+=======
+          <entry key="PLAIN_TEXT" value="538" />
+>>>>>>> develop
           <entry key="Python" value="12106" />
 >>>>>>> develop
         </counts>
@@ -87,23 +76,23 @@
         </entry>
       </file>
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
       <file pinned="false" current-in-tab="true">
+=======
+      <file pinned="false" current-in-tab="false">
+>>>>>>> develop
         <entry file="file://$PROJECT_DIR$/src/import_data/team_data/ballpark_and_manager_data.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="17">
+            <state relative-caret-position="-34">
               <caret line="98" column="20" selection-start-line="98" selection-start-column="20" selection-end-line="98" selection-end-column="20" />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/logs/import_data/driver.log">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="317">
-              <caret line="411" lean-forward="true" selection-start-line="411" selection-end-line="411" />
-            </state>
-          </provider>
+          <provider selected="true" editor-type-id="text-editor" />
         </entry>
       </file>
 >>>>>>> develop
@@ -186,7 +175,6 @@
         <option value="$PROJECT_DIR$/src/utilities/time_converter.py" />
 >>>>>>> develop
         <option value="$PROJECT_DIR$/src/import_data/driver.py" />
-        <option value="$PROJECT_DIR$/logs/import_data/driver.log" />
         <option value="$PROJECT_DIR$/background/to_do_list.txt" />
 <<<<<<< HEAD
 =======
@@ -195,6 +183,7 @@
         <option value="$PROJECT_DIR$/src/import_data/leagues/year_data.py" />
 >>>>>>> develop
         <option value="$PROJECT_DIR$/src/import_data/team_data/ballpark_and_manager_data.py" />
+        <option value="$PROJECT_DIR$/logs/import_data/driver.log" />
       </list>
     </option>
   </component>
@@ -243,15 +232,15 @@
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Anthony Raimondo\PycharmProjects\baseball-sync\src\utilities" />
+    </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\Anthony Raimondo\PycharmProjects\baseball-sync\background" />
       <recent name="C:\Users\Anthony Raimondo\PycharmProjects\baseball-sync\src\model" />
       <recent name="C:\Users\Anthony Raimondo\PycharmProjects\baseball-sync\src\utilities" />
       <recent name="C:\Users\Anthony Raimondo\PycharmProjects\baseball-sync\src\import_data\utilities" />
       <recent name="C:\Users\Anthony Raimondo\PycharmProjects\baseball-sync\images" />
-    </key>
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\Users\Anthony Raimondo\PycharmProjects\baseball-sync\src\utilities" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -632,9 +621,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/logs/import_data/driver.log.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
+    <entry file="file://$PROJECT_DIR$/logs/import_data/driver.log.py" />
     <entry file="file://$PROJECT_DIR$/src/utilities/get_most_recent_year.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="102">
@@ -736,19 +723,18 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/logs/import_data/driver.log">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="317">
-          <caret line="411" lean-forward="true" selection-start-line="411" selection-end-line="411" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/import_data/team_data/ballpark_and_manager_data.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
+        <state relative-caret-position="-34">
           <caret line="98" column="20" selection-start-line="98" selection-start-column="20" selection-end-line="98" selection-end-column="20" />
         </state>
       </provider>
+    </entry>
+<<<<<<< HEAD
+>>>>>>> develop
+=======
+    <entry file="file://$PROJECT_DIR$/logs/import_data/driver.log">
+      <provider selected="true" editor-type-id="text-editor" />
     </entry>
 >>>>>>> develop
   </component>
