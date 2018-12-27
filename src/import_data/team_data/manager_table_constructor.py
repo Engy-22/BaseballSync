@@ -33,7 +33,8 @@ def manager_table_constructor():
                     loses = this_row.split('data-stat="L">')[1].split('<')[0]
                     executor.submit(write_to_file, '"' + manager_id + '","' + last + '","' + first + '",' + wins + ','
                                                    + loses)
-                except AttributeError:
+                except AttributeError as e:
+                    logger.log("\t\te")
                     continue
     total_time = time.time() - start_time
     logger.log('Constructing manager table completed: time = ' + time_converter(total_time))
