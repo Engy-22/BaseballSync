@@ -115,7 +115,8 @@ def gather_team_home_numbers(team_id, team_key, year, team_count):
                         if stat != 'PA':
                             trajectory[key] = int(row.split('data-stat="' + key.split('_')[2] + '" >')[1].\
                                                   split('<')[0]) * home_percent[stat]
-        except IndexError:
+        except IndexError as e:
+            logger.log("\t\te")
             table = str(BeautifulSoup(urlopen('https://www.baseball-reference.com/teams/' + team_key + '/' + str(year)
                                               + '.shtml'), 'html.parser'))
             manager_data = table.split('<strong>Manager')[1].split('<p>')[0].split('<a href="/managers/')[1:]
@@ -135,18 +136,19 @@ def gather_team_home_numbers(team_id, team_key, year, team_count):
             manager_pic_url = manager_page.split('<img class="" src="')[1].split('"')[0]
             urlretrieve(manager_pic_url, "C:\\Users\\Anthony Raimondo\\images\\managers\\"
                                          + manager_data[0].split('.shtml')[0] + ".jpg")
-        except IndexError:
-            pass
+        except IndexError as e:
+            logger.log('\t\te')
         team_pic_url = table.split('<div class="media-item logo loader">')[1].split('<')[1].split('src="')[1].split('"')[0]
         try:
             urlretrieve(team_pic_url, "C:\\Users\\Anthony Raimondo\\images\\teams\\" + team_id + str(year) + ".jpg")
         except Exception as e:
-            print(e)
+            logger.log('\t\te')
         for i in manager_data:
             manager_ids[i.split('.shtml')[0]] = i.split('(')[1].split(')')[0]
         try:
             park_name = table.split('<strong>Ballpark')[1].split('</strong> ')[1].split('</p>')[0][:-1]
-        except IndexError:
+        except IndexError as e:
+            logger.log('\t\te')
             park_name = "No Home Field"
         write_to_db(team_id, location, trajectory, manager_ids, year, park_name)
 
