@@ -16,7 +16,7 @@ from import_data.team_data.ballpark_and_manager_data import ballpark_and_manager
 from import_data.leagues.league_standings import league_standings
 from import_data.team_data.team_offensive_statistics import team_offensive_statistics
 from import_data.team_data.team_defensive_statistics import team_defensive_statistics
-from import_data.player_data.pitch_fx import get_pitch_fx_data
+from import_data.player_data.pitch_fx.pitch_fx import get_pitch_fx_data
 
 
 def driver(year, driver_log):
