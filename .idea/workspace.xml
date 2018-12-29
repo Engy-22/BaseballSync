@@ -9,11 +9,9 @@
       <change beforePath="$PROJECT_DIR$/logs/import_data/league_standings.log" beforeDir="false" afterPath="$PROJECT_DIR$/logs/import_data/league_standings.log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/logs/import_data/league_table_constructor.log" beforeDir="false" afterPath="$PROJECT_DIR$/logs/import_data/league_table_constructor.log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/logs/import_data/manager_table_constructor.log" beforeDir="false" afterPath="$PROJECT_DIR$/logs/import_data/manager_table_constructor.log" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/import_data/pitch_fx.log" beforeDir="false" afterPath="$PROJECT_DIR$/logs/import_data/pitch_fx.log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/logs/import_data/populate_teams_table.log" beforeDir="false" afterPath="$PROJECT_DIR$/logs/import_data/populate_teams_table.log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/logs/import_data/year_data.log" beforeDir="false" afterPath="$PROJECT_DIR$/logs/import_data/year_data.log" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/import_data/driver.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/import_data/driver.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/import_data/player_data/pitch_fx.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/import_data/player_data/pitch_fx/pitch_fx.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/import_data/player_data/pitch_fx/pitch_fx.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/import_data/player_data/pitch_fx/pitch_fx.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -37,13 +35,14 @@
           <entry key="Image" value="2" />
           <entry key="PLAIN_TEXT" value="51" />
           <entry key="Python" value="123" />
-          <entry key="XML" value="2" />
+          <entry key="XML" value="3" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="PLAIN_TEXT" value="609" />
-          <entry key="Python" value="15811" />
+          <entry key="PLAIN_TEXT" value="616" />
+          <entry key="Python" value="16806" />
+          <entry key="XML" value="1" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.vcs.git.usages">
@@ -59,8 +58,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/import_data/driver.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="68">
-              <caret line="20" selection-start-line="20" selection-end-line="20" />
+            <state relative-caret-position="321">
+              <caret line="47" lean-forward="true" selection-start-line="47" selection-end-line="47" />
               <folding>
                 <element signature="e#0#126#1" />
               </folding>
@@ -71,11 +70,15 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/import_data/player_data/pitch_fx/pitch_fx.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="355">
-              <caret line="91" column="17" lean-forward="true" selection-start-line="91" selection-start-column="17" selection-end-line="91" selection-end-column="17" />
+            <state relative-caret-position="321">
+              <caret line="129" lean-forward="true" selection-start-line="129" selection-end-line="129" />
               <folding>
                 <element signature="e#0#9#0" expanded="true" />
                 <element signature="e#590#1959#0" />
+                <element signature="e#3989#4181#0" />
+                <element signature="e#4206#4440#0" />
+                <element signature="e#4521#4715#0" />
+                <element signature="e#4750#5001#0" />
               </folding>
             </state>
           </provider>
@@ -88,11 +91,7 @@
       </file>
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/logs/import_data/pitch_fx.log">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="385">
-              <caret line="38" lean-forward="true" selection-start-line="38" selection-end-line="38" />
-            </state>
-          </provider>
+          <provider selected="true" editor-type-id="text-editor" />
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
@@ -199,18 +198,19 @@
         <option value="$PROJECT_DIR$/src/import_data/leagues/league_standings.py" />
         <option value="$PROJECT_DIR$/src/import_data/team_data/team_defensive_statistics.py" />
         <option value="$PROJECT_DIR$/src/import_data/team_data/team_offensive_statistics.py" />
-        <option value="$PROJECT_DIR$/logs/import_data/pitch_fx.log" />
         <option value="$PROJECT_DIR$/logs/import_data/dump.log" />
         <option value="$PROJECT_DIR$/src/import_data/player_data/pitch_fx.py" />
         <option value="$PROJECT_DIR$/src/import_data/driver.py" />
+        <option value="$PROJECT_DIR$/src/import_data/player_data/pitch_fx/xml.xml" />
         <option value="$PROJECT_DIR$/src/import_data/player_data/pitch_fx/pitch_fx.py" />
+        <option value="$PROJECT_DIR$/logs/import_data/pitch_fx.log" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="-9" />
-    <option name="width" value="978" />
-    <option name="height" value="1039" />
+    <option name="x" value="-10" />
+    <option name="width" value="980" />
+    <option name="height" value="1040" />
   </component>
   <component name="ProjectView">
     <navigator proportions="" version="1">
@@ -230,36 +230,6 @@
               <item name="baseball-sync" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
             </path>
-            <path>
-              <item name="baseball-sync" type="b2602c69:ProjectViewProjectNode" />
-              <item name="baseball-sync" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="import_data" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="baseball-sync" type="b2602c69:ProjectViewProjectNode" />
-              <item name="baseball-sync" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="import_data" type="462c0819:PsiDirectoryNode" />
-              <item name="player_data" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="baseball-sync" type="b2602c69:ProjectViewProjectNode" />
-              <item name="baseball-sync" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="import_data" type="462c0819:PsiDirectoryNode" />
-              <item name="player_data" type="462c0819:PsiDirectoryNode" />
-              <item name="pitch_fx" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="baseball-sync" type="b2602c69:ProjectViewProjectNode" />
-              <item name="baseball-sync" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="import_data" type="462c0819:PsiDirectoryNode" />
-              <item name="player_data" type="462c0819:PsiDirectoryNode" />
-              <item name="pitch_fx" type="462c0819:PsiDirectoryNode" />
-              <item name="xml" type="462c0819:PsiDirectoryNode" />
-            </path>
           </expand>
           <select />
         </subPane>
@@ -267,7 +237,7 @@
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../Finances" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
@@ -410,8 +380,8 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.pitch_fx" />
         <item itemvalue="Python.clear_logs" />
+        <item itemvalue="Python.pitch_fx" />
         <item itemvalue="Python.driver" />
         <item itemvalue="Python.reset_database" />
         <item itemvalue="Python.team_defensive_statistics" />
@@ -537,9 +507,6 @@
     <option name="LAST_COMMIT_MESSAGE" value="initial model setup" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/background/team_finder.txt">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/utilities/DB_Connect.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="408">
@@ -746,41 +713,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/background/table_definitions.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="68">
-          <caret line="4" selection-start-line="4" selection-end-line="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/background/to_do_list.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="364">
-          <caret line="103" selection-start-line="103" selection-end-line="103" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/import_data/team_data/ballpark_and_manager_data.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="204">
           <caret line="20" column="78" lean-forward="true" selection-start-line="20" selection-start-column="78" selection-end-line="20" selection-end-column="78" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/logs/import_data/driver.log">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret lean-forward="true" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/import_data/driver.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="68">
-          <caret line="20" selection-start-line="20" selection-end-line="20" />
-          <folding>
-            <element signature="e#0#126#1" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -791,26 +727,60 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/logs/import_data/pitch_fx.log">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="385">
-          <caret line="38" lean-forward="true" selection-start-line="38" selection-end-line="38" />
-        </state>
-      </provider>
+    <entry file="file://$PROJECT_DIR$/src/import_data/player_data/pitch_fx/xml/1.xml">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/import_data/player_data/pitch_fx/xml.xml">
+      <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/logs/import_data/dump.log">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/import_data/player_data/pitch_fx/xml/1.xml">
+    <entry file="file://$PROJECT_DIR$/logs/import_data/pitch_fx.log">
       <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/logs/import_data/driver.log">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret lean-forward="true" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/background/to_do_list.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="364">
+          <caret line="103" selection-start-line="103" selection-end-line="103" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/background/table_definitions.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="68">
+          <caret line="4" selection-start-line="4" selection-end-line="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/import_data/driver.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="321">
+          <caret line="47" lean-forward="true" selection-start-line="47" selection-end-line="47" />
+          <folding>
+            <element signature="e#0#126#1" />
+          </folding>
+        </state>
+      </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/import_data/player_data/pitch_fx/pitch_fx.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="355">
-          <caret line="91" column="17" lean-forward="true" selection-start-line="91" selection-start-column="17" selection-end-line="91" selection-end-column="17" />
+        <state relative-caret-position="321">
+          <caret line="129" lean-forward="true" selection-start-line="129" selection-end-line="129" />
           <folding>
             <element signature="e#0#9#0" expanded="true" />
             <element signature="e#590#1959#0" />
+            <element signature="e#3989#4181#0" />
+            <element signature="e#4206#4440#0" />
+            <element signature="e#4521#4715#0" />
+            <element signature="e#4750#5001#0" />
           </folding>
         </state>
       </provider>
