@@ -16,7 +16,10 @@ from import_data.team_data.ballpark_and_manager_data import ballpark_and_manager
 from import_data.leagues.league_standings import league_standings
 from import_data.team_data.team_offensive_statistics import team_offensive_statistics
 from import_data.team_data.team_defensive_statistics import team_defensive_statistics
-from import_data.player_data.pitch_fx.pitch_fx import get_pitch_fx_data
+from import_data.player_data.pitch_fx import pitch_fx
+from import_data.player_data.batting.batters import batting_constructor
+from import_data.player_data.pitching.pitchers import pitching_constructor
+from import_data.player_data.fielding.fielders import fielding_constructor
 
 
 def driver(year, driver_log):
@@ -28,6 +31,9 @@ def driver(year, driver_log):
     team_offensive_statistics(year, driver_log)
     team_defensive_statistics(year, driver_log)
     # get_pitch_fx_data(year, driver_log)
+    # batting_constructor(year, driver_log)
+    # pitching_constructor(year, driver_log)
+    # fielding_constructor(year, driver_log)
 
 
 if __name__ == '__main__':
