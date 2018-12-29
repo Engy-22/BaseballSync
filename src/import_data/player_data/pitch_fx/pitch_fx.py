@@ -5,7 +5,7 @@ import datetime
 from utilities.Logger import Logger
 from utilities.DB_Connect import DB_Connect
 from utilities.time_converter import time_converter
-from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import ThreadPoolExecutor, ProcessPoolExecutor
 from urllib.request import urlopen, urlretrieve
 from bs4 import BeautifulSoup
 from xml.dom import minidom
@@ -64,10 +64,12 @@ def get_day_data(day, month, year):
                         try:
                             if inning.split('<a href="inning_')[1].split('.')[0].isdigit():
                                 individual_inning_url = inning.split('.xml"> ')[1].split('</a>')[0]
+                                print(innings_url + individual_inning_url)
                                 executor.submit(load_xml, innings_url + individual_inning_url,
                                                 individual_inning_url.split('_')[1].split('.xml')[0])
                         except IndexError:
                             continue
+                parse_innings()
                 clear_xmls()
                 logger.log("\t\t\tTime = " + time_converter(time.time() - game_time))
         except IndexError:
@@ -91,6 +93,37 @@ def clear_xmls():
         os.remove(dir + '\\' + xml_file)
 
 
+def parse_innings():
+    dir = "C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\src\\import_data\\player_data\\pitch_fx\\xml"
+    for xml_file in os.listdir(dir):
+        parse_inning(dir + '\\' + xml_file)
+
+
+def parse_inning(xml_file):
+    doc = minidom.parse(xml_file)
+    at_bats = doc.getElementsByTagName('atbat')
+    for at_bat in at_bats:
+        parse_at_bat(at_bat)
+
+
+def parse_at_bat(at_bat):
+    meta_data = {'pitcher_id': at_bat.getAttribute('pitcher'), 'batter_id': at_bat.getAttribute('batter'),
+                 'temp_outcome': at_bat.getAttribute('event'),
+                 'batter_orientation': 'v' + at_bat.getAttribute('stand="').lower() + 'hb',
+                 'pitcher_orientation': 'v' + at_bat.getAttribute('p_throws="').lower() + 'hp'}
+    pitches = at_bat.getElementsByTagName('pitch')
+    for pitch in pitches:
+        parse_pitch(pitch, meta_data)
+    actions = at_bat.getElementsByTagName('action')
+    if len(actions) > 0:
+        print(actions)
+
+
+def parse_pitch(pitch, meta_data):
+    pitch_type = pitch.getAttribute('pitch_type')
+    swing_take = pitch.getAttribute('des="')
+
+
 # get_pitch_fx_data(2018, Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\"
 #                                "dump.log"))
-get_day_data('10', '05', '2018')
+# get_day_data('10', '05', '2018')
