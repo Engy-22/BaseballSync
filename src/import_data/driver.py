@@ -13,28 +13,41 @@ from import_data.team_data.manager_table_constructor import manager_table_constr
 from import_data.team_data.populate_teams_table import populate_teams_table
 from import_data.leagues.year_data import get_year_data
 from import_data.team_data.ballpark_and_manager_data import ballpark_and_manager_data
+from import_data.leagues.league_standings import league_standings
+from import_data.team_data.team_offensive_statistics import team_offensive_statistics
+from import_data.team_data.team_defensive_statistics import team_defensive_statistics
+from import_data.player_data.pitch_fx import pitch_fx
+from import_data.player_data.batting.batters import batting_constructor
+from import_data.player_data.pitching.pitchers import pitching_constructor
+from import_data.player_data.fielding.fielders import fielding_constructor
 
-logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\driver.log")
 
-
-def driver(year):
+def driver(year, driver_log):
     print('\n\n' + str(year))
-    populate_teams_table(year)
-    get_year_data(year)
-    ballpark_and_manager_data(year)
+    populate_teams_table(year, driver_log)
+    get_year_data(year, driver_log)
+    ballpark_and_manager_data(year, driver_log)
+    league_standings(year, driver_log)
+    team_offensive_statistics(year, driver_log)
+    team_defensive_statistics(year, driver_log)
+    # get_pitch_fx_data(year, driver_log)
+    # batting_constructor(year, driver_log)
+    # pitching_constructor(year, driver_log)
+    # fielding_constructor(year, driver_log)
 
 
 if __name__ == '__main__':
-    logger.log('Begin Driver || Timestamp: ' + datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S'))
+    main_logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\driver.log")
+    main_logger.log('Begin Driver || Timestamp: ' + datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S'))
     start_time = time.time()
     try:
-        most_recent_year = get_most_recent_year()
+        most_recent_year = get_most_recent_year(main_logger)
     except IndexError:
         most_recent_year = 1876
-    league_table_constructor()
-    manager_table_constructor()
-    driver(2018)
+    league_table_constructor(main_logger)
+    manager_table_constructor(main_logger)
+    driver(2018, main_logger)
     # if most_recent_year > 1997:
     #     comparisons_driver()
     # hof_finder()
-    logger.log('\nDriver complete: time = ' + time_converter(time.time() - start_time))
+    main_logger.log('Driver complete: time = ' + time_converter(time.time() - start_time) + '\n\n')
