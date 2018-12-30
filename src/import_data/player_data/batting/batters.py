@@ -16,11 +16,29 @@ logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\lo
 
 
 def batting_constructor(year, driver_logger):
-    driver_logger.log("\t")
+    driver_logger.log("\tDownloading player images and attributes")
     start_time = time.time()
-    logger.log("Downloading batter " + str(year) + "data || Timestamp: " + datetime.datetime.today()\
+    logger.log("Downloading batter " + str(year) + " data || Timestamp: " + datetime.datetime.today()\
                .strftime('%Y-%m-%d %H:%M:%S'))
+    logger.log("\tAssembling list of players")
+    table = str(BeautifulSoup(urlopen("https://www.baseball-reference.com/leagues/MLB/" + str(year)
+                                      + "-standard-batting.shtml"), 'html.parser')).\
+        split('<table class="sortable stats_table" id')[1].split('<tbody>')[1].split('</tbody>')[0].split('<tr')
+    temp_players = []
+    reversed_names = []
     player_ids = []
+    for row in table:
+        if 'data-stat="player" csk="' in row and 'data-append-csv="' in row:
+            player_ids.append(row.split('data-append-csv="')[1].split('"')[0].replace("'", "\'"))
+            temp_players.append(row.split('data-stat="player" csk="')[1].split('" >')[0])
+        else:
+            continue
+    for temp_player in temp_players:
+        if "-0" in temp_player:
+            reversed_names.append(temp_player.split("-0")[0].replace("'", "\'"))
+        else:
+            reversed_names.append(temp_player.split("0")[0].replace("'", "\'"))
+    logger.log("\t\tDone assembling list of players")
     page_time = time.time()
     logger.log("\tGathering player pages")
     with ThreadPoolExecutor(os.cpu_count()) as executor1:
@@ -40,7 +58,7 @@ def batting_constructor(year, driver_logger):
             executor2.submit(download_image, data, player_id)
     logger.log("\t\tTime = " + time_converter(time.time() - image_time))
     total_time = time_converter(time.time() - start_time)
-    logger.log("Done: time = " + total_time + '\n\n')
+    logger.log("Done downloading player images and attributes: time = " + total_time + '\n\n')
     driver_logger.log("\t\tTime = " + total_time)
 
 
@@ -72,5 +90,5 @@ def write_to_db(player_id):
     DB_Connect.close(db)
 
 
-# batting_constructor(2018, Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\"
-#                                  "dump.log"))
+batting_constructor(2018, Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\"
+                                 "dump.log"))
