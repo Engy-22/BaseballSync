@@ -64,14 +64,14 @@ def get_day_data(day, month, year):
                         try:
                             if inning.split('<a href="inning_')[1].split('.')[0].isdigit():
                                 individual_inning_url = inning.split('.xml"> ')[1].split('</a>')[0]
-                                print(innings_url + individual_inning_url)
+                                # print(innings_url + individual_inning_url)
                                 executor.submit(load_xml, innings_url + individual_inning_url,
                                                 individual_inning_url.split('_')[1].split('.xml')[0])
                         except IndexError:
                             continue
                 parse_innings()
                 clear_xmls()
-                logger.log("\t\t\tTime = " + time_converter(time.time() - game_time))
+                logger.log("\t\t\t\tTime = " + time_converter(time.time() - game_time))
         except IndexError:
             continue
         except Exception as e:
@@ -124,6 +124,6 @@ def parse_pitch(pitch, meta_data):
     swing_take = pitch.getAttribute('des="')
 
 
-# get_pitch_fx_data(2018, Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\"
-#                                "dump.log"))
+get_pitch_fx_data(2018, Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\"
+                               "dump.log"))
 # get_day_data('10', '05', '2018')
