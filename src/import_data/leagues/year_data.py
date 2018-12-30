@@ -10,12 +10,11 @@ from utilities.time_converter import time_converter
 
 pages = {}
 strings = {}
-driver_logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\driver.log")
 logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\year_data.log")
 
 
-def get_year_data(year):
-    driver_logger.log('Gathering year data')
+def get_year_data(year, driver_logger):
+    driver_logger.log('\tGathering year data')
     print("Gathering year data")
     start_time = time.time()
     logger.log('Beginning year_data download for ' + str(year) + ' || Timestamp: ' + datetime.datetime.today()\
@@ -49,7 +48,7 @@ def get_year_data(year):
     logger.log("\tdone writing to database: time = " + time_converter(time.time() - write_start))
     total_time = time_converter(time.time() - start_time)
     logger.log('year_data download completed: time = ' + total_time + '\n\n')
-    driver_logger.log('\tTime = ' + total_time + ' seconds')
+    driver_logger.log('\t\tTime = ' + total_time + ' seconds')
 
 
 def load_url(year, stat_type):
