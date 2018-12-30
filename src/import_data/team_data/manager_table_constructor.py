@@ -8,13 +8,12 @@ from utilities.Logger import Logger
 import datetime
 import time
 
-driver_logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\driver.log")
 logger = Logger('C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\'
                 'manager_table_constructor.log')
 
 
-def manager_table_constructor():
-    driver_logger.log('Gathering manager data (all-time)')
+def manager_table_constructor(driver_logger):
+    driver_logger.log('\tGathering manager data (all-time)')
     print("Gathering manager data (all-time)")
     start_time = time.time()
     logger.log('Begin populating teams table || Timestamp: ' + datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S'))
@@ -33,11 +32,12 @@ def manager_table_constructor():
                     loses = this_row.split('data-stat="L">')[1].split('<')[0]
                     executor.submit(write_to_file, '"' + manager_id + '","' + last + '","' + first + '",' + wins + ','
                                                    + loses)
-                except AttributeError:
+                except AttributeError as e:
+                    logger.log("\t\te")
                     continue
     total_time = time.time() - start_time
     logger.log('Constructing manager table completed: time = ' + time_converter(total_time))
-    driver_logger.log('\tTime = ' + time_converter(total_time))
+    driver_logger.log('\t\tTime = ' + time_converter(total_time))
 
 
 def write_to_file(data):
