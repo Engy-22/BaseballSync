@@ -44,17 +44,17 @@ def batting_constructor(year, driver_logger):
     with ThreadPoolExecutor(os.cpu_count()) as executor1:
         for player_id in player_ids:
             executor1.submit(load_url, "https://www.baseball-reference.com/players/" + player_id[0] + "/" + player_id
-                             + ".shtml", player_id)
+                                       + ".shtml", player_id)
     logger.log("\t\tTime = " + time_converter(time.time() - page_time))
     logger.log("\tExtracting player attributes")
     extraction_time = time.time()
-    if __name__ == '__main__':
-        extract_player_attributes()
+    # if __name__ == '__main__':
+    extract_player_attributes()
     logger.log('\t\tTime = ' + time_converter(time.time() - extraction_time))
     image_time = time.time()
     logger.log("\tDownloading player images")
     with ThreadPoolExecutor(os.cpu_count()) as executor2:
-        for player_id, data in player_attributes:
+        for player_id, data in player_attributes.items():
             executor2.submit(download_image, data, player_id)
     logger.log("\t\tTime = " + time_converter(time.time() - image_time))
     total_time = time_converter(time.time() - start_time)
@@ -71,15 +71,21 @@ def download_image(image_url, player_id):
 
 
 def extract_player_attributes():
-    with ProcessPoolExecutor(os.cpu_count()) as processor:
-        for player_id, page in pages:
-            processor.submit(extract, player_id, page)
+    # with ProcessPoolExecutor(os.cpu_count()) as processor:
+    for player_id, page in pages.items():
+            # processor.submit(extract, player_id, page)
+            extract(player_id, page)
 
 
 def extract(player_id, page):
-    player_attributes[player_id] = {'pic_url': str(page.find_all('img')[1]).split('src=')[1].split('/>')[0].split('"')[1],
-                                    'throwsWith': str(page).split('Throws: </strong>')[1][0],
-                                    'batsWith': str(page).split('Bats: </strong>')[1][0]}
+    try:
+        this_page = str(page)
+        player_attributes[player_id] = {'pic_url': str(page.find_all('img')[1]).split('src=')[1].split('/>')[0].split('"')[1],
+                                    'throwsWith': this_page.split('Throws: </strong>')[1][0],
+                                    'batsWith': this_page.split('Bats: </strong>')[1][0]}
+    except MemoryError as e:
+        print(len(player_attributes))
+        raise e
 
 
 def write_to_db(player_id):
