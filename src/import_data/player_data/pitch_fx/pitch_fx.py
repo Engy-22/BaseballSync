@@ -124,6 +124,6 @@ def parse_pitch(pitch, meta_data):
     swing_take = pitch.getAttribute('des="')
 
 
-get_pitch_fx_data(2018, Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\"
-                               "dump.log"))
+# get_pitch_fx_data(2018, Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\"
+#                                "dump.log"))
 # get_day_data('10', '05', '2018')
