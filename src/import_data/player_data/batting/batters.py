@@ -47,14 +47,14 @@ def batting_constructor(year, driver_logger):
     logger.log("\tExtracting player attributes and downloading player images")
     extraction_time = time.time()
     for player_id, page in pages.items():
-        extract_player_attributes(player_id, page, year, driver_logger)
+        extract_player_attributes(player_id, page)
     logger.log('\t\tTime = ' + time_converter(time.time() - extraction_time))
     total_time = time_converter(time.time() - start_time)
     logger.log("Done downloading player images and attributes: time = " + total_time + '\n\n')
     driver_logger.log("\t\tTime = " + total_time)
 
 
-def extract_player_attributes(player_id, page, year, driver_logger):
+def extract_player_attributes(player_id, page):
     try:
         for ent in page.find_all('div'):
             str_ent = str(ent)
@@ -68,11 +68,8 @@ def extract_player_attributes(player_id, page, year, driver_logger):
         urlretrieve(str(page.find_all('img')[1]).split('src=')[1].split('/>')[0].split('"')[1],
                     "C:\\Users\\Anthony Raimondo\\images\\players\\" + player_id + ".jpg")
     except MemoryError as e:
-        global pages
-        del pages
-        batting_constructor(year, driver_logger)
-        # print('Memory error: just restart this program to get the guys it missed')
-        # raise e
+        print('Memory error: just restart this program to get the guys it missed')
+        raise e
 
 
 def load_url(url, player_id):
