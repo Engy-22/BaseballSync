@@ -31,9 +31,9 @@ def driver(year, driver_log):
     team_offensive_statistics(year, driver_log)
     team_defensive_statistics(year, driver_log)
     # get_pitch_fx_data(year, driver_log)
-    # batting_constructor(year, driver_log)
-    # pitching_constructor(year, driver_log)
-    # fielding_constructor(year, driver_log)
+    batting_constructor(year, driver_log)
+    pitching_constructor(year, driver_log)
+    fielding_constructor(year, driver_log)
 
 
 if __name__ == '__main__':
