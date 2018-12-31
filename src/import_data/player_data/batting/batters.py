@@ -67,8 +67,9 @@ def extract_player_attributes(player_id, page, year, driver_logger):
                 break
         urlretrieve(str(page.find_all('img')[1]).split('src=')[1].split('/>')[0].split('"')[1],
                     "C:\\Users\\Anthony Raimondo\\images\\players\\" + player_id + ".jpg")
-    except MemoryError:
-        driver_logger.log("\t---Restarting due to memory error---")
+    except MemoryError as e:
+        global pages
+        del pages
         batting_constructor(year, driver_logger)
         # print('Memory error: just restart this program to get the guys it missed')
         # raise e
@@ -94,5 +95,5 @@ def write_to_db(player_id, player_attributes):
     DB_Connect.close(db)
 
 
-# batting_constructor(2016, Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\"
+# batting_constructor(2018, Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\"
 #                                  "dump.log"))
