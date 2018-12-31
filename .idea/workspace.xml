@@ -2,19 +2,19 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d8a74621-0067-4fd9-a532-54885cc58d7f" name="Default Changelist" comment="concurrency working finally">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/logs/import_data/ballpark_and_manager_data.log" beforeDir="false" afterPath="$PROJECT_DIR$/logs/import_data/ballpark_and_manager_data.log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/logs/import_data/batters.log" beforeDir="false" afterPath="$PROJECT_DIR$/logs/import_data/batters.log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/logs/import_data/driver.log" beforeDir="false" afterPath="$PROJECT_DIR$/logs/import_data/driver.log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/logs/import_data/dump.log" beforeDir="false" afterPath="$PROJECT_DIR$/logs/import_data/dump.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/logs/import_data/fielders.log" beforeDir="false" afterPath="$PROJECT_DIR$/logs/import_data/fielders.log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/logs/import_data/league_standings.log" beforeDir="false" afterPath="$PROJECT_DIR$/logs/import_data/league_standings.log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/logs/import_data/league_table_constructor.log" beforeDir="false" afterPath="$PROJECT_DIR$/logs/import_data/league_table_constructor.log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/logs/import_data/manager_table_constructor.log" beforeDir="false" afterPath="$PROJECT_DIR$/logs/import_data/manager_table_constructor.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/logs/import_data/pitchers.log" beforeDir="false" afterPath="$PROJECT_DIR$/logs/import_data/pitchers.log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/logs/import_data/populate_teams_table.log" beforeDir="false" afterPath="$PROJECT_DIR$/logs/import_data/populate_teams_table.log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/logs/import_data/team_defensive_statistics.log" beforeDir="false" afterPath="$PROJECT_DIR$/logs/import_data/team_defensive_statistics.log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/logs/import_data/team_offensive_statistics.log" beforeDir="false" afterPath="$PROJECT_DIR$/logs/import_data/team_offensive_statistics.log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/logs/import_data/year_data.log" beforeDir="false" afterPath="$PROJECT_DIR$/logs/import_data/year_data.log" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/import_data/player_data/batting/batters.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/import_data/player_data/batting/batters.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -37,7 +37,7 @@
           <entry key="HTML" value="1" />
           <entry key="Image" value="2" />
           <entry key="PLAIN_TEXT" value="64" />
-          <entry key="Python" value="147" />
+          <entry key="Python" value="149" />
           <entry key="XML" value="3" />
         </counts>
       </usages-collector>
@@ -58,29 +58,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/logs/import_data/driver.log">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="340">
-              <caret line="20" selection-start-line="20" selection-end-line="20" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/logs/import_data/batters.log">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="119">
-              <caret line="7" selection-start-line="7" selection-end-line="7" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/import_data/driver.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="304">
-              <caret line="52" lean-forward="true" selection-start-line="52" selection-end-line="52" />
+            <state relative-caret-position="151">
+              <caret line="37" lean-forward="true" selection-start-line="37" selection-end-line="37" />
               <folding>
                 <element signature="e#0#126#1" />
               </folding>
@@ -88,7 +70,7 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/import_data/player_data/batting/batters.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="321">
@@ -103,8 +85,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/background/to_do_list.txt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="262">
-              <caret line="82" column="81" lean-forward="true" selection-start-line="82" selection-start-column="81" selection-end-line="82" selection-end-column="81" />
+            <state relative-caret-position="412">
+              <caret line="103" lean-forward="true" selection-start-line="103" selection-end-line="103" />
             </state>
           </provider>
         </entry>
@@ -114,6 +96,15 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="68">
               <caret line="4" lean-forward="true" selection-start-line="4" selection-end-line="4" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/logs/import_data/driver.log">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="368">
+              <caret line="47" lean-forward="true" selection-start-line="47" selection-end-line="47" />
             </state>
           </provider>
         </entry>
@@ -270,6 +261,14 @@
               <item name="import_data" type="462c0819:PsiDirectoryNode" />
               <item name="player_data" type="462c0819:PsiDirectoryNode" />
             </path>
+            <path>
+              <item name="baseball-sync" type="b2602c69:ProjectViewProjectNode" />
+              <item name="baseball-sync" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="import_data" type="462c0819:PsiDirectoryNode" />
+              <item name="player_data" type="462c0819:PsiDirectoryNode" />
+              <item name="fielding" type="462c0819:PsiDirectoryNode" />
+            </path>
           </expand>
           <select />
         </subPane>
@@ -308,7 +307,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.batters">
+  <component name="RunManager" selected="Python.driver">
     <configuration name="batters" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="baseball-sync" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -423,8 +422,8 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.batters" />
         <item itemvalue="Python.driver" />
+        <item itemvalue="Python.batters" />
         <item itemvalue="Python.clear_logs" />
         <item itemvalue="Python.reset_database" />
         <item itemvalue="Python.fielders" />
@@ -498,12 +497,12 @@
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.15069398" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.15069398" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.3286119" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.4990086" visible="true" weight="0.3286119" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.4990086" visible="true" weight="0.3286119" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -774,33 +773,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/import_data/player_data/fielding/fielders.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="106">
-          <caret line="17" column="30" selection-start-line="17" selection-start-column="30" selection-end-line="17" selection-end-column="30" />
-          <folding>
-            <element signature="e#0#9#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/import_data/player_data/pitching/pitchers.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="289">
-          <caret line="17" column="30" selection-start-line="17" selection-start-column="30" selection-end-line="17" selection-end-column="30" />
-          <folding>
-            <element signature="e#0#9#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/background/to_do_list.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="262">
-          <caret line="82" column="81" lean-forward="true" selection-start-line="82" selection-start-column="81" selection-end-line="82" selection-end-column="81" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/background/table_definitions.txt">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="68">
@@ -808,27 +780,24 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/background/to_do_list.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="412">
+          <caret line="103" lean-forward="true" selection-start-line="103" selection-end-line="103" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/logs/import_data/batters.log">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="119">
-          <caret line="7" selection-start-line="7" selection-end-line="7" />
+        <state relative-caret-position="317">
+          <caret line="27" lean-forward="true" selection-start-line="27" selection-end-line="27" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/logs/import_data/driver.log">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="340">
-          <caret line="20" selection-start-line="20" selection-end-line="20" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/import_data/driver.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="304">
-          <caret line="52" lean-forward="true" selection-start-line="52" selection-end-line="52" />
-          <folding>
-            <element signature="e#0#126#1" />
-          </folding>
+        <state relative-caret-position="368">
+          <caret line="47" lean-forward="true" selection-start-line="47" selection-end-line="47" />
         </state>
       </provider>
     </entry>
@@ -838,6 +807,36 @@
           <caret line="96" lean-forward="true" selection-start-line="96" selection-end-line="96" />
           <folding>
             <element signature="e#0#9#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/import_data/player_data/pitching/pitchers.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="321">
+          <caret line="95" lean-forward="true" selection-start-line="95" selection-end-line="95" />
+          <folding>
+            <element signature="e#0#9#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/import_data/player_data/fielding/fielders.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="321">
+          <caret line="95" lean-forward="true" selection-start-line="95" selection-end-line="95" />
+          <folding>
+            <element signature="e#0#9#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/import_data/driver.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="151">
+          <caret line="37" lean-forward="true" selection-start-line="37" selection-end-line="37" />
+          <folding>
+            <element signature="e#0#126#1" />
           </folding>
         </state>
       </provider>
