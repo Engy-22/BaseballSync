@@ -1,17 +1,27 @@
-Downloading batter 2018 data || Timestamp: 2018-12-31 11:11:53
+Downloading batter 2018 data || Timestamp: 2018-12-31 13:51:57
 	Assembling list of players
 		Done assembling list of players
 	Gathering player pages
-		Time = 20 minutes 10.47 seconds
+		Time = 14 minutes 30.76 seconds
 	Extracting player attributes and downloading player images
 
-Downloading batter 2018 data || Timestamp: 2018-12-31 11:40:30
+Downloading batter 2018 data || Timestamp: 2018-12-31 14:15:31
 	Assembling list of players
 		Done assembling list of players
 	Gathering player pages
-		Time = 2 minutes 23.9 seconds
+		Time = 7 minutes 7.82 seconds
 	Extracting player attributes and downloading player images
-		Time = 1 minute 20.61 seconds
-Done downloading player images and attributes: time = 3 minutes 52.92 seconds
+		Time = 5 minutes 22.56 seconds
+Done downloading player images and attributes: time = 12 minutes 35.01 seconds
+
+
+Downloading batter 2018 data || Timestamp: 2018-12-31 14:30:23
+	Assembling list of players
+		Done assembling list of players
+	Gathering player pages
+		Time = 2.33 seconds
+	Extracting player attributes and downloading player images
+		Time = 0.0 seconds
+Done downloading player images and attributes: time = 6.11 seconds
 
 
