@@ -16,7 +16,8 @@ logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\lo
 
 
 def batting_constructor(year, driver_logger):
-    driver_logger.log("\tDownloading player images and attributes")
+    print('Downloading batter images and attributes')
+    driver_logger.log("\tDownloading batter images and attributes")
     start_time = time.time()
     logger.log("Downloading batter " + str(year) + " data || Timestamp: " + datetime.datetime.today()\
                .strftime('%Y-%m-%d %H:%M:%S'))
@@ -46,14 +47,14 @@ def batting_constructor(year, driver_logger):
     logger.log("\tExtracting player attributes and downloading player images")
     extraction_time = time.time()
     for player_id, page in pages.items():
-        extract_player_attributes(player_id, page)
+        extract_player_attributes(player_id, page, year, driver_logger)
     logger.log('\t\tTime = ' + time_converter(time.time() - extraction_time))
     total_time = time_converter(time.time() - start_time)
     logger.log("Done downloading player images and attributes: time = " + total_time + '\n\n')
     driver_logger.log("\t\tTime = " + total_time)
 
 
-def extract_player_attributes(player_id, page):
+def extract_player_attributes(player_id, page, year, driver_logger):
     try:
         for ent in page.find_all('div'):
             str_ent = str(ent)
@@ -66,9 +67,11 @@ def extract_player_attributes(player_id, page):
                 break
         urlretrieve(str(page.find_all('img')[1]).split('src=')[1].split('/>')[0].split('"')[1],
                     "C:\\Users\\Anthony Raimondo\\images\\players\\" + player_id + ".jpg")
-    except MemoryError as e:
-        print('Memory error: just restart this program to get the guys it missed')
-        raise e
+    except MemoryError:
+        driver_logger.log("\t---Restarting due to memory error---")
+        batting_constructor(year, driver_logger)
+        # print('Memory error: just restart this program to get the guys it missed')
+        # raise e
 
 
 def load_url(url, player_id):
@@ -87,9 +90,9 @@ def write_to_db(player_id, player_attributes):
     db, cursor = DB_Connect.grab("baseballData")
     if len(DB_Connect.read(cursor, 'select * from players where playerid = "' + player_id + '";')) == 0:
         DB_Connect.write(db, cursor, 'insert into players (playerid ' + fields + ') values ("' + player_id + values
-                         + '");')
+                                     + '");')
     DB_Connect.close(db)
 
 
-batting_constructor(2018, Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\"
-                                 "dump.log"))
+# batting_constructor(2016, Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\"
+#                                  "dump.log"))
