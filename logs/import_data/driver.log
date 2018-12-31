@@ -1,0 +1,47 @@
+Begin Driver || Timestamp: 2018-12-31 13:49:56
+	Getting most recent year listed in the database
+	Populating leagues table (all-time)
+		Populating leagues table completed
+	Gathering manager data (all-time)
+		Time = 43.46 seconds
+	Populating teams table
+		Time = 3.59 seconds
+	Gathering year data
+		Time = 9.06 seconds seconds
+	Gathering ballpark and manager data
+		Time = 39.76 seconds
+	Adding to team_years (standings)
+		Time = 4.55 seconds
+	Gathering team offensive statistics
+		Time = 8.07 seconds
+	Gathering team defensive statistics
+		Time = 11.07 seconds
+	Downloading batter images and attributes
+
+Begin Driver || Timestamp: 2018-12-31 14:29:35
+	Getting most recent year listed in the database
+	Populating leagues table (all-time)
+		Populating leagues table completed
+	Gathering manager data (all-time)
+		Time = 5.08 seconds
+	Populating teams table
+		Time = 0.06 seconds
+	Gathering year data
+		Time = 10.79 seconds seconds
+	Gathering ballpark and manager data
+		Time = 18.91 seconds
+	Adding to team_years (standings)
+		Time = 0.87 seconds
+	Gathering team offensive statistics
+		Time = 4.69 seconds
+	Gathering team defensive statistics
+		Time = 7.4 seconds
+	Downloading batter images and attributes
+		Time = 6.11 seconds
+	Downloading pitcher images and attributes
+		Time = 1 minute 13.16 seconds
+	Downloading fielder images and attributes
+		Time = 7.45 seconds
+Driver complete: time = 2 minutes 14.64 seconds
+
+
