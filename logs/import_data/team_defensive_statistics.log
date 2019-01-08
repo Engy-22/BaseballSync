@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 Downloading team defensive data for 2018 || Timestamp: 2019-01-07 23:27:46
+=======
+Downloading team defensive data for 2018 || Timestamp: 2019-01-08 15:15:41
+>>>>>>> develop-import-data
 	Writing ARI data to database
 	Writing ATL data to database
 	Writing BAL data to database
@@ -59,6 +63,10 @@ Downloading team defensive data for 2018 || Timestamp: 2019-01-07 23:27:46
 	Writing TEX data to database
 	Writing TOR data to database
 	Writing WSN data to database
+<<<<<<< HEAD
 Done donwloading team defensive data for 2018: time = 12.78 seconds
+=======
+Done donwloading team defensive data for 2018: time = 12.73 seconds
+>>>>>>> develop-import-data
 
 
