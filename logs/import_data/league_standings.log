@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 Begin organizing league standings for 2018 || Timestamp: 2019-01-07 23:27:34
+=======
+Begin organizing league standings for 2018 || Timestamp: 2019-01-08 15:15:29
+>>>>>>> develop-import-data
 	Writing BOS to team_years
 	Writing HOU to team_years
 	Writing NYY to team_years
@@ -29,6 +33,10 @@ Begin organizing league standings for 2018 || Timestamp: 2019-01-07 23:27:34
 	Writing CHW to team_years
 	Writing KCR to team_years
 	Writing BAL to team_years
+<<<<<<< HEAD
 Done organizing league standings for 2018: time = 3.83 seconds
+=======
+Done organizing league standings for 2018: time = 4.92 seconds
+>>>>>>> develop-import-data
 
 
