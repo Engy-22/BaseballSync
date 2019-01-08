@@ -1,0 +1,12 @@
+Downloading pitcher 2018 data || Timestamp: 2019-01-08 15:30:47
+	Assembling list of players
+		Done assembling list of players
+	Calculating pitcher ratios
+		Time = 2.59 seconds
+	Parsing player pages, downloading images, and extracting player attributes
+		Time = 2 minutes 44.97 seconds
+Done downloading player images and attributes: time = 2 minutes 51.65 seconds
+
+
+Downloading pitcher 2018 data || Timestamp: 2019-01-08 16:01:20
+	Assembling list of players
