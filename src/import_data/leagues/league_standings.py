@@ -133,9 +133,8 @@ def write_ws_data(year, ws_data):
         db, cursor = DB_Connect.grab("baseballData")
         champ_league = str(DB_Connect.read(cursor, 'select league from team_years where teamId = "'
                                                    + ws_data['ws_champ'] + '" and year = ' + str(year) + ';')[0][0])
-        runnerup_league = str(DB_Connect.read(cursor, 'select league from team_years where teamId = "'
-                                                      + ws_data['ws_runnerup'] + '" and year = ' + str(year)
-                                                      + ';')[0][0])
+        runnerup_league = str(DB_Connect.read(cursor, 'select league from team_years where teamId = "' + ws_data
+                                                      ['ws_runnerup'] + '" and year = ' + str(year) + ';')[0][0])
         DB_Connect.write(db, cursor, 'update years set ws_champ = "' + ws_data['ws_champ'] + '", ' + champ_league
                                      + '_champ = "' + ws_data['ws_champ'] + '", ' + runnerup_league + '_champ = "'
                                      + ws_data['ws_runnerup'] + '" where year = ' + str(year) + ';')
@@ -150,8 +149,8 @@ def get_league_division(divisions, team_key, year):
                 if year > 1968:
                     return "'" + div[:2] + "','" + div[3] + "'"
                 else:
-                    return "'" + div[:2] + "','" + 'N'
-        except KeyError as e:
+                    return "'" + div[:2] + "',N"
+        except KeyError:
             continue
 
 
