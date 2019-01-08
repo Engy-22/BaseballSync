@@ -1,6 +1,19 @@
+<<<<<<< HEAD
 Downloading batter 2018 data || Timestamp: 2019-01-07 23:27:59
 	Assembling list of players
 		Done assembling list of players
 	Calculating batter ratios
 		Time = 3.64 seconds
 	Parsing player pages, downloading images, and extracting player attributes
+=======
+Downloading batter 2018 data || Timestamp: 2019-01-08 15:15:54
+	Assembling list of players
+		Done assembling list of players
+	Calculating batter ratios
+		Time = 2.49 seconds
+	Parsing player pages, downloading images, and extracting player attributes
+		Time = 14 minutes 49.62 seconds
+Done downloading player images and attributes: time = 14 minutes 53.32 seconds
+
+
+>>>>>>> develop-import-data
