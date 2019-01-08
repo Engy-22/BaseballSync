@@ -13,23 +13,27 @@ logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\lo
 
 
 def team_batting_order_constructor(year, driver_logger):
-    print("getting team batting order data")
-    driver_logger.log("\tGetting team batting order data")
-    start_time = time.time()
-    logger.log("Downloading " + str(year) + " team batting order data || Timestamp: " + datetime.datetime.today()\
-               .strftime('%Y-%m-%d %H:%M:%S'))
-    with open("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\background\\yearTeams.txt", 'r') as year_file:
-        with ThreadPoolExecutor(os.cpu_count()) as executor:
-            for line in year_file:
-                if str(year) in line:
-                    temp_line = line.split(',')[1:-1]
-                    for team in temp_line:
-                        if "TOT" not in team:
-                            executor.submit(get_hitters, year, team.split(';')[0], team.split(';')[1])
-                    break
-    total_time = time_converter(time.time() - start_time)
-    logger.log("Done downloading team batting order data: time = " + total_time + '\n\n')
-    driver_logger.log("\t\tTime = " + total_time)
+    if year >= 1908:
+        print("getting team batting order data")
+        driver_logger.log("\tGetting team batting order data")
+        start_time = time.time()
+        logger.log("Downloading " + str(year) + " team batting order data || Timestamp: " + datetime.datetime.today()\
+                   .strftime('%Y-%m-%d %H:%M:%S'))
+        with open("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\background\\yearTeams.txt", 'r') as year_file:
+            with ThreadPoolExecutor(os.cpu_count()) as executor:
+                for line in year_file:
+                    if str(year) in line:
+                        temp_line = line.split(',')[1:-1]
+                        for team in temp_line:
+                            if "TOT" not in team:
+                                executor.submit(get_hitters, year, team.split(';')[0], team.split(';')[1])
+                        break
+        total_time = time_converter(time.time() - start_time)
+        logger.log("Done downloading team batting order data: time = " + total_time + '\n\n')
+        driver_logger.log("\t\tTime = " + total_time)
+    else:
+        logger.log("No team batting order data to download. (before 1908).")
+        driver_logger.log("\tNo team batting order data to download. (before 1908).")
 
 
 def get_hitters(year, team_id, team_key):
