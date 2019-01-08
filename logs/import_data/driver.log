@@ -1,21 +1,46 @@
-Begin Driver || Timestamp: 2019-01-07 23:26:13
+Begin Driver || Timestamp: 2019-01-08 15:13:30
 	Getting most recent year listed in the database
 	Populating leagues table (all-time)
 		Populating leagues table completed
 	Gathering manager data (all-time)
-		Time = 32.4 seconds
-	
+		Time = 32.54 seconds
 2018
 	Populating teams table
-		Time = 2.01 seconds
+		Time = 2.5 seconds
 	Gathering year data
-		Time = 9.25 seconds seconds
+		Time = 6.52 seconds seconds
 	Gathering ballpark and manager data
-		Time = 37.05 seconds
+		Time = 1 minute 16.93 seconds
 	Adding to team_years (standings)
-		Time = 3.83 seconds
+		Time = 4.92 seconds
 	Gathering team offensive statistics
+<<<<<<< HEAD
 		Time = 8.12 seconds
 	Gathering team defensive statistics
 		Time = 12.78 seconds
 	Downloading batter images and attributes
+=======
+		Time = 7.15 seconds
+	Gathering team defensive statistics
+		Time = 12.73 seconds
+	Downloading batter images and attributes
+		Time = 14 minutes 53.32 seconds
+	Downloading pitcher images and attributes
+		Time = 2 minutes 51.65 seconds
+	Downloading fielder images and attributes
+		Time = 2 minutes 11.56 seconds
+	getting team fielding positions
+		Time = 2 minutes 32.46 seconds
+	Getting team batting order data
+		Time = 6 minutes 25.28 seconds
+	Getting team schedules and pitching rotations
+		Time = 12 minutes 30.04 seconds
+	Adding primary and secondary positions
+		Time = 2 minutes 31.9 seconds
+	Storing hitter tendencies
+		Time = 1 minute 29.38 seconds
+	Downloading pitcher images and attributes
+
+
+
+>>>>>>> develop-import-data
