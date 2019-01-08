@@ -20,9 +20,12 @@ from import_data.player_data.pitch_fx import pitch_fx
 from import_data.player_data.batting.batters import batting_constructor
 from import_data.player_data.pitching.pitchers import pitching_constructor
 from import_data.player_data.fielding.fielders import fielding_constructor
+from import_data.team_data.team_fielding_file_constructor import team_fielding_file_constructor
 
 
 def driver(year, driver_log):
+    driver_log.log("\t\n" + str(year))
+    driver_time = time.time()
     print('\n\n' + str(year))
     populate_teams_table(year, driver_log)
     get_year_data(year, driver_log)
@@ -34,6 +37,8 @@ def driver(year, driver_log):
     batting_constructor(year, driver_log)
     pitching_constructor(year, driver_log)
     fielding_constructor(year, driver_log)
+    team_fielding_file_constructor(year, driver_log)
+    driver_log.log('Time taken to download ' + str(year) + ' data: ' + time_converter(time.time() - driver_time) + '\n')
 
 
 if __name__ == '__main__':
@@ -46,7 +51,8 @@ if __name__ == '__main__':
         most_recent_year = 1876
     league_table_constructor(main_logger)
     manager_table_constructor(main_logger)
-    driver(2018, main_logger)
+    for year in range(2018, 2017, -1):
+        driver(year, main_logger)
     # if most_recent_year > 1997:
     #     comparisons_driver()
     # hof_finder()
