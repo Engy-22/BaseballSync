@@ -11,7 +11,6 @@ from utilities.time_converter import time_converter
 from utilities.Logger import Logger
 
 data = {}
-
 logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\pitchers.log")
 
 
