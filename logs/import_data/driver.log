@@ -1,0 +1,21 @@
+Begin Driver || Timestamp: 2019-01-07 23:26:13
+	Getting most recent year listed in the database
+	Populating leagues table (all-time)
+		Populating leagues table completed
+	Gathering manager data (all-time)
+		Time = 32.4 seconds
+	
+2018
+	Populating teams table
+		Time = 2.01 seconds
+	Gathering year data
+		Time = 9.25 seconds seconds
+	Gathering ballpark and manager data
+		Time = 37.05 seconds
+	Adding to team_years (standings)
+		Time = 3.83 seconds
+	Gathering team offensive statistics
+		Time = 8.12 seconds
+	Gathering team defensive statistics
+		Time = 12.78 seconds
+	Downloading batter images and attributes
