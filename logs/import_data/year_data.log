@@ -1,11 +1,21 @@
+<<<<<<< HEAD
 Beginning year_data download for 2018 || Timestamp: 2019-01-07 23:26:48
 Getting date of opening day
 	Complete (opening day): time = 3.23 seconds
+=======
+Beginning year_data download for 2018 || Timestamp: 2019-01-08 15:14:06
+Getting date of opening day
+	Complete (opening day): time = 2.23 seconds
+>>>>>>> develop-import-data
 making HTTP requests for year data
 downloading batting data
 downloading pitching data
 downloading fielding data
+<<<<<<< HEAD
 	done making HTTP requests: time = 4.92 seconds
+=======
+	done making HTTP requests: time = 3.13 seconds
+>>>>>>> develop-import-data
 Assembling year batting stats
 	Completed (batting): time = 0.01 seconds
 Assembling year pitching stats
@@ -16,7 +26,12 @@ writing to database
 writing batting stats to database
 writing pitching stats to database
 writing fielding stats to database
+<<<<<<< HEAD
 	done writing to database: time = 0.21 seconds
 year_data download completed: time = 9.25 seconds
+=======
+	done writing to database: time = 0.29 seconds
+year_data download completed: time = 6.52 seconds
+>>>>>>> develop-import-data
 
 
