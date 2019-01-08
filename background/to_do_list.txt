@@ -102,4 +102,3 @@
     *Delete all images that aren't of the player.
 
 -Restart everything with concurrency, and make it clean in terms of folder hierarchy.
-    *rewrite team_fielding_file_constructor and team_batting_order_constructor for optimal execution
