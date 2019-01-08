@@ -1,4 +1,4 @@
-Beginning ballpark and manager data download for 2018 || Timestamp: 2019-01-07 23:26:57
+Beginning ballpark and manager data download for 2018 || Timestamp: 2019-01-08 15:14:12
 Begin downloading team pages
 	Downloading CHC data
 	Downloading CIN data
@@ -30,7 +30,7 @@ Begin downloading team pages
 	Downloading OAK data
 	Downloading SEA data
 	Downloading TEX data
-	Done downloading team pages: time = 18.4 seconds
+	Done downloading team pages: time = 57.86 seconds
 Calculating and writing ballpark numbers and downloading images
 	Calculating home numbers and downloading manager data: CHC
 	Calculating home numbers and downloading manager data: CIN
@@ -62,7 +62,7 @@ Calculating and writing ballpark numbers and downloading images
 	Calculating home numbers and downloading manager data: OAK
 	Calculating home numbers and downloading manager data: SEA
 	Calculating home numbers and downloading manager data: TEX
-	Done calculating and writing ballpark numbers and downloading manager data: time = 18.65 seconds
-Ballpark and manager data download completed: time = 37.05 seconds
+	Done calculating and writing ballpark numbers and downloading manager data: time = 19.06 seconds
+Ballpark and manager data download completed: time = 1 minute 16.93 seconds
 
 
