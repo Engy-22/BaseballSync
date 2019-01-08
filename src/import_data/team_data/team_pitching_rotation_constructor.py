@@ -30,8 +30,6 @@ def team_pitching_rotation_constructor(year, driver_logger):
                         for team in temp_line:
                             if "TOT" not in team:
                                 executor.submit(load_url, year, team.split(';')[0], team.split(';')[1])
-                                # get_pitchers(year, team.split(';')[0], team.split(';')[1])
-                                # executor.submit(get_pitchers, year, team.split(';')[0], team.split(';')[1])
                         break
         logger.log("\t\tTime = " + time_converter(time.time() - start_time))
         logger.log("\tOrganizing schedules and pitching rotations")
@@ -40,7 +38,7 @@ def team_pitching_rotation_constructor(year, driver_logger):
         logger.log("\t\t\tTime = " + time_converter(time.time() - write_time))
         total_time = time_converter(time.time() - start_time)
         logger.log("Done downloading team pitching rotation data: time = " + total_time + '\n\n')
-        driver_logger.log("\t\t\tTime = " + total_time)
+        driver_logger.log("\t\tTime = " + total_time)
     else:
         logger.log("No team pitching rotation data to download. (before 1908).")
         driver_logger.log("\tNo team pitching rotation data to download. (before 1908).")
