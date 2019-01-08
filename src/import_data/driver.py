@@ -22,10 +22,16 @@ from import_data.player_data.pitching.pitchers import pitching_constructor
 from import_data.player_data.fielding.fielders import fielding_constructor
 from import_data.team_data.team_fielding_file_constructor import team_fielding_file_constructor
 from import_data.team_data.team_batting_order_constructor import team_batting_order_constructor
+from import_data.team_data.team_pitching_rotation_constructor import team_pitching_rotation_constructor
+from import_data.player_data.fielding.primary_and_secondary_positions import primary_and_secondary_positions
+from import_data.player_data.batting.hitter_tendencies import hitter_tendencies
+from import_data.player_data.pitching.pitcher_tendencies import pitcher_tendencies
+from import_data.player_data.batting.hitter_spray_chart_constructor import hitter_spray_chart_constructor
+from import_data.player_data.pitching.pitching_spray_chart_constructor import pitcher_spray_chart_constructor
 
 
 def driver(year, driver_log):
-    driver_log.log("\t\n" + str(year))
+    driver_log.log(str(year))
     driver_time = time.time()
     print('\n\n' + str(year))
     populate_teams_table(year, driver_log)
@@ -40,6 +46,12 @@ def driver(year, driver_log):
     fielding_constructor(year, driver_log)
     team_fielding_file_constructor(year, driver_log)
     team_batting_order_constructor(year, driver_log)
+    team_pitching_rotation_constructor(year, driver_log)
+    primary_and_secondary_positions(year, driver_log)
+    hitter_tendencies(year, driver_log)
+    pitcher_tendencies(year, driver_log)
+    hitter_spray_chart_constructor(year, driver_log)
+    pitcher_spray_chart_constructor(year, driver_log)
     driver_log.log('Time taken to download ' + str(year) + ' data: ' + time_converter(time.time() - driver_time) + '\n')
 
 
@@ -58,4 +70,4 @@ if __name__ == '__main__':
     # if most_recent_year > 1997:
     #     comparisons_driver()
     # hof_finder()
-    main_logger.log('Driver complete: time = ' + time_converter(time.time() - start_time) + '\n\n')
+    main_logger.log('Driver complete: time = ' + time_converter(time.time() - start_time) + '\n\n\n')
