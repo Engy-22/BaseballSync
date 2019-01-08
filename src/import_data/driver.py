@@ -21,6 +21,7 @@ from import_data.player_data.batting.batters import batting_constructor
 from import_data.player_data.pitching.pitchers import pitching_constructor
 from import_data.player_data.fielding.fielders import fielding_constructor
 from import_data.team_data.team_fielding_file_constructor import team_fielding_file_constructor
+from import_data.team_data.team_batting_order_constructor import team_batting_order_constructor
 
 
 def driver(year, driver_log):
@@ -38,6 +39,7 @@ def driver(year, driver_log):
     pitching_constructor(year, driver_log)
     fielding_constructor(year, driver_log)
     team_fielding_file_constructor(year, driver_log)
+    team_batting_order_constructor(year, driver_log)
     driver_log.log('Time taken to download ' + str(year) + ' data: ' + time_converter(time.time() - driver_time) + '\n')
 
 
