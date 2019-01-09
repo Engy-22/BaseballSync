@@ -102,3 +102,6 @@
     *Delete all images that aren't of the player.
 
 -Restart everything with concurrency, and make it clean in terms of folder hierarchy.
+    *maybe decrease the amount which standard deviation affects team rankings in overall team ranker.
+    *investigate deadlock situation in tendency constructors
+        -ex.) 'Deadlock found when trying to get lock; try restarting transaction'
