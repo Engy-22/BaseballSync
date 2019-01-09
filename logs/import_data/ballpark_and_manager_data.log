@@ -1,8 +1,18 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> develop
 Beginning ballpark and manager data download for 2018 || Timestamp: 2019-01-07 23:26:57
 =======
 Beginning ballpark and manager data download for 2018 || Timestamp: 2019-01-08 15:14:12
 >>>>>>> develop-import-data
+<<<<<<< HEAD
+=======
+=======
+Beginning ballpark and manager data download for 2016 || Timestamp: 2019-01-09 14:54:23
+>>>>>>> develop-import-data
+>>>>>>> develop
 Begin downloading team pages
 	Downloading CHC data
 	Downloading CIN data
@@ -35,10 +45,20 @@ Begin downloading team pages
 	Downloading SEA data
 	Downloading TEX data
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> develop
 	Done downloading team pages: time = 18.4 seconds
 =======
 	Done downloading team pages: time = 57.86 seconds
 >>>>>>> develop-import-data
+<<<<<<< HEAD
+=======
+=======
+	Done downloading team pages: time = 52.62 seconds
+>>>>>>> develop-import-data
+>>>>>>> develop
 Calculating and writing ballpark numbers and downloading images
 	Calculating home numbers and downloading manager data: CHC
 	Calculating home numbers and downloading manager data: CIN
@@ -71,11 +91,90 @@ Calculating and writing ballpark numbers and downloading images
 	Calculating home numbers and downloading manager data: SEA
 	Calculating home numbers and downloading manager data: TEX
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> develop
 	Done calculating and writing ballpark numbers and downloading manager data: time = 18.65 seconds
 Ballpark and manager data download completed: time = 37.05 seconds
 =======
 	Done calculating and writing ballpark numbers and downloading manager data: time = 19.06 seconds
 Ballpark and manager data download completed: time = 1 minute 16.93 seconds
 >>>>>>> develop-import-data
+<<<<<<< HEAD
+=======
+=======
+	Done calculating and writing ballpark numbers and downloading manager data: time = 17.62 seconds
+Ballpark and manager data download completed: time = 1 minute 10.24 seconds
+
+
+Beginning ballpark and manager data download for 2017 || Timestamp: 2019-01-09 16:11:01
+Begin downloading team pages
+	Downloading CHC data
+	Downloading CIN data
+	Downloading MIL data
+	Downloading PIT data
+	Downloading STL data
+	Downloading ATL data
+	Downloading MIA data
+	Downloading NYM data
+	Downloading PHI data
+	Downloading WSN data
+	Downloading ARI data
+	Downloading COL data
+	Downloading LAD data
+	Downloading SDP data
+	Downloading SFG data
+	Downloading CHW data
+	Downloading CLE data
+	Downloading DET data
+	Downloading KCR data
+	Downloading MIN data
+	Downloading BAL data
+	Downloading BOS data
+	Downloading NYY data
+	Downloading TBR data
+	Downloading TOR data
+	Downloading HOU data
+	Downloading LAA data
+	Downloading OAK data
+	Downloading SEA data
+	Downloading TEX data
+	Done downloading team pages: time = 17.35 seconds
+Calculating and writing ballpark numbers and downloading images
+	Calculating home numbers and downloading manager data: CHC
+	Calculating home numbers and downloading manager data: CIN
+	Calculating home numbers and downloading manager data: MIL
+	Calculating home numbers and downloading manager data: PIT
+	Calculating home numbers and downloading manager data: STL
+	Calculating home numbers and downloading manager data: ATL
+	Calculating home numbers and downloading manager data: MIA
+	Calculating home numbers and downloading manager data: NYM
+	Calculating home numbers and downloading manager data: PHI
+	Calculating home numbers and downloading manager data: WSN
+	Calculating home numbers and downloading manager data: ARI
+	Calculating home numbers and downloading manager data: COL
+	Calculating home numbers and downloading manager data: LAD
+	Calculating home numbers and downloading manager data: SDP
+	Calculating home numbers and downloading manager data: SFG
+	Calculating home numbers and downloading manager data: CHW
+	Calculating home numbers and downloading manager data: CLE
+	Calculating home numbers and downloading manager data: DET
+	Calculating home numbers and downloading manager data: KCR
+	Calculating home numbers and downloading manager data: MIN
+	Calculating home numbers and downloading manager data: BAL
+	Calculating home numbers and downloading manager data: BOS
+	Calculating home numbers and downloading manager data: NYY
+	Calculating home numbers and downloading manager data: TBR
+	Calculating home numbers and downloading manager data: TOR
+	Calculating home numbers and downloading manager data: HOU
+	Calculating home numbers and downloading manager data: LAA
+	Calculating home numbers and downloading manager data: OAK
+	Calculating home numbers and downloading manager data: SEA
+	Calculating home numbers and downloading manager data: TEX
+	Done calculating and writing ballpark numbers and downloading manager data: time = 15.75 seconds
+Ballpark and manager data download completed: time = 33.1 seconds
+>>>>>>> develop-import-data
+>>>>>>> develop
 
 
