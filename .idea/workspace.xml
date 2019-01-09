@@ -3,6 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="d8a74621-0067-4fd9-a532-54885cc58d7f" name="Default Changelist" comment="concurrency working finally">
 <<<<<<< HEAD
+<<<<<<< HEAD
       <change afterPath="$PROJECT_DIR$/logs/import_data/hitter_spray_chart_constructor.log" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/logs/import_data/hitter_tendecies.log" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/logs/import_data/pitcher_tendencies.log" afterDir="false" />
@@ -55,6 +56,9 @@
       <change beforePath="$PROJECT_DIR$/src/import_data/team_data/team_pitching_rotation_constructor.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/import_data/team_data/team_pitching_rotation_constructor.py" afterDir="false" />
 =======
       <change beforePath="$PROJECT_DIR$/src/utilities/get_most_recent_year.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/utilities/get_most_recent_year.py" afterDir="false" />
+>>>>>>> develop
+=======
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
 >>>>>>> develop
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -220,6 +224,7 @@
             <state relative-caret-position="326">
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
               <caret line="61" lean-forward="true" selection-start-line="61" selection-end-line="61" />
 >>>>>>> develop
 =======
@@ -227,6 +232,9 @@
 >>>>>>> develop
 =======
               <caret line="83" lean-forward="true" selection-start-line="83" selection-end-line="83" />
+>>>>>>> develop
+=======
+              <caret line="83" selection-start-line="83" selection-end-line="83" />
 >>>>>>> develop
               <folding>
                 <element signature="e#0#126#1" />
@@ -353,7 +361,11 @@
         <entry file="file://$PROJECT_DIR$/logs/import_data/driver.log">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="549">
+<<<<<<< HEAD
               <caret line="104" lean-forward="true" selection-start-line="104" selection-end-line="104" />
+>>>>>>> develop
+=======
+              <caret line="104" selection-start-line="104" selection-end-line="104" />
 >>>>>>> develop
             </state>
           </provider>
@@ -376,7 +388,11 @@
               <caret line="104" column="100" selection-start-line="104" selection-start-column="100" selection-end-line="104" selection-end-column="100" />
 =======
             <state relative-caret-position="386">
+<<<<<<< HEAD
               <caret line="107" lean-forward="true" selection-start-line="107" selection-end-line="107" />
+>>>>>>> develop
+=======
+              <caret line="107" selection-start-line="107" selection-end-line="107" />
 >>>>>>> develop
             </state>
           </provider>
@@ -1641,7 +1657,7 @@
     <entry file="file://$PROJECT_DIR$/logs/import_data/driver.log">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="549">
-          <caret line="104" lean-forward="true" selection-start-line="104" selection-end-line="104" />
+          <caret line="104" selection-start-line="104" selection-end-line="104" />
         </state>
       </provider>
     </entry>
@@ -1651,7 +1667,11 @@
     <entry file="file://$PROJECT_DIR$/background/to_do_list.txt">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="386">
+<<<<<<< HEAD
           <caret line="107" lean-forward="true" selection-start-line="107" selection-end-line="107" />
+>>>>>>> develop
+=======
+          <caret line="107" selection-start-line="107" selection-end-line="107" />
 >>>>>>> develop
         </state>
       </provider>
@@ -1660,9 +1680,13 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="326">
 <<<<<<< HEAD
+<<<<<<< HEAD
           <caret line="73" lean-forward="true" selection-start-line="73" selection-end-line="73" />
 =======
           <caret line="83" lean-forward="true" selection-start-line="83" selection-end-line="83" />
+>>>>>>> develop
+=======
+          <caret line="83" selection-start-line="83" selection-end-line="83" />
 >>>>>>> develop
           <folding>
             <element signature="e#0#126#1" />
