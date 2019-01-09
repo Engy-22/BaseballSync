@@ -5,6 +5,7 @@
 
 import time
 import datetime
+from utilities.stringify_list import stringify_list
 from utilities.Logger import Logger
 from utilities.time_converter import time_converter
 from utilities.get_most_recent_year import get_most_recent_year
@@ -28,6 +29,9 @@ from import_data.player_data.batting.hitter_tendencies import hitter_tendencies
 from import_data.player_data.pitching.pitcher_tendencies import pitcher_tendencies
 from import_data.player_data.batting.hitter_spray_chart_constructor import hitter_spray_chart_constructor
 from import_data.player_data.pitching.pitching_spray_chart_constructor import pitcher_spray_chart_constructor
+from import_data.team_data.team_certainties import team_certainties
+from import_data.team_data.rank_driver import rank_driver
+from import_data.player_data.awards.award_winner_driver import award_winner_driver
 
 
 def driver(year, driver_log):
@@ -52,6 +56,9 @@ def driver(year, driver_log):
     pitcher_tendencies(year, driver_log)
     hitter_spray_chart_constructor(year, driver_log)
     pitcher_spray_chart_constructor(year, driver_log)
+    team_certainties(year, driver_log)
+    rank_driver(year, driver_log)
+    # award_winner_driver(year, driver_log)
     driver_log.log('Time taken to download ' + str(year) + ' data: ' + time_converter(time.time() - driver_time) + '\n')
 
 
@@ -65,9 +72,12 @@ if __name__ == '__main__':
         most_recent_year = 1876
     league_table_constructor(main_logger)
     manager_table_constructor(main_logger)
-    for year in range(2018, 2017, -1):
+    years = []
+    for year in range(2016, 2018, 1):
+        years.append(year)
         driver(year, main_logger)
     # if most_recent_year > 1997:
     #     comparisons_driver()
     # hof_finder()
-    main_logger.log('Driver complete: time = ' + time_converter(time.time() - start_time) + '\n\n\n')
+    main_logger.log('Driver complete for year' + stringify_list(years) + ': time = '
+                    + time_converter(time.time() - start_time) + '\n\n\n')
