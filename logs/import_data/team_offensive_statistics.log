@@ -1,4 +1,4 @@
-Downloading team offensive data for 2018 || Timestamp: 2019-01-08 15:15:34
+Downloading team offensive data for 2016 || Timestamp: 2019-01-09 14:55:37
 	Writing ARI data to database
 	Writing ATL data to database
 	Writing BAL data to database
@@ -29,6 +29,40 @@ Downloading team offensive data for 2018 || Timestamp: 2019-01-08 15:15:34
 	Writing TEX data to database
 	Writing TOR data to database
 	Writing WSN data to database
-Done donwloading team offensive data for 2018: time = 7.15 seconds
+Done donwloading team offensive data for 2016: time = 7.31 seconds
+
+
+Downloading team offensive data for 2017 || Timestamp: 2019-01-09 16:11:38
+	Writing ARI data to database
+	Writing ATL data to database
+	Writing BAL data to database
+	Writing BOS data to database
+	Writing CHC data to database
+	Writing CHW data to database
+	Writing CIN data to database
+	Writing CLE data to database
+	Writing COL data to database
+	Writing DET data to database
+	Writing HOU data to database
+	Writing KCR data to database
+	Writing LAA data to database
+	Writing LAD data to database
+	Writing MIA data to database
+	Writing MIL data to database
+	Writing MIN data to database
+	Writing NYM data to database
+	Writing NYY data to database
+	Writing OAK data to database
+	Writing PHI data to database
+	Writing PIT data to database
+	Writing SDP data to database
+	Writing SEA data to database
+	Writing SFG data to database
+	Writing STL data to database
+	Writing TBR data to database
+	Writing TEX data to database
+	Writing TOR data to database
+	Writing WSN data to database
+Done donwloading team offensive data for 2017: time = 7.09 seconds
 
 
