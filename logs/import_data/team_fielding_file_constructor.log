@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 Downloading 2018 team fielding positions || Timestamp: 2019-01-08 15:35:51
+=======
+Downloading 2016 team fielding positions || Timestamp: 2019-01-09 15:15:20
+>>>>>>> develop
 	Downloading team pages
 		downloading CHC page
 		downloading CIN page
@@ -30,6 +34,7 @@ Downloading 2018 team fielding positions || Timestamp: 2019-01-08 15:35:51
 		downloading OAK page
 		downloading SEA page
 		downloading TEX page
+<<<<<<< HEAD
 		Time = 13.62 seconds
 	Organizing team position data
 		gathering and writing PIT positions
@@ -64,5 +69,109 @@ Downloading 2018 team fielding positions || Timestamp: 2019-01-08 15:35:51
 		gathering and writing OAK positions
 		Time = 2 minutes 18.84 seconds
 Done downloading team fielding data: time = 2 minutes 32.46 seconds
+=======
+		Time = 13.29 seconds
+	Organizing team position data
+		gathering and writing CIN positions
+		gathering and writing CHC positions
+		gathering and writing MIL positions
+		gathering and writing PIT positions
+		gathering and writing STL positions
+		gathering and writing ATL positions
+		gathering and writing NYM positions
+		gathering and writing MIA positions
+		gathering and writing WSN positions
+		gathering and writing PHI positions
+		gathering and writing COL positions
+		gathering and writing ARI positions
+		gathering and writing CHW positions
+		gathering and writing LAD positions
+		gathering and writing SDP positions
+		gathering and writing SFG positions
+		gathering and writing DET positions
+		gathering and writing MIN positions
+		gathering and writing KCR positions
+		gathering and writing CLE positions
+		gathering and writing BOS positions
+		gathering and writing NYY positions
+		gathering and writing BAL positions
+		gathering and writing TBR positions
+		gathering and writing TOR positions
+		gathering and writing HOU positions
+		gathering and writing LAA positions
+		gathering and writing OAK positions
+		gathering and writing SEA positions
+		gathering and writing TEX positions
+		Time = 2 minutes 1.71 seconds
+Done downloading team fielding data: time = 2 minutes 15.0 seconds
+
+
+Downloading 2017 team fielding positions || Timestamp: 2019-01-09 16:22:44
+	Downloading team pages
+		downloading CHC page
+		downloading CIN page
+		downloading MIL page
+		downloading PIT page
+		downloading STL page
+		downloading ATL page
+		downloading MIA page
+		downloading NYM page
+		downloading PHI page
+		downloading WSN page
+		downloading ARI page
+		downloading COL page
+		downloading LAD page
+		downloading SDP page
+		downloading SFG page
+		downloading CHW page
+		downloading CLE page
+		downloading DET page
+		downloading KCR page
+		downloading MIN page
+		downloading BAL page
+		downloading BOS page
+		downloading NYY page
+		downloading TBR page
+		downloading TOR page
+		downloading HOU page
+		downloading LAA page
+		downloading OAK page
+		downloading SEA page
+		downloading TEX page
+		Time = 11.78 seconds
+	Organizing team position data
+		gathering and writing CIN positions
+		gathering and writing CHC positions
+		gathering and writing MIL positions
+		gathering and writing PIT positions
+		gathering and writing STL positions
+		gathering and writing ATL positions
+		gathering and writing NYM positions
+		gathering and writing MIA positions
+		gathering and writing WSN positions
+		gathering and writing PHI positions
+		gathering and writing COL positions
+		gathering and writing ARI positions
+		gathering and writing CHW positions
+		gathering and writing LAD positions
+		gathering and writing SDP positions
+		gathering and writing SFG positions
+		gathering and writing DET positions
+		gathering and writing MIN positions
+		gathering and writing KCR positions
+		gathering and writing CLE positions
+		gathering and writing BOS positions
+		gathering and writing NYY positions
+		gathering and writing BAL positions
+		gathering and writing TBR positions
+		gathering and writing TOR positions
+		gathering and writing HOU positions
+		gathering and writing LAA positions
+		gathering and writing OAK positions
+		gathering and writing SEA positions
+		gathering and writing TEX positions
+		Time = 1 minute 57.3 seconds
+Done downloading team fielding data: time = 2 minutes 9.08 seconds
+>>>>>>> develop
 
 
