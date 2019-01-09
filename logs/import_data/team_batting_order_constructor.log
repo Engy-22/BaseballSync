@@ -1,4 +1,4 @@
-Downloading 2018 team batting order data || Timestamp: 2019-01-08 15:38:23
+Downloading 2016 team batting order data || Timestamp: 2019-01-09 15:17:35
 	Downloading team pages
 		downloading CHC page
 		downloading CIN page
@@ -30,20 +30,20 @@ Downloading 2018 team batting order data || Timestamp: 2019-01-08 15:38:23
 		downloading OAK page
 		downloading SEA page
 		downloading TEX page
-		Time = 19.6 seconds
+		Time = 18.97 seconds
 	Organizing batting orders
-	Getting CIN batting order data
-	Getting PIT batting order data
 	Getting MIL batting order data
+	Getting PIT batting order data
+	Getting CIN batting order data
 	Getting CHC batting order data
-	Getting ATL batting order data
 	Getting STL batting order data
-	Getting NYM batting order data
+	Getting ATL batting order data
 	Getting MIA batting order data
+	Getting NYM batting order data
 	Getting PHI batting order data
+	Getting WSN batting order data
 	Getting ARI batting order data
 	Getting COL batting order data
-	Getting WSN batting order data
 	Getting LAD batting order data
 	Getting SDP batting order data
 	Getting CHW batting order data
@@ -55,14 +55,82 @@ Downloading 2018 team batting order data || Timestamp: 2019-01-08 15:38:23
 	Getting BAL batting order data
 	Getting BOS batting order data
 	Getting NYY batting order data
-	Getting TBR batting order data
 	Getting TOR batting order data
+	Getting TBR batting order data
 	Getting HOU batting order data
 	Getting LAA batting order data
-	Getting SEA batting order data
 	Getting OAK batting order data
+	Getting SEA batting order data
 	Getting TEX batting order data
-		Time = 6 minutes 5.68 seconds
-Done downloading team batting order data: time = 6 minutes 25.28 seconds
+		Time = 5 minutes 0.05 seconds
+Done downloading team batting order data: time = 5 minutes 19.02 seconds
+
+
+Downloading 2017 team batting order data || Timestamp: 2019-01-09 16:24:53
+	Downloading team pages
+		downloading CHC page
+		downloading CIN page
+		downloading MIL page
+		downloading PIT page
+		downloading STL page
+		downloading ATL page
+		downloading MIA page
+		downloading NYM page
+		downloading PHI page
+		downloading WSN page
+		downloading ARI page
+		downloading COL page
+		downloading LAD page
+		downloading SDP page
+		downloading SFG page
+		downloading CHW page
+		downloading CLE page
+		downloading DET page
+		downloading KCR page
+		downloading MIN page
+		downloading BAL page
+		downloading BOS page
+		downloading NYY page
+		downloading TBR page
+		downloading TOR page
+		downloading HOU page
+		downloading LAA page
+		downloading OAK page
+		downloading SEA page
+		downloading TEX page
+		Time = 20.76 seconds
+	Organizing batting orders
+	Getting MIL batting order data
+	Getting PIT batting order data
+	Getting CIN batting order data
+	Getting CHC batting order data
+	Getting STL batting order data
+	Getting ATL batting order data
+	Getting MIA batting order data
+	Getting NYM batting order data
+	Getting PHI batting order data
+	Getting WSN batting order data
+	Getting ARI batting order data
+	Getting COL batting order data
+	Getting LAD batting order data
+	Getting SDP batting order data
+	Getting CHW batting order data
+	Getting SFG batting order data
+	Getting CLE batting order data
+	Getting KCR batting order data
+	Getting DET batting order data
+	Getting MIN batting order data
+	Getting BAL batting order data
+	Getting BOS batting order data
+	Getting NYY batting order data
+	Getting TOR batting order data
+	Getting TBR batting order data
+	Getting HOU batting order data
+	Getting LAA batting order data
+	Getting OAK batting order data
+	Getting SEA batting order data
+	Getting TEX batting order data
+		Time = 5 minutes 30.03 seconds
+Done downloading team batting order data: time = 5 minutes 50.79 seconds
 
 
