@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 Begin Driver || Timestamp: 2019-01-08 15:13:30
 	Getting most recent year listed in the database
 	Populating leagues table (all-time)
@@ -15,12 +16,33 @@ Begin Driver || Timestamp: 2019-01-08 15:13:30
 		Time = 4.92 seconds
 	Gathering team offensive statistics
 <<<<<<< HEAD
+=======
+Begin Driver || Timestamp: 2019-01-09 14:53:46
+	* Getting most recent year listed in the database *
+	Populating leagues table (all-time)
+		Populating leagues table completed
+	Gathering manager data (all-time)
+		Time = 26.41 seconds
+2016
+	Populating teams table
+		Time = 2.81 seconds
+	Gathering year data
+		Time = 7.52 seconds seconds
+	Gathering ballpark and manager data
+		Time = 1 minute 10.24 seconds
+	Adding to team_years (standings)
+		Time = 3.26 seconds
+	Gathering team offensive statistics
+<<<<<<< HEAD
+<<<<<<< HEAD
+>>>>>>> develop
 		Time = 8.12 seconds
 	Gathering team defensive statistics
 		Time = 12.78 seconds
 	Downloading batter images and attributes
 =======
 		Time = 7.15 seconds
+<<<<<<< HEAD
 	Gathering team defensive statistics
 		Time = 12.73 seconds
 	Downloading batter images and attributes
@@ -40,6 +62,95 @@ Begin Driver || Timestamp: 2019-01-08 15:13:30
 	Storing hitter tendencies
 		Time = 1 minute 29.38 seconds
 	Downloading pitcher images and attributes
+=======
+=======
+		Time = 7.31 seconds
+>>>>>>> develop-import-data
+	Gathering team defensive statistics
+		Time = 10.5 seconds
+	Downloading batter images and attributes
+		Time = 14 minutes 48.59 seconds
+	Downloading pitcher images and attributes
+		Time = 2 minutes 35.1 seconds
+	Downloading fielder images and attributes
+		Time = 2 minutes 1.28 seconds
+	getting team fielding positions
+		Time = 2 minutes 15.0 seconds
+	Getting team batting order data
+		Time = 5 minutes 19.02 seconds
+	Getting team schedules and pitching rotations
+		Time = 12 minutes 14.06 seconds
+	Adding primary and secondary positions
+		Time = 2 minutes 29.19 seconds
+	Storing hitter tendencies
+		Time = 1 minute 15.09 seconds
+	Storing pitcher tendencies
+		Time = 1 minute 2.79 seconds
+	Creating hitter spray charts
+		Time = 16 minutes 1.71 seconds
+	Creating pitcher spray charts
+		Time = 14 minutes 35.34 seconds
+	Aggregating team statistic certainties
+		Time = 7.4 seconds
+	Beginning rank driver
+	* Getting most recent year listed in the database *
+		Calculating team ranks (year)
+			Time = 7.29 seconds
+		Calculating team ranks (overall)
+			Time = 7.44 seconds
+		Rank driver time = 14.84 seconds
+Time taken to download 2016 data: 1 hour 16 minutes 41.08 seconds
+
+2017
+	Populating teams table
+		Time = 0.07 seconds
+	Gathering year data
+		Time = 7.36 seconds seconds
+	Gathering ballpark and manager data
+		Time = 33.1 seconds
+	Adding to team_years (standings)
+		Time = 3.42 seconds
+	Gathering team offensive statistics
+		Time = 7.09 seconds
+	Gathering team defensive statistics
+		Time = 10.51 seconds
+	Downloading batter images and attributes
+		Time = 6 minutes 4.21 seconds
+	Downloading pitcher images and attributes
+		Time = 2 minutes 22.85 seconds
+	Downloading fielder images and attributes
+		Time = 2 minutes 21.83 seconds
+	getting team fielding positions
+		Time = 2 minutes 9.08 seconds
+	Getting team batting order data
+		Time = 5 minutes 50.79 seconds
+	Getting team schedules and pitching rotations
+		Time = 12 minutes 15.59 seconds
+	Adding primary and secondary positions
+		Time = 1 minute 5.22 seconds
+	Storing hitter tendencies
+		Time = 2 minutes 1.23 seconds
+	Storing pitcher tendencies
+		Time = 1 minute 21.52 seconds
+	Creating hitter spray charts
+		Time = 17 minutes 14.12 seconds
+	Creating pitcher spray charts
+		Time = 15 minutes 2.98 seconds
+	Aggregating team statistic certainties
+		Time = 7.61 seconds
+	Beginning rank driver
+	* Getting most recent year listed in the database *
+		Calculating team ranks (year)
+			Time = 7.93 seconds
+		Calculating team ranks (year)
+			Time = 0.37 seconds
+		Calculating team ranks (overall)
+			Time = 18.07 seconds
+		Rank driver time = 26.4 seconds
+Time taken to download 2017 data: 1 hour 9 minutes 24.99 seconds
+
+Driver complete: time = 2 hours 26 minutes 33.22 seconds
+>>>>>>> develop
 
 
 
