@@ -2,7 +2,7 @@ from utilities.DB_Connect import DB_Connect
 
 
 def get_most_recent_year(driver_logger):
-    driver_logger.log('\tGetting most recent year listed in the database')
+    driver_logger.log('\t* Getting most recent year listed in the database *')
     db, cursor = DB_Connect.grab("baseballData")
     most_recent_year = int(DB_Connect.read(cursor, "select year from years order by year desc limit 1;")[0][0])
     DB_Connect.close(db)
