@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d8a74621-0067-4fd9-a532-54885cc58d7f" name="Default Changelist" comment="concurrency working finally">
+<<<<<<< HEAD
       <change afterPath="$PROJECT_DIR$/logs/import_data/hitter_spray_chart_constructor.log" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/logs/import_data/hitter_tendecies.log" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/logs/import_data/pitcher_tendencies.log" afterDir="false" />
@@ -12,7 +13,24 @@
       <change afterPath="$PROJECT_DIR$/src/import_data/player_data/fielding/primary_and_secondary_positions.py" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/import_data/player_data/pitching/pitcher_tendencies.py" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/import_data/player_data/pitching/pitching_spray_chart_constructor.py" afterDir="false" />
+=======
+      <change afterPath="$PROJECT_DIR$/src/import_data/player_data/awards/all_star_finder.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/import_data/player_data/awards/award_winner_driver.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/import_data/player_data/awards/gold_glove_winners.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/import_data/player_data/awards/moy_gatherer.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/import_data/player_data/awards/mvp_cy_young.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/import_data/player_data/awards/roy_gatherer.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/import_data/player_data/awards/silver_slugger_winners.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/import_data/player_data/awards/triple_crown_winners.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/import_data/team_data/rank_driver.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/import_data/team_data/team_certainties.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/import_data/team_data/team_ranker_ovr.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/import_data/team_data/team_ranker_year.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/utilities/get_oldest_year.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/utilities/stringify_list.py" afterDir="false" />
+>>>>>>> develop
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/background/to_do_list.txt" beforeDir="false" afterPath="$PROJECT_DIR$/background/to_do_list.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/logs/import_data/ballpark_and_manager_data.log" beforeDir="false" afterPath="$PROJECT_DIR$/logs/import_data/ballpark_and_manager_data.log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/logs/import_data/batters.log" beforeDir="false" afterPath="$PROJECT_DIR$/logs/import_data/batters.log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/logs/import_data/driver.log" beforeDir="false" afterPath="$PROJECT_DIR$/logs/import_data/driver.log" afterDir="false" />
@@ -30,10 +48,14 @@
       <change beforePath="$PROJECT_DIR$/logs/import_data/team_pitching_rotation_constructor.log" beforeDir="false" afterPath="$PROJECT_DIR$/logs/import_data/team_pitching_rotation_constructor.log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/logs/import_data/year_data.log" beforeDir="false" afterPath="$PROJECT_DIR$/logs/import_data/year_data.log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/import_data/driver.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/import_data/driver.py" afterDir="false" />
+<<<<<<< HEAD
       <change beforePath="$PROJECT_DIR$/src/import_data/player_data/pitching/pitchers.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/import_data/player_data/pitching/pitchers.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/import_data/team_data/team_batting_order_constructor.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/import_data/team_data/team_batting_order_constructor.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/import_data/team_data/team_fielding_file_constructor.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/import_data/team_data/team_fielding_file_constructor.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/import_data/team_data/team_pitching_rotation_constructor.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/import_data/team_data/team_pitching_rotation_constructor.py" afterDir="false" />
+=======
+      <change beforePath="$PROJECT_DIR$/src/utilities/get_most_recent_year.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/utilities/get_most_recent_year.py" afterDir="false" />
+>>>>>>> develop
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -56,6 +78,7 @@
         <counts>
           <entry key="HTML" value="1" />
           <entry key="Image" value="2" />
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -93,12 +116,17 @@
           <entry key="PLAIN_TEXT" value="100" />
           <entry key="Python" value="212" />
 >>>>>>> develop
+=======
+          <entry key="PLAIN_TEXT" value="124" />
+          <entry key="Python" value="248" />
+>>>>>>> develop
           <entry key="XML" value="3" />
 >>>>>>> develop
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -138,6 +166,10 @@
 =======
           <entry key="PLAIN_TEXT" value="984" />
           <entry key="Python" value="30978" />
+>>>>>>> develop
+=======
+          <entry key="PLAIN_TEXT" value="1189" />
+          <entry key="Python" value="35074" />
 >>>>>>> develop
           <entry key="XML" value="1" />
 >>>>>>> develop
@@ -187,10 +219,14 @@
 =======
             <state relative-caret-position="326">
 <<<<<<< HEAD
+<<<<<<< HEAD
               <caret line="61" lean-forward="true" selection-start-line="61" selection-end-line="61" />
 >>>>>>> develop
 =======
               <caret line="73" lean-forward="true" selection-start-line="73" selection-end-line="73" />
+>>>>>>> develop
+=======
+              <caret line="83" lean-forward="true" selection-start-line="83" selection-end-line="83" />
 >>>>>>> develop
               <folding>
                 <element signature="e#0#126#1" />
@@ -232,6 +268,7 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
+<<<<<<< HEAD
         <entry file="file://$PROJECT_DIR$/logs/import_data/pitch_fx.log">
           <provider selected="true" editor-type-id="text-editor">
             <state>
@@ -312,6 +349,12 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="17">
               <caret line="1" lean-forward="true" selection-start-line="1" selection-end-line="1" />
+=======
+        <entry file="file://$PROJECT_DIR$/logs/import_data/driver.log">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="549">
+              <caret line="104" lean-forward="true" selection-start-line="104" selection-end-line="104" />
+>>>>>>> develop
             </state>
           </provider>
         </entry>
@@ -328,8 +371,13 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/background/to_do_list.txt">
           <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
             <state relative-caret-position="349">
               <caret line="104" column="100" selection-start-line="104" selection-start-column="100" selection-end-line="104" selection-end-column="100" />
+=======
+            <state relative-caret-position="386">
+              <caret line="107" lean-forward="true" selection-start-line="107" selection-end-line="107" />
+>>>>>>> develop
             </state>
           </provider>
         </entry>
@@ -343,6 +391,7 @@
           </provider>
         </entry>
       </file>
+<<<<<<< HEAD
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/logs/import_data/driver.log">
           <provider selected="true" editor-type-id="text-editor">
@@ -352,6 +401,8 @@
           </provider>
         </entry>
       </file>
+=======
+>>>>>>> develop
     </leaf>
   </component>
   <component name="FileTemplateManagerImpl">
@@ -363,8 +414,11 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
+<<<<<<< HEAD
       <find>time.time()</find>
       <find>, 2</find>
+=======
+>>>>>>> develop
       <find>home_percent</find>
       <find>home_per</find>
       <find>-1</find>
@@ -393,6 +447,11 @@
       <find>print</find>
       <find>None</find>
       <find>https</find>
+<<<<<<< HEAD
+=======
+      <find>def stri</find>
+      <find>def cre</find>
+>>>>>>> develop
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -401,6 +460,7 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
+<<<<<<< HEAD
         <option value="$PROJECT_DIR$/src/utilities/Logger.py" />
         <option value="$PROJECT_DIR$/src/import_data/team_data/ballpark_data_gatherer.py" />
         <option value="$PROJECT_DIR$/src/import_data/team_data/tester.py" />
@@ -454,6 +514,8 @@
         <option value="$PROJECT_DIR$/src/import_data/team_data/team_offensive_statistics.py" />
         <option value="$PROJECT_DIR$/src/import_data/player_data/pitch_fx.py" />
         <option value="$PROJECT_DIR$/src/import_data/player_data/pitch_fx/xml.xml" />
+=======
+>>>>>>> develop
         <option value="$PROJECT_DIR$/logs/import_data/pitch_fx.log" />
         <option value="$PROJECT_DIR$/src/import_data/player_data/fielders.py" />
         <option value="$PROJECT_DIR$/src/import_data/player_data/pitchers.py" />
@@ -468,11 +530,17 @@
         <option value="$PROJECT_DIR$/src/import_data/player_data/pitching/league_pitching_file_constructor.py" />
         <option value="$PROJECT_DIR$/src/import_data/player_data/batting/batters.py" />
         <option value="$PROJECT_DIR$/src/import_data/player_data/fielding/fielders.py" />
+<<<<<<< HEAD
         <option value="$PROJECT_DIR$/logs/import_data/dump.log" />
         <option value="$PROJECT_DIR$/logs/import_data/team_fielding_file_constructor.log" />
         <option value="$PROJECT_DIR$/src/import_data/team_data/team_batting_file_constructor.py" />
         <option value="$PROJECT_DIR$/logs/import_data/team_pitching_rotation_constructor.log" />
         <option value="$PROJECT_DIR$/background/to_do_list.txt" />
+=======
+        <option value="$PROJECT_DIR$/logs/import_data/team_fielding_file_constructor.log" />
+        <option value="$PROJECT_DIR$/src/import_data/team_data/team_batting_file_constructor.py" />
+        <option value="$PROJECT_DIR$/logs/import_data/team_pitching_rotation_constructor.log" />
+>>>>>>> develop
         <option value="$PROJECT_DIR$/src/import_data/team_data/team_pitching_rotation_constructor.py" />
         <option value="$PROJECT_DIR$/src/import_data/team_data/team_batting_order_constructor.py" />
         <option value="$PROJECT_DIR$/src/import_data/team_data/team_fielding_file_constructor.py" />
@@ -484,7 +552,32 @@
         <option value="$PROJECT_DIR$/logs/import_data/driver.log" />
         <option value="$PROJECT_DIR$/src/import_data/player_data/batting/hitter_spray_chart_constructor.py" />
         <option value="$PROJECT_DIR$/src/import_data/player_data/pitching/pitching_spray_chart_constructor.py" />
+<<<<<<< HEAD
+=======
+        <option value="$PROJECT_DIR$/.gitignore" />
+        <option value="$PROJECT_DIR$/src/import_data/team_data/team_certainties.py" />
+        <option value="$PROJECT_DIR$/logs/import_data/team_certainties.log" />
+        <option value="$PROJECT_DIR$/src/utilities/get_most_recent_year.py" />
+        <option value="$PROJECT_DIR$/logs/import_data/team_ranker_year.log" />
+        <option value="$PROJECT_DIR$/logs/import_data/team_ranker_ovr.log" />
+        <option value="$PROJECT_DIR$/logs/import_data/dump.log" />
+        <option value="$PROJECT_DIR$/src/import_data/team_data/team_ranker_year.py" />
+        <option value="$PROJECT_DIR$/src/import_data/team_data/rank_driver.py" />
+        <option value="$PROJECT_DIR$/src/import_data/team_data/team_ranker_ovr.py" />
+        <option value="$PROJECT_DIR$/src/utilities/get_oldest_year.py" />
+        <option value="$PROJECT_DIR$/src/utilities/stringify_list.py" />
+        <option value="$PROJECT_DIR$/background/to_do_list.txt" />
+>>>>>>> develop
         <option value="$PROJECT_DIR$/src/import_data/driver.py" />
+        <option value="$PROJECT_DIR$/src/import_data/player_data/awards/all_star_finder.py" />
+        <option value="$PROJECT_DIR$/src/import_data/player_data/awards/triple_crown_winners.py" />
+        <option value="$PROJECT_DIR$/src/import_data/player_data/awards/silver_slugger_winners.py" />
+        <option value="$PROJECT_DIR$/src/import_data/player_data/awards/moy_gatherer.py" />
+        <option value="$PROJECT_DIR$/src/import_data/player_data/awards/gold_glove_winners.py" />
+        <option value="$PROJECT_DIR$/src/import_data/player_data/awards/mvp_cy_young.py" />
+        <option value="$PROJECT_DIR$/src/import_data/player_data/awards/roy_gatherer.py" />
+        <option value="$PROJECT_DIR$/logs/import_data/award_winner_driver.log" />
+        <option value="$PROJECT_DIR$/src/import_data/player_data/awards/award_winner_driver.py" />
       </list>
     </option>
   </component>
@@ -504,6 +597,51 @@
             <path>
               <item name="baseball-sync" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
               <item name="" type="442cc68d:ScopeViewTreeModel$RootNode" />
+            </path>
+            <path>
+              <item name="baseball-sync" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
+              <item name="" type="442cc68d:ScopeViewTreeModel$RootNode" />
+              <item name="src" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+            </path>
+            <path>
+              <item name="baseball-sync" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
+              <item name="" type="442cc68d:ScopeViewTreeModel$RootNode" />
+              <item name="src" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="import_data" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+            </path>
+            <path>
+              <item name="baseball-sync" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
+              <item name="" type="442cc68d:ScopeViewTreeModel$RootNode" />
+              <item name="src" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="import_data" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="player_data" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+        <subPane subId="Scope 'Changed Files'; set:Changed Files; ALL; class com.intellij.packageDependencies.ChangeListScope">
+          <expand>
+            <path>
+              <item name="baseball-sync" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
+              <item name="" type="442cc68d:ScopeViewTreeModel$RootNode" />
+            </path>
+            <path>
+              <item name="baseball-sync" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
+              <item name="" type="442cc68d:ScopeViewTreeModel$RootNode" />
+              <item name="src" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+            </path>
+            <path>
+              <item name="baseball-sync" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
+              <item name="" type="442cc68d:ScopeViewTreeModel$RootNode" />
+              <item name="src" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="import_data" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+            </path>
+            <path>
+              <item name="baseball-sync" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
+              <item name="" type="442cc68d:ScopeViewTreeModel$RootNode" />
+              <item name="src" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="import_data" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="player_data" type="9f88c78c:ScopeViewTreeModel$FileNode" />
             </path>
           </expand>
           <select />
@@ -562,6 +700,7 @@
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="import_data" type="462c0819:PsiDirectoryNode" />
             </path>
+<<<<<<< HEAD
             <path>
               <item name="baseball-sync" type="b2602c69:ProjectViewProjectNode" />
               <item name="baseball-sync" type="462c0819:PsiDirectoryNode" />
@@ -577,6 +716,8 @@
               <item name="player_data" type="462c0819:PsiDirectoryNode" />
               <item name="pitching" type="462c0819:PsiDirectoryNode" />
             </path>
+=======
+>>>>>>> develop
           </expand>
           <select />
         </subPane>
@@ -596,11 +737,18 @@
       <recent name="C:\Users\Anthony Raimondo\PycharmProjects\baseball-sync\src\utilities" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
+<<<<<<< HEAD
+=======
+      <recent name="C:\Users\Anthony Raimondo\PycharmProjects\baseball-sync\src\import_data\player_data\awards" />
+>>>>>>> develop
       <recent name="C:\Users\Anthony Raimondo\PycharmProjects\baseball-sync\src\utilities" />
       <recent name="C:\Users\Anthony Raimondo\PycharmProjects\baseball-sync\background" />
       <recent name="C:\Users\Anthony Raimondo\PycharmProjects\baseball-sync\src\model" />
       <recent name="C:\Users\Anthony Raimondo\PycharmProjects\baseball-sync\src\import_data\utilities" />
+<<<<<<< HEAD
       <recent name="C:\Users\Anthony Raimondo\PycharmProjects\baseball-sync\images" />
+=======
+>>>>>>> develop
     </key>
   </component>
   <component name="RunDashboard">
@@ -615,7 +763,33 @@
       </list>
     </option>
   </component>
+<<<<<<< HEAD
   <component name="RunManager" selected="Python.pitching_spray_chart_constructor">
+    <configuration name="clear_logs" type="PythonConfigurationType" factoryName="Python" temporary="true">
+=======
+  <component name="RunManager" selected="Python.award_winner_driver">
+    <configuration name="award_winner_driver" type="PythonConfigurationType" factoryName="Python" temporary="true">
+>>>>>>> develop
+      <module name="baseball-sync" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/src/import_data/player_data/awards" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/import_data/player_data/awards/award_winner_driver.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="clear_logs" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="baseball-sync" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -637,28 +811,11 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="driver" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="baseball-sync" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/src/import_data" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/import_data/driver.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
+<<<<<<< HEAD
     <configuration name="hitter_spray_chart_constructor" type="PythonConfigurationType" factoryName="Python" temporary="true">
+=======
+    <configuration name="driver" type="PythonConfigurationType" factoryName="Python" temporary="true">
+>>>>>>> develop
       <module name="baseball-sync" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -666,11 +823,19 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
+<<<<<<< HEAD
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/src/import_data/player_data/batting" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/import_data/player_data/batting/hitter_spray_chart_constructor.py" />
+=======
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/src/import_data" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/import_data/driver.py" />
+>>>>>>> develop
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -679,7 +844,11 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+<<<<<<< HEAD
     <configuration name="pitching_spray_chart_constructor" type="PythonConfigurationType" factoryName="Python" temporary="true">
+=======
+    <configuration name="rank_driver" type="PythonConfigurationType" factoryName="Python" temporary="true">
+>>>>>>> develop
       <module name="baseball-sync" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -691,7 +860,11 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
+<<<<<<< HEAD
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/import_data/player_data/pitching/pitching_spray_chart_constructor.py" />
+=======
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/import_data/team_data/rank_driver.py" />
+>>>>>>> develop
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -722,9 +895,10 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="Python.reset_database" />
+      <item itemvalue="Python.rank_driver" />
       <item itemvalue="Python.clear_logs" />
       <item itemvalue="Python.driver" />
+<<<<<<< HEAD
       <item itemvalue="Python.hitter_spray_chart_constructor" />
       <item itemvalue="Python.pitching_spray_chart_constructor" />
     </list>
@@ -732,9 +906,21 @@
       <list>
         <item itemvalue="Python.pitching_spray_chart_constructor" />
         <item itemvalue="Python.hitter_spray_chart_constructor" />
+=======
+      <item itemvalue="Python.reset_database" />
+      <item itemvalue="Python.award_winner_driver" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.award_winner_driver" />
+>>>>>>> develop
         <item itemvalue="Python.driver" />
-        <item itemvalue="Python.clear_logs" />
         <item itemvalue="Python.reset_database" />
+<<<<<<< HEAD
+=======
+        <item itemvalue="Python.clear_logs" />
+        <item itemvalue="Python.rank_driver" />
+>>>>>>> develop
       </list>
     </recent_temporary>
   </component>
@@ -857,76 +1043,156 @@
     <option name="LAST_COMMIT_MESSAGE" value="initial model setup" />
   </component>
   <component name="editorHistoryManager">
+<<<<<<< HEAD
     <entry file="file://$PROJECT_DIR$/src/import_data/leagues/league_table_constructor.py">
+=======
+    <entry file="file://$PROJECT_DIR$/logs/import_data/team_fielding_file_constructor.log">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="253">
-          <caret line="25" column="25" selection-start-line="25" selection-start-column="25" selection-end-line="25" selection-end-column="25" />
+        <state relative-caret-position="322">
+          <caret line="296" lean-forward="true" selection-start-line="296" selection-end-line="296" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/import_data/team_data/manager_table_constructor.py">
+    <entry file="file://$PROJECT_DIR$/src/import_data/team_data/team_fielding_file_constructor.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="134">
-          <caret line="39" column="25" selection-start-line="39" selection-start-column="25" selection-end-line="39" selection-end-column="25" />
+        <state relative-caret-position="-881">
+          <caret line="15" column="4" selection-start-line="15" selection-start-column="4" selection-end-line="15" selection-end-column="4" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/import_data/team_data/populate_teams_table.py">
+    <entry file="file://$PROJECT_DIR$/src/import_data/team_data/team_batting_order_constructor.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="253">
-          <caret line="30" column="25" selection-start-line="30" selection-start-column="25" selection-end-line="30" selection-end-column="25" />
+        <state relative-caret-position="-1408">
+          <caret line="15" column="4" selection-start-line="15" selection-start-column="4" selection-end-line="15" selection-end-column="4" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/logs/import_data/team_offensive_statistics.log">
+    <entry file="file://$PROJECT_DIR$/src/import_data/team_data/team_pitching_rotation_constructor.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="345">
-          <caret line="22" column="32" lean-forward="true" selection-start-line="22" selection-start-column="32" selection-end-line="22" selection-end-column="32" />
+        <state relative-caret-position="221">
+          <caret line="40" column="53" lean-forward="true" selection-start-line="40" selection-start-column="53" selection-end-line="40" selection-end-column="53" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/logs/import_data/team_defensive_statistics.log">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="317">
-          <caret line="64" lean-forward="true" selection-start-line="64" selection-end-line="64" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/import_data/team_data/team_defensive_statistics.py">
+    <entry file="file://$PROJECT_DIR$/logs/import_data/primary_and_secondary_positions.log">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/import_data/team_data/team_offensive_statistics.py">
+    <entry file="file://$PROJECT_DIR$/src/import_data/player_data/fielding/primary_and_secondary_positions.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="321">
-          <caret line="59" lean-forward="true" selection-start-line="59" selection-end-line="59" />
+        <state relative-caret-position="238">
+          <caret line="38" column="80" lean-forward="true" selection-start-line="38" selection-start-column="80" selection-end-line="38" selection-end-column="80" />
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/logs/import_data/pitcher_tendencies.log">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="68">
+          <caret line="4" lean-forward="true" selection-start-line="4" selection-end-line="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/import_data/player_data/pitching/pitcher_tendencies.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="309">
+          <caret line="112" column="38" selection-start-line="111" selection-start-column="35" selection-end-line="112" selection-end-column="38" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/logs/import_data/hitter_spray_chart_constructor.log.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/logs/import_data/batters.log">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret lean-forward="true" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/logs/import_data/team_pitching_rotation_constructor.log">
+>>>>>>> develop
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="322">
+          <caret line="62" lean-forward="true" selection-start-line="62" selection-end-line="62" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/import_data/player_data/pitching/pitchers.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="102">
+          <caret line="16" column="4" lean-forward="true" selection-start-line="16" selection-start-column="4" selection-end-line="16" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/logs/import_data/hitter_tendecies.log">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="68">
+          <caret line="4" lean-forward="true" selection-start-line="4" selection-end-line="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/import_data/player_data/batting/hitter_tendencies.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="85">
+          <caret line="13" column="4" selection-start-line="13" selection-start-column="4" selection-end-line="13" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/import_data/player_data/batting/hitter_spray_chart_constructor.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="326">
+          <caret line="165" lean-forward="true" selection-start-line="165" selection-end-line="165" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/logs/import_data/pitching_spray_chart_constructor.log">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="17">
+          <caret line="1" lean-forward="true" selection-start-line="1" selection-end-line="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="34">
+          <caret line="2" lean-forward="true" selection-start-line="2" selection-end-line="2" />
+        </state>
+      </provider>
+    </entry>
+<<<<<<< HEAD
     <entry file="file://$PROJECT_DIR$/src/import_data/player_data/pitch_fx/xml/1.xml" />
     <entry file="file://$PROJECT_DIR$/src/import_data/player_data/pitch_fx/xml.xml" />
     <entry file="file://$USER_HOME$/.virtualenvs/baseball-sync/Lib/site-packages/bs4/element.py">
+=======
+    <entry file="file://$PROJECT_DIR$/logs/import_data/team_certainties.log">
       <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <element signature="e#244#253#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="68">
+          <caret line="4" lean-forward="true" selection-start-line="4" selection-end-line="4" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python36-32/Lib/threading.py">
+    <entry file="file://$PROJECT_DIR$/src/import_data/player_data/pitching/pitching_spray_chart_constructor.py">
+>>>>>>> develop
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="148">
-          <caret line="845" selection-start-line="845" selection-end-line="845" />
+        <state relative-caret-position="40">
+          <caret line="32" column="52" lean-forward="true" selection-start-line="32" selection-start-column="52" selection-end-line="32" selection-end-column="52" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python36-32/Lib/concurrent/futures/thread.py">
+    <entry file="file://$PROJECT_DIR$/src/utilities/get_most_recent_year.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2295">
-          <caret line="141" selection-start-line="141" selection-end-line="141" />
+        <state relative-caret-position="68">
+          <caret line="4" column="76" selection-start-line="4" selection-start-column="76" selection-end-line="4" selection-end-column="76" />
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/utilities/clear_logs.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="136">
+          <caret line="8" selection-start-line="8" selection-end-line="8" />
+        </state>
+      </provider>
+    </entry>
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -953,32 +1219,35 @@
 =======
 >>>>>>> develop
     <entry file="file://$PROJECT_DIR$/logs/import_data/pitch_fx.log">
+=======
+    <entry file="file://$PROJECT_DIR$/logs/import_data/rank_driver.log">
+>>>>>>> develop
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/utilities/Logger.py">
+    <entry file="file://$USER_HOME$/.virtualenvs/baseball-sync/Lib/site-packages/pymysql/err.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="204">
-          <caret line="12" column="8" selection-start-line="12" selection-start-column="8" selection-end-line="12" selection-end-column="8" />
+        <state relative-caret-position="332">
+          <caret line="108" selection-start-line="108" selection-end-line="108" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/import_data/player_data/pitch_fx/pitch_fx.py">
+    <entry file="file://$USER_HOME$/.virtualenvs/baseball-sync/Lib/site-packages/pymysql/protocol.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="304">
-          <caret line="128" column="34" lean-forward="true" selection-start-line="128" selection-start-column="34" selection-end-line="128" selection-end-column="34" />
+        <state relative-caret-position="150">
+          <caret line="219" selection-start-line="219" selection-end-line="219" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/import_data/leagues/year_data.py">
+    <entry file="file://$USER_HOME$/.virtualenvs/baseball-sync/Lib/site-packages/pymysql/connections.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="132">
-          <caret line="30" column="49" selection-start-line="30" selection-start-column="45" selection-end-line="30" selection-end-column="49" />
+        <state relative-caret-position="150">
+          <caret line="683" selection-start-line="683" selection-end-line="683" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/utilities/RestartException.py" />
-    <entry file="file://$PROJECT_DIR$/src/import_data/leagues/league_standings.py">
+    <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python36-32/Lib/statistics.py">
       <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -1014,33 +1283,59 @@
         <state relative-caret-position="143">
           <caret line="134" selection-start-line="134" selection-end-line="134" />
 >>>>>>> develop
+=======
+        <state relative-caret-position="-419">
+          <caret line="545" column="4" selection-start-line="545" selection-start-column="4" selection-end-line="545" selection-end-column="4" />
+>>>>>>> develop
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/import_data/team_data/ballpark_and_manager_data.py">
+    <entry file="file://$PROJECT_DIR$/logs/import_data/dump.log">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="321">
-          <caret line="196" lean-forward="true" selection-start-line="196" selection-end-line="196" />
+        <state relative-caret-position="119">
+          <caret line="7" lean-forward="true" selection-start-line="7" selection-end-line="7" />
         </state>
       </provider>
     </entry>
+<<<<<<< HEAD
     <entry file="file://$PROJECT_DIR$/src/import_data/player_data/batting/league_batting_ratios_constructor.py">
+=======
+    <entry file="file://$PROJECT_DIR$/src/import_data/team_data/team_ranker_year.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
-          <caret line="10" column="19" lean-forward="true" selection-end-line="50" />
-          <folding>
-            <element signature="e#0#11#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="326">
+          <caret line="87" lean-forward="true" selection-start-line="87" selection-end-line="87" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/import_data/player_data/pitching/league_pitching_ratios_constructor.py">
+    <entry file="file://$PROJECT_DIR$/logs/import_data/team_ranker_ovr.log">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/logs/import_data/team_ranker_year.log">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/utilities/reset_database.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="325">
-          <caret line="50" lean-forward="true" selection-start-line="50" selection-end-line="50" />
+        <state relative-caret-position="221">
+          <caret line="13" lean-forward="true" selection-start-line="13" selection-end-line="13" />
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/import_data/team_data/rank_driver.py">
+>>>>>>> develop
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="34">
+          <caret line="2" column="43" selection-start-line="2" selection-start-column="43" selection-end-line="2" selection-end-column="43" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/utilities/get_oldest_year.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="68">
+          <caret line="4" column="41" selection-start-line="4" selection-start-column="41" selection-end-line="4" selection-end-column="41" />
+        </state>
+      </provider>
+    </entry>
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -1053,21 +1348,36 @@
 =======
     <entry file="file://$PROJECT_DIR$/logs/import_data/batters.log">
 >>>>>>> develop
+=======
+    <entry file="file://$USER_HOME$/Desktop/Game_Simulator_Folder/Utility.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="236">
+          <caret line="424" column="27" lean-forward="true" selection-start-line="391" selection-start-column="65" selection-end-line="424" selection-end-column="27" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/utilities/stringify_list.py">
+>>>>>>> develop
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="170">
           <caret line="10" lean-forward="true" selection-start-line="10" selection-end-line="10" />
         </state>
       </provider>
     </entry>
+<<<<<<< HEAD
 =======
 >>>>>>> develop
     <entry file="file://$PROJECT_DIR$/src/import_data/player_data/batting/batters.py">
+=======
+    <entry file="file://$PROJECT_DIR$/logs/import_data/hitter_spray_chart_constructor.log">
+>>>>>>> develop
       <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret lean-forward="true" />
+        <state relative-caret-position="85">
+          <caret line="5" lean-forward="true" selection-start-line="5" selection-end-line="5" />
         </state>
       </provider>
     </entry>
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
     <entry file="file://$PROJECT_DIR$/logs/import_data/dump.log">
@@ -1078,12 +1388,16 @@
 =======
     <entry file="file://$PROJECT_DIR$/logs/import_data/fielders.log">
 >>>>>>> develop
+=======
+    <entry file="file://$PROJECT_DIR$/src/import_data/team_data/team_ranker_ovr.py">
+>>>>>>> develop
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="389">
-          <caret line="26" lean-forward="true" selection-start-line="26" selection-end-line="26" />
+        <state relative-caret-position="1411">
+          <caret line="88" selection-start-line="88" selection-end-line="88" />
         </state>
       </provider>
     </entry>
+<<<<<<< HEAD
     <entry file="file://$PROJECT_DIR$/src/import_data/player_data/fielding/fielders.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="91">
@@ -1273,13 +1587,83 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="51">
           <caret line="3" lean-forward="true" selection-start-line="3" selection-end-line="3" />
+=======
+    <entry file="file://$PROJECT_DIR$/src/import_data/team_data/team_certainties.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="136">
+          <caret line="12" column="28" lean-forward="true" selection-start-line="12" selection-start-column="28" selection-end-line="14" selection-end-column="46" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/import_data/player_data/awards/gold_glove_winners.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/import_data/player_data/awards/moy_gatherer.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/import_data/player_data/awards/triple_crown_winners.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/import_data/player_data/awards/all_star_finder.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="836">
+          <caret line="68" lean-forward="true" selection-start-line="68" selection-end-line="68" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/import_data/player_data/awards/mvp_cy_young.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-2" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/logs/import_data/award_winner_driver.log">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="373">
+          <caret line="31" lean-forward="true" selection-start-line="31" selection-end-line="31" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/import_data/player_data/awards/award_winner_driver.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="326">
+          <caret line="53" lean-forward="true" selection-start-line="53" selection-end-line="53" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/import_data/player_data/awards/roy_gatherer.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-286" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/import_data/player_data/awards/silver_slugger_winners.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/logs/import_data/driver.log">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="549">
+          <caret line="104" lean-forward="true" selection-start-line="104" selection-end-line="104" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/background/table_definitions.txt">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/background/to_do_list.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="386">
+          <caret line="107" lean-forward="true" selection-start-line="107" selection-end-line="107" />
+>>>>>>> develop
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/import_data/driver.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="326">
+<<<<<<< HEAD
           <caret line="73" lean-forward="true" selection-start-line="73" selection-end-line="73" />
+=======
+          <caret line="83" lean-forward="true" selection-start-line="83" selection-end-line="83" />
+>>>>>>> develop
           <folding>
             <element signature="e#0#126#1" />
           </folding>
