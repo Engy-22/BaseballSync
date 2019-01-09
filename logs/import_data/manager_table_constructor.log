@@ -1,2 +1,7 @@
+<<<<<<< HEAD
 Begin populating teams table || Timestamp: 2019-01-08 15:13:31
 Constructing manager table completed: time = 32.54 seconds
+=======
+Begin populating teams table || Timestamp: 2019-01-09 14:53:46
+Constructing manager table completed: time = 26.41 seconds
+>>>>>>> develop
