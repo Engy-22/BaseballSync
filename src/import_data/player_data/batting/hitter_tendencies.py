@@ -29,35 +29,10 @@ def hitter_tendencies(year, driver_logger):
         format_time = time.time()
         with ThreadPoolExecutor(os.cpu_count()) as executor:
             for row in rows:
-                stats = {"pitches_per_pa": ["pp_pa", ""],
-                         "strike_looking_perc": ["strike_looking_percent", ""],
-                         "strike_swinging_perc": ["strike_swinging_percent", ""],
-                         "strike_foul_perc": ["strike_foul_percent", ""],
-                         "strike_inplay_perc": ["strike_in_play_percent", ""],
-                         "all_strikes_swinging_perc": ["strikes_swung_at_percent", ""],
-                         "pitches_swinging_perc": ["swing_percent", ""],
-                         "contact_perc": ["contact_rate", ""],
-                         "first_pitch_swings_perc": ["first_pitch_swinging_percent", ""],
-                         "30_pitches": ["counts_30", ""],
-                         "30_swings": ["swings_30", ""],
-                         "20_pitches": ["counts_20", ""],
-                         "20_swings": ["swings_20", ""],
-                         "31_pitches": ["counts_31", ""],
-                         "31_swings": ["swings_31", ""],
-                         "SO_looking_perc": ["k_looking_percent", ""],
-                         "PA_unknown": ["certainty", ""]}
-                try:
-                    player_id = row.split('data-append-csv="')[1].split('"')[0]
-                    if player_id == prev_player_id:
-                        continue
-                    for key, value in stats.items():
-                        stats[key][1] = row.split('data-stat="' + key + '" >')[1].split('<')[0].split('%')[0]
-                        if stats[key][1] == '':
-                            stats[key][1] = '0'
-                except IndexError:
-                    continue
-                executor.submit(write_to_file, year, player_id, stats)
-                prev_player_id = player_id
+                player_id, stats = intermediate(row, prev_player_id)
+                if player_id is not None:
+                    executor.submit(write_to_file, year, player_id, stats)
+                    prev_player_id = player_id
         fill_batters_with_0_pa(year)
         logger.log("\t\tTime = " + time_converter(time.time() - format_time))
     else:
@@ -66,6 +41,37 @@ def hitter_tendencies(year, driver_logger):
     total_time = time_converter(time.time() - start_time)
     logger.log("Done storing hitter tendencies: time = " + total_time + '\n\n')
     driver_logger.log("\t\tTime = " + total_time)
+
+
+def intermediate(row, prev_player_id):
+    stats = {"pitches_per_pa": ["pp_pa", ""],
+             "strike_looking_perc": ["strike_looking_percent", ""],
+             "strike_swinging_perc": ["strike_swinging_percent", ""],
+             "strike_foul_perc": ["strike_foul_percent", ""],
+             "strike_inplay_perc": ["strike_in_play_percent", ""],
+             "all_strikes_swinging_perc": ["strikes_swung_at_percent", ""],
+             "pitches_swinging_perc": ["swing_percent", ""],
+             "contact_perc": ["contact_rate", ""],
+             "first_pitch_swings_perc": ["first_pitch_swinging_percent", ""],
+             "30_pitches": ["counts_30", ""],
+             "30_swings": ["swings_30", ""],
+             "20_pitches": ["counts_20", ""],
+             "20_swings": ["swings_20", ""],
+             "31_pitches": ["counts_31", ""],
+             "31_swings": ["swings_31", ""],
+             "SO_looking_perc": ["k_looking_percent", ""],
+             "PA_unknown": ["certainty", ""]}
+    try:
+        player_id = row.split('data-append-csv="')[1].split('"')[0]
+        if player_id == prev_player_id:
+            player_id = None
+        for key, value in stats.items():
+            stats[key][1] = row.split('data-stat="' + key + '" >')[1].split('<')[0].split('%')[0]
+            if stats[key][1] == '':
+                stats[key][1] = '0'
+    except IndexError:
+        player_id = None
+    return player_id, stats
 
 
 def write_to_file(year, player_id, stat_list):
