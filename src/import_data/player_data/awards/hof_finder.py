@@ -11,7 +11,7 @@ logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\lo
 
 def hof_finder(driver_logger):
     print("adding HOF data")
-    driver_logger.log("\tAdding HOF data")
+    driver_logger.log("\n\tAdding HOF data")
     start_time = time.time()
     logger.log("Begin finding hall of famers || Timestamp: " + datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S'))
     hof_table = str(BeautifulSoup(urlopen('https://www.baseball-reference.com/awards/hof.shtml'), 'html.parser')).\
