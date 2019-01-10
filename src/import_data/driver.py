@@ -32,7 +32,7 @@ from import_data.player_data.pitching.pitching_spray_chart_constructor import pi
 from import_data.team_data.team_certainties import team_certainties
 from import_data.team_data.rank_driver import rank_driver
 from import_data.player_data.awards.award_winner_driver import award_winner_driver
-
+from import_data.comparisions.comparisons_driver import comparisons_driver
 from import_data.player_data.awards.hof_finder import hof_finder
 
 
