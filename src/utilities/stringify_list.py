@@ -7,4 +7,4 @@ def stringify_list(given_list):
         else:
             return 's ' + low + ' & ' + high
     else:
-        return str(given_list[0])
+        return ' ' + str(given_list[0])
