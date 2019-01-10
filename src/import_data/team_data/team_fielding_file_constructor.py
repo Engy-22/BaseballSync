@@ -15,7 +15,7 @@ logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\lo
 
 def team_fielding_file_constructor(year, driver_logger):
     print('getting team fielding positions')
-    driver_logger.log("\tgetting team fielding positions")
+    driver_logger.log("\tGetting team fielding positions")
     start_time = time.time()
     logger.log("Downloading " + str(year) + " team fielding positions || Timestamp: " + datetime.datetime.today()\
                .strftime('%Y-%m-%d %H:%M:%S'))
