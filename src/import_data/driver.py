@@ -33,6 +33,8 @@ from import_data.team_data.team_certainties import team_certainties
 from import_data.team_data.rank_driver import rank_driver
 from import_data.player_data.awards.award_winner_driver import award_winner_driver
 
+from import_data.player_data.awards.hof_finder import hof_finder
+
 
 def driver(year, driver_log):
     driver_log.log(str(year))
@@ -78,6 +80,6 @@ if __name__ == '__main__':
         driver(year, main_logger)
     # if most_recent_year > 1997:
     #     comparisons_driver()
-    # hof_finder()
+    hof_finder(main_logger)
     main_logger.log('Driver complete for year' + stringify_list(years) + ': time = '
                     + time_converter(time.time() - start_time) + '\n\n\n')
