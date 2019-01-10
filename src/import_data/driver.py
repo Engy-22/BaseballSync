@@ -75,11 +75,11 @@ if __name__ == '__main__':
     league_table_constructor(main_logger)
     manager_table_constructor(main_logger)
     years = []
-    for year in range(2018, 2019, 1):
+    for year in range(2000, 2002, 1):
         years.append(year)
         driver(year, main_logger)
     # if most_recent_year > 1997:
-    #     comparisons_driver()
+    #     comparisons_driver(most_recent_year)
     hof_finder(main_logger)
     main_logger.log('Driver complete for year' + stringify_list(years) + ': time = '
                     + time_converter(time.time() - start_time) + '\n\n\n')
