@@ -3,7 +3,7 @@ from import_data.comparisions.file_writers.write_to_file_teams import write_to_f
 from utilities.DB_Connect import DB_Connect
 
 
-def make_offensive_comparisons(ty_uids, year, possible_comps):
+def make_offensive_comparisons(ty_uids, year, possible_comps, driver_logger):
     comparisons = {}
     db, cursor = DB_Connect.grab("baseballData")
     for ty_uid in ty_uids:
@@ -12,17 +12,17 @@ def make_offensive_comparisons(ty_uids, year, possible_comps):
     write_to_file(comparisons, "offense")
 
 
-def determine_comp(ty_uid, year, teams_to_compare):
+def determine_comp(ty_uid, year, teams_to_compare, driver_logger):
     comp = None
-    year_pa, year_totals = get_year_totals(year)
-    team_pa, stats = get_offensive_stats(ty_uid)
-    team_drs = offensive_dr_calc(team_pa, stats, year_pa, year_totals)
+    year_pa, year_totals = get_year_totals(year, driver_logger)
+    team_pa, stats = get_offensive_stats(ty_uid, driver_logger)
+    team_drs = offensive_dr_calc(team_pa, stats, year_pa, year_totals, driver_logger)
     if len(team_drs) > 0:
-        comp = find_comp(ty_uid, team_drs, teams_to_compare)
+        comp = find_comp(ty_uid, team_drs, teams_to_compare, driver_logger)
     return comp
 
 
-def offensive_dr_calc(pa, stats, year_pa, year_stats):
+def offensive_dr_calc(pa, stats, year_pa, year_stats, driver_logger):
     team_drs = {}
     for key, value in stats.items():
         if value != -1:
@@ -37,7 +37,7 @@ def offensive_dr_calc(pa, stats, year_pa, year_stats):
     return team_drs
 
 
-def find_comp(ty_uid, team_drs, teams_to_compare):
+def find_comp(ty_uid, team_drs, teams_to_compare, driver_logger):
     comp_team_scores = {}
     for comp_ty_uid, possible_comps_stats in teams_to_compare.items():
         if comp_ty_uid != ty_uid:
