@@ -3,7 +3,7 @@ from import_data.comparisions.file_writers.write_to_file_players import write_to
 from utilities.DB_Connect import DB_Connect
 
 
-def make_pitcher_comparisons(pitchers, year, possible_comps):
+def make_pitcher_comparisons(pitchers, year, possible_comps, driver_logger):
     comparisons = {}
     db, cursor = DB_Connect.grab("baseballData")
     for pitcher in pitchers:
@@ -13,22 +13,22 @@ def make_pitcher_comparisons(pitchers, year, possible_comps):
                                             + pitcher + '";')[0][0]
         if certainty is not None:
             if float(certainty) < 1.0:
-                comparisons[pitcher] = determine_comp(pitcher, year, possible_comps)
+                comparisons[pitcher] = determine_comp(pitcher, year, possible_comps, driver_logger)
     DB_Connect.close(db)
     write_to_file(year, comparisons, "pitching")
 
 
-def determine_comp(pitcher, year, pitchers_to_compare):
+def determine_comp(pitcher, year, pitchers_to_compare, driver_logger):
     comp = None
-    year_pa, year_totals = get_year_totals(year)
-    pitcher_pa, stats = get_pitcher_stats(pitcher, year)
-    pitcher_drs = pitcher_dr_calc(pitcher_pa, stats, year_pa, year_totals)
-    if len(pitcher_drs) > 0: # and year < 1997: #  or (len(pitcher_drs) == 8 and year > 1988)
-        comp = find_comp(pitcher, year, pitcher_drs, pitchers_to_compare)
+    year_pa, year_totals = get_year_totals(year, driver_logger)
+    pitcher_pa, stats = get_pitcher_stats(pitcher, year, driver_logger)
+    pitcher_drs = pitcher_dr_calc(pitcher_pa, stats, year_pa, year_totals, driver_logger)
+    if len(pitcher_drs) > 0:
+        comp = find_comp(pitcher, year, pitcher_drs, pitchers_to_compare, driver_logger)
     return comp
 
 
-def pitcher_dr_calc(pa, stats, year_pa, year_stats):
+def pitcher_dr_calc(pa, stats, year_pa, year_stats, driver_logger):
     pitcher_drs = {}
     for key, value in stats.items():
         if value != -1:
@@ -43,7 +43,7 @@ def pitcher_dr_calc(pa, stats, year_pa, year_stats):
     return pitcher_drs
 
 
-def find_comp(pitcher, year, pitcher_drs, pitchers_to_compare):
+def find_comp(pitcher, year, pitcher_drs, pitchers_to_compare, driver_logger):
     comp_player_scores = {}
     for year_to_compare, possible_comps in pitchers_to_compare.items():
         for possible_comp_pitcher, possible_comp_stats in possible_comps.items():
