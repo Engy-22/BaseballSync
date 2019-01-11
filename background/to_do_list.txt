@@ -105,4 +105,3 @@
     *maybe decrease the amount which standard deviation affects team rankings in overall team ranker.
     *investigate deadlock situation in tendency constructors
         -ex.) 'Deadlock found when trying to get lock; try restarting transaction'
-     *remove all .pyc files the same way that log files were removed using git bash.
