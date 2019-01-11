@@ -28,12 +28,15 @@ def pitcher_tendencies(year, driver_logger):
         logger.log("\t\tTime = " + time_converter(time.time() - start_time))
         logger.log("\tFormatting data")
         format_time = time.time()
+        stat_dictionary = {}
+        for row in rows:
+            player_id, temp_stats = intermediate(row, prev_player_id)
+            if player_id is not None:
+                stat_dictionary[player_id] = temp_stats
+                prev_player_id = player_id
         with ThreadPoolExecutor(os.cpu_count()) as executor:
-            for row in rows:
-                player_id, stats = intermediate(row, prev_player_id)
-                if player_id is not None:
-                    executor.submit(write_to_file, year, player_id, stats)
-                    prev_player_id = player_id
+            for player_id, stats in stat_dictionary.items():
+                executor.submit(write_to_file, year, player_id, stats)
         fill_pitchers_with_0_pa(year)
         logger.log("\t\tTime = " + time_converter(time.time() - format_time))
     else:
