@@ -27,12 +27,15 @@ def hitter_tendencies(year, driver_logger):
         logger.log("\t\tTime = " + time_converter(time.time() - start_time))
         logger.log("\tFormatting data")
         format_time = time.time()
+        stat_dictionary = {}
+        for row in rows:
+            player_id, temp_stats = intermediate(row, prev_player_id)
+            if player_id is not None:
+                stat_dictionary[player_id] = temp_stats
+                prev_player_id = player_id
         with ThreadPoolExecutor(os.cpu_count()) as executor:
-            for row in rows:
-                player_id, stats = intermediate(row, prev_player_id)
-                if player_id is not None:
-                    executor.submit(write_to_file, year, player_id, stats)
-                    prev_player_id = player_id
+            for player_id, stats in stat_dictionary.items():
+                executor.submit(write_to_file, year, player_id, stats)
         fill_batters_with_0_pa(year)
         logger.log("\t\tTime = " + time_converter(time.time() - format_time))
     else:
@@ -110,7 +113,8 @@ def fill_fields(year):
 
 def fill_batters_with_0_pa(year):
     db, cursor = DB_Connect.grab("baseballData")
-    DB_Connect.write(db, cursor, "update player_batting set certainty = 0.0 where pa = 0 and year = " + str(year) + ";")
+    DB_Connect.write(db, cursor, "update player_batting set certainty = 0.0 where pa = 0 and year = "
+                                 + str(year) + ";")
     DB_Connect.close(db)
 
 
