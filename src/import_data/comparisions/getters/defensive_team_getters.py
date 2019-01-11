@@ -1,7 +1,7 @@
 from utilities.DB_Connect import DB_Connect
 
 
-def get_defensive_stats(ty_uid):
+def get_defensive_stats(ty_uid, driver_logger):
     stats = {'ER': 0, 'HA': 0, '2BA': 0, '3BA': 0, 'HRA': 0, 'BBA': 0, 'K': 0}
     db, cursor = DB_Connect.grab("baseballData")
     pa = int(DB_Connect.read(cursor, 'select pa from team_years where ty_uniqueidentifier=' + str(ty_uid) + ';')[0][0])
@@ -12,7 +12,7 @@ def get_defensive_stats(ty_uid):
     return pa, stats
 
 
-def get_year_totals(year):
+def get_year_totals(year, driver_logger):
     year_totals = {'ER': ['ER', 0], 'HA': ['H', 0], '2BA': ['2B', 0], '3BA': ['3B', 0], 'HRA': ['HR', 0],
                    'BBA': ['BB', 0], 'K': ['SO', 0]}
     db, cursor = DB_Connect.grab("baseballData")
