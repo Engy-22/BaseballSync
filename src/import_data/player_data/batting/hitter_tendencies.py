@@ -1,4 +1,3 @@
-import os
 import time
 import datetime
 from urllib.request import urlopen
@@ -6,7 +5,6 @@ from bs4 import BeautifulSoup
 from utilities.DB_Connect import DB_Connect
 from utilities.Logger import Logger
 from utilities.time_converter import time_converter
-from concurrent.futures import ThreadPoolExecutor
 
 logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\hitter_tendecies.log")
 
@@ -33,9 +31,8 @@ def hitter_tendencies(year, driver_logger):
             if player_id is not None:
                 stat_dictionary[player_id] = temp_stats
                 prev_player_id = player_id
-        with ThreadPoolExecutor(os.cpu_count()) as executor:
-            for player_id, stats in stat_dictionary.items():
-                executor.submit(write_to_file, year, player_id, stats)
+        for player_id, stats in stat_dictionary.items():
+            write_to_file(year, player_id, stats)
         fill_batters_with_0_pa(year)
         logger.log("\t\tTime = " + time_converter(time.time() - format_time))
     else:
