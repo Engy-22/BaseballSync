@@ -75,7 +75,7 @@ def comparisons_driver(most_recent_year, driver_logger):
         year_pa, year_totals = defensive_year_totals(year_to_compare, logger)
         defenses_to_compare[year_to_compare] = gather_teams(year_to_compare, logger)
         for comp_ty_uid in defenses_to_compare[year_to_compare]:
-            comp_team_pa, comp_stats = get_defensive_stats(comp_ty_uid)
+            comp_team_pa, comp_stats = get_defensive_stats(comp_ty_uid, driver_logger)
             possible_defensive_comps[comp_ty_uid] = defensive_dr_calc(comp_team_pa, comp_stats, year_pa, year_totals, logger)
     for comp_year in range(1876, most_recent_year + 1, 1):
         make_defensive_comparisons(gather_teams(comp_year, logger), comp_year, possible_defensive_comps, logger)
@@ -84,6 +84,6 @@ def comparisons_driver(most_recent_year, driver_logger):
     driver_logger.log("\t\tDone making comparisons: time = " + total_time)
 
 
-# from utilities.get_most_recent_year import get_most_recent_year
-# dump = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\dump.log")
-# comparisons_driver(get_most_recent_year(dump), dump)
+from utilities.get_most_recent_year import get_most_recent_year
+dump = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\dump.log")
+comparisons_driver(get_most_recent_year(dump), dump)
