@@ -24,40 +24,69 @@ def pitching_constructor(year, driver_logger):
     table = str(BeautifulSoup(urlopen("https://www.baseball-reference.com/leagues/MLB/" + str(year)
                                       + "-standard-pitching.shtml"), 'html.parser')).\
         split('<table class="sortable stats_table" id')[1].split('<tbody>')[1].split('</tbody>')[0].split('<tr')
-    count = 0
     for row in table:
         if 'data-stat="player" csk="' in row and 'data-append-csv="' in row:
-            data[str(count)] = {'player_id': row.split('data-append-csv="')[1].split('"')[0].replace("'", "\'"),
-                                'row': row.split('data-stat'),
-                                'temp_player': row.split('data-stat="player" csk="')[1].split('" >')[0]}
-            count += 1
+            try:
+                team = translate_team_id(row.split('a href="/teams/')[1].split('/')[0], year)
+            except IndexError:
+                team = 'TOT'
+            player_id = row.split('data-append-csv="')[1].split('"')[0].replace("'", "\'")
+            global data
+            if player_id not in data:
+                data[player_id] = {}
+            if team not in data[player_id]:
+                this_index = 1
+                data[player_id][team] = {}
+            else:
+                if team != 'TOT':
+                    this_index = len(data[player_id][team]) + 1
+                else:
+                    continue
+            data[player_id][team][this_index] = {'row': row.split('data-stat'),
+                                                 'temp_player': row.split('ata-stat="player" csk="')[1].split('" >')[0]}
     table2 = str(BeautifulSoup(urlopen("https://www.baseball-reference.com/leagues/MLB/" + str(year) + "-batting-"
-                                       "pitching.shtml"), 'html.parser')).split('<tr class="full_table non_qual" >'
-                                                                                '<th scope="row"')
+                                       "pitching.shtml"), 'html.parser')).split('<h2>Player Batting Against</h2>')[1].\
+        split('</tbody>')[0].split('<tbody>')[1].split('<tr ')
     batting_against_rows = {}
     for row in table2:
-        if 'data-stat="player" csk="' in row:
-            this_id = row.split('data-append-csv="')[1].split('"')[0]
-            if this_id not in batting_against_rows:
-                batting_against_rows[this_id] = row.split('<td')
+        if 'data-stat="player" csk="' in row and 'data-append-csv="' in row:
+            try:
+                team = translate_team_id(row.split('a href="/teams/')[1].split('/')[0], year)
+            except IndexError:
+                team = 'TOT'
+            player_id = row.split('data-append-csv="')[1].split('"')[0].replace("'", "\'")
+            if player_id not in batting_against_rows:
+                batting_against_rows[player_id] = {}
+            if team not in batting_against_rows[player_id]:
+                this_index = 1
+                batting_against_rows[player_id][team] = {}
+            else:
+                if team != 'TOT':
+                    this_index = len(batting_against_rows[player_id][team]) + 1
+                else:
+                    continue
+            batting_against_rows[player_id][team][this_index] = {'row': row.split('data-stat'), 'temp_player': row.\
+                split('ata-stat="player" csk="')[1].split('" >')[0]}
     logger.log("\t\tDone assembling list of players")
     bulk_time = time.time()
     ratios = league_pitching_ratios_constructor(year, logger)
     logger.log("\tParsing player pages, downloading images, and extracting player attributes")
     with ThreadPoolExecutor(os.cpu_count()) as executor:
-        for id_num, dictionary in data.items():
-            player_id = dictionary['player_id']
+        for player_id, dictionary in data.items():
+            for team, dictionary2 in dictionary.items():
+                for index, dictionary3 in dictionary2.items():
+                    try:
+                        executor.submit(intermediate, player_id, team, index, dictionary3['temp_player'],
+                                        dictionary3['row'], batting_against_rows[player_id][team][index]['row'])
+                    except KeyError:
+                        executor.submit(intermediate, player_id, team, index, dictionary3['temp_player'],
+                                        dictionary3['row'], [])
+    for player_id, dictionary in data.items():
+        for team, dictionary2 in dictionary.items():
             try:
-                executor.submit(intermediate, id_num, year, player_id, dictionary['temp_player'], dictionary['row'],
-                                batting_against_rows[player_id])
+                write_teams_and_stats(player_id, dictionary2, ratios[player_id], team, year)
             except KeyError:
-                executor.submit(intermediate, id_num, year, player_id, dictionary['temp_player'], dictionary['row'], [])
-    for id_num, dictionary in data.items():
-        player_id = dictionary['player_id']
-        try:
-            write_teams_and_stats(player_id, dictionary['stats'], ratios[player_id], dictionary['team'], year)
-        except KeyError:
-            write_teams_and_stats(player_id, dictionary['stats'], [], dictionary['team'], year)
+                write_teams_and_stats(player_id, dictionary2, [], team, year)
     logger.log("\t\tTime = " + time_converter(time.time() - bulk_time))
     total_time = time_converter(time.time() - start_time)
     logger.log("Done downloading player images and attributes: time = " + total_time + '\n\n')
@@ -75,23 +104,16 @@ def extract_player_attributes(player_id, page, reversed_name):
                     'batsWith': str_ent.split('Throws: </strong>')[1][0]}
 
 
-def get_team_and_stats(id_num, row, row2, year):
-    stats = ["W", "L", "G", "GS", "SV", "IP", "H", "R", "ER", "HR", "BB", "IBB", "SO", "HBP", "BK", "WP", "whip",
-             "team_ID"]
+def get_stats(player_id, team, index, row, row2):
+    stats = ["W", "L", "G", "GS", "SV", "IP", "H", "R", "ER", "HR", "BB", "IBB", "SO", "HBP", "BK", "WP", "whip"]
     stats2 = ["PA", "AB", "2B", "3B", "SB", "CS", "batting_avg_bip", "GIDP", "SH", "SF"]
     stat_dictionary = {}
-    team = "TOT"
     for ent in row:
         for stat in stats:
             if '="' + stat + '" >' in ent:
                 try:
-                    if stat not in ["pitching_avg", "onbase_perc", "slugging_perc", "onbase_plus_slugging", "team_ID"]:
+                    if stat not in ["pitching_avg", "onbase_perc", "slugging_perc", "onbase_plus_slugging"]:
                         stat_dictionary[stat] = int(ent.split('="' + stat + '" >')[1].split('<')[0])
-                    elif stat == "team_ID":
-                        try:
-                            team = translate_team_id(ent.split('a href="/teams/')[1].split('/')[0], year)
-                        except IndexError:
-                            pass
                     else:
                         stat_dictionary[stat] = float(ent.split('="' + stat + '" >')[1].split('<')[0])
                 except ValueError:
@@ -108,8 +130,7 @@ def get_team_and_stats(id_num, row, row2, year):
                 except ValueError:
                     pass
                 break
-    data[id_num]['stats'] = stat_dictionary
-    data[id_num]['team'] = team
+    data[player_id][team][index]['stats'] = stat_dictionary
 
 
 def load_url(player_id):
@@ -136,6 +157,13 @@ def write_to_db(player_id, player_attributes):
 
 
 def write_teams_and_stats(player_id, stats, ratios, team, year):
+    stat_nums = {}
+    for index, numbers in stats.items():
+        for field, value in numbers['stats'].items():
+            if field in stat_nums:
+                stat_nums[field] += value
+            else:
+                stat_nums[field] = value
     db, cursor = DB_Connect.grab("baseballData")
     if len(DB_Connect.read(cursor, 'select pt_uniqueidentifier from player_teams where playerid = "' + player_id
                                    + '" and teamid = "' + team + '";')) == 0:
@@ -146,7 +174,7 @@ def write_teams_and_stats(player_id, stats, ratios, team, year):
                                    'playerid = "' + player_id + '" and teamid = "' + team + '");')) == 0:
         fields = ''
         values = ''
-        for field, value in stats.items():
+        for field, value in stat_nums.items():
             fields += ', ' + field
             values += ', ' + str(value)
         for ratio in ratios:
@@ -159,7 +187,7 @@ def write_teams_and_stats(player_id, stats, ratios, team, year):
     DB_Connect.close(db)
 
 
-def intermediate(id_num, year, player_id, temp_player, row, row2):
+def intermediate(player_id, team, index, temp_player, row, row2):
     page = load_url(player_id)
     if page is not None:
         if "-0" in temp_player:
@@ -167,8 +195,8 @@ def intermediate(id_num, year, player_id, temp_player, row, row2):
         else:
             reversed_name = temp_player.split("0")[0].replace("'", "\'")
         write_to_db(player_id, extract_player_attributes(player_id, page, reversed_name))
-    get_team_and_stats(id_num, row, row2, year)
+    get_stats(player_id, team, index, row, row2)
 
 
-# pitching_constructor(2018, Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\"
+# pitching_constructor(1997, Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\"
 #                                   "dump.log"))
