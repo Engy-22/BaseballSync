@@ -68,10 +68,7 @@ if __name__ == '__main__':
     main_logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\driver.log")
     main_logger.log('Begin Driver || Timestamp: ' + datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S'))
     start_time = time.time()
-    try:
-        most_recent_year = get_most_recent_year(main_logger)
-    except IndexError:
-        most_recent_year = 1876
+    most_recent_year = get_most_recent_year(main_logger)
     league_table_constructor(main_logger)
     manager_table_constructor(main_logger)
     years = []
