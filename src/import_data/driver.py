@@ -56,8 +56,8 @@ def driver(year, driver_log):
     primary_and_secondary_positions(year, driver_log)
     hitter_tendencies(year, driver_log)
     pitcher_tendencies(year, driver_log)
-    hitter_spray_chart_constructor(year, driver_log)
-    pitcher_spray_chart_constructor(year, driver_log)
+    # hitter_spray_chart_constructor(year, driver_log)
+    # pitcher_spray_chart_constructor(year, driver_log)
     team_certainties(year, driver_log)
     rank_driver(year, driver_log)
     award_winner_driver(year, driver_log)
@@ -75,7 +75,7 @@ if __name__ == '__main__':
     league_table_constructor(main_logger)
     manager_table_constructor(main_logger)
     years = []
-    for year in range(2000, 2002, 1):
+    for year in range(1997, 1999, 1):
         years.append(year)
         driver(year, main_logger)
     # if most_recent_year > 1997:
