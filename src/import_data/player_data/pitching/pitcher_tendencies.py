@@ -107,14 +107,13 @@ def write_to_file(year, player_id, stat_list):
 
 def fill_fields(year):
     db, cursor = DB_Connect.grab("baseballData")
-    DB_Connect.write(db, cursor, 'update player_pitching set certainty = 0.0 where year = ' + str(year) + ';')
+    DB_Connect.write(db, cursor, 'update player_pitching set certainty=0.0 where year=' + str(year) + ';')
     DB_Connect.close(db)
 
 
 def fill_pitchers_with_0_pa(year):
     db, cursor = DB_Connect.grab("baseballData")
-    DB_Connect.write(db, cursor, "update player_pitching set certainty = 0.0 where pa = 0 and year = "
-                                 + str(year) + ";")
+    DB_Connect.write(db, cursor, "update player_pitching set certainty = 0.0 where pa=0 and year=" + str(year) + ";")
     DB_Connect.close(db)
 
 
