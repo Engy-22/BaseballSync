@@ -114,12 +114,12 @@ def get_stats(player_id, team, index, row, row2):
             if '="' + stat + '" >' in ent:
                 try:
                     if stat not in ["pitching_avg", "onbase_perc", "slugging_perc", "onbase_plus_slugging"]:
-                        stat_dictionary[stat] = int(ent.split('="' + stat + '" >')[1].split('<')[0])
-                    else:
                         if stat != "batters_faced":
-                            stat_dictionary[stat] = float(ent.split('="' + stat + '" >')[1].split('<')[0])
+                            stat_dictionary[stat] = int(ent.split('="' + stat + '" >')[1].split('<')[0])
                         else:
-                            stat_dictionary['pa'] = float(ent.split('="' + stat + '" >')[1].split('<')[0])
+                            stat_dictionary['pa'] = int(ent.split('="' + stat + '" >')[1].split('<')[0])
+                    else:
+                        stat_dictionary[stat] = float(ent.split('="' + stat + '" >')[1].split('<')[0])
                 except ValueError:
                     pass
                 break
