@@ -20,7 +20,7 @@ def pitcher_tendencies(year, driver_logger):
         logger.log("\tDownloading data")
         prev_player_id = ""
         page = str(BeautifulSoup(urlopen('https://www.baseball-reference.com/leagues/MLB/' + str(year)
-                                             + '-pitches-pitching.shtml'), 'html.parser'))
+                                         + '-pitches-pitching.shtml'), 'html.parser'))
         table = page.split('<h2>Player Pitching Pitches</h2>')[1].split('<tbody>')[1].split('</tbody>')[0]
         rows = table.split('<tr')
         logger.log("\t\tTime = " + time_converter(time.time() - start_time))
@@ -83,8 +83,11 @@ def write_to_file(year, player_id, stat_list):
     for pt_uid in pt_uids:
         if len(DB_Connect.read(cursor, "select PP_uniqueidentifier from player_pitching where PT_uniqueidentifier = "
                                        + str(pt_uid[0]) + " and year = " + str(year) + ";")) != 0:
-            pa.append(int(DB_Connect.read(cursor, "select pa from player_pitching where pt_uniqueidentifier = "
-                                                  + str(pt_uid[0]) + " and year = " + str(year) + ";")[0][0]))
+            try:
+                pa.append(int(DB_Connect.read(cursor, "select pa from player_pitching where pt_uniqueidentifier = "
+                                                      + str(pt_uid[0]) + " and year = " + str(year) + ";")[0][0]))
+            except TypeError:
+                continue
             records.append(pt_uid)
     if len(pa) != 0:
         for pt in records:
