@@ -20,10 +20,13 @@ def rank_driver(year, driver_logger):
     allowed = {}
     difference = {}
     standard_deviation = {}
+    driver_logger.log("\t\tCalculating team ranks (year)")
     for data_year in range(year, get_oldest_year(driver_logger)-1, -1):
-        runs[data_year], allowed[data_year], difference[data_year] = team_ranker_year(data_year, driver_logger)
+        runs[data_year], allowed[data_year], difference[data_year] = team_ranker_year(data_year)
         standard_deviation[str(data_year)] = stdev([team_runs[1] for team_runs in runs[data_year]])
-    logger.log("\t\tTime = " + time_converter(time.time() - start_time))
+    total_time = time_converter(time.time() - start_time)
+    logger.log("\t\tTime = " + total_time)
+    driver_logger.log("\t\t\tTime = " + total_time)
     second_time = time.time()
     driver_logger.log("\t\tCalculating team ranks (overall)")
     logger.log("\tCalculating team ranks (overall)")
