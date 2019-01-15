@@ -8,8 +8,7 @@ from utilities.Logger import Logger
 logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\team_ranker_year.log")
 
 
-def team_ranker_year(year, driver_logger):
-    driver_logger.log("\t\tCalculating team ranks (year)")
+def team_ranker_year(year):
     start_time = time.time()
     logger.log("Beginning year team ranker || Timestamp: " + datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S'))
     runs_for = {}
@@ -27,9 +26,7 @@ def team_ranker_year(year, driver_logger):
     write_to_file(scored, year, "offRank")
     write_to_file(allowed, year, "defRank")
     write_to_file(difference, year, "ovrRank")
-    total_time = time_converter(time.time() - start_time)
-    logger.log("Year team ranker complete: time = " + total_time + '\n\n')
-    driver_logger.log("\t\t\tTime = " + total_time)
+    logger.log("Year team ranker complete: time = " + time_converter(time.time() - start_time) + '\n\n')
     return scored, allowed, difference
 
 
