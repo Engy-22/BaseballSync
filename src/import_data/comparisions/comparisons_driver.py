@@ -30,22 +30,22 @@ def comparisons_driver(most_recent_year, driver_logger):
     possible_defensive_comps = {}
     defenses_to_compare = {}
 
-    print('making hitter comparisons (overall)')
-    hc_time = time.time()
-    logger.log("\tMaking hitter comparisons (overall)")
-    hitter_years_to_compare = [year for year in range(most_recent_year, 1997, -1)]
-    for year_to_compare in hitter_years_to_compare:
-        possible_hitter_comps[year_to_compare] = {}
-        year_pa, year_totals = hitter_year_totals(year_to_compare, logger)
-        hitters_to_compare[year_to_compare] = gather_players(year_to_compare, "batting", logger)
-        for comp_ty_uid in hitters_to_compare[year_to_compare]:
-            comp_team_pa, comp_stats = get_hitter_stats(comp_ty_uid, year_to_compare, logger)
-            if comp_team_pa >= 300:
-                possible_hitter_comps[year_to_compare][comp_ty_uid + ';' + str(year_to_compare)] =\
-                    hitter_dr_calc(comp_team_pa, comp_stats, year_pa, year_totals, logger)
-    for comp_year in range(1876, most_recent_year + 1, 1):
-        make_hitter_comparisons(gather_players(comp_year, "batting", logger), comp_year, possible_hitter_comps, logger)
-    logger.log("\t\tTime = " + time_converter(time.time() - hc_time))
+    # print('making hitter comparisons (overall)')
+    # hc_time = time.time()
+    # logger.log("\tMaking hitter comparisons (overall)")
+    # hitter_years_to_compare = [year for year in range(most_recent_year, 1997, -1)]
+    # for year_to_compare in hitter_years_to_compare:
+    #     possible_hitter_comps[year_to_compare] = {}
+    #     year_pa, year_totals = hitter_year_totals(year_to_compare, logger)
+    #     hitters_to_compare[year_to_compare] = gather_players(year_to_compare, "batting", logger)
+    #     for comp_ty_uid in hitters_to_compare[year_to_compare]:
+    #         comp_team_pa, comp_stats = get_hitter_stats(comp_ty_uid, year_to_compare, logger)
+    #         if comp_team_pa >= 300:
+    #             possible_hitter_comps[year_to_compare][comp_ty_uid + ';' + str(year_to_compare)] =\
+    #                 hitter_dr_calc(comp_team_pa, comp_stats, year_pa, year_totals, logger)
+    # for comp_year in range(1876, most_recent_year + 1, 1):
+    #     make_hitter_comparisons(gather_players(comp_year, "batting", logger), comp_year, possible_hitter_comps, logger)
+    # logger.log("\t\tTime = " + time_converter(time.time() - hc_time))
 
     print('making pitcher comparisons (overall)')
     pc_time = time.time()
