@@ -58,19 +58,19 @@ def get_pitchers(year):
         pitcher_list = []
         schedule = {}
         try:
+            for i in def_lineups:
+                if 'th class="left "' in i:
+                    pitcher_list.append(i.split('data-stat="P"><a data-entry-id="')[1].split('"')[0].replace("'", "\'"))
+                    game_num = i.split('<a name="')[1].split('"')[0]
+                    schedule[game_num] = []
+                    schedule[game_num].append(translate_team_id(i.split('<a href="/teams/')[1].split('/')[0], year))
+                    schedule[game_num].append(i.split('">' + schedule[game_num][0] + '</a> ')[1].split(' ')[0])
+                    schedule[game_num].append(i.split(schedule[game_num][0] + '</a> ' + schedule[game_num][1]
+                                                      + ' (')[1].split(')')[0])
+                    date = i.split('title="facing:')[1].split('">')[1].split(',')[1].split('</a>')[0].split('/')
+                    schedule[game_num].append(date[0])
+                    schedule[game_num].append(date[1])
             with ThreadPoolExecutor(os.cpu_count()) as executor2:
-                for i in def_lineups:
-                    if 'th class="left "' in i:
-                        pitcher_list.append(i.split('data-stat="P"><a data-entry-id="')[1].split('"')[0].replace("'", "\'"))
-                        game_num = i.split('<a name="')[1].split('"')[0]
-                        schedule[game_num] = []
-                        schedule[game_num].append(translate_team_id(i.split('<a href="/teams/')[1].split('/')[0], year))
-                        schedule[game_num].append(i.split('">' + schedule[game_num][0] + '</a> ')[1].split(' ')[0])
-                        schedule[game_num].append(i.split(schedule[game_num][0] + '</a> ' + schedule[game_num][1]
-                                                          + ' (')[1].split(')')[0])
-                        date = i.split('title="facing:')[1].split('">')[1].split(',')[1].split('</a>')[0].split('/')
-                        schedule[game_num].append(date[0])
-                        schedule[game_num].append(date[1])
                 executor2.submit(write_to_file_pitchers, team_id, year, pitcher_list)
                 executor2.submit(write_to_file_schedule, team_id, year, schedule)
         except IndexError:
