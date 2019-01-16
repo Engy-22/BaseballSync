@@ -22,7 +22,7 @@ def get_year_data(year, driver_logger):
     batting_list = {'PA': 'pa', 'AB': 'ab', 'R': 'r', 'H': 'h', '2B': '2b', '3B': '3b', 'HR': 'hr', 'RBI': 'rbi',
                     'SB': 'sb', 'BB': 'bb', 'SO': 'so', 'batting_avg': 'ba', 'onbase_perc': 'obp',
                     'slugging_perc': 'slg', 'onbase_plus_slugging': 'ops'}
-    pitching_list = {'earned_run_avg': 'era', 'whip': 'whip', 'strikeouts_per_nine': 'k_9',
+    pitching_list = {'earned_run_avg': 'era', 'IP': 'ip', 'ER': 'er', 'whip': 'whip', 'strikeouts_per_nine': 'k_9',
                      'strikeouts_per_base_on_balls': 'k_bb'}
     fielding_list = {'E_def': 'e', 'fielding_perc': 'f_percent'}
     stat_list = {"batting": batting_list, "pitching": pitching_list, "fielding": fielding_list}
@@ -104,4 +104,5 @@ def write_to_db(year, stat_string, stat_type):
     DB_Connect.close(db)
 
 
-# get_year_data(2018)
+# for year in range(1997, 2005, 1):
+#     get_year_data(year, Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\dump.log"))
