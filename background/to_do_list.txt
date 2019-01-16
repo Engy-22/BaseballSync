@@ -106,4 +106,3 @@
     *investigate deadlock situation in tendency constructors
         -ex.) 'Deadlock found when trying to get lock; try restarting transaction'
     *reconfigure batters.py the same way as pitchers.py
-    *make IP get put into years table.
