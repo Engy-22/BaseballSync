@@ -105,21 +105,21 @@ def extract_player_attributes(player_id, page, reversed_name):
 
 
 def get_stats(player_id, team, index, row, row2):
-    stats = ["W", "L", "G", "GS", "SV", "IP", "H", "R", "ER", "HR", "BB", "IBB", "SO", "HBP", "BK", "WP", "whip",
-             "batters_faced"]
+    stats = ["earned_run_average", "W", "L", "G", "GS", "SV", "IP", "H", "R", "ER", "HR", "BB", "IBB", "SO", "HBP",
+             "BK", "WP", "whip", "batters_faced"]
     stats2 = ["AB", "2B", "3B", "SB", "CS", "batting_avg_bip", "GIDP", "SH", "SF"]
     stat_dictionary = {}
     for ent in row:
         for stat in stats:
             if '="' + stat + '" >' in ent:
                 try:
-                    if stat not in ["pitching_avg", "onbase_perc", "slugging_perc", "onbase_plus_slugging"]:
-                        if stat != "batters_faced":
-                            stat_dictionary[stat] = int(ent.split('="' + stat + '" >')[1].split('<')[0])
-                        else:
-                            stat_dictionary['pa'] = int(ent.split('="' + stat + '" >')[1].split('<')[0])
+                    if stat not in ["earned_run_average", "whip", "IP"]:
+                        stat_dictionary[stat] = int(ent.split('="' + stat + '" >')[1].split('<')[0])
                     else:
-                        stat_dictionary[stat] = float(ent.split('="' + stat + '" >')[1].split('<')[0])
+                        if stat != "earned_run_average":
+                            stat_dictionary[stat] = float(ent.split('="' + stat + '" >')[1].split('<')[0])
+                        else:
+                            stat_dictionary['era'] = float(ent.split('="' + stat + '" >')[1].split('<')[0])
                 except ValueError:
                     pass
                 break
