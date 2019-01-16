@@ -114,7 +114,10 @@ def get_stats(player_id, team, index, row, row2):
             if '="' + stat + '" >' in ent:
                 try:
                     if stat not in ["earned_run_average", "whip", "IP"]:
-                        stat_dictionary[stat] = int(ent.split('="' + stat + '" >')[1].split('<')[0])
+                        if stat != "batters_faced":
+                            stat_dictionary[stat] = int(ent.split('="' + stat + '" >')[1].split('<')[0])
+                        else:
+                            stat_dictionary['pa'] = int(ent.split('="' + stat + '" >')[1].split('<')[0])
                     else:
                         if stat != "earned_run_average":
                             stat_dictionary[stat] = float(ent.split('="' + stat + '" >')[1].split('<')[0])
