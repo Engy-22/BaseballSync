@@ -148,5 +148,5 @@ def write_teams_and_stats(player_id, stats, team, year):
     DB_Connect.close(db)
 
 
-fielding_constructor(1876, Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\"
-                                  "dump.log"))
+# fielding_constructor(1876, Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\"
+#                                   "dump.log"))
