@@ -4,7 +4,7 @@ import pymysql
 class DB_Connect:
     
     def grab(db):
-        db_connection = pymysql.connect("localhost","root","Invader1401asdf", db)
+        db_connection = pymysql.connect("localhost", "root", "Invader1401asdf", db)
         return db_connection, db_connection.cursor()
 
     def write(db, cursor, action):
