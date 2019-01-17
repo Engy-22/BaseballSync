@@ -44,9 +44,12 @@ def pitching_constructor(year, driver_logger):
                     continue
             data[player_id][team][this_index] = {'row': row.split('data-stat'),
                                                  'temp_player': row.split('ata-stat="player" csk="')[1].split('" >')[0]}
-    table2 = str(BeautifulSoup(urlopen("https://www.baseball-reference.com/leagues/MLB/" + str(year) + "-batting-"
-                                       "pitching.shtml"), 'html.parser')).split('<h2>Player Batting Against</h2>')[1].\
-        split('</tbody>')[0].split('<tbody>')[1].split('<tr ')
+    try:
+        table2 = str(BeautifulSoup(urlopen("https://www.baseball-reference.com/leagues/MLB/" + str(year) + "-batting-"
+                                           "pitching.shtml"), 'html.parser')).split('<h2>Player Batting Against</h2>')
+        [1].split('</tbody>')[0].split('<tbody>')[1].split('<tr ')
+    except Exception:
+        table2 = []
     batting_against_rows = {}
     for row in table2:
         if 'data-stat="player" csk="' in row and 'data-append-csv="' in row:
@@ -102,6 +105,17 @@ def extract_player_attributes(player_id, page, reversed_name):
             return {'lastName': reversed_name.split(',')[1], 'firstName': reversed_name.split(',')[0],
                     'throwsWith': str_ent.split('Bats: </strong>')[1][0], 'primaryPosition': 'N',
                     'batsWith': str_ent.split('Throws: </strong>')[1][0]}
+
+
+def intermediate(player_id, team, index, temp_player, row, row2):
+    page = load_url(player_id)
+    if page is not None:
+        if "-0" in temp_player:
+            reversed_name = temp_player.split("-0")[0].replace("'", "\'")
+        else:
+            reversed_name = temp_player.split("0")[0].replace("'", "\'")
+        write_to_db(player_id, extract_player_attributes(player_id, page, reversed_name))
+    get_stats(player_id, team, index, row, row2)
 
 
 def get_stats(player_id, team, index, row, row2):
@@ -194,17 +208,6 @@ def write_teams_and_stats(player_id, stats, ratios, team, year):
                                      'pt_uniqueidentifier from player_teams where playerid = "' + player_id + '" and '
                                      'teamid = "' + team + '"), FALSE' + values + ');')
     DB_Connect.close(db)
-
-
-def intermediate(player_id, team, index, temp_player, row, row2):
-    page = load_url(player_id)
-    if page is not None:
-        if "-0" in temp_player:
-            reversed_name = temp_player.split("-0")[0].replace("'", "\'")
-        else:
-            reversed_name = temp_player.split("0")[0].replace("'", "\'")
-        write_to_db(player_id, extract_player_attributes(player_id, page, reversed_name))
-    get_stats(player_id, team, index, row, row2)
 
 
 # pitching_constructor(1997, Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\"
