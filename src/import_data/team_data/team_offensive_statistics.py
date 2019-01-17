@@ -49,7 +49,10 @@ def write_to_file(team_data, year):
         logger.log("\tWriting " + team + " data to database")
         sets = ''
         for field, value in data.items():
-            sets += field + ' = ' + value + ', '
+            if value != '':
+                sets += field + ' = ' + value + ', '
+            else:
+                continue
         DB_Connect.write(db, cursor, 'update team_years set ' + sets[:-2] + ' where teamid = "' + team + '" and year = '
                                      + str(year) + ';')
     DB_Connect.close(db)
