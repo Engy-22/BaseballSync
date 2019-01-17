@@ -9,6 +9,7 @@ from import_data.player_data.pitching.league_pitching_ratios_constructor import 
 from utilities.translate_team_id import translate_team_id
 from utilities.time_converter import time_converter
 from utilities.Logger import Logger
+from utilities.anomaly_team import anomaly_team
 
 data = {}
 logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\pitchers.log")
@@ -29,8 +30,8 @@ def pitching_constructor(year, driver_logger):
             player_id = row.split('data-append-csv="')[1].split('"')[0].replace("'", "\'")
             try:
                 team = translate_team_id(row.split('a href="/teams/')[1].split('/')[0], year)
-                if year == 1880 and len(team) == 4:
-                    team = "CIN"
+                if len(team) == 4:
+                    team = anomaly_team(year)
                     print("\t\t\tcheck out " + player_id + " this year's standard batting page")
             except IndexError:
                 team = 'TOT'
