@@ -27,14 +27,14 @@ def batting_constructor(year, driver_logger):
         split('<table class="sortable stats_table" id')[1].split('<tbody>')[1].split('</tbody>')[0].split('<tr')
     for row in table:
         if 'data-stat="player" csk="' in row and 'data-append-csv="' in row:
+            player_id = row.split('data-append-csv="')[1].split('"')[0].replace("'", "\'")
             try:
                 team = translate_team_id(row.split('a href="/teams/')[1].split('/')[0], year)
                 if year == 1880 and len(team) == 4:
                     team = "CIN"
-                    print("check out this year's standard batting page")
+                    print("\t\t\tcheck out " + player_id + " this year's standard batting page")
             except IndexError:
                 team = 'TOT'
-            player_id = row.split('data-append-csv="')[1].split('"')[0].replace("'", "\'")
             global data
             if player_id not in data:
                 data[player_id] = {}
