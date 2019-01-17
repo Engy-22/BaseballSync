@@ -26,8 +26,24 @@ def fielding_constructor(year, driver_logger):
         split('<table class="sortable stats_table" id')[1].split('<tbody>')[1].split('</tbody>')[0].split('<tr')
     for row in table:
         if 'data-stat="player" csk="' in row and 'data-append-csv="' in row:
-            data['player_id': row.split('data-append-csv="')[1].split('"')[0].replace("'", "\'")] = {
-                'row': row.split('data-stat'), 'temp_player': row.split('data-stat="player" csk="')[1].split('" >')[0]}
+            try:
+                team = translate_team_id(row.split('a href="/teams/')[1].split('/')[0], year)
+            except IndexError:
+                team = 'TOT'
+            player_id = row.split('data-append-csv="')[1].split('"')[0].replace("'", "\'")
+            global data
+            if player_id not in data:
+                data[player_id] = {}
+            if team not in data[player_id]:
+                this_index = 1
+                data[player_id][team] = {}
+            else:
+                if team != 'TOT':
+                    this_index = len(data[player_id][team]) + 1
+                else:
+                    continue
+            data[player_id][team][this_index] = {'row': row.split('data-stat'),
+                                                 'temp_player': row.split('ata-stat="player" csk="')[1].split('" >')[0]}
     logger.log("\t\tDone assembling list of players")
     bulk_time = time.time()
     logger.log("\tParsing player pages, downloading images, and extracting player attributes")
@@ -70,7 +86,6 @@ def intermediate(player_id, team, index, temp_player, row):
 def get_stats(player_id, team, index, row):
     stats = {"CH": "chances", "PO": "PO", "A": "A", "E": "E_def"}
     stat_dictionary = {}
-    team = "TOT"
     for ent in row:
         for stat, name in stats.items():
             if '="' + name + '" >' in ent:
@@ -133,5 +148,5 @@ def write_teams_and_stats(player_id, stats, team, year):
     DB_Connect.close(db)
 
 
-# fielding_constructor(2018, Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\"
-#                                  "dump.log"))
+fielding_constructor(1876, Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\"
+                                  "dump.log"))
