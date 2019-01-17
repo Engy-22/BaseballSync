@@ -71,8 +71,9 @@ def batting_constructor(year, driver_logger):
 
 
 def extract_player_attributes(player_id, page, reversed_name):
-    urlretrieve(str(page.find_all('img')[1]).split('src=')[1].split('/>')[0].split('"')[1],
-                "C:\\Users\\Anthony Raimondo\\images\\players\\" + player_id + ".jpg")
+    img_location = str(page.find_all('img')[1]).split('src=')[1].split('/>')[0].split('"')[1]
+    if 'gracenote' not in img_location:
+        urlretrieve(img_location, "C:\\Users\\Anthony Raimondo\\images\\players\\" + player_id + ".jpg")
     for ent in page.find_all('div'):
         str_ent = str(ent)
         if 'Throws: </strong>' in str_ent:
@@ -165,5 +166,5 @@ def write_teams_and_stats(player_id, stats, ratios, team, year):
     DB_Connect.close(db)
 
 
-# batting_constructor(1880, Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\"
+# batting_constructor(1997, Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\"
 #                                  "dump.log"))
