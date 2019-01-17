@@ -8,6 +8,7 @@ from utilities.DB_Connect import DB_Connect
 from utilities.translate_team_id import translate_team_id
 from utilities.time_converter import time_converter
 from utilities.Logger import Logger
+from utilities.anomaly_team import anomaly_team
 
 data = {}
 
@@ -29,8 +30,8 @@ def fielding_constructor(year, driver_logger):
             player_id = row.split('data-append-csv="')[1].split('"')[0].replace("'", "\'")
             try:
                 team = translate_team_id(row.split('a href="/teams/')[1].split('/')[0], year)
-                if year == 1880 and len(team) == 4:
-                    team = "CIN"
+                if len(team) == 4:
+                    team = anomaly_team(year)
                     print("\t\t\tcheck out " + player_id + " this year's standard batting page")
             except IndexError:
                 team = 'TOT'
