@@ -192,5 +192,5 @@ def write_to_db(team_id, stats, trajectory, manager_ids, year, park_name):
     DB_Connect.close(db)
 
 
-# ballpark_and_manager_data(2018, Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data"
+# ballpark_and_manager_data(1878, Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data"
 #                                        "\\dump.log"))
