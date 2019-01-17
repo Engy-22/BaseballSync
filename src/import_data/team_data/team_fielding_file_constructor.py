@@ -69,14 +69,14 @@ def write_to_file(year):
                     else:
                         this_string += position_summary
                     this_string += '"'
+                    ty_uid = DB_Connect.read(cursor, ('select TY_uniqueidentifier from team_years where teamId = "'
+                                                      + team_id + '" and year = ' + str(year) + ';'))[0][0]
                     if len(DB_Connect.read(cursor, 'select PPos_uniqueidentifier from player_positions where playerId='
-                                                   + this_string.split(',')[0] + ' and TY_uniqueidentifier = (select '
-                                                   + 'TY_uniqueidentifier from team_years where teamId = "' + team_id
-                                                   + '" and year = ' + str(year) + ');')) == 0:
+                                                   + this_string.split(',')[0] + ' and TY_uniqueidentifier = ' + ty_uid
+                                                   + ';')) == 0:
                         DB_Connect.write(db, cursor, 'insert into player_positions (PPos_uniqueidentifier, playerId, '
                                                      'positions, TY_uniqueidentifier) values (default, ' + this_string
-                                                     + ', (select TY_uniqueidentifier from team_years where teamId = "'
-                                                     + team_id + '" and year = ' + str(year) + '));')
+                                                     + ', ' + ty_uid + ');')
         except IndexError:
             pass
         DB_Connect.close(db)
