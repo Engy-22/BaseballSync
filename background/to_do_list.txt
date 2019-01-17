@@ -105,4 +105,4 @@
     *maybe decrease the amount which standard deviation affects team rankings in overall team ranker.
     *investigate deadlock situation in tendency constructors
         -ex.) 'Deadlock found when trying to get lock; try restarting transaction'
-    *reconfigure batters.py the same way as pitchers.py
+    *reconfigure batters.py and fielders.py the same way as pitchers.py
