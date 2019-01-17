@@ -9,8 +9,12 @@ def league_pitching_ratios_constructor(year, logger):
     start_time = time.time()
     keys = []
     final_list = {}
-    table = str(BeautifulSoup(urlopen("https://www.baseball-reference.com/leagues/MLB/" + str(year) + "-ratio-pitching."
-                                      "shtml"), "html.parser")).split('<tbody>')[2].split('</tbody>')[0].split('<tr ')
+    try:
+        table = str(BeautifulSoup(urlopen("https://www.baseball-reference.com/leagues/MLB/" + str(year)
+                                          + "-ratio-pitching.shtml"), "html.parser")).split('<tbody>')[2].\
+            split('</tbody>')[0].split('<tr ')
+    except Exception:
+        table = []
     for row in table:
         if 'data-append-csv="' in row:
             keys.append(row.split('data-append-csv="')[1].split('"')[0])
