@@ -29,6 +29,9 @@ def batting_constructor(year, driver_logger):
         if 'data-stat="player" csk="' in row and 'data-append-csv="' in row:
             try:
                 team = translate_team_id(row.split('a href="/teams/')[1].split('/')[0], year)
+                if year == 1880 and len(team) == 4:
+                    team = "CIN"
+                    print("check out this year's standard batting page")
             except IndexError:
                 team = 'TOT'
             player_id = row.split('data-append-csv="')[1].split('"')[0].replace("'", "\'")
@@ -161,5 +164,5 @@ def write_teams_and_stats(player_id, stats, ratios, team, year):
     DB_Connect.close(db)
 
 
-# batting_constructor(1877, Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\"
+# batting_constructor(1880, Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\"
 #                                  "dump.log"))
