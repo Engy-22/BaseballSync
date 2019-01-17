@@ -11,8 +11,7 @@ def team_certainties(year, driver_logger):
     print('aggregating team statistic certainties')
     driver_logger.log("\tAggregating team statistic certainties")
     start_time = time.time()
-    logger.log("Calculating team certainties || Timestamp: " + datetime.datetime.today()\
-               .strftime('%Y-%m-%d %H:%M:%S'))
+    logger.log("Calculating team certainties || Timestamp: " + datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S'))
     db, cursor = DB_Connect.grab("baseballData")
     stat_types = ["batting", "pitching"]
     for stat_type in stat_types:
