@@ -195,7 +195,7 @@ def write_to_db(this_string, team_id, year):
                                    + '" and year = ' + str(year) + ';')) == 0:
         DB_Connect.write(db, cursor, 'Insert into team_years (TY_uniqueidentifier, teamId, year, league, division, '
                                      + 'wins, loses, playoffs, BY_uniqueidentifier) values (default,' + this_string
-                                     + ',(select BY_uniqueidentifier from ballpark_years where teamId = "' + team_id
+                                     + ', (select BY_uniqueidentifier from ballpark_years where teamId = "' + team_id
                                      + '" and year = ' + str(year) + '));')
     DB_Connect.close(db)
 
