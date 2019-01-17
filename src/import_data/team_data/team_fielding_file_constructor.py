@@ -69,8 +69,8 @@ def write_to_file(year):
                     else:
                         this_string += position_summary
                     this_string += '"'
-                    ty_uid = DB_Connect.read(cursor, ('select TY_uniqueidentifier from team_years where teamId = "'
-                                                      + team_id + '" and year = ' + str(year) + ';'))[0][0]
+                    ty_uid = str(DB_Connect.read(cursor, ('select TY_uniqueidentifier from team_years where teamId = "'
+                                                          + team_id + '" and year = ' + str(year) + ';'))[0][0])
                     if len(DB_Connect.read(cursor, 'select PPos_uniqueidentifier from player_positions where playerId='
                                                    + this_string.split(',')[0] + ' and TY_uniqueidentifier = ' + ty_uid
                                                    + ';')) == 0:
@@ -82,5 +82,5 @@ def write_to_file(year):
         DB_Connect.close(db)
 
 
-# team_fielding_file_constructor(2018, Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\"
+# team_fielding_file_constructor(1877, Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\"
 #                                             "import_data\\dump.log"))
