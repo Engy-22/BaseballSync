@@ -24,22 +24,21 @@ def fielding_constructor(year, driver_logger):
     table = str(BeautifulSoup(urlopen("https://www.baseball-reference.com/leagues/MLB/" + str(year)
                                       + "-standard-fielding.shtml"), 'html.parser')).\
         split('<table class="sortable stats_table" id')[1].split('<tbody>')[1].split('</tbody>')[0].split('<tr')
-    count = 0
     for row in table:
         if 'data-stat="player" csk="' in row and 'data-append-csv="' in row:
-            data[str(count)] = {'player_id': row.split('data-append-csv="')[1].split('"')[0].replace("'", "\'"),
-                                'row': row.split('data-stat'),
-                                'temp_player': row.split('data-stat="player" csk="')[1].split('" >')[0]}
-            count += 1
+            data['player_id': row.split('data-append-csv="')[1].split('"')[0].replace("'", "\'")] = {
+                'row': row.split('data-stat'), 'temp_player': row.split('data-stat="player" csk="')[1].split('" >')[0]}
     logger.log("\t\tDone assembling list of players")
     bulk_time = time.time()
     logger.log("\tParsing player pages, downloading images, and extracting player attributes")
     with ThreadPoolExecutor(os.cpu_count()) as executor:
-        for id_num, dictionary in data.items():
-            executor.submit(intermediate, id_num, year, dictionary['player_id'], dictionary['temp_player'],
-                            dictionary['row'])
-    for id_num, dictionary in data.items():
-        write_teams_and_stats(dictionary['player_id'], dictionary['stats'], dictionary['team'], year)
+        for player_id, dictionary in data.items():
+            for team, dictionary2 in dictionary.items():
+                for index, dictionary3 in dictionary2.items():
+                    executor.submit(intermediate, player_id, team, index, dictionary3['temp_player'], dictionary3['row'])
+    for player_id, dictionary in data.items():
+        for team, dictionary2 in dictionary.items():
+            write_teams_and_stats(player_id, dictionary2, team, year)
     logger.log("\t\tTime = " + time_converter(time.time() - bulk_time))
     total_time = time_converter(time.time() - start_time)
     logger.log("Done downloading player images and attributes: time = " + total_time + '\n\n')
@@ -57,26 +56,30 @@ def extract_player_attributes(player_id, page, reversed_name):
                     'batsWith': str_ent.split('Throws: </strong>')[1][0]}
 
 
-def get_team_and_stats(id_num, row, year):
-    stats = {"CH": "chances", "PO": "PO", "A": "A", "E": "E_def", "team_ID": "team_ID"}
+def intermediate(player_id, team, index, temp_player, row):
+    page = load_url(player_id)
+    if page is not None:
+        if "-0" in temp_player:
+            reversed_name = temp_player.split("-0")[0].replace("'", "\'")
+        else:
+            reversed_name = temp_player.split("0")[0].replace("'", "\'")
+        write_to_db(player_id, extract_player_attributes(player_id, page, reversed_name))
+    get_stats(player_id, team, index, row)
+
+
+def get_stats(player_id, team, index, row):
+    stats = {"CH": "chances", "PO": "PO", "A": "A", "E": "E_def"}
     stat_dictionary = {}
     team = "TOT"
     for ent in row:
         for stat, name in stats.items():
             if '="' + name + '" >' in ent:
                 try:
-                    if name == "team_ID":
-                        try:
-                            team = translate_team_id(ent.split('a href="/teams/')[1].split('/')[0], year)
-                        except IndexError:
-                            pass
-                    else:
-                        stat_dictionary[stat] = int(ent.split('="' + name + '" >')[1].split('<')[0])
+                    stat_dictionary[stat] = int(ent.split('="' + name + '" >')[1].split('<')[0])
                 except ValueError:
                     pass
                 break
-    data[id_num]['stats'] = stat_dictionary
-    data[id_num]['team'] = team
+    data[player_id][team][index]['stats'] = stat_dictionary
 
 
 def load_url(player_id):
@@ -103,6 +106,13 @@ def write_to_db(player_id, player_attributes):
 
 
 def write_teams_and_stats(player_id, stats, team, year):
+    stat_nums = {}
+    for index, numbers in stats.items():
+        for field, value in numbers['stats'].items():
+            if field in stat_nums:
+                stat_nums[field] += value
+            else:
+                stat_nums[field] = value
     db, cursor = DB_Connect.grab("baseballData")
     if len(DB_Connect.read(cursor, 'select pt_uniqueidentifier from player_teams where playerid = "' + player_id
                                    + '" and teamid = "' + team + '";')) == 0:
@@ -113,7 +123,7 @@ def write_teams_and_stats(player_id, stats, team, year):
                                    'playerid = "' + player_id + '" and teamid = "' + team + '");')) == 0:
         fields = ''
         values = ''
-        for field, value in stats.items():
+        for field, value in stat_nums.items():
             fields += ', ' + field
             values += ', ' + str(value)
         DB_Connect.write(db, cursor, 'insert into player_fielding (pf_uniqueidentifier, year, pt_uniqueidentifier, '
@@ -121,17 +131,6 @@ def write_teams_and_stats(player_id, stats, team, year):
                                      'pt_uniqueidentifier from player_teams where playerid = "' + player_id + '" and '
                                      'teamid = "' + team + '"), FALSE' + values + ');')
     DB_Connect.close(db)
-
-
-def intermediate(id_num, year, player_id, temp_player, row):
-    page = load_url(player_id)
-    if page is not None:
-        if "-0" in temp_player:
-            reversed_name = temp_player.split("-0")[0].replace("'", "\'")
-        else:
-            reversed_name = temp_player.split("0")[0].replace("'", "\'")
-        write_to_db(player_id, extract_player_attributes(player_id, page, reversed_name))
-    get_team_and_stats(id_num, row, year)
 
 
 # fielding_constructor(2018, Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\"
