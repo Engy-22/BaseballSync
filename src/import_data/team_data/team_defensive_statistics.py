@@ -6,6 +6,7 @@ from bs4 import BeautifulSoup
 from utilities.DB_Connect import DB_Connect
 from utilities.translate_team_id import translate_team_id
 from utilities.time_converter import time_converter
+from utilities.anomaly_team import anomaly_team
 
 logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\"
                 "team_defensive_statistics.log")
@@ -44,6 +45,8 @@ def extract_data(data, stats, year):
     for datum in data:
         try:
             team_id = translate_team_id(datum.split('<a href="/teams/')[1].split('/')[0], year)
+            if len(team_id) == 4:
+                team_id = anomaly_team(year)
             needed_data[team_id] = {}
         except IndexError:
             continue
