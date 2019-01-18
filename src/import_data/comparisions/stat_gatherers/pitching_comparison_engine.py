@@ -4,23 +4,18 @@ from utilities.DB_Connect import DB_Connect
 
 
 def make_pitcher_comparisons(pitchers, year, possible_comps, driver_logger):
+    print(str(year) + '-' + str(len(pitchers)))
     comparisons = {}
+    year_pa, year_totals = get_year_totals(year, driver_logger)
     db, cursor = DB_Connect.grab("baseballData")
     for pitcher in pitchers:
-        certainty = DB_Connect.read(cursor, 'select player_pitching.certainty from player_pitching, player_teams where '
-                                            'player_pitching.PT_uniqueidentifier = player_teams.PT_uniqueidentifier and'
-                                            ' player_pitching.year = ' + str(year) + ' and player_teams.playerid = "'
-                                            + pitcher + '";')[0][0]
-        if certainty is not None:
-            if float(certainty) < 1.0:
-                comparisons[pitcher] = determine_comp(pitcher, year, possible_comps, driver_logger)
+        comparisons[pitcher] = determine_comp(pitcher, year, possible_comps, year_pa, year_totals, driver_logger)
     DB_Connect.close(db)
     write_to_file(year, comparisons, "pitching")
 
 
-def determine_comp(pitcher, year, pitchers_to_compare, driver_logger):
+def determine_comp(pitcher, year, pitchers_to_compare, year_pa, year_totals, driver_logger):
     comp = None
-    year_pa, year_totals = get_year_totals(year, driver_logger)
     pitcher_pa, stats = get_pitcher_stats(pitcher, year, driver_logger)
     pitcher_drs = pitcher_dr_calc(pitcher_pa, stats, year_pa, year_totals, driver_logger)
     if len(pitcher_drs) > 0:
