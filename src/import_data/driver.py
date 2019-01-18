@@ -1,6 +1,6 @@
 """
-    Run this with the year(s) you want to download data for
-    This populates all tables in the baseballData database
+    Run this with the year(s) you want to download data for.
+    This populates all tables in the baseballData database.
 """
 
 import time
