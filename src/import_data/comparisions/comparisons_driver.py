@@ -97,6 +97,6 @@ def comparisons_driver(most_recent_year, driver_logger):
     driver_logger.log("\t\tDone making comparisons: time = " + total_time)
 
 
-# from utilities.get_most_recent_year import get_most_recent_year
-# dump = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\dump.log")
-# comparisons_driver(get_most_recent_year(dump), dump)
+from utilities.get_most_recent_year import get_most_recent_year
+dump = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\dump.log")
+comparisons_driver(get_most_recent_year(dump), dump)
