@@ -200,7 +200,8 @@ def write_to_db(this_string, team_id, year):
     DB_Connect.close(db)
 
 
+# dump_logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\dump.log")
 # for i in range(2018, 1875, -1):
 #     print(str(i))
-#     league_standings(i)
-# league_standings(2018)
+#     league_standings(i, dump_logger)
+# league_standings(2018, dump_logger)
