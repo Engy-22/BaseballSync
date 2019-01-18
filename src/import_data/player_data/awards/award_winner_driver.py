@@ -49,5 +49,5 @@ def write_to_file(year, awards_dict_list):
         DB_Connect.close(db)
 
 
-# award_winner_driver(2018, Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\"
-#                                  "dump.log"))
+# dump_logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\dump.log")
+# award_winner_driver(2018, dump_logger)
