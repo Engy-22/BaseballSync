@@ -7,7 +7,7 @@ def make_offensive_comparisons(ty_uids, year, possible_comps, driver_logger):
     comparisons = {}
     db, cursor = DB_Connect.grab("baseballData")
     for ty_uid in ty_uids:
-        comparisons[ty_uid] = determine_comp(ty_uid, year, possible_comps)
+        comparisons[ty_uid] = determine_comp(ty_uid, year, possible_comps, driver_logger)
     DB_Connect.close(db)
     write_to_file(comparisons, "offense")
 
