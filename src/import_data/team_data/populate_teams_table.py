@@ -31,4 +31,5 @@ def populate_teams_table(year, driver_logger):
     driver_logger.log('\t\tTime = ' + time_converter(total_time))
 
 
-# populate_teams_table(2018)
+# dump_logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\dump.log")
+# populate_teams_table(2018, dump_logger)
