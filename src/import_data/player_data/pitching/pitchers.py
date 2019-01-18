@@ -16,6 +16,8 @@ logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\lo
 
 
 def pitching_constructor(year, driver_logger):
+    global data
+    data = {}
     print('Downloading pitcher images and attributes')
     driver_logger.log("\tDownloading pitcher images and attributes")
     start_time = time.time()
@@ -35,7 +37,6 @@ def pitching_constructor(year, driver_logger):
                     print("\t\t\tcheck out " + player_id + " this year's standard batting page")
             except IndexError:
                 team = 'TOT'
-            global data
             if player_id not in data:
                 data[player_id] = {}
             if team not in data[player_id]:
@@ -50,8 +51,8 @@ def pitching_constructor(year, driver_logger):
                                                  'temp_player': row.split('ata-stat="player" csk="')[1].split('" >')[0]}
     try:
         table2 = str(BeautifulSoup(urlopen("https://www.baseball-reference.com/leagues/MLB/" + str(year) + "-batting-"
-                                           "pitching.shtml"), 'html.parser')).split('<h2>Player Batting Against</h2>')
-        [1].split('</tbody>')[0].split('<tbody>')[1].split('<tr ')
+                                           "pitching.shtml"), 'html.parser')).\
+            split('<h2>Player Batting Against</h2>')[1].split('</tbody>')[0].split('<tbody>')[1].split('<tr ')
     except Exception:
         table2 = []
     batting_against_rows = {}
@@ -215,5 +216,6 @@ def write_teams_and_stats(player_id, stats, ratios, team, year):
     DB_Connect.close(db)
 
 
-# pitching_constructor(1997, Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\"
-#                                   "dump.log"))
+# for year in range(1998, 2009, 1):
+#     pitching_constructor(year, Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\"
+#                                       "dump.log"))
