@@ -48,4 +48,5 @@ def rank_driver(year, driver_logger):
     driver_logger.log("\t\tRank driver time = " + total_time)
 
 
-# rank_driver(2018, Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\dump.log"))
+# dump_logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\dump.log")
+# rank_driver(2018, dump_logger)
