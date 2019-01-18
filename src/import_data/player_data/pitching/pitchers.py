@@ -216,6 +216,6 @@ def write_teams_and_stats(player_id, stats, ratios, team, year):
     DB_Connect.close(db)
 
 
+# dump_logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\dump.log")
 # for year in range(1998, 2009, 1):
-#     pitching_constructor(year, Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\"
-#                                       "dump.log"))
+#     pitching_constructor(year, dump_logger)
