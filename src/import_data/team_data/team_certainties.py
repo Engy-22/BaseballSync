@@ -42,5 +42,5 @@ def team_certainties(year, driver_logger):
     driver_logger.log("\t\tTime = " + total_time)
 
 
-# team_certainties(2018, Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\"
-#                               "dump.log"))
+# dump_logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\dump.log")
+# team_certainties(2018, dump_logger)
