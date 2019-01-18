@@ -104,5 +104,6 @@ def write_to_db(year, stat_string, stat_type):
     DB_Connect.close(db)
 
 
+# dump_logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\dump.log")
 # for year in range(1997, 2005, 1):
-#     get_year_data(year, Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\dump.log"))
+#     get_year_data(year, dump_logger)
