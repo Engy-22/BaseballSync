@@ -8,10 +8,14 @@ def get_pitcher_stats(pitcher, year, driver_logger):
                                      + 'ng.PT_uniqueidentifier = player_teams.PT_uniqueidentifier and player_teams.'
                                      + 'playerId = "' + pitcher + '" and year = ' + str(year) + ';')[0][0])
     for key, value in stats.items():
-        stats[key] = float(DB_Connect.read(cursor, 'select player_pitching.' + key + ' from player_pitching, player_tea'
-                                                   + 'ms where player_pitching.PT_uniqueidentifier = player_teams.'
-                                                   + 'PT_uniqueidentifier and player_teams.playerId = "' + pitcher
-                                                   + '" and year = ' + str(year) + ';')[0][0])
+        try:
+            stats[key] = float(DB_Connect.read(cursor, 'select player_pitching.' + key + ' from player_pitching, '
+                                                       'player_teams where player_pitching.PT_uniqueidentifier = '
+                                                       'player_teams.PT_uniqueidentifier and player_teams.playerId = "'
+                                                       + pitcher + '" and year = ' + str(year) + ';')[0][0])
+        except TypeError:
+            pa = 0
+            break
     DB_Connect.close(db)
     return pa, stats
 
