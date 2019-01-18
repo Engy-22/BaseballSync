@@ -81,5 +81,5 @@ def get_player_positions(player, year_range):
     return ';'.join(positions)
 
 
-# primary_and_secondary_positions(2018, Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\"
-#                                              "import_data\\dump.log"))
+# dump_logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\dump.log")
+# primary_and_secondary_positions(2018, dunp_logger)
