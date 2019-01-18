@@ -116,4 +116,5 @@ def fill_batters_with_0_pa(year):
 
 
 # dump_logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\dump.log")
-# hitter_tendencies(2018, dunp_logger)
+# for year in range(1997, 2009, 1):
+#     hitter_tendencies(year, dump_logger)
