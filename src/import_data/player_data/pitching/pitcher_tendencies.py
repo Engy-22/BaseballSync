@@ -117,5 +117,5 @@ def fill_pitchers_with_0_pa(year):
     DB_Connect.close(db)
 
 
-# pitcher_tendencies(1997, Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\"
-#                                 "dump.log"))
+# dump_logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\dump.log")
+# pitcher_tendencies(1997, dump_logger)
