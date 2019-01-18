@@ -17,6 +17,8 @@ logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\lo
 
 
 def batting_constructor(year, driver_logger):
+    global data
+    data = {}
     print('Downloading batter images and attributes')
     driver_logger.log("\tDownloading batter images and attributes")
     start_time = time.time()
@@ -36,7 +38,6 @@ def batting_constructor(year, driver_logger):
                     print("\t\t\tcheck out " + player_id + " this year's standard batting page")
             except IndexError:
                 team = 'TOT'
-            global data
             if player_id not in data:
                 data[player_id] = {}
             if team not in data[player_id]:
@@ -166,5 +167,6 @@ def write_teams_and_stats(player_id, stats, ratios, team, year):
     DB_Connect.close(db)
 
 
-# batting_constructor(1997, Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\"
-#                                  "dump.log"))
+for year in range(1998, 2009, 1):
+    batting_constructor(year, Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\"
+                                     "dump.log"))
