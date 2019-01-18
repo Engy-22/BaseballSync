@@ -61,5 +61,5 @@ def write_to_file(team_data, year):
     DB_Connect.close(db)
 
 
-# team_offensive_statistics(1880, Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data"
-#                                        "\\dump.log"))
+# dump_logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\dump.log")
+# team_offensive_statistics(1880, dump_logger)
