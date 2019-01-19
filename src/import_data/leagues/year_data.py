@@ -4,7 +4,7 @@ from urllib.request import urlopen
 from bs4 import BeautifulSoup
 import time
 import datetime
-from utilities.DB_Connect import DB_Connect
+from utilities.dbconnect import DatabaseConnection
 from utilities.Logger import Logger
 from utilities.time_converter import time_converter
 
@@ -26,10 +26,10 @@ def get_year_data(year, driver_logger):
                      'strikeouts_per_base_on_balls': 'k_bb'}
     fielding_list = {'E_def': 'e', 'fielding_perc': 'f_percent'}
     stat_list = {"batting": batting_list, "pitching": pitching_list, "fielding": fielding_list}
-    db, cursor = DB_Connect.grab("baseballData")
-    if len(DB_Connect.read(cursor, 'select * from years where year = ' + str(year) + ';')) == 0:
-        DB_Connect.write(db, cursor, 'insert into years (year) values (' + str(year) + ');')
-    DB_Connect.close(db)
+    db = DatabaseConnection()
+    if len(db.read('select * from years where year = ' + str(year) + ';')) == 0:
+        db.write('insert into years (year) values (' + str(year) + ');')
+    db.close()
     write_opening_day(year)
     download_start = time.time()
     logger.log("making HTTP requests for year data")
@@ -60,7 +60,7 @@ def load_url(year, stat_type):
 
 def write_opening_day(year):
     start_time = time.time()
-    db, cursor = DB_Connect.grab("baseballData")
+    db = DatabaseConnection()
     logger.log('Getting date of opening day')
     mlb_schedule = str(BeautifulSoup(urlopen('https://www.baseball-reference.com/leagues/MLB/' + str(year)
                                              + '-schedule.shtml'), 'html.parser'))
@@ -68,8 +68,8 @@ def write_opening_day(year):
     months = {'March': '03', 'April': '04', 'May': '05'}
     opening_day = months[opening_date.split(', ')[1].split(' ')[0]] + '-' + opening_date.split(', ')[1].split(' ')[1]\
                   .split(',')[0]
-    DB_Connect.write(db, cursor, 'update years set opening_day = "' + opening_day + '" where year = ' + str(year) + ';')
-    DB_Connect.close(db)
+    db.write('update years set opening_day = "' + opening_day + '" where year = ' + str(year) + ';')
+    db.close()
     logger.log('\tComplete (opening day): time = ' + time_converter(time.time() - start_time))
 
 
@@ -99,9 +99,9 @@ def assemble_stats(stat_type, stats, page):
 
 def write_to_db(year, stat_string, stat_type):
     logger.log("writing " + stat_type + " stats to database")
-    db, cursor = DB_Connect.grab("baseballData")
-    DB_Connect.write(db, cursor, 'update years set ' + stat_string[:-2] + ' where year = ' + str(year) + ';')
-    DB_Connect.close(db)
+    db = DatabaseConnection()
+    db.write('update years set ' + stat_string[:-2] + ' where year = ' + str(year) + ';')
+    db.close()
 
 
 # dump_logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\dump.log")
