@@ -3,7 +3,7 @@ import datetime
 from utilities.Logger import Logger
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
-from utilities.DB_Connect import DB_Connect
+from utilities.dbconnect import DatabaseConnection
 from utilities.translate_team_id import translate_team_id
 from utilities.time_converter import time_converter
 from utilities.anomaly_team import anomaly_team
@@ -47,7 +47,7 @@ def extract_data(data, stats, year):
 
 
 def write_to_file(team_data, year):
-    db, cursor = DB_Connect.grab("baseballData")
+    db = DatabaseConnection()
     for team, data in team_data.items():
         logger.log("\tWriting " + team + " data to database")
         sets = ''
@@ -56,9 +56,8 @@ def write_to_file(team_data, year):
                 sets += field + ' = ' + value + ', '
             else:
                 continue
-        DB_Connect.write(db, cursor, 'update team_years set ' + sets[:-2] + ' where teamid = "' + team + '" and year = '
-                                     + str(year) + ';')
-    DB_Connect.close(db)
+        db.write('update team_years set ' + sets[:-2] + ' where teamid = "' + team + '" and year = ' + str(year) + ';')
+    db.close()
 
 
 # dump_logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\dump.log")
