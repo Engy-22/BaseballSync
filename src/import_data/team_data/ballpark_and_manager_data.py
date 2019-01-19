@@ -2,7 +2,7 @@ import os
 from utilities.Logger import Logger
 import time
 import datetime
-from utilities.DB_Connect import DB_Connect
+from utilities.dbconnect import DatabaseConnection
 from utilities.time_converter import time_converter
 from concurrent.futures import ThreadPoolExecutor
 from urllib.request import urlopen, urlretrieve
@@ -51,9 +51,9 @@ def ballpark_and_manager_data(year, driver_logger):
 
 def gather_team_home_numbers(team_id, team_key, year, team_count):
     logger.log("\tCalculating home numbers and downloading manager data: " + team_id)
-    db, cursor = DB_Connect.grab("baseballData")
-    if len(DB_Connect.read(cursor, 'select BY_uniqueidentifier from ballpark_years where teamId = "' + team_id
-                                   + '" and year = ' + str(year) + ';')) == 0:
+    db = DatabaseConnection()
+    if len(db.read('select BY_uniqueidentifier from ballpark_years where teamId = "' + team_id + '" and year = '
+                   + str(year) + ';')) == 0:
         global pages
         table = str(pages[team_key])
         manager_ids = {}
@@ -71,13 +71,12 @@ def gather_team_home_numbers(team_id, team_key, year, team_count):
             season_total_row = table.split('<h2>Season Totals</h2>')[1].split('<tbody>')[1].split('</tbody>')[0].\
                 split('<tr>')[1]
             for stat in stats:
-                league_total = int(DB_Connect.read(cursor, "select " + stat + " from years where year = " + str(year)
-                                                           + ";")[0][0])
+                league_total = int(db.read("select " + stat + " from years where year = " + str(year) + ";")[0][0])
                 team_total = int(season_total_row.split('data-stat="' + stat + '">')[1].split('<')[0])
                 overall_stats[stat] = team_total / ((league_total - team_total) / (team_count - 2))
                 home = int(home_row.split('data-stat="' + stat + '" >')[1].split('<')[0])
                 home_percent[stat] = home / team_total
-            DB_Connect.close(db)
+            db.close()
             stat_translate = {'AB': 'AB', 'H': 'H', '2B': 'double', '3B': 'triple', 'HR': 'homerun'}
             r_location = {'Up Mdle': 'centerfield', 'Opp Fld': 'rightfield', 'Pulled': 'leftfield'}
             l_location = {'Up Mdle': 'centerfield', 'Opp Fld': 'leftfield', 'Pulled': 'rightfield'}
@@ -160,11 +159,11 @@ def load_url(year, team_key):
 
 
 def write_to_db(team_id, stats, trajectory, manager_ids, year, park_name):
-    db, cursor = DB_Connect.grab("baseballData")
-    if len(DB_Connect.read(cursor, 'select parkId from ballparks where parkName = "' + park_name + '";')) == 0:
-        DB_Connect.write(db, cursor, 'insert into ballparks (parkId, parkName) values (default, "' + park_name + '");')
-    if len(DB_Connect.read(cursor, 'select BY_uniqueidentifier from ballpark_years where teamId = "' + team_id
-                                   + '" and year = ' + str(year) + ';')) == 0:
+    db = DatabaseConnection()
+    if len(db.read('select parkId from ballparks where parkName = "' + park_name + '";')) == 0:
+        db.write('insert into ballparks (parkId, parkName) values (default, "' + park_name + '");')
+    if len(db.read('select BY_uniqueidentifier from ballpark_years where teamId = "' + team_id + '" and year = '
+                   + str(year) + ';')) == 0:
         field_list = ""
         value_list = ""
         for key, value in stats.items():
@@ -173,23 +172,22 @@ def write_to_db(team_id, stats, trajectory, manager_ids, year, park_name):
         for key, value in trajectory.items():
             field_list += key + ', '
             value_list += str(value) + ', '
-        DB_Connect.write(db, cursor, 'insert into ballpark_years (BY_uniqueidentifier, teamId, year, ' + field_list
-                                     + 'parkId) values (default, "' + team_id + '", ' + str(year) + ', ' + value_list
-                                     + '(select parkId from ballparks where ' + 'parkName = "' + park_name + '"));')
+        db.write('insert into ballpark_years (BY_uniqueidentifier, teamId, year, ' + field_list + 'parkId) values '
+                 '(default, "' + team_id + '", ' + str(year) + ', ' + value_list + '(select parkId from ballparks where'
+                 ' parkName = "' + park_name + '"));')
     for manager, record in manager_ids.items():
-        if len(DB_Connect.read(cursor, 'select MT_uniqueidentifier from manager_teams where managerId = "'
+        if len(db.read('select MT_uniqueidentifier from manager_teams where managerId = "'
                                        + manager + '" and teamId = "' + team_id + '";')) == 0:
-            DB_Connect.write(db, cursor, 'insert into manager_teams (MT_uniqueidentifier, managerId, teamId) values'
-                                         + '(default, "' + manager + '", "' + team_id + '");')
-        if len(DB_Connect.read(cursor, 'select MY_uniqueidentifier from manager_year where year = ' + str(year) + ' and'
-                                       ' MT_uniqueidentifier = (select MT_uniqueidentifier from manager_teams where '
-                                       'managerId = "' + manager + '" and teamId = "' + team_id + '")' + ';')) == 0:
-            DB_Connect.write(db, cursor, 'insert into manager_year (MY_uniqueidentifier, year, MT_uniqueidentifier, '
-                                         + 'wins, loses) values (default, ' + str(year) + ', (select '
-                                         + 'MT_uniqueidentifier from manager_teams where managerId = "' + manager
-                                         + '" and teamId = "' + team_id + '")' + ', ' + record.split('-')[0] + ', '
-                                         + record.split('-')[1] + ');')
-    DB_Connect.close(db)
+            db.write('insert into manager_teams (MT_uniqueidentifier, managerId, teamId) values (default, "' + manager
+                     + '", "' + team_id + '");')
+        if len(db.read('select MY_uniqueidentifier from manager_year where year = ' + str(year) + ' and '
+                       'MT_uniqueidentifier = (select MT_uniqueidentifier from manager_teams where managerId = "'
+                       + manager + '" and teamId = "' + team_id + '")' + ';')) == 0:
+            db.write('insert into manager_year (MY_uniqueidentifier, year, MT_uniqueidentifier, wins, loses) values '
+                     '(default, ' + str(year) + ', (select MT_uniqueidentifier from manager_teams where managerId = "'
+                     + manager + '" and teamId = "' + team_id + '")' + ', ' + record.split('-')[0] + ', '
+                     + record.split('-')[1] + ');')
+    db.close()
 
 
 # dump_logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\dump.log")
