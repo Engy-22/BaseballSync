@@ -4,7 +4,7 @@ from urllib.request import urlopen
 from bs4 import BeautifulSoup
 from utilities.dbconnect import DatabaseConnection
 from utilities.translate_team_id import translate_team_id
-from utilities.Logger import Logger
+from utilities.logger import Logger
 from utilities.time_converter import time_converter
 
 logger = Logger('C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\league_standings.log')
