@@ -1,6 +1,6 @@
 from utilities.dbconnect import DatabaseConnection
 from utilities.translate_team_name import translate_team_name
-from utilities.Logger import Logger
+from utilities.logger import Logger
 from utilities.time_converter import time_converter
 import datetime
 import time
