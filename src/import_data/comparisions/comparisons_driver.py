@@ -1,6 +1,6 @@
 import time
 import datetime
-from utilities.Logger import Logger
+from utilities.logger import Logger
 from import_data.comparisions.stat_gatherers.gather_players import gather_players
 from import_data.comparisions.stat_gatherers.gather_teams import gather_teams
 from import_data.comparisions.stat_gatherers.batting_comparison_engine import make_hitter_comparisons, hitter_dr_calc
