@@ -1,7 +1,7 @@
 import time
 import datetime
 from utilities.time_converter import time_converter
-from utilities.Logger import Logger
+from utilities.logger import Logger
 from utilities.dbconnect import DatabaseConnection
 from import_data.player_data.awards.mvp_cy_young import mvp_cy_young
 from import_data.player_data.awards.roy_gatherer import roy_gatherer
