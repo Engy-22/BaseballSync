@@ -35,6 +35,7 @@ def comparisons_driver(most_recent_year, driver_logger):
         for comp_hitter in gather_players(year_to_compare, "batting", True, logger):
             comp_hitter_pa, comp_stats = get_hitter_stats(comp_hitter, year_to_compare, logger)
             if comp_hitter_pa >= 300:
+                print(comp_hitter)
                 possible_hitter_comps[year_to_compare][comp_hitter + ';' + str(year_to_compare)] =\
                     hitter_dr_calc(comp_hitter_pa, comp_stats, year_pa, year_totals, logger)
     for comp_year in range(1876, most_recent_year + 1, 1):
