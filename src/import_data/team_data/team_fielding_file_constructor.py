@@ -5,7 +5,7 @@ from urllib.request import urlopen
 from bs4 import BeautifulSoup
 from utilities.dbconnect import DatabaseConnection
 from utilities.time_converter import time_converter
-from utilities.Logger import Logger
+from utilities.logger import Logger
 from concurrent.futures import ThreadPoolExecutor
 
 pages = {}
