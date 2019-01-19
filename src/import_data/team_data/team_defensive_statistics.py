@@ -1,6 +1,6 @@
 import time
 import datetime
-from utilities.Logger import Logger
+from utilities.logger import Logger
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
 from utilities.dbconnect import DatabaseConnection
