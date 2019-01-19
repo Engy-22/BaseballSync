@@ -4,7 +4,7 @@ import urllib.request
 from bs4 import BeautifulSoup as bs
 from concurrent.futures import ThreadPoolExecutor
 from utilities.dbconnect import DatabaseConnection
-from utilities.Logger import Logger
+from utilities.logger import Logger
 import datetime
 import time
 
