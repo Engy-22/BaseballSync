@@ -3,10 +3,8 @@ from import_data.comparisions.file_writers.write_to_file_players import write_to
 from utilities.DB_Connect import DB_Connect
 
 
-def make_pitcher_comparisons(pitchers, year, possible_comps, driver_logger):
-    print(str(year) + '-' + str(len(pitchers)))
+def make_pitcher_comparisons(pitchers, year, possible_comps, year_pa, year_totals, driver_logger):
     comparisons = {}
-    year_pa, year_totals = get_year_totals(year, driver_logger)
     db, cursor = DB_Connect.grab("baseballData")
     for pitcher in pitchers:
         comparisons[pitcher] = determine_comp(pitcher, year, possible_comps, year_pa, year_totals, driver_logger)
@@ -39,6 +37,7 @@ def pitcher_dr_calc(pa, stats, year_pa, year_stats, driver_logger):
 
 
 def find_comp(pitcher, year, pitcher_drs, pitchers_to_compare, driver_logger):
+    print(pitcher)
     comp_player_scores = {}
     for year_to_compare, possible_comps in pitchers_to_compare.items():
         for possible_comp_pitcher, possible_comp_stats in possible_comps.items():
