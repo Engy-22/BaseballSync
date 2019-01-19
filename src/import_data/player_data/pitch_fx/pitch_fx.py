@@ -3,7 +3,7 @@ import time
 import datetime
 # from utilities.translate_pitchfx import translate_pitch_type, translate_pitch_outcome, determine_swing_or_take
 from utilities.Logger import Logger
-from utilities.DB_Connect import DB_Connect
+from utilities.dbconnect import DatabaseConnection
 from utilities.time_converter import time_converter
 from concurrent.futures import ThreadPoolExecutor, ProcessPoolExecutor
 from urllib.request import urlopen, urlretrieve
@@ -20,9 +20,9 @@ def get_pitch_fx_data(year, driver_logger):
     start_time = time.time()
     logger.log("Downloading pitch fx data for " + str(year) + ' || Timestamp: ' + datetime.datetime.today().\
                strftime('%Y-%m-%d %H:%M:%S'))
-    db, cursor = DB_Connect.grab("baseballData")
-    opening_day = DB_Connect.read(cursor, 'select opening_day from years where year = ' + str(year) + ';')[0][0]
-    DB_Connect.close(db)
+    db = DatabaseConnection()
+    opening_day = db.read('select opening_day from years where year = ' + str(year) + ';')[0][0]
+    db.close()
     for month in range(3, 12, 1):
         if month > 3:
             if month < int(opening_day.split('-')[0]):
