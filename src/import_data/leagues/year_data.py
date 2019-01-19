@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup
 import time
 import datetime
 from utilities.dbconnect import DatabaseConnection
-from utilities.Logger import Logger
+from utilities.logger import Logger
 from utilities.time_converter import time_converter
 
 pages = {}
