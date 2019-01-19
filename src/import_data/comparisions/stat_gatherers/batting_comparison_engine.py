@@ -21,15 +21,14 @@ def determine_comp(hitter, year, hitters_to_compare, year_pa, year_totals, drive
 def hitter_dr_calc(pa, stats, year_pa, year_stats, driver_logger):
     hitter_drs = {}
     for key, value in stats.items():
-        if value != -1:
-            try:
-                dr_stat = (value / pa) / (year_stats[key] / year_pa)
-                if dr_stat > 0.0:
-                    hitter_drs[key] = dr_stat
-            except KeyError:
-                continue
-            except ZeroDivisionError:
-                continue
+        try:
+            dr_stat = (value / pa) / (year_stats[key] / year_pa)
+            if dr_stat > 0.0:
+                hitter_drs[key] = dr_stat
+        except KeyError:
+            continue
+        except ZeroDivisionError:
+            continue
     return hitter_drs
 
 
