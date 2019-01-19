@@ -5,7 +5,7 @@ from import_data.team_data.team_ranker_year import team_ranker_year
 from import_data.team_data.team_ranker_ovr import team_ranker_ovr
 from statistics import stdev, mean
 from utilities.time_converter import time_converter
-from utilities.Logger import Logger
+from utilities.logger import Logger
 
 logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\rank_driver.log")
 
