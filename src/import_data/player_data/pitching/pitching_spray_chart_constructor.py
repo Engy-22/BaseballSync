@@ -3,7 +3,7 @@ import time
 import datetime
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
-from utilities.DB_Connect import DB_Connect
+from utilities.dbconnect import DatabaseConnection
 from utilities.time_converter import time_converter
 from utilities.Logger import Logger
 from concurrent.futures import ThreadPoolExecutor
@@ -20,10 +20,9 @@ def pitcher_spray_chart_constructor(year, driver_logger):
     logger.log("Downloading " + str(year) + " pitcher spray charts || Timestamp: " + datetime.datetime.today()\
                .strftime('%Y-%m-%d %H:%M:%S'))
     if year >= 1988:
-        db, cursor = DB_Connect.grab("baseballData")
-        pt_uid_players = set(DB_Connect.read(cursor, 'select PT_uniqueidentifier from player_pitching where year = '
-                                                     + str(year) + ';'))
-        DB_Connect.close(db)
+        db = DatabaseConnection()
+        pt_uid_players = set(db.read('select PT_uniqueidentifier from player_pitching where year = ' + str(year) + ';'))
+        db.close()
         with ThreadPoolExecutor(os.cpu_count()) as executor:
             for ent in pt_uid_players:
                 executor.submit(reduce_functionality, year, ent)
@@ -98,11 +97,10 @@ def reduce_functionality(year, ent):
               "Line_Drives_2B": "",
               "Line_Drives_3B": "",
               "Line_Drives_HR": ""}
-    db, cursor = DB_Connect.grab("baseballData")
-    player_id = DB_Connect.read(cursor, "select playerId from player_teams where PT_uniqueidentifier = " + str(ent[0])
-                                + ";")[0][0]
-    if DB_Connect.read(cursor, 'select pa_infield from player_pitching where PT_uniqueidentifier = ' + str(ent[0])
-                               + ' and year = ' + str(year) + ';')[0][0] is None:
+    db = DatabaseConnection()
+    player_id = db.read("select playerId from player_teams where PT_uniqueidentifier = " + str(ent[0]) + ";")[0][0]
+    if db.read('select pa_infield from player_pitching where PT_uniqueidentifier = ' + str(ent[0]) + ' and year = '
+               + str(year) + ';')[0][0] is None:
         try:
             page = str(BeautifulSoup(urlopen('https://www.baseball-reference.com/players/split.fcgi?id=' + player_id
                                              + '&year=' + str(year) + '&t=p'), 'html.parser'))
@@ -141,7 +139,7 @@ def reduce_functionality(year, ent):
 
 
 def write_to_file(year, pt_uid, stat_list1, stat_list2):
-    db, cursor = DB_Connect.grab("baseballData")
+    db = DatabaseConnection()
     query_string = ""
     for key, value in stat_list1.items():
         if value[1] == '':
@@ -151,9 +149,9 @@ def write_to_file(year, pt_uid, stat_list1, stat_list2):
         if value == '':
             value = '0'
         query_string += key + ' = ' + value + ', '
-    DB_Connect.write(db, cursor, 'update player_pitching set ' + query_string[:-2] + ' where PT_uniqueidentifier = '
-                                 + str(pt_uid) + ' and year = ' + str(year) + ';')
-    DB_Connect.close(db)
+    db.write('update player_pitching set ' + query_string[:-2] + ' where PT_uniqueidentifier = ' + str(pt_uid) + ' and '
+             'year = ' + str(year) + ';')
+    db.close()
 
 
 def revisit_bad_gateways(year, data):
