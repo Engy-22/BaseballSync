@@ -1,5 +1,5 @@
 from utilities.dbconnect import DatabaseConnection
-from utilities.Logger import Logger
+from utilities.logger import Logger
 import datetime
 
 logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\"
