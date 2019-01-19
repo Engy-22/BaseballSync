@@ -1,5 +1,5 @@
 import time
-from utilities.DB_Connect import DB_Connect
+from utilities.dbconnect import DatabaseConnection
 from utilities.translate_team_id import translate_team_id
 from statistics import mean
 from utilities.time_converter import time_converter
@@ -47,7 +47,7 @@ def team_ranker_ovr(data, greater_than, field, standard_deviation, average_devia
 
 
 def write_to_file(final_data, greater_than, field):
-    db, cursor = DB_Connect.grab("baseballData")
+    db = DatabaseConnection()
     counter = 0
     while len(final_data) > 0:
         target = None
@@ -69,19 +69,17 @@ def write_to_file(final_data, greater_than, field):
             else:
                 target = b[0]
                 target_year = a
-        if DB_Connect.read(cursor, 'select league from team_years where teamId = "'
-                                   + translate_team_id(target[0], target_year) + '" and year = ' + str(target_year)
-                                   + ';')[0][0].upper() in ['AL', 'NL']:
+        if db.read('select league from team_years where teamId = "' + translate_team_id(target[0], target_year)
+                   + '" and year = ' + str(target_year) + ';')[0][0].upper() in ['AL', 'NL']:
             counter += 1
-            DB_Connect.write(db, cursor, 'update team_years set ' + field + ' = ' + str(counter) + ' where teamId = "'
-                                         + translate_team_id(target[0], target_year) + '" and year = '
-                                         + str(target_year) + ';')
+            db.write('update team_years set ' + field + ' = ' + str(counter) + ' where teamId = "'
+                     + translate_team_id(target[0], target_year) + '" and year = ' + str(target_year) + ';')
         del final_data[target_year][0]
         if len(final_data[target_year]) == 0:
             del final_data[target_year]
         else:
             continue
-    DB_Connect.close(db)
+    db.close()
 
 
 # team_ranker_ovr(2018, Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\"
