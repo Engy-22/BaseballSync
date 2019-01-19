@@ -2,7 +2,7 @@ import time
 import datetime
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
-from utilities.DB_Connect import DB_Connect
+from utilities.dbconnect import DatabaseConnection
 from utilities.Logger import Logger
 from utilities.time_converter import time_converter
 
@@ -75,17 +75,16 @@ def intermediate(row, prev_player_id):
 
 
 def write_to_file(year, player_id, stat_list):
-    db, cursor = DB_Connect.grab("baseballData")
+    db = DatabaseConnection()
     pa = []
     records = []
-    pt_uids = list(DB_Connect.read(cursor, 'select PT_uniqueidentifier from player_teams where playerId = "'
-                                           + player_id + '";'))
+    pt_uids = list(db.read('select PT_uniqueidentifier from player_teams where playerId = "' + player_id + '";'))
     for pt_uid in pt_uids:
-        if len(DB_Connect.read(cursor, "select PP_uniqueidentifier from player_pitching where PT_uniqueidentifier = "
-                                       + str(pt_uid[0]) + " and year = " + str(year) + ";")) != 0:
+        if len(db.read("select PP_uniqueidentifier from player_pitching where PT_uniqueidentifier = " + str(pt_uid[0])
+                       + " and year = " + str(year) + ";")) != 0:
             try:
-                pa.append(int(DB_Connect.read(cursor, "select pa from player_pitching where pt_uniqueidentifier = "
-                                                      + str(pt_uid[0]) + " and year = " + str(year) + ";")[0][0]))
+                pa.append(int(db.read("select pa from player_pitching where pt_uniqueidentifier = " + str(pt_uid[0])
+                                      + " and year = " + str(year) + ";")[0][0]))
             except TypeError:
                 continue
             records.append(pt_uid)
@@ -100,21 +99,21 @@ def write_to_file(year, player_id, stat_list):
                         query_string += value[0] + ' = ' + str(pa[0] / (pa[0] + int(value[1]))) + ', '
                     except ZeroDivisionError:
                         query_string += value[0] + ' = ' + '1.0' + ', '
-            DB_Connect.write(db, cursor, 'update player_pitching set ' + query_string[:-2] + ' where '
-                                         + 'PT_uniqueidentifier = ' + str(pt[0]) + ' and year = ' + str(year) + ';')
-    DB_Connect.close(db)
+            db.write('update player_pitching set ' + query_string[:-2] + ' where PT_uniqueidentifier = ' + str(pt[0])
+                     + ' and year = ' + str(year) + ';')
+    db.close()
 
 
 def fill_fields(year):
-    db, cursor = DB_Connect.grab("baseballData")
-    DB_Connect.write(db, cursor, 'update player_pitching set certainty=0.0 where year=' + str(year) + ';')
-    DB_Connect.close(db)
+    db = DatabaseConnection()
+    db.write('update player_pitching set certainty=0.0 where year=' + str(year) + ';')
+    db.close()
 
 
 def fill_pitchers_with_0_pa(year):
-    db, cursor = DB_Connect.grab("baseballData")
-    DB_Connect.write(db, cursor, "update player_pitching set certainty = 0.0 where pa=0 and year=" + str(year) + ";")
-    DB_Connect.close(db)
+    db = DatabaseConnection()
+    db.write("update player_pitching set certainty = 0.0 where pa=0 and year=" + str(year) + ";")
+    db.close()
 
 
 # dump_logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\dump.log")
