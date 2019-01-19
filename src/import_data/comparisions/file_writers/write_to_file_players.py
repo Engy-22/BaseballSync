@@ -6,10 +6,11 @@ def write_to_file(year, comps, comp_type):
     for player, comp in comps.items():
         if comp is not None:
             comp_pull = 1.0 - float(db.read('select player_' + comp_type + '.certainty from player_' + comp_type
-                                            + ', player_teams where player_' + comp_type + '.pt_uniqueidentifier='
-                                            'player_teams.pt_uniqueidentifier and player_teams.playerid = "'
-                                            + player + '" and player_' + comp_type + '.year = ' + str(year)
-                                            + ';')[0][0])
+                                            + ', player_teams where player_' + comp_type + '.pt_uniqueidentifier = '
+                                            'player_teams.pt_uniqueidentifier and player_teams.playerid = "' + player
+                                            + '" and player_' + comp_type + '.year = ' + str(year) + ';')[0][0])
+            if comp_pull == 0.0:
+                continue
             comp_stat_id = int(db.read('select player_' + comp_type + '.p' + comp_type[0] + '_uniqueidentifier from'
                                        ' player_' + comp_type + ', player_teams where player_' + comp_type
                                        + '.pt_uniqueidentifier=player_teams.pt_uniqueidentifier and player_teams.'
