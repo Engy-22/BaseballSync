@@ -4,7 +4,6 @@ from utilities.dbconnect import DatabaseConnection
 def write_to_file(year, comps, comp_type):
     db = DatabaseConnection()
     for player, comp in comps.items():
-        print(player + ' --> ' + str(comp))
         if comp is not None:
             comp_pull = 1.0 - float(db.read('select player_' + comp_type + '.certainty from player_' + comp_type
                                             + ', player_teams where player_' + comp_type + '.pt_uniqueidentifier='
@@ -28,9 +27,4 @@ def write_to_file(year, comps, comp_type):
                 db.write('update comparisons_' + comp_type + '_overall set comp = "' + comp.split(';')[0]
                          + '", comp_year = ' + comp.split(';')[1] + ', comp_pull = ' + str(comp_pull)
                          + ', comp_stat_id = ' + str(comp_stat_id) + ' where ' + 'comp_id = ' + str(comp_id) + ';')
-        else:
-            if len(db.read('select comp_id from comparisons_' + comp_type + '_overall where playerid = "' + player
-                           + '" and year = ' + str(year) + ';')) == 0:
-                db.write('insert into comparisons_' + comp_type + '_overall (comp_id, playerId, year) values (default,'
-                         ' "' + player + '", ' + str(year) + ');')
     db.close()
