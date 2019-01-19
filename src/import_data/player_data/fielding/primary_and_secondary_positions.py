@@ -1,6 +1,6 @@
 import time
 import datetime
-from utilities.DB_Connect import DB_Connect
+from utilities.dbconnect import DatabaseConnection
 from utilities.Logger import Logger
 from utilities.time_converter import time_converter
 
@@ -14,19 +14,19 @@ def primary_and_secondary_positions(year, driver_logger):
     start_time = time.time()
     logger.log("Downloading " + str(year) + " primary and secondary data || Timestamp: " + datetime.datetime.today()\
                .strftime('%Y-%m-%d %H:%M:%S'))
-    db, cursor = DB_Connect.grab("baseballData")
+    db = DatabaseConnection()
     logger.log("\tAssembling list of players")
     assembly_time = time.time()
-    teams_from_year = DB_Connect.read(cursor, "select TY_uniqueidentifier from team_years where year=" + str(year)+';')
-    teams_from_year_range = DB_Connect.read(cursor, "select TY_uniqueidentifier from team_years where year between "
+    teams_from_year = db.read("select TY_uniqueidentifier from team_years where year=" + str(year)+';')
+    teams_from_year_range = db.read("select TY_uniqueidentifier from team_years where year between "
                                                     + str(year-25) + ' and ' + str(year) + ';')
     player_positions = []
     player_positions_range = []
     for team in teams_from_year:
-        player_positions += DB_Connect.read(cursor, 'select playerId, positions from player_positions where '
+        player_positions += db.read('select playerId, positions from player_positions where '
                                                     + 'TY_uniqueidentifier = ' + str(team[0]) + ';')
     for team in teams_from_year_range:
-        player_positions_range += DB_Connect.read(cursor, 'select playerId, positions from player_positions where '
+        player_positions_range += db.read('select playerId, positions from player_positions where '
                                                           + 'TY_uniqueidentifier = ' + str(team[0]) + ';')
     logger.log("\t\tTime = " + time_converter(time.time() - assembly_time))
     logger.log("\tDetermining positions")
@@ -35,7 +35,7 @@ def primary_and_secondary_positions(year, driver_logger):
         player_position_string = get_player_positions(player, player_positions_range)
         player_positions_dict = determine_primary_position(player_position_string)
         write_to_file(player[0].replace("'", "\'"), player_positions_dict)
-    DB_Connect.close(db)
+    db.close()
     logger.log("\t\tTime = " + time_converter(time.time() - determination_time))
     total_time = time_converter(time.time() - start_time)
     logger.log("Done downloading primary and secondary positions: time = " + total_time + '\n\n')
@@ -43,19 +43,19 @@ def primary_and_secondary_positions(year, driver_logger):
 
 
 def write_to_file(player, positions_dict):
-    db, cursor = DB_Connect.grab("baseballData")
+    db = DatabaseConnection()
     positions = sorted(positions_dict.items(), key=lambda kv: kv[1], reverse=True)
     secondary = positions[1:]
     secondary_positions = []
     for ent in secondary:
         secondary_positions.append(ent[0])
     if len(secondary_positions) == 0:
-        DB_Connect.write(db, cursor, 'update players set primaryPosition = "' + positions[0][0]+'", secondaryPositions'
-                                     + ' = Null where playerId = "' + player + '";')
+        db.write('update players set primaryPosition = "' + positions[0][0]+'", secondaryPositions' + ' = Null where '
+                 'playerId = "' + player + '";')
     else:
-        DB_Connect.write(db, cursor, 'update players set primaryPosition = "' + positions[0][0]+'", secondaryPositions'
-                                     + ' = "' + ','.join(secondary_positions) + '" where playerId = "' + player + '";')
-    DB_Connect.close(db)
+        db.write('update players set primaryPosition = "' + positions[0][0]+'", secondaryPositions' + ' = "'
+                 + ','.join(secondary_positions) + '" where playerId = "' + player + '";')
+    db.close()
 
 
 def determine_primary_position(position_string):
