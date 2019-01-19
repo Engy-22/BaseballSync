@@ -1,5 +1,5 @@
 import os
-from utilities.Logger import Logger
+from utilities.logger import Logger
 import time
 import datetime
 from utilities.dbconnect import DatabaseConnection
