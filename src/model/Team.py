@@ -1,4 +1,4 @@
-from utilities.DB_Connect import DB_Connect
+from utilities.dbconnect import DatabaseConnection
 
 
 class Team:
@@ -72,11 +72,11 @@ class Team:
 
 ### SETTERS ###
     def setRoster(self):
-        db, cursor = DB_Connect.grab("baseballData")
-        team_id = DB_Connect.read(cursor, "select TY_uniqueidentifier from team_years where teamId = '" + self.teamId
-                                          + "' and year = " + str(self.year) + ";")
+        db = DatabaseConnection()
+        team_id = db.read("select TY_uniqueidentifier from team_years where teamId = '" + self.teamId + "' and year = "
+                          + str(self.year) + ";")
         print(team_id)
-        #data = DB_Connect.read(cursor, "select playerId from playerPositions where TY_uniqueidentifier = " + str(team_id))
+        #data = db.read("select playerId from playerPositions where TY_uniqueidentifier = " + str(team_id))
 ### SETTERS ###
 
 team = Team("CLE", 2017)
