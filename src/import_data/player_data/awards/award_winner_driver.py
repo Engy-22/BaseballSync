@@ -2,7 +2,7 @@ import time
 import datetime
 from utilities.time_converter import time_converter
 from utilities.Logger import Logger
-from utilities.DB_Connect import DB_Connect
+from utilities.dbconnect import DatabaseConnection
 from import_data.player_data.awards.mvp_cy_young import mvp_cy_young
 from import_data.player_data.awards.roy_gatherer import roy_gatherer
 from import_data.player_data.awards.moy_gatherer import moy_gatherer
@@ -40,13 +40,13 @@ def award_winner_driver(year, driver_logger):
 def write_to_file(year, awards_dict_list):
     if len(awards_dict_list[0]) + len(awards_dict_list[1]) + len(awards_dict_list[2]) + len(awards_dict_list[3]) \
            + len(awards_dict_list[4]) + len(awards_dict_list[5]) > 0:
-        db, cursor = DB_Connect.grab("baseballData")
+        db = DatabaseConnection()
         this_string = ""
         for dictionary in awards_dict_list:
             for key, value in dictionary.items():
                 this_string += key + ' = "' + value.replace("'", "\'") + '", '
-        DB_Connect.write(db, cursor, 'update years set ' + this_string[:-2] + ' where year = ' + str(year) + ';')
-        DB_Connect.close(db)
+        db.write('update years set ' + this_string[:-2] + ' where year = ' + str(year) + ';')
+        db.close()
 
 
 # dump_logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\dump.log")
