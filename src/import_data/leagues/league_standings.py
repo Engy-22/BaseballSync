@@ -2,7 +2,7 @@ import time
 import datetime
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
-from utilities.DB_Connect import DB_Connect
+from utilities.dbconnect import DatabaseConnection
 from utilities.translate_team_id import translate_team_id
 from utilities.Logger import Logger
 from utilities.time_converter import time_converter
@@ -117,28 +117,28 @@ def league_standings(year, driver_logger):
 
 
 def write_league_champs_non_ws(champs, year):
-    db, cursor = DB_Connect.grab("baseballData")
+    db = DatabaseConnection()
     query_string = 'update years set '
     team_count = 0
     for league, team in champs.items():
         query_string += league + '_champ = "' + team + '", '
         team_count += 1
     query_string = query_string[:-2] + ' where year = ' + str(year) + ';'
-    DB_Connect.write(db, cursor, query_string)
-    DB_Connect.close(db)
+    db.write(query_string)
+    db.close()
 
 
 def write_ws_data(year, ws_data):
     if ws_data['ws_champ'] is not None:
-        db, cursor = DB_Connect.grab("baseballData")
-        champ_league = str(DB_Connect.read(cursor, 'select league from team_years where teamId = "'
+        db = DatabaseConnection()
+        champ_league = str(db.read('select league from team_years where teamId = "'
                                                    + ws_data['ws_champ'] + '" and year = ' + str(year) + ';')[0][0])
-        runnerup_league = str(DB_Connect.read(cursor, 'select league from team_years where teamId = "' + ws_data
+        runnerup_league = str(db.read('select league from team_years where teamId = "' + ws_data
                                                       ['ws_runnerup'] + '" and year = ' + str(year) + ';')[0][0])
-        DB_Connect.write(db, cursor, 'update years set ws_champ = "' + ws_data['ws_champ'] + '", ' + champ_league
+        db.write('update years set ws_champ = "' + ws_data['ws_champ'] + '", ' + champ_league
                                      + '_champ = "' + ws_data['ws_champ'] + '", ' + runnerup_league + '_champ = "'
                                      + ws_data['ws_runnerup'] + '" where year = ' + str(year) + ';')
-        DB_Connect.close(db)
+        db.close()
 
 
 def get_league_division(divisions, team_key, year):
@@ -190,14 +190,14 @@ def is_in_playoffs(playoffs, team_key, year):
 
 def write_to_db(this_string, team_id, year):
     logger.log("\tWriting " + team_id + " to team_years")
-    db, cursor = DB_Connect.grab("baseballData")
-    if len(DB_Connect.read(cursor, 'select TY_uniqueidentifier from team_years where teamId = "' + team_id
+    db = DatabaseConnection()
+    if len(db.read('select TY_uniqueidentifier from team_years where teamId = "' + team_id
                                    + '" and year = ' + str(year) + ';')) == 0:
-        DB_Connect.write(db, cursor, 'Insert into team_years (TY_uniqueidentifier, teamId, year, league, division, '
+        db.write('Insert into team_years (TY_uniqueidentifier, teamId, year, league, division, '
                                      + 'wins, loses, playoffs, BY_uniqueidentifier) values (default,' + this_string
                                      + ', (select BY_uniqueidentifier from ballpark_years where teamId = "' + team_id
                                      + '" and year = ' + str(year) + '));')
-    DB_Connect.close(db)
+    db.close()
 
 
 # dump_logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\dump.log")
