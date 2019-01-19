@@ -1,4 +1,4 @@
-from utilities.DB_Connect import DB_Connect
+from utilities.dbconnect import DatabaseConnection
 
 
 class Player:
@@ -16,15 +16,13 @@ class Player:
         self.imageURL = self.create_image_url(player_id)
 
     def import_primary_position(self, player_id, team_id, year="ALL"):
-        db, cursor = DB_Connect.grab("baseballData")
+        db = DatabaseConnection()
         if year == "ALL":
-            position = DB_Connect.read(cursor, 'select primaryPosition from players where playerId = "' + player_id
-                                               + '";')[0][0]
+            position = db.read('select primaryPosition from players where playerId = "' + player_id + '";')[0][0]
         else:
-            position = DB_Connect.read(cursor, 'select positions from player_positions where playerId = ' + player_id
-                                               + ' and TY_uniqueidentifier = (select TY_uniqueidentifier from '
-                                               + 'team_years where teamId = ' + team_id + ' and year = ' + str(year)
-                                               + ');')[0][0]
+            position = db.read('select positions from player_positions where playerId = ' + player_id + ' and '
+                               'TY_uniqueidentifier = (select TY_uniqueidentifier from team_years where teamId = '
+                               + team_id + ' and year = ' + str(year) + ');')[0][0]
         return position
 
 ### Getters ###
