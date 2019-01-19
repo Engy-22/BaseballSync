@@ -3,7 +3,7 @@ import time
 import datetime
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
-from utilities.DB_Connect import DB_Connect
+from utilities.dbconnect import DatabaseConnection
 from utilities.time_converter import time_converter
 from utilities.Logger import Logger
 from concurrent.futures import ThreadPoolExecutor
@@ -50,7 +50,7 @@ def load_url(year, team_id, team_key):
 def write_to_file(year):
     for team_id, table in pages.items():
         logger.log("\t\tgathering and writing " + team_id + " positions")
-        db, cursor = DB_Connect.grab("baseballData")
+        db = DatabaseConnection()
         primary_keys = []
         try:
             for row in table:
@@ -69,17 +69,15 @@ def write_to_file(year):
                     else:
                         this_string += position_summary
                     this_string += '"'
-                    ty_uid = str(DB_Connect.read(cursor, ('select TY_uniqueidentifier from team_years where teamId = "'
-                                                          + team_id + '" and year = ' + str(year) + ';'))[0][0])
-                    if len(DB_Connect.read(cursor, 'select PPos_uniqueidentifier from player_positions where playerId='
-                                                   + this_string.split(',')[0] + ' and TY_uniqueidentifier = ' + ty_uid
-                                                   + ';')) == 0:
-                        DB_Connect.write(db, cursor, 'insert into player_positions (PPos_uniqueidentifier, playerId, '
-                                                     'positions, TY_uniqueidentifier) values (default, ' + this_string
-                                                     + ', ' + ty_uid + ');')
+                    ty_uid = str(db.read('select TY_uniqueidentifier from team_years where teamId = "' + team_id
+                                         + '" and year = ' + str(year) + ';')[0][0])
+                    if len(db.read('select PPos_uniqueidentifier from player_positions where playerId='
+                                   + this_string.split(',')[0] + ' and TY_uniqueidentifier = ' + ty_uid + ';')) == 0:
+                        db.write('insert into player_positions (PPos_uniqueidentifier, playerId, positions, '
+                                 'TY_uniqueidentifier) values (default, ' + this_string + ', ' + ty_uid + ');')
         except IndexError:
             pass
-        DB_Connect.close(db)
+        db.close()
 
 
 # dump_logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\dump.log")
