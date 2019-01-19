@@ -10,12 +10,9 @@ def make_hitter_comparisons(hitters, year, possible_comps, year_pa, year_totals,
 
 
 def determine_comp(hitter, year, hitters_to_compare, year_pa, year_totals, driver_logger):
-    comp = None
     hitter_pa, stats = get_hitter_stats(hitter, year, driver_logger)
-    hitter_drs = hitter_dr_calc(hitter_pa, stats, year_pa, year_totals, driver_logger)
-    if len(hitter_drs) > 0:
-        comp = find_comp(hitter, year, hitter_drs, hitters_to_compare, driver_logger)
-    return comp
+    return find_comp(hitter, year, hitter_dr_calc(hitter_pa, stats, year_pa, year_totals, driver_logger),
+                     hitters_to_compare, driver_logger)
 
 
 def hitter_dr_calc(pa, stats, year_pa, year_stats, driver_logger):
@@ -33,18 +30,21 @@ def hitter_dr_calc(pa, stats, year_pa, year_stats, driver_logger):
 
 
 def find_comp(hitter, year, hitter_drs, hitters_to_compare, driver_logger):
-    comp_player_scores = {}
-    for year_to_compare, possible_comps in hitters_to_compare.items():
-        for possible_comp_hitter, possible_comp_stats in possible_comps.items():
-            if possible_comp_hitter != hitter + ';' + str(year):
-                if len(possible_comp_stats) == 9:
-                    comp_player_scores[possible_comp_hitter] = 0
-                    for statistic, value in possible_comp_stats.items():
-                        try:
-                            comp_player_scores[possible_comp_hitter] += abs(hitter_drs[statistic] - value)
-                        except KeyError:
-                            continue
-    return sorted(comp_player_scores.items(), key=lambda kv: kv[1])[0][0]
+    if len(hitter_drs) > 0:
+        comp_player_scores = {}
+        for year_to_compare, possible_comps in hitters_to_compare.items():
+            for possible_comp_hitter, possible_comp_stats in possible_comps.items():
+                if possible_comp_hitter != hitter + ';' + str(year):
+                    if len(possible_comp_stats) == 9:
+                        comp_player_scores[possible_comp_hitter] = 0
+                        for statistic, value in possible_comp_stats.items():
+                            try:
+                                comp_player_scores[possible_comp_hitter] += abs(hitter_drs[statistic] - value)
+                            except KeyError:
+                                continue
+        return sorted(comp_player_scores.items(), key=lambda kv: kv[1])[0][0]
+    else:
+        return None
 
 
 # print(find_comp('lindofr01', 2018))
