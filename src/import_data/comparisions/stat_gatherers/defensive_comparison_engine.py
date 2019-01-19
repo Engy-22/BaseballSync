@@ -1,14 +1,11 @@
 from import_data.comparisions.getters.defensive_team_getters import get_year_totals, get_defensive_stats
 from import_data.comparisions.file_writers.write_to_file_teams import write_to_file
-from utilities.DB_Connect import DB_Connect
 
 
 def make_defensive_comparisons(ty_uids, year, possible_comps, driver_logger):
     comparisons = {}
-    db, cursor = DB_Connect.grab("baseballData")
     for ty_uid in ty_uids:
         comparisons[ty_uid] = determine_comp(ty_uid, year, possible_comps, driver_logger)
-    DB_Connect.close(db)
     write_to_file(comparisons, "defense")
 
 
