@@ -5,7 +5,7 @@ from urllib.request import urlopen
 from bs4 import BeautifulSoup
 from utilities.dbconnect import DatabaseConnection
 from utilities.translate_team_id import translate_team_id
-from utilities.Logger import Logger
+from utilities.logger import Logger
 from utilities.time_converter import time_converter
 from concurrent.futures import ThreadPoolExecutor
 
