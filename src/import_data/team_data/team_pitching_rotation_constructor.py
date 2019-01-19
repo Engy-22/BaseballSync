@@ -3,7 +3,7 @@ import time
 import datetime
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
-from utilities.DB_Connect import DB_Connect
+from utilities.dbconnect import DatabaseConnection
 from utilities.translate_team_id import translate_team_id
 from utilities.Logger import Logger
 from utilities.time_converter import time_converter
@@ -78,32 +78,30 @@ def get_pitchers(year):
 
 
 def write_to_file_pitchers(team, year, pitchers):
-    db, cursor = DB_Connect.grab("baseballData")
+    db = DatabaseConnection()
     for i in range(len(pitchers)):
-        if len(DB_Connect.read(cursor, 'select starterId from starting_pitchers where playerId = "' + pitchers[i]
+        if len(db.read('select starterId from starting_pitchers where playerId = "' + pitchers[i]
                                        + '" and gameNum = ' + str(i+1) + ' and TY_uniqueidentifier = (select '
                                        + 'TY_uniqueidentifier from team_years where teamId = "' + team + '" and year = '
                                        + str(year) + ');')) == 0:
-            DB_Connect.write(db, cursor, 'insert into starting_pitchers (starterId, playerId, gameNum, '
-                                         + 'TY_uniqueidentifier) values (default, "' + pitchers[i] + '", ' + str(i+1)
-                                         + ', (select TY_uniqueidentifier from team_years where teamId = "' + team
-                                         + '" and year = ' + str(year) + '));')
-    DB_Connect.close(db)
+            db.write('insert into starting_pitchers (starterId, playerId, gameNum, TY_uniqueidentifier) values (default'
+                     ', "' + pitchers[i] + '", ' + str(i+1) + ', (select TY_uniqueidentifier from team_years where '
+                     'teamId = "' + team + '" and year = ' + str(year) + '));')
+    db.close()
 
 
 def write_to_file_schedule(team_id, year, schedule):
-    db, cursor = DB_Connect.grab("baseballData")
-    ty_uid = DB_Connect.read(cursor, 'select ty_uniqueidentifier from team_years where teamid = "' + team_id + '" and '
-                                     'year = ' + str(year) + ';')[0][0]
+    db = DatabaseConnection()
+    ty_uid = db.read('select ty_uniqueidentifier from team_years where teamid = "' + team_id + '" and year = '
+                     + str(year) + ';')[0][0]
     for game, data in schedule.items():
-        if len(DB_Connect.read(cursor, 'select gameid from schedule where ty_uniqueidentifier = ' + str(ty_uid)
-                                       + ' and game_num = ' + game + ';')) == 0:
-            DB_Connect.write(db, cursor, 'insert into schedule (gameid, day, month, year, ty_uniqueidentifier, '
-                                         'game_num, opponent, outcome, score) values (default, ' + str(data[4]) + ', '
-                                         + str(data[3]) + ', ' + str(year) + ', ' + str(ty_uid) + ', ' + game
-                                         + ', (select ty_uniqueidentifier from team_years where teamid = "' + data[0]
-                                         + '" and year = ' + str(year) + '), "' + data[1] + '", "' + data[2] + '");')
-    DB_Connect.close(db)
+        if len(db.read('select gameid from schedule where ty_uniqueidentifier = ' + str(ty_uid) + ' and game_num = '
+                       + game + ';')) == 0:
+            db.write('insert into schedule (gameid, day, month, year, ty_uniqueidentifier, game_num, opponent, outcome,'
+                     ' score) values (default, ' + str(data[4]) + ', ' + str(data[3]) + ', ' + str(year) + ', '
+                     + str(ty_uid) + ', ' + game + ', (select ty_uniqueidentifier from team_years where teamid = "'
+                     + data[0] + '" and year = ' + str(year) + '), "' + data[1] + '", "' + data[2] + '");')
+    db.close()
 
 
 # dump_logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\dump.log")
