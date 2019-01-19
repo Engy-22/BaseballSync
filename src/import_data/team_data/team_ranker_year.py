@@ -1,6 +1,6 @@
 import time
 import datetime
-from utilities.DB_Connect import DB_Connect
+from utilities.dbconnect import DatabaseConnection
 from utilities.translate_team_id import translate_team_id
 from utilities.time_converter import time_converter
 from utilities.Logger import Logger
@@ -31,52 +31,51 @@ def team_ranker_year(year):
 
 
 def get_teams(year):
-    db, cursor = DB_Connect.grab("baseballData")
-    teams = DB_Connect.read(cursor, 'select teamid from team_years where year = ' + str(year) + ';')
-    DB_Connect.close(db)
+    db = DatabaseConnection()
+    teams = db.read('select teamid from team_years where year = ' + str(year) + ';')
+    db.close()
     return teams
 
 
 def get_games(team, year):
-    db, cursor = DB_Connect.grab("baseballData")
-    games = int(DB_Connect.read(cursor, 'select g from team_years where teamid = "' + team + '" and year = '
+    db = DatabaseConnection()
+    games = int(db.read('select g from team_years where teamid = "' + team + '" and year = '
                                         + str(year) + ';')[0][0])
-    DB_Connect.close(db)
+    db.close()
     return games
 
 
 def get_runs_for(team, year):
-    db, cursor = DB_Connect.grab("baseballData")
-    runs_for = int(DB_Connect.read(cursor, 'select r from team_years where teamid = "' + team + '" and year = '
-                                           + str(year) + ';')[0][0])
-    DB_Connect.close(db)
+    db = DatabaseConnection()
+    runs_for = int(db.read('select r from team_years where teamid = "' + team + '" and year=' + str(year) + ';')[0][0])
+    db.close()
     return runs_for
 
 
 def get_runs_against(team, year):
     global runs_against
-    db, cursor = DB_Connect.grab("baseballData")
-    runs_against = int(DB_Connect.read(cursor, 'select ra from team_years where teamid = "' + team + '" and year = '
-                                               + str(year) + ';')[0][0])
-    DB_Connect.close(db)
+    db = DatabaseConnection()
+    runs_against = int(db.read('select ra from team_years where teamid = "' + team + '" and year = ' + str(year)
+                               + ';')[0][0])
+    db.close()
     return runs_against
 
 
 def write_to_file(stats, year, stat_type):
     logger.log("\tWriting " + stat_type + " data")
     start_time = time.time()
-    db, cursor = DB_Connect.grab("baseballData")
+    db = DatabaseConnection()
     counter = 0
     for team in stats:
         team_id = translate_team_id(team[0], year)
-        if DB_Connect.read(cursor, 'select league from team_years where teamId = "' + team_id + '" and year = '
-                                   + str(year) + ';')[0][0].upper() in ['AL', 'NL']:
+        if db.read('select league from team_years where teamId = "' + team_id + '" and year = ' + str(year)
+                   + ';')[0][0].upper() in ['AL', 'NL']:
             counter += 1
-            DB_Connect.write(db, cursor, 'update team_years set ' + stat_type + '_year = ' + str(counter)
-                                         + ' where teamId = "' + team_id + '" and year = ' + str(year) + ';')
+            db.write('update team_years set ' + stat_type + '_year = ' + str(counter) + ' where teamId = "' + team_id
+                     + '" and year = ' + str(year) + ';')
         else:
             continue
-    DB_Connect.close(db)
+    db.close()
     logger.log("\t\tTime = " + time_converter(time.time() - start_time))
 
 
