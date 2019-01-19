@@ -104,4 +104,3 @@
 -Restart everything with concurrency, and make it clean in terms of folder hierarchy.
     *maybe decrease the amount which standard deviation affects team rankings in overall team ranker.
     *verify that player_batting, player_pitching and player_fielding numbers are accurate.
-    *change all db connections to new class
