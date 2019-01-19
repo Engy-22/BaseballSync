@@ -99,7 +99,6 @@
             *determine fields
             *determine directions
     *Find out when mlbam data is updated, if in real time then I can created a real time view similar to fantasycast.
-    *Delete all images that aren't of the player.
 
 -Restart everything with concurrency, and make it clean in terms of folder hierarchy.
     *maybe decrease the amount which standard deviation affects team rankings in overall team ranker.
