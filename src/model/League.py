@@ -1,4 +1,4 @@
-from utilities.DB_Connect import DB_Connect
+from utilities.dbconnect import DatabaseConnection
 
 
 class League:
@@ -8,11 +8,11 @@ class League:
         self.year = year
         self.league = ''
 
-    def set_league(self, year):
-        db, cursor = DB_Connect.grab("baseballData")
-        self.league = DB_Connect.read(cursor, 'select league from team_years where teamid = ' + self.home_team
-                                              + ' and year = ' + str(self.year) + ';')
-        DB_Connect.close(db)
+    def set_league(self):
+        db = DatabaseConnection()
+        self.league = db.read('select league from team_years where teamid = ' + self.home_team + ' and year = '
+                              + str(self.year) + ';')
+        db.close()
 
     def get_league(self):
         return self.league
