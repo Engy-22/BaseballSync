@@ -1,12 +1,10 @@
-from import_data.comparisions.getters.hitting_getters import get_year_totals, get_hitter_stats
+from import_data.comparisions.getters.hitting_getters import get_hitter_stats
 from import_data.comparisions.file_writers.write_to_file_players import write_to_file
 from utilities.DB_Connect import DB_Connect
 
 
-def make_hitter_comparisons(hitters, year, possible_comps, driver_logger):
-    print(str(year) + '-' + str(len(hitters)))
+def make_hitter_comparisons(hitters, year, possible_comps, year_pa, year_totals, driver_logger):
     comparisons = {}
-    year_pa, year_totals = get_year_totals(year, driver_logger)
     db, cursor = DB_Connect.grab("baseballData")
     for hitter in hitters:
         comparisons[hitter] = determine_comp(hitter, year, possible_comps, year_pa, year_totals, driver_logger)
