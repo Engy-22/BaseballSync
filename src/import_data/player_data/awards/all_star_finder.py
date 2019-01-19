@@ -2,7 +2,7 @@ import time
 import datetime
 from utilities.time_converter import time_converter
 from utilities.Logger import Logger
-from utilities.DB_Connect import DB_Connect
+from utilities.dbconnect import DatabaseConnection
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
 
@@ -52,16 +52,15 @@ def get_all_stars(table, delimeter):
 
 
 def write_to_file(year, all_stars):
-    db, cursor = DB_Connect.grab("baseballData")
+    db = DatabaseConnection()
     for player in all_stars:
-        pt_uids = DB_Connect.read(cursor, 'select PT_uniqueidentifier from player_teams ' + 'where playerId = "'
-                                          + player + '";')
+        pt_uids = db.read('select PT_uniqueidentifier from player_teams ' + 'where playerId = "' + player + '";')
         for pt_uid in pt_uids:
-            DB_Connect.write(db, cursor, 'update player_batting set all_star = TRUE where PT_uniqueidentifier = '
-                                         + str(pt_uid[0]) + ' and year = ' + str(year) + ';')
-            DB_Connect.write(db, cursor, 'update player_pitching set all_star = TRUE where PT_uniqueidentifier = '
-                                         + str(pt_uid[0]) + ' and year = ' + str(year) + ';')
-    DB_Connect.close(db)
+            db.write('update player_batting set all_star = TRUE where PT_uniqueidentifier = ' + str(pt_uid[0]) + ' and '
+                     'year = ' + str(year) + ';')
+            db.write('update player_pitching set all_star = TRUE where PT_uniqueidentifier = ' + str(pt_uid[0]) + ' and'
+                     ' year = ' + str(year) + ';')
+    db.close()
 
 
 # all_star_finder(2018, True, Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\"
