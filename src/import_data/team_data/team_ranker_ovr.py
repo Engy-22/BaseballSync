@@ -3,7 +3,7 @@ from utilities.dbconnect import DatabaseConnection
 from utilities.translate_team_id import translate_team_id
 from statistics import mean
 from utilities.time_converter import time_converter
-from utilities.Logger import Logger
+from utilities.logger import Logger
 
 
 def team_ranker_ovr(data, greater_than, field, standard_deviation, average_deviation):
