@@ -1,7 +1,7 @@
 import time
 import datetime
 from utilities.dbconnect import DatabaseConnection
-from utilities.Logger import Logger
+from utilities.logger import Logger
 from utilities.time_converter import time_converter
 
 logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\"
