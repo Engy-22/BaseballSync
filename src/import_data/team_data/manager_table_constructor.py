@@ -3,7 +3,7 @@ from utilities.time_converter import time_converter
 import urllib.request
 from bs4 import BeautifulSoup as bs
 from concurrent.futures import ThreadPoolExecutor
-from utilities.DB_Connect import DB_Connect
+from utilities.dbconnect import DatabaseConnection
 from utilities.Logger import Logger
 import datetime
 import time
@@ -41,10 +41,9 @@ def manager_table_constructor(driver_logger):
 
 
 def write_to_file(data):
-    db, cursor = DB_Connect.grab("baseballData")
-    DB_Connect.write(db, cursor, 'insert into managers (managerId, lastName, firstName, wins, loses) values (' + data
-                     + ');')
-    DB_Connect.close(db)
+    db = DatabaseConnection()
+    db.write('insert into managers (managerId, lastName, firstName, wins, loses) values (' + data + ');')
+    db.close()
 
 
 # manager_table_constructor()
