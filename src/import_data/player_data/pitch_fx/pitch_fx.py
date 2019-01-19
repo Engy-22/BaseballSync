@@ -2,7 +2,7 @@ import os
 import time
 import datetime
 # from utilities.translate_pitchfx import translate_pitch_type, translate_pitch_outcome, determine_swing_or_take
-from utilities.Logger import Logger
+from utilities.logger import Logger
 from utilities.dbconnect import DatabaseConnection
 from utilities.time_converter import time_converter
 from concurrent.futures import ThreadPoolExecutor, ProcessPoolExecutor
