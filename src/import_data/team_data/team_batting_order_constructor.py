@@ -3,7 +3,7 @@ import time
 import datetime
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
-from utilities.DB_Connect import DB_Connect
+from utilities.dbconnect import DatabaseConnection
 from utilities. Logger import Logger
 from utilities.time_converter import time_converter
 from concurrent.futures import ThreadPoolExecutor
@@ -89,23 +89,21 @@ def get_hitters(year):
 
 
 def write_to_file(team, year, batting_order):
-    db, cursor = DB_Connect.grab("baseballData")
+    db = DatabaseConnection()
     for place in range(len(batting_order)):
         for hitter in batting_order[place]:
-            ty_uid = DB_Connect.read(cursor, 'select TY_uniqueidentifier from team_years where teamId = "' + team
-                                             + '" and year = ' + str(year))[0][0]
-            if len(DB_Connect.read(cursor, 'select * from hitter_spots where playerId = "' + hitter.split(',')[0]
-                                           + '" and TY_uniqueidentifier = ' + str(ty_uid))) > 0:
-                DB_Connect.write(db, cursor, 'update hitter_spots set ' + stringify_num(place) + ' = '
-                                             + hitter.split(',')[1] + ' where playerId = "' + hitter.split(',')[0]
-                                             + '" and TY_uniqueidentifier = (select TY_uniqueidentifier from team_years'
-                                             + ' where teamId = "' + team + '" and year = ' + str(year) + ');')
+            ty_uid = db.read('select TY_uniqueidentifier from team_years where teamId = "' + team + '" and year = '
+                             + str(year))[0][0]
+            if len(db.read('select * from hitter_spots where playerId = "' + hitter.split(',')[0] + '" and '
+                           'TY_uniqueidentifier = ' + str(ty_uid))) > 0:
+                db.write('update hitter_spots set ' + stringify_num(place) + ' = ' + hitter.split(',')[1] + ' where '
+                         'playerId = "' + hitter.split(',')[0] + '" and TY_uniqueidentifier = (select TY_uniqueidentif'
+                         'ier from team_years where teamId = "' + team + '" and year = ' + str(year) + ');')
             else:
-                DB_Connect.write(db, cursor, 'insert into hitter_spots (HS_uniqueidentifier, playerId, '
-                                             + stringify_num(place) + ', TY_uniqueidentifier) values (default, "'
-                                             + hitter.split(',')[0] + '", ' + hitter.split(',')[1] + ', ' + str(ty_uid)
-                                             + ');')
-    DB_Connect.close(db)
+                db.write('insert into hitter_spots (HS_uniqueidentifier, playerId, ' + stringify_num(place)
+                         + ', TY_uniqueidentifier) values (default, "' + hitter.split(',')[0] + '", '
+                         + hitter.split(',')[1] + ', ' + str(ty_uid) + ');')
+    db.close()
 
 
 def stringify_num(num):
