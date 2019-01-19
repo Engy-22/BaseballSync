@@ -37,8 +37,7 @@ def comparisons_driver(most_recent_year, driver_logger):
             if comp_hitter_pa >= 300:
                 possible_hitter_comps[year_to_compare][comp_hitter + ';' + str(year_to_compare)] =\
                     hitter_dr_calc(comp_hitter_pa, comp_stats, year_pa, year_totals, logger)
-    print(possible_hitter_comps)
-    for comp_year in range(1876, most_recent_year + 1, 1):
+    for comp_year in range(1876, most_recent_year+1, 1):
         try:
             year_pa, year_totals = hitter_year_totals(comp_year, driver_logger)
         except IndexError:
@@ -58,7 +57,7 @@ def comparisons_driver(most_recent_year, driver_logger):
     #         if comp_pitcher_pa >= 200:
     #             possible_pitcher_comps[year_to_compare][comp_pitcher + ';' + str(year_to_compare)] = \
     #                 pitcher_dr_calc(comp_pitcher_pa, comp_stats, year_pa, year_totals, logger)
-    # for comp_year in range(1876, most_recent_year + 1, 1):
+    # for comp_year in range(1876, most_recent_year+1, 1):
     #     try:
     #         year_pa, year_totals = pitcher_year_totals(comp_year, driver_logger)
     #     except IndexError:
@@ -75,7 +74,7 @@ def comparisons_driver(most_recent_year, driver_logger):
     #     for comp_ty_uid in gather_teams(year_to_compare, logger):
     #         comp_team_pa, comp_stats = get_offensive_stats(comp_ty_uid, logger)
     #         possible_offensive_comps[comp_ty_uid] = offensive_dr_calc(comp_team_pa, comp_stats, year_pa, year_totals, logger)
-    # for comp_year in range(1876, most_recent_year + 1, 1):
+    # for comp_year in range(1876, most_recent_year+1, 1):
     #     make_offensive_comparisons(gather_teams(comp_year, logger), comp_year, possible_offensive_comps, logger)
     # logger.log("\t\tTime = " + time_converter(time.time() - oc_time))
     #
@@ -87,7 +86,7 @@ def comparisons_driver(most_recent_year, driver_logger):
     #     for comp_ty_uid in gather_teams(year_to_compare, logger):
     #         comp_team_pa, comp_stats = get_defensive_stats(comp_ty_uid, driver_logger)
     #         possible_defensive_comps[comp_ty_uid] = defensive_dr_calc(comp_team_pa, comp_stats, year_pa, year_totals, logger)
-    # for comp_year in range(1876, most_recent_year + 1, 1):
+    # for comp_year in range(1876, most_recent_year+1, 1):
     #     make_defensive_comparisons(gather_teams(comp_year, logger), comp_year, possible_defensive_comps, logger)
     # logger.log("\t\tTime = " + time_converter(time.time() - dc_time))
 
