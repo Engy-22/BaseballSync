@@ -4,7 +4,7 @@ import datetime
 from urllib.request import urlopen, urlretrieve
 from bs4 import BeautifulSoup
 from concurrent.futures import ThreadPoolExecutor
-from utilities.DB_Connect import DB_Connect
+from utilities.dbconnect import DatabaseConnection
 from import_data.player_data.batting.league_batting_ratios_constructor import league_batting_ratios_constructor
 from utilities.translate_team_id import translate_team_id
 from utilities.time_converter import time_converter
@@ -115,11 +115,11 @@ def get_stats(player_id, team, row, index):
 
 def load_url(player_id):
     page = None
-    db, cursor = DB_Connect.grab("baseballData")
-    if len(DB_Connect.read(cursor, 'select * from players where playerid = "' + player_id + '";')) == 0:
+    db = DatabaseConnection()
+    if len(db.read('select * from players where playerid = "' + player_id + '";')) == 0:
         page = BeautifulSoup(urlopen("https://www.baseball-reference.com/players/" + player_id[0] + "/" + player_id
                                      + ".shtml"), 'html.parser')
-    DB_Connect.close(db)
+    db.close()
     return page
 
 
@@ -129,11 +129,10 @@ def write_to_db(player_id, player_attributes):
     for field, value in player_attributes.items():
         fields += ', ' + field
         values += '", "' + value
-    db, cursor = DB_Connect.grab("baseballData")
-    if len(DB_Connect.read(cursor, 'select * from players where playerid = "' + player_id + '";')) == 0:
-        DB_Connect.write(db, cursor, 'insert into players (playerid ' + fields + ') values ("' + player_id + values
-                                     + '");')
-    DB_Connect.close(db)
+    db = DatabaseConnection()
+    if len(db.read('select * from players where playerid = "' + player_id + '";')) == 0:
+        db.write('insert into players (playerid ' + fields + ') values ("' + player_id + values + '");')
+    db.close()
 
 
 def write_teams_and_stats(player_id, stats, ratios, team, year):
@@ -144,14 +143,14 @@ def write_teams_and_stats(player_id, stats, ratios, team, year):
                 stat_nums[field] += value
             else:
                 stat_nums[field] = value
-    db, cursor = DB_Connect.grab("baseballData")
-    if len(DB_Connect.read(cursor, 'select pt_uniqueidentifier from player_teams where playerid = "' + player_id
-                                   + '" and teamid = "' + team + '";')) == 0:
-        DB_Connect.write(db, cursor, 'insert into player_teams (pt_uniqueidentifier, playerid, teamid) values (default,'
-                                     ' "' + player_id + '", "' + team + '");')
-    if len(DB_Connect.read(cursor, 'select pb_uniqueidentifier from player_batting where year = ' + str(year)
-                                   + ' and pt_uniqueidentifier = (select pt_uniqueidentifier from player_teams where '
-                                   'playerid = "' + player_id + '" and teamid = "' + team + '");')) == 0:
+    db = DatabaseConnection()
+    if len(db.read('select pt_uniqueidentifier from player_teams where playerid = "' + player_id + '" and teamid = "'
+                   + team + '";')) == 0:
+        db.write('insert into player_teams (pt_uniqueidentifier, playerid, teamid) values (default, "' + player_id
+                 + '", "' + team + '");')
+    if len(db.read('select pb_uniqueidentifier from player_batting where year = ' + str(year) + ' and '
+                   'pt_uniqueidentifier = (select pt_uniqueidentifier from player_teams where playerid = "' + player_id
+                   + '" and teamid = "' + team + '");')) == 0:
         fields = ''
         values = ''
         for field, value in stat_nums.items():
@@ -160,11 +159,10 @@ def write_teams_and_stats(player_id, stats, ratios, team, year):
         for ratio in ratios:
             fields += ', ' + ratio.split(';')[0]
             values += ', ' + ratio.split(';')[1]
-        DB_Connect.write(db, cursor, 'insert into player_batting (pb_uniqueidentifier, year, pt_uniqueidentifier, '
-                                     'complete_year' + fields + ') values (default, ' + str(year) + ', (select '
-                                     'pt_uniqueidentifier from player_teams where playerid = "' + player_id + '" and '
-                                     'teamid = "' + team + '"), FALSE' + values + ');')
-    DB_Connect.close(db)
+        db.write('insert into player_batting (pb_uniqueidentifier, year, pt_uniqueidentifier, complete_year' + fields
+                 + ') values (default, ' + str(year) + ', (select pt_uniqueidentifier from player_teams where playerid'
+                 ' = "' + player_id + '" and teamid = "' + team + '"), FALSE' + values + ');')
+    db.close()
 
 
 # dump_logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\dump.log")
