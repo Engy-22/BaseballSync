@@ -8,7 +8,7 @@ from utilities.dbconnect import DatabaseConnection
 from import_data.player_data.pitching.league_pitching_ratios_constructor import league_pitching_ratios_constructor
 from utilities.translate_team_id import translate_team_id
 from utilities.time_converter import time_converter
-from utilities.Logger import Logger
+from utilities.logger import Logger
 from utilities.anomaly_team import anomaly_team
 
 data = {}
