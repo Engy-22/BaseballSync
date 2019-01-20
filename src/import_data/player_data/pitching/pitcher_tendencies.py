@@ -106,16 +106,16 @@ def write_to_file(year, player_id, stat_list):
 
 def fill_fields(year):
     db = DatabaseConnection()
-    db.write('update player_pitching set certainty=0.0 where year=' + str(year) + ';')
+    db.write('update player_pitching set certainty = 0.0 where year = ' + str(year) + ';')
     db.close()
 
 
 def fill_pitchers_with_0_pa(year):
     db = DatabaseConnection()
-    db.write("update player_pitching set certainty = 0.0 where pa=0 and year=" + str(year) + ";")
+    db.write("update player_pitching set certainty = 0.0 where pa = 0 and year = " + str(year) + ";")
     db.close()
 
 
 # dump_logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\dump.log")
-# for year in range(1998, 2009, 1):
+# for year in range(1996, 2009, 1):
 #     pitcher_tendencies(year, dump_logger)
