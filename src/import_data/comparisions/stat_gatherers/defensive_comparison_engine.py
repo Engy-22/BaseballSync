@@ -3,7 +3,7 @@ from import_data.comparisions.file_writers.write_to_file_teams import write_to_f
 
 
 def make_defensive_comparisons(ty_uids, possible_comps, year_pa, year_totals, logger):
-    logger.log('\t\tMaking team defensive comparisons')
+    logger.log('\t\t\tMaking team defensive comparisons')
     comparisons = {}
     for ty_uid in ty_uids:
         comparisons[ty_uid] = determine_comp(ty_uid, possible_comps, year_pa, year_totals)
