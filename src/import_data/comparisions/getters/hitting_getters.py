@@ -8,9 +8,12 @@ def get_hitter_stats(hitter, year, driver_logger):
                      'PT_uniqueidentifier = player_teams.PT_uniqueidentifier and ' + 'player_teams.playerId = "'
                      + hitter + '" and year = ' + str(year) + ';')[0][0])
     for key, value in stats.items():
-        stats[key] = int(db.read('select player_batting.' + key + ' from player_batting, player_teams where '
-                                 'player_batting.PT_uniqueidentifier = player_teams.PT_uniqueidentifier and '
-                                 'player_teams.playerId = "' + hitter + '" and year = ' + str(year) + ';')[0][0])
+        try:
+            stats[key] = int(db.read('select player_batting.' + key + ' from player_batting, player_teams where '
+                                     'player_batting.PT_uniqueidentifier = player_teams.PT_uniqueidentifier and '
+                                     'player_teams.playerId = "' + hitter + '" and year = ' + str(year) + ';')[0][0])
+        except TypeError:
+            continue
     db.close()
     return pa, stats
 
