@@ -190,4 +190,5 @@ def write_to_db(team_id, stats, trajectory, manager_ids, year, park_name):
 
 
 # dump_logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\dump.log")
-# ballpark_and_manager_data(1878, dump_logger)
+# for year in range(1996, 1997, 1):
+#     ballpark_and_manager_data(year, dump_logger)
