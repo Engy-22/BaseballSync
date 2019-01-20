@@ -1,4 +1,4 @@
-from import_data.comparisions.getters.offensive_team_getters import get_year_totals, get_offensive_stats
+from import_data.comparisions.getters.offensive_team_getters import get_offensive_stats
 from import_data.comparisions.file_writers.write_to_file_teams import write_to_file
 from utilities.dbconnect import DatabaseConnection
 
