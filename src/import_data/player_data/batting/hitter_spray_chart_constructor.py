@@ -159,6 +159,6 @@ def revisit_bad_gateways(year, data):
         reduce_functionality(year, datum[0])
 
 
-dump_logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\dump.log")
-for year in range(1996, 2009, 1):
-    hitter_spray_chart_constructor(year, dump_logger)
+# dump_logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\dump.log")
+# for year in range(1996, 2009, 1):
+#     hitter_spray_chart_constructor(year, dump_logger)
