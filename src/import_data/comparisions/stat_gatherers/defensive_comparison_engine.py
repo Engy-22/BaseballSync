@@ -2,20 +2,20 @@ from import_data.comparisions.getters.defensive_team_getters import get_year_tot
 from import_data.comparisions.file_writers.write_to_file_teams import write_to_file
 
 
-def make_defensive_comparisons(ty_uids, possible_comps, year_pa, year_totals, driver_logger):
+def make_defensive_comparisons(ty_uids, possible_comps, year_pa, year_totals, logger):
+    logger.log('\t\tMaking team defensive comparisons')
     comparisons = {}
     for ty_uid in ty_uids:
-        comparisons[ty_uid] = determine_comp(ty_uid, possible_comps, year_pa, year_totals, driver_logger)
+        comparisons[ty_uid] = determine_comp(ty_uid, possible_comps, year_pa, year_totals)
     write_to_file(comparisons, "defense")
 
 
-def determine_comp(ty_uid, teams_to_compare, year_pa, year_totals, driver_logger):
-    team_pa, stats = get_defensive_stats(ty_uid, driver_logger)
-    return find_comp(ty_uid, defensive_dr_calc(team_pa, stats, year_pa, year_totals, driver_logger), teams_to_compare,
-                     driver_logger)
+def determine_comp(ty_uid, teams_to_compare, year_pa, year_totals):
+    team_pa, stats = get_defensive_stats(ty_uid)
+    return find_comp(ty_uid, defensive_dr_calc(team_pa, stats, year_pa, year_totals), teams_to_compare)
 
 
-def defensive_dr_calc(pa, stats, year_pa, year_stats, driver_logger):
+def defensive_dr_calc(pa, stats, year_pa, year_stats):
     team_drs = {}
     for key, value in stats.items():
         try:
@@ -29,7 +29,7 @@ def defensive_dr_calc(pa, stats, year_pa, year_stats, driver_logger):
     return team_drs
 
 
-def find_comp(ty_uid, team_drs, teams_to_compare, driver_logger):
+def find_comp(ty_uid, team_drs, teams_to_compare):
     comp_team_scores = {}
     for comp_ty_uid, possible_comps_stats in teams_to_compare.items():
         if comp_ty_uid != ty_uid:
