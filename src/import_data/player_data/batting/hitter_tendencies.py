@@ -109,8 +109,7 @@ def fill_fields(year):
 
 def fill_batters_with_0_pa(year):
     db = DatabaseConnection()
-    db.write("update player_batting set certainty = 0.0 where pa = 0 and year = "
-                                 + str(year) + ";")
+    db.write("update player_batting set certainty = 0.0 where pa = 0 and year = " + str(year) + ";")
     db.close()
 
 
