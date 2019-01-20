@@ -14,7 +14,7 @@ def league_standings(year, driver_logger):
     driver_logger.log("\tAdding to team_years (standings)")
     print("Adding to team_years (standings)")
     start_time = time.time()
-    logger.log('Begin organizing league standings for ' + str(year) + ' || Timestamp: ' + datetime.datetime.today().\
+    logger.log('Begin organizing league standings for ' + str(year) + ' || Timestamp: ' + datetime.datetime.today().
                strftime('%Y-%m-%d %H:%M:%S'))
     page = str(BeautifulSoup(urlopen("https://www.baseball-reference.com/leagues/MLB/" + str(year)
                                      + "-standings.shtml"), "html.parser"))
@@ -96,15 +96,15 @@ def league_standings(year, driver_logger):
         except IndexError:
             continue
         write_to_db(this_string, team_id, year)
-    if year == 1903 or year > 1904:
+    if year == 1903 or year > 1904:  # the first world series (1903); didn't play a WS in 1904
         playoff_picture = {}
         try:
-            playoff_picture['ws_champ'] = translate_team_id(playoffs.split('>World Series<')[1].\
+            playoff_picture['ws_champ'] = translate_team_id(playoffs.split('>World Series<')[1].
                                                             split('a href="/teams/')[1].split('/')[0], year)
         except IndexError:
             playoff_picture['ws_champ'] = None
         try:
-            playoff_picture['ws_runnerup'] = translate_team_id(playoffs.split('>World Series<')[1].\
+            playoff_picture['ws_runnerup'] = translate_team_id(playoffs.split('>World Series<')[1].
                                                                split('a href="/teams/')[2].split('/')[0], year)
         except IndexError:
             playoff_picture['ws_runnerup'] = None
@@ -131,13 +131,13 @@ def write_league_champs_non_ws(champs, year):
 def write_ws_data(year, ws_data):
     if ws_data['ws_champ'] is not None:
         db = DatabaseConnection()
-        champ_league = str(db.read('select league from team_years where teamId = "'
-                                                   + ws_data['ws_champ'] + '" and year = ' + str(year) + ';')[0][0])
-        runnerup_league = str(db.read('select league from team_years where teamId = "' + ws_data
-                                                      ['ws_runnerup'] + '" and year = ' + str(year) + ';')[0][0])
-        db.write('update years set ws_champ = "' + ws_data['ws_champ'] + '", ' + champ_league
-                                     + '_champ = "' + ws_data['ws_champ'] + '", ' + runnerup_league + '_champ = "'
-                                     + ws_data['ws_runnerup'] + '" where year = ' + str(year) + ';')
+        champ_league = str(db.read('select league from team_years where teamId = "' + ws_data['ws_champ']
+                                   + '" and year = ' + str(year) + ';')[0][0])
+        runnerup_league = str(db.read('select league from team_years where teamId = "' + ws_data['ws_runnerup']
+                                      + '" and year = ' + str(year) + ';')[0][0])
+        db.write('update years set ws_champ = "' + ws_data['ws_champ'] + '", ' + champ_league + '_champ = "'
+                 + ws_data['ws_champ'] + '", ' + runnerup_league + '_champ = "' + ws_data['ws_runnerup']
+                 + '" where year = ' + str(year) + ';')
         db.close()
 
 
@@ -175,7 +175,7 @@ def wins_loses(row):
 
 def is_in_playoffs(playoffs, team_key, year):
     is_in = "FALSE"
-    if 1904 != year >= 1903: #the first world series (1903); didn't play a WS in 1904
+    if 1904 != year >= 1903:  # the first world series (1903); didn't play a WS in 1904
         series = playoffs.split('<tr>')
         for matchup in series:
             try:
@@ -191,12 +191,11 @@ def is_in_playoffs(playoffs, team_key, year):
 def write_to_db(this_string, team_id, year):
     logger.log("\tWriting " + team_id + " to team_years")
     db = DatabaseConnection()
-    if len(db.read('select TY_uniqueidentifier from team_years where teamId = "' + team_id
-                                   + '" and year = ' + str(year) + ';')) == 0:
-        db.write('Insert into team_years (TY_uniqueidentifier, teamId, year, league, division, '
-                                     + 'wins, loses, playoffs, BY_uniqueidentifier) values (default,' + this_string
-                                     + ', (select BY_uniqueidentifier from ballpark_years where teamId = "' + team_id
-                                     + '" and year = ' + str(year) + '));')
+    if len(db.read('select TY_uniqueidentifier from team_years where teamId = "' + team_id + '" and year = '
+                   + str(year) + ';')) == 0:
+        db.write('Insert into team_years (TY_uniqueidentifier, teamId, year, league, division, wins, loses, playoffs, '
+                 'BY_uniqueidentifier) values (default,' + this_string + ', (select BY_uniqueidentifier from '
+                 'ballpark_years where teamId = "' + team_id + '" and year = ' + str(year) + '));')
     db.close()
 
 
