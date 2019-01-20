@@ -111,10 +111,9 @@ def gather_team_home_numbers(team_id, team_key, year, team_count):
                     if key.split('_')[0] + ' ' + key.split('_')[1] in row:
                         stat = key.split('_')[-1]
                         if stat != 'PA':
-                            trajectory[key] = int(row.split('data-stat="' + key.split('_')[2] + '" >')[1].\
+                            trajectory[key] = int(row.split('data-stat="' + key.split('_')[2] + '" >')[1].
                                                   split('<')[0]) * home_percent[stat]
-        except IndexError as e:
-            logger.log("\t\te")
+        except IndexError:
             table = str(BeautifulSoup(urlopen('https://www.baseball-reference.com/teams/' + team_key + '/' + str(year)
                                               + '.shtml'), 'html.parser'))
             manager_data = table.split('<strong>Manager')[1].split('<p>')[0].split('<a href="/managers/')[1:]
@@ -132,21 +131,21 @@ def gather_team_home_numbers(team_id, team_key, year, team_count):
                                                  .split('.shtml')[0] + '.shtml'), 'html.parser'))
         try:
             manager_pic_url = manager_page.split('<img class="" src="')[1].split('"')[0]
-            urlretrieve(manager_pic_url, "C:\\Users\\Anthony Raimondo\\images\\managers\\"
-                                         + manager_data[0].split('.shtml')[0] + ".jpg")
+            urlretrieve(manager_pic_url, "C:\\Users\\Anthony Raimondo\\images\\managers\\" + manager_data[0].
+                        split('.shtml')[0] + ".jpg")
         except IndexError as e:
-            logger.log('\t\te')
+            logger.log('\t\t' + str(e))
         team_pic_url = table.split('<div class="media-item logo loader">')[1].split('<')[1].split('src="')[1].split('"')[0]
         try:
             urlretrieve(team_pic_url, "C:\\Users\\Anthony Raimondo\\images\\teams\\" + team_id + str(year) + ".jpg")
         except Exception as e:
-            logger.log('\t\te')
+            logger.log('\t\t' + str(e))
         for i in manager_data:
             manager_ids[i.split('.shtml')[0]] = i.split('(')[1].split(')')[0]
         try:
             park_name = table.split('<strong>Ballpark')[1].split('</strong> ')[1].split('</p>')[0][:-1]
         except IndexError as e:
-            logger.log('\t\te')
+            logger.log('\t\t' + str(e))
             park_name = "No Home Field"
         write_to_db(team_id, location, trajectory, manager_ids, year, park_name)
 
@@ -176,8 +175,8 @@ def write_to_db(team_id, stats, trajectory, manager_ids, year, park_name):
                  '(default, "' + team_id + '", ' + str(year) + ', ' + value_list + '(select parkId from ballparks where'
                  ' parkName = "' + park_name + '"));')
     for manager, record in manager_ids.items():
-        if len(db.read('select MT_uniqueidentifier from manager_teams where managerId = "'
-                                       + manager + '" and teamId = "' + team_id + '";')) == 0:
+        if len(db.read('select MT_uniqueidentifier from manager_teams where managerId = "' + manager + '" and teamId '
+                       '= "' + team_id + '";')) == 0:
             db.write('insert into manager_teams (MT_uniqueidentifier, managerId, teamId) values (default, "' + manager
                      + '", "' + team_id + '");')
         if len(db.read('select MY_uniqueidentifier from manager_year where year = ' + str(year) + ' and '
