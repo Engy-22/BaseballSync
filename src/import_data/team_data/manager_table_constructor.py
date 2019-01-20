@@ -32,8 +32,7 @@ def manager_table_constructor(driver_logger):
                     loses = this_row.split('data-stat="L">')[1].split('<')[0]
                     executor.submit(write_to_file, '"' + manager_id + '","' + last + '","' + first + '",' + wins + ','
                                                    + loses)
-                except AttributeError as e:
-                    logger.log("\t\te")
+                except AttributeError:
                     continue
     total_time = time.time() - start_time
     logger.log('Constructing manager table completed: time = ' + time_converter(total_time))
@@ -46,4 +45,5 @@ def write_to_file(data):
     db.close()
 
 
-# manager_table_constructor()
+# manager_table_constructor(Logger('C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\'
+#                                  'dump.log'))
