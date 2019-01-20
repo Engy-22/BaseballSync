@@ -20,7 +20,7 @@ def get_year_totals(year, driver_logger):
     db = DatabaseConnection()
     pa = int(db.read('select pa from years where year = ' + str(year) + ';')[0][0])
     for key, value in year_totals.items():
-        year_totals[key] = db.read('select ' + key + ' from years where year=' + str(year) + ';')[0][0]
+        year_totals[key] = float(db.read('select ' + key + ' from years where year=' + str(year) + ';')[0][0])
     db.close()
     return pa, year_totals
 
