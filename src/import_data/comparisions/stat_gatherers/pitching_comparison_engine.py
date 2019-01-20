@@ -2,20 +2,20 @@ from import_data.comparisions.getters.pitching_getters import get_pitcher_stats
 from import_data.comparisions.file_writers.write_to_file_players import write_to_file
 
 
-def make_pitcher_comparisons(pitchers, year, possible_comps, year_pa, year_totals, driver_logger):
+def make_pitcher_comparisons(pitchers, year, possible_comps, year_pa, year_totals, logger):
+    logger.log('\t\t\tMaking comparisons for ' + str(year) + ' pitchers')
     comparisons = {}
     for pitcher in pitchers:
-        comparisons[pitcher] = determine_comp(pitcher, year, possible_comps, year_pa, year_totals, driver_logger)
+        comparisons[pitcher] = determine_comp(pitcher, year, possible_comps, year_pa, year_totals)
     write_to_file(year, comparisons, "pitching")
 
 
-def determine_comp(pitcher, year, pitchers_to_compare, year_pa, year_totals, driver_logger):
-    pitcher_pa, stats = get_pitcher_stats(pitcher, year, driver_logger)
-    return find_comp(pitcher, year, pitcher_dr_calc(pitcher_pa, stats, year_pa, year_totals, driver_logger),
-                     pitchers_to_compare, driver_logger)
+def determine_comp(pitcher, year, pitchers_to_compare, year_pa, year_totals):
+    pitcher_pa, stats = get_pitcher_stats(pitcher, year)
+    return find_comp(pitcher, year, pitcher_dr_calc(pitcher_pa, stats, year_pa, year_totals), pitchers_to_compare)
 
 
-def pitcher_dr_calc(pa, stats, year_pa, year_stats, driver_logger):
+def pitcher_dr_calc(pa, stats, year_pa, year_stats):
     pitcher_drs = {}
     for key, value in stats.items():
         try:
@@ -29,7 +29,7 @@ def pitcher_dr_calc(pa, stats, year_pa, year_stats, driver_logger):
     return pitcher_drs
 
 
-def find_comp(pitcher, year, pitcher_drs, pitchers_to_compare, driver_logger):
+def find_comp(pitcher, year, pitcher_drs, pitchers_to_compare):
     if len(pitcher_drs) > 0:
         comp_player_scores = {}
         for year_to_compare, possible_comps in pitchers_to_compare.items():
