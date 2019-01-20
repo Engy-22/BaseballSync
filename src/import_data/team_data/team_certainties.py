@@ -41,4 +41,5 @@ def team_certainties(year, driver_logger):
 
 
 # dump_logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\dump.log")
-# team_certainties(2018, dump_logger)
+# for year in range(1996, 2009, 1):
+#     team_certainties(year, dump_logger)
