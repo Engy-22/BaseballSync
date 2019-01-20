@@ -46,25 +46,25 @@ def comparisons_driver(most_recent_year, driver_logger):
                                 year_pa, year_totals, logger)
     logger.log("\t\tTime = " + time_converter(time.time() - hc_time))
 
-    # print('making pitcher comparisons (overall)')
-    # pc_time = time.time()
-    # logger.log("\tMaking pitcher comparisons (overall)")
-    # for year_to_compare in [year for year in range(most_recent_year, 1996, -1)]:
-    #     possible_pitcher_comps[year_to_compare] = {}
-    #     year_pa, year_totals = pitcher_year_totals(year_to_compare, logger)
-    #     for comp_pitcher in gather_players(year_to_compare, "pitching", True, logger):
-    #         comp_pitcher_pa, comp_stats = get_pitcher_stats(comp_pitcher, year_to_compare, logger)
-    #         if comp_pitcher_pa >= 200:
-    #             possible_pitcher_comps[year_to_compare][comp_pitcher + ';' + str(year_to_compare)] = \
-    #                 pitcher_dr_calc(comp_pitcher_pa, comp_stats, year_pa, year_totals, logger)
-    # for comp_year in range(1876, most_recent_year+1, 1):
-    #     try:
-    #         year_pa, year_totals = pitcher_year_totals(comp_year, driver_logger)
-    #     except IndexError:
-    #         continue
-    #     make_pitcher_comparisons(gather_players(comp_year, "pitching", False, logger), comp_year,
-    #                              possible_pitcher_comps, year_pa, year_totals, logger)
-    # logger.log("\t\tTime = " + time_converter(time.time() - pc_time))
+    print('making pitcher comparisons (overall)')
+    pc_time = time.time()
+    logger.log("\tMaking pitcher comparisons (overall)")
+    for year_to_compare in [year for year in range(most_recent_year, 1996, -1)]:
+        possible_pitcher_comps[year_to_compare] = {}
+        year_pa, year_totals = pitcher_year_totals(year_to_compare, logger)
+        for comp_pitcher in gather_players(year_to_compare, "pitching", True, logger):
+            comp_pitcher_pa, comp_stats = get_pitcher_stats(comp_pitcher, year_to_compare, logger)
+            if comp_pitcher_pa >= 200:
+                possible_pitcher_comps[year_to_compare][comp_pitcher + ';' + str(year_to_compare)] = \
+                    pitcher_dr_calc(comp_pitcher_pa, comp_stats, year_pa, year_totals, logger)
+    for comp_year in range(1876, most_recent_year+1, 1):
+        try:
+            year_pa, year_totals = pitcher_year_totals(comp_year, driver_logger)
+        except IndexError:
+            continue
+        make_pitcher_comparisons(gather_players(comp_year, "pitching", False, logger), comp_year,
+                                 possible_pitcher_comps, year_pa, year_totals, logger)
+    logger.log("\t\tTime = " + time_converter(time.time() - pc_time))
 
     # print('making team offensive comparisons')
     # oc_time = time.time()
