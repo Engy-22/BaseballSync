@@ -35,17 +35,16 @@ def find_comp(pitcher, year, pitcher_drs, pitchers_to_compare, driver_logger):
         for year_to_compare, possible_comps in pitchers_to_compare.items():
             for possible_comp_pitcher, possible_comp_stats in possible_comps.items():
                 if possible_comp_pitcher != pitcher + ';' + str(year):
-                    if len(possible_comp_stats) == 8:
+                    if len(possible_comp_stats) > 0:
+                        stat_count = 0
                         comp_player_scores[possible_comp_pitcher] = 0
                         for statistic, value in possible_comp_stats.items():
                             try:
                                 comp_player_scores[possible_comp_pitcher] += abs(pitcher_drs[statistic] - value)
+                                stat_count += 1
                             except KeyError:
                                 continue
+                        comp_player_scores[possible_comp_pitcher] /= stat_count
         return sorted(comp_player_scores.items(), key=lambda kv: kv[1])[0][0]
     else:
         return None
-
-
-# print(find_comp('lindofr01', 2018))
-# print(make_pitcher_comparisons(['lindofr01', 'abreujo02', 'ramirjo01', 'pearcst01'], 2018))
