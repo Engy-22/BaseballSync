@@ -1,24 +1,24 @@
 from utilities.dbconnect import DatabaseConnection
 
 
-def get_defensive_stats(ty_uid, driver_logger):
+def get_defensive_stats(ty_uid):
     stats = {'ER': 0, 'HA': 0, '2BA': 0, '3BA': 0, 'HRA': 0, 'BBA': 0, 'K': 0}
     db = DatabaseConnection()
     pa = int(db.read('select pa from team_years where ty_uniqueidentifier=' + str(ty_uid) + ';')[0][0])
     for key, value in stats.items():
-        stats[key] = int(db.read('select ' + key + ' from team_years where ty_uniqueidentifier = '
-                                                 + str(ty_uid) + ';')[0][0])
+        stats[key] = int(db.read('select ' + key + ' from team_years where ty_uniqueidentifier = ' + str(ty_uid)
+                                 + ';')[0][0])
     db.close()
     return pa, stats
 
 
-def get_year_totals(year, driver_logger):
+def get_year_totals(year, logger):
+    logger.log('\t\t\tGathering ' + str(year) + ' defensive totals')
     year_totals = {'ER': ['ER', 0], 'HA': ['H', 0], '2BA': ['2B', 0], '3BA': ['3B', 0], 'HRA': ['HR', 0],
                    'BBA': ['BB', 0], 'K': ['SO', 0]}
     db = DatabaseConnection()
     pa = int(db.read('select pa from years where year = ' + str(year) + ';')[0][0])
     for key, value in year_totals.items():
-        year_totals[key] = \
-        db.read('select ' + value[0] + ' from years where year=' + str(year) + ';')[0][0]
+        year_totals[key] = db.read('select ' + value[0] + ' from years where year=' + str(year) + ';')[0][0]
     db.close()
     return pa, year_totals
