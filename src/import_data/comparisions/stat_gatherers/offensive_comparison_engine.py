@@ -4,7 +4,7 @@ from utilities.dbconnect import DatabaseConnection
 
 
 def make_offensive_comparisons(ty_uids, possible_comps, year_pa, year_totals, logger):
-    logger.log('\t\tMaking team offensive comparisons')
+    logger.log('\t\t\tMaking team offensive comparisons')
     comparisons = {}
     for ty_uid in ty_uids:
         comparisons[ty_uid] = determine_comp(ty_uid, possible_comps, year_pa, year_totals)
