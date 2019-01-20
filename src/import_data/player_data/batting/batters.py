@@ -166,5 +166,5 @@ def write_teams_and_stats(player_id, stats, ratios, team, year):
 
 
 # dump_logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\dump.log")
-# for year in range(1998, 2009, 1):
+# for year in range(1996, 2009, 1):
 #     batting_constructor(year, dump_logger)
