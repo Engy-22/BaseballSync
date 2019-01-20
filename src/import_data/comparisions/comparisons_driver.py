@@ -30,6 +30,7 @@ def comparisons_driver(most_recent_year, driver_logger):
     driver_logger.log('\t\tMaking hitter comparisons (overall)')
     hc_time = time.time()
     logger.log("\tMaking hitter comparisons (overall)")
+    logger.log('\t\tGathering list of possible comps')
     for year_to_compare in [year for year in range(most_recent_year, 1997, -1)]:
         possible_hitter_comps[year_to_compare] = {}
         year_pa, year_totals = hitter_year_totals(year_to_compare, logger)
@@ -38,6 +39,7 @@ def comparisons_driver(most_recent_year, driver_logger):
             if comp_hitter_pa >= 300:
                 possible_hitter_comps[year_to_compare][comp_hitter + ';' + str(year_to_compare)] =\
                     hitter_dr_calc(comp_hitter_pa, comp_stats, year_pa, year_totals)
+    logger.log('\t\tBegin calculating comparisons scores')
     for comp_year in range(1876, most_recent_year+1, 1):
         try:
             year_pa, year_totals = hitter_year_totals(comp_year, logger)
@@ -53,6 +55,7 @@ def comparisons_driver(most_recent_year, driver_logger):
     driver_logger.log('\t\tMaking pitcher comparisons (overall)')
     pc_time = time.time()
     logger.log("\tMaking pitcher comparisons (overall)")
+    logger.log('\t\tGathering list of possible comps')
     for year_to_compare in [year for year in range(most_recent_year, 1996, -1)]:
         possible_pitcher_comps[year_to_compare] = {}
         year_pa, year_totals = pitcher_year_totals(year_to_compare, logger)
@@ -61,6 +64,7 @@ def comparisons_driver(most_recent_year, driver_logger):
             if comp_pitcher_pa >= 200:
                 possible_pitcher_comps[year_to_compare][comp_pitcher + ';' + str(year_to_compare)] = \
                     pitcher_dr_calc(comp_pitcher_pa, comp_stats, year_pa, year_totals)
+    logger.log('\t\tBegin calculating comparisons scores')
     for comp_year in range(1876, most_recent_year+1, 1):
         try:
             year_pa, year_totals = pitcher_year_totals(comp_year, logger)
@@ -74,6 +78,7 @@ def comparisons_driver(most_recent_year, driver_logger):
 
     print('making team offensive comparisons')
     driver_logger.log('\t\tMaking team offensive comparisons')
+    logger.log('\t\tGathering list of possible comps')
     oc_time = time.time()
     logger.log("\tMaking offensive comparisons (overall)")
     for year_to_compare in [year for year in range(most_recent_year, 1997, -1)]:
@@ -81,6 +86,7 @@ def comparisons_driver(most_recent_year, driver_logger):
         for comp_ty_uid in gather_teams(year_to_compare, logger):
             comp_team_pa, comp_stats = get_offensive_stats(comp_ty_uid)
             possible_offensive_comps[comp_ty_uid] = offensive_dr_calc(comp_team_pa, comp_stats, year_pa, year_totals)
+    logger.log('\t\tBegin calculating comparisons scores')
     for comp_year in range(1876, most_recent_year+1, 1):
         try:
             year_pa, year_totals = offensive_year_totals(comp_year, logger)
@@ -94,6 +100,7 @@ def comparisons_driver(most_recent_year, driver_logger):
 
     print('making team defensive comparisons')
     driver_logger.log('\t\tMaking team defensive comparisons')
+    logger.log('\t\tGathering list of possible comps')
     dc_time = time.time()
     logger.log("\tMaking defensive comparisons (overall)")
     for year_to_compare in [year for year in range(most_recent_year, 1997, -1)]:
@@ -101,6 +108,7 @@ def comparisons_driver(most_recent_year, driver_logger):
         for comp_ty_uid in gather_teams(year_to_compare, logger):
             comp_team_pa, comp_stats = get_defensive_stats(comp_ty_uid)
             possible_defensive_comps[comp_ty_uid] = defensive_dr_calc(comp_team_pa, comp_stats, year_pa, year_totals)
+    logger.log('\t\tBegin calculating comparisons scores')
     for comp_year in range(1876, most_recent_year+1, 1):
         try:
             year_pa, year_totals = defensive_year_totals(comp_year, logger)
