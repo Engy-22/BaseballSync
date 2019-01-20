@@ -1,4 +1,4 @@
-from import_data.comparisions.getters.defensive_team_getters import get_year_totals, get_defensive_stats
+from import_data.comparisions.getters.defensive_team_getters import get_defensive_stats
 from import_data.comparisions.file_writers.write_to_file_teams import write_to_file
 
 
