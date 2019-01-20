@@ -8,7 +8,7 @@ def gather_players(year, player_type, all, driver_logger):
     if all:
         player_list = list(db.read(query + ";"))
     else:
-        player_list = list(db.read(query + " and certainty < 1.0;"))
+        player_list = list(db.read(query + " and certainty < 1.0 and certainty > 0.0;"))
     db.close()
     return [player[0] for player in player_list]
 
