@@ -2,20 +2,20 @@ from import_data.comparisions.getters.hitting_getters import get_hitter_stats
 from import_data.comparisions.file_writers.write_to_file_players import write_to_file
 
 
-def make_hitter_comparisons(hitters, year, possible_comps, year_pa, year_totals, driver_logger):
+def make_hitter_comparisons(hitters, year, possible_comps, year_pa, year_totals, logger):
+    logger.log('\t\t\tMaking comparisons for ' + str(year) + ' hitters')
     comparisons = {}
     for hitter in hitters:
-        comparisons[hitter] = determine_comp(hitter, year, possible_comps, year_pa, year_totals, driver_logger)
+        comparisons[hitter] = determine_comp(hitter, year, possible_comps, year_pa, year_totals)
     write_to_file(year, comparisons, "batting")
 
 
-def determine_comp(hitter, year, hitters_to_compare, year_pa, year_totals, driver_logger):
-    hitter_pa, stats = get_hitter_stats(hitter, year, driver_logger)
-    return find_comp(hitter, year, hitter_dr_calc(hitter_pa, stats, year_pa, year_totals, driver_logger),
-                     hitters_to_compare, driver_logger)
+def determine_comp(hitter, year, hitters_to_compare, year_pa, year_totals):
+    hitter_pa, stats = get_hitter_stats(hitter, year)
+    return find_comp(hitter, year, hitter_dr_calc(hitter_pa, stats, year_pa, year_totals), hitters_to_compare)
 
 
-def hitter_dr_calc(pa, stats, year_pa, year_stats, driver_logger):
+def hitter_dr_calc(pa, stats, year_pa, year_stats):
     hitter_drs = {}
     for key, value in stats.items():
         try:
@@ -29,7 +29,7 @@ def hitter_dr_calc(pa, stats, year_pa, year_stats, driver_logger):
     return hitter_drs
 
 
-def find_comp(hitter, year, hitter_drs, hitters_to_compare, driver_logger):
+def find_comp(hitter, year, hitter_drs, hitters_to_compare):
     if len(hitter_drs) > 0:
         comp_player_scores = {}
         for year_to_compare, possible_comps in hitters_to_compare.items():
