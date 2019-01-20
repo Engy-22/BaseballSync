@@ -22,8 +22,8 @@ def get_year_data(year, driver_logger):
     batting_list = {'PA': 'pa', 'AB': 'ab', 'R': 'r', 'H': 'h', '2B': '2b', '3B': '3b', 'HR': 'hr', 'RBI': 'rbi',
                     'SB': 'sb', 'BB': 'bb', 'SO': 'so', 'batting_avg': 'ba', 'onbase_perc': 'obp',
                     'slugging_perc': 'slg', 'onbase_plus_slugging': 'ops'}
-    pitching_list = {'earned_run_avg': 'era', 'IP': 'ip', 'ER': 'er', 'whip': 'whip', 'strikeouts_per_nine': 'k_9',
-                     'strikeouts_per_base_on_balls': 'k_bb'}
+    pitching_list = {'earned_run_avg': 'era', 'SV': 'sv', 'IP': 'ip', 'ER': 'er', 'whip': 'whip',
+                     'strikeouts_per_nine': 'k_9', 'strikeouts_per_base_on_balls': 'k_bb'}
     fielding_list = {'E_def': 'e', 'fielding_perc': 'f_percent'}
     stat_list = {"batting": batting_list, "pitching": pitching_list, "fielding": fielding_list}
     db = DatabaseConnection()
@@ -67,7 +67,7 @@ def write_opening_day(year):
     opening_date = mlb_schedule.split('<h3>')[1].split('</h3>')[0]
     months = {'March': '03', 'April': '04', 'May': '05'}
     opening_day = months[opening_date.split(', ')[1].split(' ')[0]] + '-' + opening_date.split(', ')[1].split(' ')[1]\
-                  .split(',')[0]
+        .split(',')[0]
     db.write('update years set opening_day = "' + opening_day + '" where year = ' + str(year) + ';')
     db.close()
     logger.log('\tComplete (opening day): time = ' + time_converter(time.time() - start_time))
@@ -105,5 +105,5 @@ def write_to_db(year, stat_string, stat_type):
 
 
 # dump_logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\dump.log")
-# for year in range(1997, 2005, 1):
+# for year in range(1996, 2009, 1):
 #     get_year_data(year, dump_logger)
