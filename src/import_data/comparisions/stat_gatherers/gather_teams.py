@@ -1,7 +1,8 @@
 from utilities.dbconnect import DatabaseConnection
 
 
-def gather_teams(year, driver_logger):
+def gather_teams(year, logger):
+    logger.log('\t\t\tGathering ' + str(year) + ' teams')
     db = DatabaseConnection()
     ty_uids = list(db.read('select ty_uniqueidentifier from team_years where year=' + str(year) + ';'))
     db.close()
