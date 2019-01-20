@@ -2,21 +2,17 @@ from import_data.comparisions.getters.defensive_team_getters import get_year_tot
 from import_data.comparisions.file_writers.write_to_file_teams import write_to_file
 
 
-def make_defensive_comparisons(ty_uids, year, possible_comps, driver_logger):
+def make_defensive_comparisons(ty_uids, possible_comps, year_pa, year_totals, driver_logger):
     comparisons = {}
     for ty_uid in ty_uids:
-        comparisons[ty_uid] = determine_comp(ty_uid, year, possible_comps, driver_logger)
+        comparisons[ty_uid] = determine_comp(ty_uid, possible_comps, year_pa, year_totals, driver_logger)
     write_to_file(comparisons, "defense")
 
 
-def determine_comp(ty_uid, year, teams_to_compare, driver_logger):
-    comp = None
-    year_pa, year_totals = get_year_totals(year, driver_logger)
+def determine_comp(ty_uid, teams_to_compare, year_pa, year_totals, driver_logger):
     team_pa, stats = get_defensive_stats(ty_uid, driver_logger)
-    team_drs = defensive_dr_calc(team_pa, stats, year_pa, year_totals, driver_logger)
-    if len(team_drs) > 0:
-        comp = find_comp(ty_uid, team_drs, teams_to_compare, driver_logger)
-    return comp
+    return find_comp(ty_uid, defensive_dr_calc(team_pa, stats, year_pa, year_totals, driver_logger), teams_to_compare,
+                     driver_logger)
 
 
 def defensive_dr_calc(pa, stats, year_pa, year_stats, driver_logger):
@@ -37,11 +33,14 @@ def find_comp(ty_uid, team_drs, teams_to_compare, driver_logger):
     comp_team_scores = {}
     for comp_ty_uid, possible_comps_stats in teams_to_compare.items():
         if comp_ty_uid != ty_uid:
-            if len(possible_comps_stats) == 7:
+            if len(possible_comps_stats) > 0:
+                stat_count = 0
+                comp_team_scores[comp_ty_uid] = 0
                 for stat_name, stat_value in possible_comps_stats.items():
-                    comp_team_scores[comp_ty_uid] = 0
                     try:
                         comp_team_scores[comp_ty_uid] += abs(team_drs[stat_name] - stat_value)
+                        stat_count += 1
                     except KeyError:
                         continue
+                comp_team_scores[comp_ty_uid] /= stat_count
     return sorted(comp_team_scores.items(), key=lambda kv: kv[1])[0][0]
