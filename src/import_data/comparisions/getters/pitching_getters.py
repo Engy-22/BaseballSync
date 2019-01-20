@@ -1,7 +1,7 @@
 from utilities.dbconnect import DatabaseConnection
 
 
-def get_pitcher_stats(pitcher, year, driver_logger):
+def get_pitcher_stats(pitcher, year):
     stats = {'IP': 0, 'H': 0, '2B': 0, '3B': 0, 'HR': 0, 'SO': 0, 'BB': 0, 'ER': 0, 'SV': 0}
     db = DatabaseConnection()
     pa = int(db.read('select player_pitching.pa from player_pitching, player_teams where player_pitching.'
@@ -18,7 +18,8 @@ def get_pitcher_stats(pitcher, year, driver_logger):
     return pa, stats
 
 
-def get_year_totals(year, driver_logger):
+def get_year_totals(year, logger):
+    logger.log('\t\t\tGetting ' + str(year) + ' pitching totals')
     year_totals = {'IP': 0, 'H': 0, '2B': 0, '3B': 0, 'HR': 0, 'SO': 0, 'BB': 0, 'ER': 0, 'SV': 0}
     db = DatabaseConnection()
     pa = int(db.read('select pa from years where year = ' + str(year) + ';')[0][0])
