@@ -75,8 +75,8 @@ if __name__ == '__main__':
     for year in range(1996, 1997, 1):
         years.append(year)
         driver(year, main_logger)
-    # if most_recent_year > 1997:
-    #     comparisons_driver(most_recent_year)
+    if most_recent_year > 1997:
+        comparisons_driver(most_recent_year, main_logger)
     hof_finder(main_logger)
     main_logger.log('Driver complete for year' + stringify_list(years) + ': time = '
                     + time_converter(time.time() - start_time) + '\n\n\n')
