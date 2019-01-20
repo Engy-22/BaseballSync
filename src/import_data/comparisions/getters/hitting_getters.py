@@ -25,4 +25,6 @@ def get_year_totals(year, driver_logger):
     return pa, year_totals
 
 
-# print(get_year_totals(2018))
+# from utilities.logger import Logger
+# print(get_year_totals(2018, Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\"
+#                                    "dump.log")))
