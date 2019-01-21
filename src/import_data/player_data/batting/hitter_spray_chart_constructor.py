@@ -17,7 +17,9 @@ def hitter_spray_chart_constructor(year, driver_logger):
     print("creating hitter spray charts")
     driver_logger.log("\tCreating hitter spray charts")
     start_time = time.time()
-    logger.log("Downloading " + str(year) + " hitter spray charts || Timestamp: " + datetime.datetime.today()\
+    global bad_gateway_data
+    bad_gateway_data = []
+    logger.log("Downloading " + str(year) + " hitter spray charts || Timestamp: " + datetime.datetime.today()
                .strftime('%Y-%m-%d %H:%M:%S'))
     if year >= 1988:
         db = DatabaseConnection()
