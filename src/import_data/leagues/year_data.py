@@ -41,7 +41,6 @@ def get_year_data(year, driver_logger):
         for key, value in stat_list.items():
             executor1.submit(load_url, year, key)
     logger.log("\tdone making HTTP requests: time = " + time_converter(time.time() - download_start))
-    global pages
     for key, dictionary in stat_list.items():
         assemble_stats(key, dictionary, pages[key])
     write_start = time.time()
