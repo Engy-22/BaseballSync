@@ -17,6 +17,8 @@ def team_fielding_file_constructor(year, driver_logger):
     print('getting team fielding positions')
     driver_logger.log("\tGetting team fielding positions")
     start_time = time.time()
+    global pages
+    pages = {}
     logger.log("Downloading " + str(year) + " team fielding positions || Timestamp: " + datetime.datetime.today()\
                .strftime('%Y-%m-%d %H:%M:%S'))
     logger.log("\tDownloading team pages")
