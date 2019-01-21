@@ -18,6 +18,8 @@ def team_batting_order_constructor(year, driver_logger):
         print("getting team batting order data")
         driver_logger.log("\tGetting team batting order data")
         start_time = time.time()
+        global pages
+        pages = {}
         logger.log("Downloading " + str(year) + " team batting order data || Timestamp: " + datetime.datetime.today()\
                    .strftime('%Y-%m-%d %H:%M:%S'))
         logger.log("\tDownloading team pages")
