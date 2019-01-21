@@ -15,40 +15,42 @@ logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\lo
 
 
 def team_pitching_rotation_constructor(year, driver_logger):
-    if year >= 1908:
-        print("getting team schedules and pitching rotations")
-        driver_logger.log("\tGetting team schedules and pitching rotations")
-        start_time = time.time()
-        logger.log("Downloading " + str(year) + " team batting order data || Timestamp: " + datetime.datetime.today()\
-                   .strftime('%Y-%m-%d %H:%M:%S'))
-        logger.log("\tdownloading team pages")
-        with open("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\background\\yearTeams.txt", 'r') as year_file:
-            with ThreadPoolExecutor(os.cpu_count()) as executor:
-                for line in year_file:
-                    if str(year) in line:
-                        temp_line = line.split(',')[1:-1]
-                        for team in temp_line:
-                            if "TOT" not in team:
-                                executor.submit(load_url, year, team.split(';')[0], team.split(';')[1])
-                        break
-        logger.log("\t\tTime = " + time_converter(time.time() - start_time))
-        logger.log("\tOrganizing schedules and pitching rotations")
-        write_time = time.time()
-        get_pitchers(year)
-        logger.log("\t\t\tTime = " + time_converter(time.time() - write_time))
-        total_time = time_converter(time.time() - start_time)
-        logger.log("Done downloading team pitching rotation data: time = " + total_time + '\n\n')
-        driver_logger.log("\t\tTime = " + total_time)
-    else:
+    if year < 1908:
         logger.log("No team pitching rotation data to download. (before 1908).")
         driver_logger.log("\tNo team pitching rotation data to download. (before 1908).")
+        return
+    print("getting team schedules and pitching rotations")
+    driver_logger.log("\tGetting team schedules and pitching rotations")
+    start_time = time.time()
+    global pages
+    pages = {}
+    logger.log("Downloading " + str(year) + " team batting order data || Timestamp: " + datetime.datetime.today()
+               .strftime('%Y-%m-%d %H:%M:%S'))
+    logger.log("\tdownloading team pages")
+    with open("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\background\\yearTeams.txt", 'r') as year_file:
+        with ThreadPoolExecutor(os.cpu_count()) as executor:
+            for line in year_file:
+                if str(year) in line:
+                    temp_line = line.split(',')[1:-1]
+                    for team in temp_line:
+                        if "TOT" not in team:
+                            executor.submit(load_url, year, team.split(';')[0], team.split(';')[1])
+                    break
+    logger.log("\t\tTime = " + time_converter(time.time() - start_time))
+    logger.log("\tOrganizing schedules and pitching rotations")
+    write_time = time.time()
+    get_pitchers(year)
+    logger.log("\t\t\tTime = " + time_converter(time.time() - write_time))
+    total_time = time_converter(time.time() - start_time)
+    logger.log("Done downloading team pitching rotation data: time = " + total_time + '\n\n')
+    driver_logger.log("\t\tTime = " + total_time)
 
 
 def load_url(year, team_id, team_key):
     logger.log("\t\tdownloading " + team_id + " page")
     pages[team_id] = str(BeautifulSoup(urlopen("https://www.baseball-reference.com/teams/" + team_key + "/"
                                                + str(year) + "-lineups.shtml"), "html.parser")).\
-            split('grid_table sortable')[1].split('tbody')[1].split('<tr')
+        split('grid_table sortable')[1].split('tbody')[1].split('<tr')
 
 
 def get_pitchers(year):
@@ -80,10 +82,9 @@ def get_pitchers(year):
 def write_to_file_pitchers(team, year, pitchers):
     db = DatabaseConnection()
     for i in range(len(pitchers)):
-        if len(db.read('select starterId from starting_pitchers where playerId = "' + pitchers[i]
-                                       + '" and gameNum = ' + str(i+1) + ' and TY_uniqueidentifier = (select '
-                                       + 'TY_uniqueidentifier from team_years where teamId = "' + team + '" and year = '
-                                       + str(year) + ');')) == 0:
+        if len(db.read('select starterId from starting_pitchers where playerId = "' + pitchers[i] + '" and gameNum = '
+                       + str(i+1) + ' and TY_uniqueidentifier = (select TY_uniqueidentifier from team_years where '
+                       'teamId = "' + team + '" and year = ' + str(year) + ');')) == 0:
             db.write('insert into starting_pitchers (starterId, playerId, gameNum, TY_uniqueidentifier) values (default'
                      ', "' + pitchers[i] + '", ' + str(i+1) + ', (select TY_uniqueidentifier from team_years where '
                      'teamId = "' + team + '" and year = ' + str(year) + '));')
@@ -105,4 +106,5 @@ def write_to_file_schedule(team_id, year, schedule):
 
 
 # dump_logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\dump.log")
-# team_pitching_rotation_constructor(2018, dump_logger)
+# for year in range(1996, 1998, 1):
+#     team_pitching_rotation_constructor(2018, dump_logger)
