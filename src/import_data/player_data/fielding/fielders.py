@@ -37,7 +37,6 @@ def fielding_constructor(year, driver_logger):
                     print("\t\t\tcheck out " + player_id + " this year's standard batting page")
             except IndexError:
                 team = 'TOT'
-            global data
             if player_id not in data:
                 data[player_id] = {}
             if team not in data[player_id]:
