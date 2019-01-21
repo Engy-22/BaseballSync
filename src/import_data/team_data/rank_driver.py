@@ -12,7 +12,7 @@ logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\lo
 
 def rank_driver(year, driver_logger):
     print("calculating team ranks (year)")
-    driver_logger.log("\tBeginning rank driver")
+    driver_logger.log("\n\tBeginning rank driver")
     start_time = time.time()
     logger.log("Beginning rank driver || Timestamp: " + datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S'))
     logger.log("\tCalculating team ranks (year)")
