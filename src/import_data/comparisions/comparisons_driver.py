@@ -19,6 +19,8 @@ logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\lo
 
 def comparisons_driver(most_recent_year, driver_logger):
     if most_recent_year < 1998:
+        driver_logger.log("\tCannot make comparisons before 1998")
+        logger.log("Cannot make comparisons before 1998")
         return
     driver_logger.log("\tBeginning comparisons driver")
     start_time = time.time()
