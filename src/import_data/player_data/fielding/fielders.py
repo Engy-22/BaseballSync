@@ -19,6 +19,8 @@ def fielding_constructor(year, driver_logger):
     print('Downloading fielder images and attributes')
     driver_logger.log("\tDownloading fielder images and attributes")
     start_time = time.time()
+    global data
+    data = {}
     logger.log("Downloading fielder " + str(year) + " data || Timestamp: " + datetime.datetime.today()\
                .strftime('%Y-%m-%d %H:%M:%S'))
     logger.log("\tAssembling list of players")
