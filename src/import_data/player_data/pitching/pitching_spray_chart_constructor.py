@@ -17,6 +17,8 @@ def pitcher_spray_chart_constructor(year, driver_logger):
     print("creating pitcher spray charts")
     driver_logger.log("\tCreating pitcher spray charts")
     start_time = time.time()
+    global bad_gateway_data
+    bad_gateway_data = []
     logger.log("Downloading " + str(year) + " pitcher spray charts || Timestamp: " + datetime.datetime.today()\
                .strftime('%Y-%m-%d %H:%M:%S'))
     if year >= 1988:
