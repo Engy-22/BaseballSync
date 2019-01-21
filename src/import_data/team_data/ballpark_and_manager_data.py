@@ -18,6 +18,8 @@ def ballpark_and_manager_data(year, driver_logger):
     driver_logger.log('\tGathering ballpark and manager data')
     print("Gathering ballpark and manager data")
     start_time = time.time()
+    global pages
+    pages = {}
     logger.log('Beginning ballpark and manager data download for ' + str(year) + ' || Timestamp: '
                + datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S'))
     teams = {}
