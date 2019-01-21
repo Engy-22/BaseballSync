@@ -17,6 +17,10 @@ def get_year_data(year, driver_logger):
     driver_logger.log('\tGathering year data')
     print("Gathering year data")
     start_time = time.time()
+    global pages
+    global strings
+    pages = {}
+    strings = {}
     logger.log('Beginning year_data download for ' + str(year) + ' || Timestamp: ' + datetime.datetime.today()\
                .strftime('%Y-%m-%d %H:%M:%S'))
     batting_list = {'PA': 'pa', 'AB': 'ab', 'R': 'r', 'H': 'h', '2B': '2b', '3B': '3b', 'HR': 'hr', 'RBI': 'rbi',
