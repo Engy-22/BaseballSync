@@ -15,26 +15,26 @@ logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\lo
 
 def hitter_spray_chart_constructor(year, driver_logger):
     print("creating hitter spray charts")
-    driver_logger.log("\tCreating hitter spray charts")
     start_time = time.time()
     global bad_gateway_data
     bad_gateway_data = []
     logger.log("Downloading " + str(year) + " hitter spray charts || Timestamp: " + datetime.datetime.today()
                .strftime('%Y-%m-%d %H:%M:%S'))
     if year >= 1988:
+        driver_logger.log("\tCreating hitter spray charts")
         db = DatabaseConnection()
         pt_uid_players = set(db.read('select PT_uniqueidentifier from player_batting where year = ' + str(year) + ';'))
         db.close()
         with ThreadPoolExecutor(os.cpu_count()) as executor:
             for ent in pt_uid_players:
                 executor.submit(reduce_functionality, year, ent)
+        driver_logger.log("\t\tTime = " + time_converter(time.time() - start_time))
     else:
-        logger.log("\tNo spray chart data before 1988")
+        driver_logger.log("\tNo hitter spray chart data before 1988")
+        logger.log("\tNo hitter spray chart data before 1988")
     if len(bad_gateway_data) > 0:
         revisit_bad_gateways(year, bad_gateway_data)
-    total_time = time_converter(time.time() - start_time)
-    logger.log("Done downloading hitter spray charts: time = " + total_time + '\n\n')
-    driver_logger.log("\t\tTime = " + total_time)
+    logger.log("Done downloading hitter spray charts: time = " + time_converter(time.time() - start_time) + '\n\n')
 
 
 def reduce_functionality(year, ent):
