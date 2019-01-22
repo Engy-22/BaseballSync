@@ -34,7 +34,6 @@ def pitching_constructor(year, driver_logger):
                 team = translate_team_id(row.split('a href="/teams/')[1].split('/')[0], year)
                 if len(team) == 4:
                     team = anomaly_team(year)
-                    print("\t\t\tcheck out " + player_id + " this year's standard batting page")
             except IndexError:
                 team = 'TOT'
             if player_id not in data:
