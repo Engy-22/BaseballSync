@@ -174,8 +174,8 @@ def write_to_db(team_id, stats, trajectory, manager_ids, year, park_name):
             field_list += key + ', '
             value_list += str(value) + ', '
         db.write('insert into ballpark_years (BY_uniqueidentifier, teamId, year, ' + field_list + 'parkId) values '
-                 '(default, "' + team_id + '", ' + str(year) + ', ' + value_list + '(select parkId from ballparks where'
-                 ' parkName = "' + park_name + '"));')
+                 '(default, "' + team_id + '", ' + str(year) + ', ' + value_list + '(select parkId from ballparks '
+                 'where parkName = "' + park_name + '"));')
     for manager, record in manager_ids.items():
         if len(db.read('select MT_uniqueidentifier from manager_teams where managerId = "' + manager + '" and teamId '
                        '= "' + team_id + '";')) == 0:
