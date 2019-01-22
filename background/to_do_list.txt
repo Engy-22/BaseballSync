@@ -104,5 +104,3 @@
     *maybe decrease the amount which standard deviation affects team rankings in overall team ranker.
     *verify that player_batting, player_pitching and player_fielding numbers are accurate.
     *change spray chart and tendency logs to say no data before 1988.
-    *investigate 1880 and 1882.
-    *investigate 1902.
