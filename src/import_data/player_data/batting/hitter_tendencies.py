@@ -11,11 +11,11 @@ logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\lo
 
 def hitter_tendencies(year, driver_logger):
     print("storing hitter tendencies")
-    driver_logger.log("\tStoring hitter tendencies")
     start_time = time.time()
     logger.log("Downloading " + str(year) + " hitter tendencies || Timestamp: " + datetime.datetime.today()\
                .strftime('%Y-%m-%d %H:%M:%S'))
     if year >= 1988:
+        driver_logger.log("\tStoring hitter tendencies")
         logger.log("\tDownloading data")
         prev_player_id = ""
         page = str(BeautifulSoup(urlopen('https://www.baseball-reference.com/leagues/MLB/' + str(year)
@@ -34,13 +34,14 @@ def hitter_tendencies(year, driver_logger):
         for player_id, stats in stat_dictionary.items():
             write_to_file(year, player_id, stats)
         fill_batters_with_0_pa(year)
-        logger.log("\t\tTime = " + time_converter(time.time() - format_time))
+        total_time = time_converter(time.time() - format_time)
+        logger.log("\t\tTime = " + total_time)
+        driver_logger.log("\t\tTime = " + total_time)
     else:
+        driver_logger.log("\tNo hitter tendency data before 1988")
         logger.log("\tNo hitter tendency data before 1988")
         fill_fields(year)
-    total_time = time_converter(time.time() - start_time)
-    logger.log("Done storing hitter tendencies: time = " + total_time + '\n\n')
-    driver_logger.log("\t\tTime = " + total_time)
+    logger.log("Done storing hitter tendencies: time = " + time_converter(time.time() - start_time) + '\n\n')
 
 
 def intermediate(row, prev_player_id):
