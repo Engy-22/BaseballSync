@@ -30,8 +30,8 @@ def hitter_spray_chart_constructor(year, driver_logger):
                 executor.submit(reduce_functionality, year, ent)
         driver_logger.log("\t\tTime = " + time_converter(time.time() - start_time))
     else:
-        driver_logger.log("\tNo spray chart data before 1988")
-        logger.log("\tNo spray chart data before 1988")
+        driver_logger.log("\tNo hitter spray chart data before 1988")
+        logger.log("\tNo hitter spray chart data before 1988")
     if len(bad_gateway_data) > 0:
         revisit_bad_gateways(year, bad_gateway_data)
     logger.log("Done downloading hitter spray charts: time = " + time_converter(time.time() - start_time) + '\n\n')
