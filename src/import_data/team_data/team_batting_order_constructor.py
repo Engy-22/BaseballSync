@@ -32,11 +32,11 @@ def team_batting_order_constructor(year, driver_logger):
                             if "TOT" not in team:
                                 executor.submit(load_url, year, team.split(';')[0], team.split(';')[1])
                         break
-        logger.log("\t\tTime = " + time_converter(time.time() - start_time))
+        logger.log("\t\t\tTime = " + time_converter(time.time() - start_time))
         logger.log("\tOrganizing batting orders")
         write_time = time.time()
         get_hitters(year)
-        logger.log("\t\tTime = " + time_converter(time.time() - write_time))
+        logger.log("\t\t]\tTime = " + time_converter(time.time() - write_time))
         total_time = time_converter(time.time() - start_time)
         logger.log("Done downloading team batting order data: time = " + total_time + '\n\n')
         driver_logger.log("\t\tTime = " + total_time)
@@ -54,7 +54,7 @@ def load_url(year, team_id, team_key):
 
 def get_hitters(year):
     for team_id, children in pages.items():
-        logger.log("\tGetting " + team_id + " batting order data")
+        logger.log("\t\tGetting " + team_id + " batting order data")
         temp_order = []
         order = [[], [], [], [], [], [], [], [], []]
         final_order = [[], [], [], [], [], [], [], [], []]
@@ -91,20 +91,25 @@ def get_hitters(year):
 
 
 def write_to_file(team, year, batting_order):
+    with ThreadPoolExecutor(os.cpu_count()) as executor2:
+        for place in range(len(batting_order)):
+            for hitter in batting_order[place]:
+                executor2.submit(transact, hitter, team, year, place)
+
+
+def transact(hitter, team, year, place):
     db = DatabaseConnection()
-    for place in range(len(batting_order)):
-        for hitter in batting_order[place]:
-            ty_uid = db.read('select TY_uniqueidentifier from team_years where teamId = "' + team + '" and year = '
-                             + str(year))[0][0]
-            if len(db.read('select * from hitter_spots where playerId = "' + hitter.split(',')[0] + '" and '
-                           'TY_uniqueidentifier = ' + str(ty_uid))) > 0:
-                db.write('update hitter_spots set ' + stringify_num(place) + ' = ' + hitter.split(',')[1] + ' where '
-                         'playerId = "' + hitter.split(',')[0] + '" and TY_uniqueidentifier = (select TY_uniqueidentif'
-                         'ier from team_years where teamId = "' + team + '" and year = ' + str(year) + ');')
-            else:
-                db.write('insert into hitter_spots (HS_uniqueidentifier, playerId, ' + stringify_num(place)
-                         + ', TY_uniqueidentifier) values (default, "' + hitter.split(',')[0] + '", '
-                         + hitter.split(',')[1] + ', ' + str(ty_uid) + ');')
+    ty_uid = db.read('select TY_uniqueidentifier from team_years where teamId = "' + team + '" and year = '
+                     + str(year))[0][0]
+    if len(db.read('select * from hitter_spots where playerId = "' + hitter.split(',')[0] + '" and TY_uniqueidentifier '
+                   '= ' + str(ty_uid))) > 0:
+        db.write('update hitter_spots set ' + stringify_num(place) + ' = ' + hitter.split(',')[1] + ' where playerId '
+                 '= "' + hitter.split(',')[0] + '" and TY_uniqueidentifier = (select TY_uniqueidentifier from '
+                 'team_years where teamId = "' + team + '" and year = ' + str(year) + ');')
+    else:
+        db.write('insert into hitter_spots (HS_uniqueidentifier, playerId, ' + stringify_num(place)
+                 + ', TY_uniqueidentifier) values (default, "' + hitter.split(',')[0] + '", ' + hitter.split(',')[1]
+                 + ', ' + str(ty_uid) + ');')
     db.close()
 
 
