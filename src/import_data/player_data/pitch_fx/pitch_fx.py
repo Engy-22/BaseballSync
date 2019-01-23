@@ -154,13 +154,13 @@ def parse_pitch(year, pitch, meta_data, last_pitch):
     write_to_file('batter', meta_data['batter_id'], year, meta_data['pitcher_orientation'], count,
                   translate_pitch_type(pitch.getAttribute('pitch_type')), ball_strike,
                   determine_swing_or_take(pitch.getAttribute('des')), outcome, trajectory, field, direction)
-    with ThreadPoolExecutor(os.cpu_count()) as executor2:
-        executor2.submit(write_to_file, 'pitcher', meta_data['pitcher_id'], year, meta_data['batter_orientation'],
-                         count, translate_pitch_type(pitch.getAttribute('pitch_type')), ball_strike,
-                         determine_swing_or_take(pitch.getAttribute('des')), outcome, trajectory, field, direction)
-        executor2.submit(write_to_file, 'batter', meta_data['batter_id'], year, meta_data['pitcher_orientation'],
-                         count, translate_pitch_type(pitch.getAttribute('pitch_type')), ball_strike,
-                         determine_swing_or_take(pitch.getAttribute('des')), outcome, trajectory, field, direction)
+    # with ThreadPoolExecutor(os.cpu_count()) as executor2:
+    #     executor2.submit(write_to_file, 'pitcher', meta_data['pitcher_id'], year, meta_data['batter_orientation'],
+    #                      count, translate_pitch_type(pitch.getAttribute('pitch_type')), ball_strike,
+    #                      determine_swing_or_take(pitch.getAttribute('des')), outcome, trajectory, field, direction)
+    #     executor2.submit(write_to_file, 'batter', meta_data['batter_id'], year, meta_data['pitcher_orientation'],
+    #                      count, translate_pitch_type(pitch.getAttribute('pitch_type')), ball_strike,
+    #                      determine_swing_or_take(pitch.getAttribute('des')), outcome, trajectory, field, direction)
 
 
 
