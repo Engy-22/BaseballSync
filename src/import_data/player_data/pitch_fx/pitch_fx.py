@@ -136,10 +136,14 @@ def parse_at_bat(year, at_bat):
 def parse_pitch(year, pitch, meta_data, last_pitch):
     global strikes
     global balls
+    count = str(balls) + '-' + str(strikes)
     if pitch.getAttribute('type') == "B":
         ball_strike = "ball"
+        balls += 1
     else:
         ball_strike = "strike"
+        if strikes < 2:
+            strikes += 1
     if last_pitch:
         outcome = translate_pitch_outcome(meta_data['temp_outcome'], meta_data['ab_description'])
         trajectory = determine_trajectory(outcome, meta_data['ab_description'])
@@ -147,7 +151,6 @@ def parse_pitch(year, pitch, meta_data, last_pitch):
         direction = determine_direction(meta_data['ab_description'], meta_data['batter_orientation'])
     else:
         outcome, trajectory, field, direction = "none"
-    count = str(balls) + '-' + str(strikes)
     write_to_file('pitcher', meta_data['pitcher_id'], year, meta_data['batter_orientation'], count,
                   translate_pitch_type(pitch.getAttribute('pitch_type')), ball_strike,
                   determine_swing_or_take(pitch.getAttribute('des')), outcome, trajectory, field, direction)
@@ -161,7 +164,6 @@ def parse_pitch(year, pitch, meta_data, last_pitch):
     #     executor2.submit(write_to_file, 'batter', meta_data['batter_id'], year, meta_data['pitcher_orientation'],
     #                      count, translate_pitch_type(pitch.getAttribute('pitch_type')), ball_strike,
     #                      determine_swing_or_take(pitch.getAttribute('des')), outcome, trajectory, field, direction)
-
 
 
 # get_pitch_fx_data(2018, Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\"
