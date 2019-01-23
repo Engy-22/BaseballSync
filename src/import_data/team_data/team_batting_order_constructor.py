@@ -36,7 +36,7 @@ def team_batting_order_constructor(year, driver_logger):
         logger.log("\tOrganizing batting orders")
         write_time = time.time()
         get_hitters(year)
-        logger.log("\t\t]\tTime = " + time_converter(time.time() - write_time))
+        logger.log("\t\t\tTime = " + time_converter(time.time() - write_time))
         total_time = time_converter(time.time() - start_time)
         logger.log("Done downloading team batting order data: time = " + total_time + '\n\n')
         driver_logger.log("\t\tTime = " + total_time)
