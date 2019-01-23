@@ -9,6 +9,7 @@ from concurrent.futures import ThreadPoolExecutor, ProcessPoolExecutor
 from urllib.request import urlopen, urlretrieve
 from bs4 import BeautifulSoup
 from xml.dom import minidom
+from import_data.player_data.pitch_fx.write_to_file import write_to_file
 
 innings = {}
 logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\logs\\import_data\\pitch_fx.log")
@@ -122,8 +123,9 @@ def parse_at_bat(at_bat):
 def parse_pitch(pitch, meta_data):
     pitch_type = pitch.getAttribute('pitch_type')
     swing_take = pitch.getAttribute('des="')
+    # write_to_file(pitch_type, swing_take, meta_data)
 
 
 # get_pitch_fx_data(2018, Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\"
 #                                "dump.log"))
-# get_day_data('10', '05', '2018')
+get_day_data('10', '05', '2018')
