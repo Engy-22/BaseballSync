@@ -18,15 +18,15 @@ def get_pitch_fx_data(year, driver_logger):
     driver_logger.log("\tFetching " + str(year) + " pitch fx data")
     print("Fetching " + str(year) + " pitch fx data")
     start_time = time.time()
-    logger.log("Downloading pitch fx data for " + str(year) + ' || Timestamp: ' + datetime.datetime.today().\
+    logger.log("Downloading pitch fx data for " + str(year) + ' || Timestamp: ' + datetime.datetime.today().
                strftime('%Y-%m-%d %H:%M:%S'))
     db = DatabaseConnection()
     opening_day = db.read('select opening_day from years where year = ' + str(year) + ';')[0][0]
     db.close()
     for month in range(3, 12, 1):
-        if month > 3:
-            if month < int(opening_day.split('-')[0]):
-                continue
+        # if month > 3:
+        if month >= int(opening_day.split('-')[0]):
+            # continue
             for day in range(1, 32, 1):
                 if month == int(opening_day.split('-')[0]) and int(day) < int(opening_day.split('-')[1]):
                     continue
