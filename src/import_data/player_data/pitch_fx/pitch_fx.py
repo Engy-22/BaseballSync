@@ -10,6 +10,7 @@ from urllib.request import urlopen, urlretrieve
 from bs4 import BeautifulSoup
 from xml.dom import minidom
 from import_data.player_data.pitch_fx.write_to_file import write_to_file
+from import_data.player_data.pitch_fx.translators.translate_outcome import translate_pitch_outcome
 
 innings = {}
 logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\logs\\import_data\\pitch_fx.log")
@@ -110,20 +111,25 @@ def parse_inning(xml_file):
 def parse_at_bat(at_bat):
     meta_data = {'pitcher_id': at_bat.getAttribute('pitcher'), 'batter_id': at_bat.getAttribute('batter'),
                  'temp_outcome': at_bat.getAttribute('event'),
+                 'ab_description': at_bat.getAttribute('des'),
                  'batter_orientation': 'v' + at_bat.getAttribute('stand="').lower() + 'hb',
                  'pitcher_orientation': 'v' + at_bat.getAttribute('p_throws="').lower() + 'hp'}
     pitches = at_bat.getElementsByTagName('pitch')
     for pitch in pitches:
-        parse_pitch(pitch, meta_data)
+        parse_pitch(pitch, meta_data, pitches.index(pitch)+1 == len(pitches))
     actions = at_bat.getElementsByTagName('action')
     if len(actions) > 0:
         print(actions)
 
 
-def parse_pitch(pitch, meta_data):
+def parse_pitch(pitch, meta_data, last_pitch):
     pitch_type = pitch.getAttribute('pitch_type')
     swing_take = pitch.getAttribute('des="')
-    # write_to_file(pitch_type, swing_take, meta_data)
+    if last_pitch:
+        outcome = translate_pitch_outcome(meta_data['temp_outcome'], meta_data['ab_description'])
+    else:
+        outcome = "none"
+    # write_to_file(pitch_type, swing_take, outcome, meta_data)
 
 
 # get_pitch_fx_data(2018, Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\"
