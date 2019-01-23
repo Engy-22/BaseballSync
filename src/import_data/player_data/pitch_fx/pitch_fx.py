@@ -11,8 +11,15 @@ from bs4 import BeautifulSoup
 from xml.dom import minidom
 from import_data.player_data.pitch_fx.write_to_file import write_to_file
 from import_data.player_data.pitch_fx.translators.translate_outcome import translate_pitch_outcome
+from import_data.player_data.pitch_fx.translators.determine_swing_take import determine_swing_or_take
+from import_data.player_data.pitch_fx.translators.translate_pitch_type import translate_pitch_type
+from import_data.player_data.pitch_fx.translators.determine_trajectory import determine_trajectory
+from import_data.player_data.pitch_fx.translators.determine_field import determine_field
+from import_data.player_data.pitch_fx.translators.determine_direction import determine_direction
 
 innings = {}
+strikes = 0
+balls = 0
 logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\logs\\import_data\\pitch_fx.log")
 
 
@@ -71,7 +78,7 @@ def get_day_data(day, month, year):
                                                 individual_inning_url.split('_')[1].split('.xml')[0])
                         except IndexError:
                             continue
-                parse_innings()
+                parse_innings(year)
                 clear_xmls()
                 logger.log("\t\t\t\tTime = " + time_converter(time.time() - game_time))
         except IndexError:
@@ -95,41 +102,66 @@ def clear_xmls():
         os.remove(dir + '\\' + xml_file)
 
 
-def parse_innings():
+def parse_innings(year):
     dir = "C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\src\\import_data\\player_data\\pitch_fx\\xml"
     for xml_file in os.listdir(dir):
-        parse_inning(dir + '\\' + xml_file)
+        parse_inning(year, dir + '\\' + xml_file)
 
 
-def parse_inning(xml_file):
+def parse_inning(year, xml_file):
     doc = minidom.parse(xml_file)
     at_bats = doc.getElementsByTagName('atbat')
     for at_bat in at_bats:
-        parse_at_bat(at_bat)
+        parse_at_bat(year, at_bat)
 
 
-def parse_at_bat(at_bat):
+def parse_at_bat(year, at_bat):
     meta_data = {'pitcher_id': at_bat.getAttribute('pitcher'), 'batter_id': at_bat.getAttribute('batter'),
                  'temp_outcome': at_bat.getAttribute('event'),
                  'ab_description': at_bat.getAttribute('des'),
                  'batter_orientation': 'v' + at_bat.getAttribute('stand="').lower() + 'hb',
                  'pitcher_orientation': 'v' + at_bat.getAttribute('p_throws="').lower() + 'hp'}
     pitches = at_bat.getElementsByTagName('pitch')
+    global strikes
+    strikes = 0
+    global balls
+    balls = 0
     for pitch in pitches:
-        parse_pitch(pitch, meta_data, pitches.index(pitch)+1 == len(pitches))
+        parse_pitch(year, pitch, meta_data, pitches.index(pitch)+1 == len(pitches))
     actions = at_bat.getElementsByTagName('action')
     if len(actions) > 0:
         print(actions)
 
 
-def parse_pitch(pitch, meta_data, last_pitch):
-    pitch_type = pitch.getAttribute('pitch_type')
-    swing_take = pitch.getAttribute('des="')
+def parse_pitch(year, pitch, meta_data, last_pitch):
+    global strikes
+    global balls
+    if pitch.getAttribute('type') == "B":
+        ball_strike = "ball"
+    else:
+        ball_strike = "strike"
     if last_pitch:
         outcome = translate_pitch_outcome(meta_data['temp_outcome'], meta_data['ab_description'])
+        trajectory = determine_trajectory(outcome, meta_data['ab_description'])
+        field = determine_field(outcome)
+        direction = determine_direction(meta_data['ab_description'], meta_data['batter_orientation'])
     else:
-        outcome = "none"
-    # write_to_file(pitch_type, swing_take, outcome, meta_data)
+        outcome, trajectory, field, direction = "none"
+    count = str(balls) + '-' + str(strikes)
+    write_to_file('pitcher', meta_data['pitcher_id'], year, meta_data['batter_orientation'], count,
+                  translate_pitch_type(pitch.getAttribute('pitch_type')), ball_strike,
+                  determine_swing_or_take(pitch.getAttribute('des')), outcome, trajectory, field, direction)
+    write_to_file('batter', meta_data['batter_id'], year, meta_data['pitcher_orientation'], count,
+                  translate_pitch_type(pitch.getAttribute('pitch_type')), ball_strike,
+                  determine_swing_or_take(pitch.getAttribute('des')), outcome, trajectory, field, direction)
+    with ThreadPoolExecutor(os.cpu_count()) as executor2:
+        executor2.submit(write_to_file, 'pitcher', meta_data['pitcher_id'], year, meta_data['batter_orientation'],
+                         count, translate_pitch_type(pitch.getAttribute('pitch_type')), ball_strike,
+                         determine_swing_or_take(pitch.getAttribute('des')), outcome, trajectory, field, direction)
+        executor2.submit(write_to_file, 'batter', meta_data['batter_id'], year, meta_data['pitcher_orientation'],
+                         count, translate_pitch_type(pitch.getAttribute('pitch_type')), ball_strike,
+                         determine_swing_or_take(pitch.getAttribute('des')), outcome, trajectory, field, direction)
+
 
 
 # get_pitch_fx_data(2018, Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\"
