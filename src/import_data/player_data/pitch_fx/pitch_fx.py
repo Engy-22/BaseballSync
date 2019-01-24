@@ -151,10 +151,10 @@ def parse_pitch(year, pitch, meta_data, last_pitch):
         direction = determine_direction(meta_data['ab_description'], meta_data['batter_orientation'])
     else:
         outcome, trajectory, field, direction = "none"
-    write_to_file('pitcher', meta_data['pitcher_id'], year, meta_data['batter_orientation'], count,
+    write_to_file('pitcher', meta_data['pitcher_id'], team_id, year, meta_data['batter_orientation'], count,
                   translate_pitch_type(pitch.getAttribute('pitch_type')), ball_strike,
                   determine_swing_or_take(pitch.getAttribute('des')), outcome, trajectory, field, direction)
-    write_to_file('batter', meta_data['batter_id'], year, meta_data['pitcher_orientation'], count,
+    write_to_file('batter', meta_data['batter_id'], team_id, year, meta_data['pitcher_orientation'], count,
                   translate_pitch_type(pitch.getAttribute('pitch_type')), ball_strike,
                   determine_swing_or_take(pitch.getAttribute('des')), outcome, trajectory, field, direction)
     # with ThreadPoolExecutor(os.cpu_count()) as executor2:
@@ -168,4 +168,4 @@ def parse_pitch(year, pitch, meta_data, last_pitch):
 
 # get_pitch_fx_data(2018, Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\"
 #                                "dump.log"))
-# get_day_data('10', '05', '2018')
+get_day_data('10', '05', '2018')
