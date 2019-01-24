@@ -112,12 +112,15 @@ def parse_inning(year, xml_file):
     doc = minidom.parse(xml_file)
     home_team = [inning.getAttribute('home_team') for inning in doc.getElementsByTagName('inning')][0]
     away_team = [inning.getAttribute('away_team') for inning in doc.getElementsByTagName('inning')][0]
-    at_bats = doc.getElementsByTagName('atbat')
-    for at_bat in at_bats:
-        parse_at_bat(year, at_bat)
+    top_at_bats = doc.getElementsByTagName('inning')[0].getElementsByTagName('top')[0].getElementsByTagName('atbat')
+    bottom_at_bats = doc.getElementsByTagName('inning')[0].getElementsByTagName('bottom')[0].getElementsByTagName('atbat')
+    for at_bat in top_at_bats:
+        parse_at_bat(year, at_bat, home_team, away_team)
+    for at_bat in bottom_at_bats:
+        parse_at_bat(year, at_bat, away_team, home_team)
 
 
-def parse_at_bat(year, at_bat):
+def parse_at_bat(year, at_bat, pitcher_team, hitter_team):
     meta_data = {'pitcher_id': at_bat.getAttribute('pitcher'), 'batter_id': at_bat.getAttribute('batter'),
                  'temp_outcome': at_bat.getAttribute('event'),
                  'ab_description': at_bat.getAttribute('des'),
@@ -129,13 +132,13 @@ def parse_at_bat(year, at_bat):
     global balls
     balls = 0
     for pitch in pitches:
-        parse_pitch(year, pitch, meta_data, pitches.index(pitch)+1 == len(pitches))
+        parse_pitch(year, pitch, meta_data, pitches.index(pitch)+1 == len(pitches), pitcher_team, hitter_team)
     actions = at_bat.getElementsByTagName('action')
     if len(actions) > 0:
         print(actions)
 
 
-def parse_pitch(year, pitch, meta_data, last_pitch):
+def parse_pitch(year, pitch, meta_data, last_pitch, pitcher_team, hitter_team):
     global strikes
     global balls
     count = str(balls) + '-' + str(strikes)
@@ -153,10 +156,10 @@ def parse_pitch(year, pitch, meta_data, last_pitch):
         direction = determine_direction(meta_data['ab_description'], meta_data['batter_orientation'])
     else:
         outcome, trajectory, field, direction = "none"
-    # write_to_file('pitcher', meta_data['pitcher_id'], team_id, year, meta_data['batter_orientation'], count,
+    # write_to_file('pitcher', meta_data['pitcher_id'], pitcher_team, year, meta_data['batter_orientation'], count,
     #               translate_pitch_type(pitch.getAttribute('pitch_type')), ball_strike,
     #               determine_swing_or_take(pitch.getAttribute('des')), outcome, trajectory, field, direction)
-    # write_to_file('batter', meta_data['batter_id'], team_id, year, meta_data['pitcher_orientation'], count,
+    # write_to_file('batter', meta_data['batter_id'], hitter_team, year, meta_data['pitcher_orientation'], count,
     #               translate_pitch_type(pitch.getAttribute('pitch_type')), ball_strike,
     #               determine_swing_or_take(pitch.getAttribute('des')), outcome, trajectory, field, direction)
 
