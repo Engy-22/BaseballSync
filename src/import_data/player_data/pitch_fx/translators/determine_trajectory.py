@@ -1,15 +1,15 @@
 def determine_trajectory(event, description):
-    outcomes = {'so': 'none', 'go': 'gb', 'fo': 'fb', 'lo': 'ld', 'po': 'fb', 'bb': 'none', 'hbp': 'none', 'sh': 'gb',
+    trajectories = {'so': 'none', 'go': 'gb', 'fo': 'fb', 'lo': 'ld', 'po': 'fb', 'bb': 'none', 'hbp': 'none', 'sh': 'gb',
                 'ibb': 'none', 'gdp': 'gb', 'sf': 'fb'}
     try:
-        trajectory = outcomes[event]
+        trajectory = trajectories[event]
     except KeyError:
-        outcomes = {'line': 'ld', 'fly': 'fb', 'ground': 'gb', 'pop': 'fb'}
+        trajectories = {'line': 'ld', 'fly': 'fb', 'ground': 'gb', 'pop': 'fb'}
         if event in ['1b', '2b', '3b', 'hr']:
             try:
-                trajectory = outcomes[description.split('on a ')[1].split(' ')[0]]
+                trajectory = trajectories[description.split('on a ')[1].split(' ')[0]]
             except KeyError:
-                trajectory = outcomes[description.split('on a ')[1].split(' ')[1]]
+                trajectory = trajectories[description.split('on a ')[1].split(' ')[1]]
         elif event == 'fc':
             if description.split(' into ')[0].split(' ')[-1] == 'grounds':
                 trajectory = 'gb'
@@ -61,4 +61,6 @@ def determine_trajectory(event, description):
                 print('\nasdfasdf')
                 print(event)
                 print(description)
+            else:
+                trajectory = 'none'
     return trajectory
