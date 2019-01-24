@@ -19,6 +19,8 @@ def determine_trajectory(event, description):
                 trajectory = 'gb'
             elif description.split(' into ')[0].split(' ')[-1] == 'lines':
                 trajectory = 'ld'
+            elif description.split(' into ')[0].split(' ')[-1] == 'pops':
+                trajectory = 'fb'
             elif 'reaches' in description:
                 fielders = {'first': 'gb', 'second': 'gb', 'third': 'gb', 'shortstop': 'gb', 'left': 'fb',
                             'right': 'fb', 'center': 'fb'}
@@ -27,6 +29,7 @@ def determine_trajectory(event, description):
                 except IndexError:
                     trajectory = fielders[description.split(', ')[1].split(' ')[0]]
             else:
+                print('\nasdf')
                 print(event)
                 print(description)
         elif event == 'dp':
@@ -36,7 +39,10 @@ def determine_trajectory(event, description):
                 trajectory = 'fb'
             elif description.split(' into ')[0].split(' ')[-1] == 'pops':
                 trajectory = 'fb'
+            elif 'challenged' in description:
+                return determine_trajectory(event, description.split(':')[1])
             else:
+                print('\n;lkj')
                 print(event)
                 print(description)
                 print(description.split(' into ')[0].split(' ')[-1])
@@ -48,6 +54,7 @@ def determine_trajectory(event, description):
                 trajectory = 'gb'
         else:
             if event != 'cs':
+                print('\nasdfasdf')
                 print(event)
                 print(description)
             trajectory = "none"
