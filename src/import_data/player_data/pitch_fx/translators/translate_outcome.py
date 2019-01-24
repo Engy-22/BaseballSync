@@ -3,7 +3,8 @@ def translate_pitch_outcome(outcome, description):
                 'Flyout': 'fo', 'Lineout': 'lo', 'Pop Out': 'po', 'Walk': 'bb', 'Hit By Pitch': 'hbp',
                 'Sac Bunt': 'sh', 'Intent Walk': 'ibb', 'Forceout': 'fc', 'Grounded Into DP': 'gdp',
                 'Double Play': 'dp', 'Field Error': 'error', 'Runner Out': 'cs', 'Sac Fly': 'sf',
-                'Bunt Groundout': 'go', 'Fielders Choice': 'fc', 'Fielders Choice Out': 'fc'}
+                'Bunt Groundout': 'go', 'Fielders Choice': 'fc', 'Fielders Choice Out': 'fc', 'Sac Fly DP': 'dp',
+                'Bunt Pop Out': 'po', 'Strikeout - DP': 'so'}
     try:
         this_outcome = outcomes[outcome]
     except KeyError:
@@ -17,5 +18,6 @@ def translate_pitch_outcome(outcome, description):
             else:
                 this_outcome = 'hr'
         else:
+            print('\n\n' + outcome)
             this_outcome = "none"
     return this_outcome
