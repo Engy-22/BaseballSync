@@ -34,6 +34,7 @@ from import_data.team_data.rank_driver import rank_driver
 from import_data.player_data.awards.award_winner_driver import award_winner_driver
 from import_data.comparisions.comparisons_driver import comparisons_driver
 from import_data.player_data.awards.hof_finder import hof_finder
+from utilities.clean_up_deadlocked_file import clean_up_deadlocked_file
 
 
 def driver(year, driver_log):
@@ -78,5 +79,6 @@ if __name__ == '__main__':
     rank_driver(years[-1], main_logger)
     comparisons_driver(years[-1], main_logger)
     hof_finder(main_logger)
+    clean_up_deadlocked_file(main_logger)
     main_logger.log('Driver complete for year' + stringify_list(years) + ': time = '
                     + time_converter(time.time() - start_time) + '\n\n\n')
