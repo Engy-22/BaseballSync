@@ -32,7 +32,7 @@ def determine_trajectory(event, description):
                 print('\nasdf')
                 print(event)
                 print(description)
-        elif event == 'dp':
+        elif event in ['dp', '3p']:
             if description.split(' into ')[0].split(' ')[-1] == 'lines':
                 trajectory = 'ld'
             elif description.split(' into ')[0].split(' ')[-1] == 'flies':
@@ -61,5 +61,4 @@ def determine_trajectory(event, description):
                 print('\nasdfasdf')
                 print(event)
                 print(description)
-            trajectory = "none"
     return trajectory
