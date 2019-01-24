@@ -17,6 +17,8 @@ def determine_trajectory(event, description):
                 trajectory = 'fb'
             elif description.split(' into ')[0].split(' ')[-2] == 'ground':
                 trajectory = 'gb'
+            elif description.split(' into ')[0].split(' ')[-1] == 'lines':
+                trajectory = 'ld'
             elif 'reaches' in description:
                 fielders = {'first': 'gb', 'second': 'gb', 'third': 'gb', 'shortstop': 'gb', 'left': 'fb',
                             'right': 'fb', 'center': 'fb'}
