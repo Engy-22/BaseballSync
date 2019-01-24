@@ -22,6 +22,8 @@ def translate_pitch_outcome(outcome, description):
                 this_outcome = 'go'
             elif 'strikes out' in description:
                 this_outcome = 'so'
+            elif 'called out on strikes' in description:
+                this_outcome = 'so'
             elif 'flies out' in description:
                 this_outcome = 'fo'
             elif 'lines out' in description:
