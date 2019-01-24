@@ -82,9 +82,10 @@ def get_day_data(day, month, year):
                 clear_xmls()
                 logger.log("\t\t\t\tTime = " + time_converter(time.time() - game_time))
         except IndexError:
+            clear_xmls()
             continue
-        except Exception as e:
-            logger.log("ERROR: " + str(e))
+        except KeyError:
+            clear_xmls()
             continue
     logger.log("\tDone downloading data for " + month + '-' + day + '-' + year + ": time = "
                + time_converter(time.time() - day_time) + '\n\n')
@@ -169,4 +170,4 @@ def parse_pitch(year, pitch, meta_data, last_pitch, pitcher_team, hitter_team):
 
 # get_pitch_fx_data(2018, Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\"
 #                                "dump.log"))
-# get_day_data('10', '05', '2018')
+get_day_data('10', '05', '2018')
