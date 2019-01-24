@@ -1,6 +1,6 @@
 def determine_trajectory(event, description):
-    trajectories = {'so': 'none', 'go': 'gb', 'fo': 'fb', 'lo': 'ld', 'po': 'fb', 'bb': 'none', 'hbp': 'none', 'sh': 'gb',
-                'ibb': 'none', 'gdp': 'gb', 'sf': 'fb'}
+    trajectories = {'so': 'none', 'go': 'gb', 'fo': 'fb', 'lo': 'ld', 'po': 'fb', 'bb': 'none', 'hbp': 'none',
+                    'sh': 'gb', 'ibb': 'none', 'gdp': 'gb', 'sf': 'fb'}
     try:
         trajectory = trajectories[event]
     except KeyError:
