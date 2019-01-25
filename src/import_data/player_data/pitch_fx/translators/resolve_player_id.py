@@ -22,7 +22,7 @@ def resolve_player_id(player_num, year, player_type):
     if player_id is not None:
         return player_id
     else:
-        pass  # there are multiple possible matches; must dump these into a file
+        return None
 
 
 def resolve_further(pid, team, year, player_type):
