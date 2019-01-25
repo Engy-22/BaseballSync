@@ -167,17 +167,17 @@ def parse_pitch(year, pitch, meta_data, last_pitch, pitcher_team, hitter_team):
         direction = determine_direction(meta_data['ab_description'], meta_data['batter_orientation'])
     else:
         outcome, trajectory, field, direction = "none"
-    # with ThreadPoolExecutor(os.cpu_count()) as executor2:
-    #     executor2.submit(write_to_file, 'pitcher', resolve_player_id(meta_data['pitcher_id'], year, 'pitching'),
-    #                      resolve_team_id(pitcher_team, year), year, meta_data['batter_orientation'], count,
-    #                      translate_pitch_type(pitch.getAttribute('pitch_type')), ball_strike,
-    #                      determine_swing_or_take(pitch.getAttribute('des')), outcome, trajectory, field, direction,
-    #                      meta_data['pitcher_id'])
-    #     executor2.submit(write_to_file, 'batter', resolve_player_id(meta_data['batter_id'], year, 'batting'),
-    #                      resolve_team_id(hitter_team, year), year, meta_data['pitcher_orientation'], count,
-    #                      translate_pitch_type(pitch.getAttribute('pitch_type')), ball_strike,
-    #                      determine_swing_or_take(pitch.getAttribute('des')), outcome, trajectory, field, direction,
-    #                      meta_data['batter_id'])
+    with ThreadPoolExecutor(os.cpu_count()) as executor2:
+        executor2.submit(write_to_file, 'pitcher', resolve_player_id(meta_data['pitcher_id'], year, 'pitching'),
+                         resolve_team_id(pitcher_team, year), year, meta_data['batter_orientation'], count,
+                         translate_pitch_type(pitch.getAttribute('pitch_type')), ball_strike,
+                         determine_swing_or_take(pitch.getAttribute('des')), outcome, trajectory, field, direction,
+                         meta_data['pitcher_id'])
+        executor2.submit(write_to_file, 'batter', resolve_player_id(meta_data['batter_id'], year, 'batting'),
+                         resolve_team_id(hitter_team, year), year, meta_data['pitcher_orientation'], count,
+                         translate_pitch_type(pitch.getAttribute('pitch_type')), ball_strike,
+                         determine_swing_or_take(pitch.getAttribute('des')), outcome, trajectory, field, direction,
+                         meta_data['batter_id'])
 
 
 for year in range(2011, 2019, 1):
