@@ -17,11 +17,16 @@ def resolve_player_id(player_num, year):
     if len(pid) == 1:
         player_id = pid[0][0]
     else:
-        player_id = resolve_further(last_name, first_name, team, year)
+        player_id = resolve_further(pid, team, year)
     db.close()
     return player_id
 
 
-def resolve_further(last, first, team, year):
+def resolve_further(pid, team, year):
     this_team = resolve_team_id(team, year)
+    pt_uids = {}
+    db = DatabaseConnection()
+    for player_id in pid:
+        pt_uids[player_id] = db.read('select teamid from player_teams where playerid = "' + player_id)[0][0]
+    db.close()
     return None
