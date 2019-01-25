@@ -26,6 +26,9 @@ logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\log
 
 
 def get_pitch_fx_data(year, driver_logger):
+    if year >= 2008:
+        driver_logger.log("\tNo pitch fx data to download before 2008")
+        return
     driver_logger.log("\tFetching " + str(year) + " pitch fx data")
     print("Fetching " + str(year) + " pitch fx data")
     start_time = time.time()
