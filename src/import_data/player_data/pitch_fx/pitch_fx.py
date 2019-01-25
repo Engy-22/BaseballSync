@@ -15,7 +15,6 @@ from import_data.player_data.pitch_fx.translators.translate_pitch_type import tr
 from import_data.player_data.pitch_fx.translators.determine_trajectory import determine_trajectory
 from import_data.player_data.pitch_fx.translators.determine_field import determine_field
 from import_data.player_data.pitch_fx.translators.determine_direction import determine_direction
-from import_data.player_data.pitch_fx.download_master_csv import download_master_csv
 from import_data.player_data.pitch_fx.translators.resolve_player_id import resolve_player_id
 from import_data.player_data.pitch_fx.translators.resolve_team_id import resolve_team_id
 
@@ -34,7 +33,6 @@ def get_pitch_fx_data(year, driver_logger):
     start_time = time.time()
     logger.log("Downloading pitch fx data for " + str(year) + ' || Timestamp: ' + datetime.datetime.today().
                strftime('%Y-%m-%d %H:%M:%S'))
-    download_master_csv(driver_logger)
     db = DatabaseConnection()
     opening_day = db.read('select opening_day from years where year = ' + str(year) + ';')[0][0]
     db.close()
