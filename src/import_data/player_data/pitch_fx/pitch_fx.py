@@ -180,7 +180,7 @@ def parse_pitch(year, pitch, meta_data, last_pitch, pitcher_team, hitter_team):
     #                      meta_data['batter_id'])
 
 
-for year in range(2011, 2019, 1):
+for year in range(2014, 2019, 1):
     get_pitch_fx_data(year, Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\"
                                    "dump.log"))
 # get_day_data('10', '05', '2018')
