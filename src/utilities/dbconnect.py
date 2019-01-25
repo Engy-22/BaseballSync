@@ -13,6 +13,10 @@ class DatabaseConnection:
         except Exception as e:
             if not any(special_error in str(e) for special_error in ['Duplicate entry','check that column/key exists']):
                 print('\t\t' + str(e) + ' --> ' + action)
+            elif 'deadlock' in str(e):
+                with open('C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\src\\utilities\\deadlocked.txt',
+                          'a') as deadlocked_file:
+                    deadlocked_file.write(action)
             self.db.rollback()
 
     def read(self, action):
