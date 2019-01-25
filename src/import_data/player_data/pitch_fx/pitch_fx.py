@@ -1,11 +1,10 @@
 import os
 import time
 import datetime
-# from utilities.translate_pitchfx import translate_pitch_type, translate_pitch_outcome, determine_swing_or_take
 from utilities.logger import Logger
 from utilities.dbconnect import DatabaseConnection
 from utilities.time_converter import time_converter
-from concurrent.futures import ThreadPoolExecutor, ProcessPoolExecutor
+from concurrent.futures import ThreadPoolExecutor
 from urllib.request import urlopen, urlretrieve
 from bs4 import BeautifulSoup
 from xml.dom import minidom
@@ -16,6 +15,9 @@ from import_data.player_data.pitch_fx.translators.translate_pitch_type import tr
 from import_data.player_data.pitch_fx.translators.determine_trajectory import determine_trajectory
 from import_data.player_data.pitch_fx.translators.determine_field import determine_field
 from import_data.player_data.pitch_fx.translators.determine_direction import determine_direction
+from import_data.player_data.pitch_fx.download_master_csv import download_master_csv
+from import_data.player_data.pitch_fx.translators.resolve_player_id import resolve_player_id
+from import_data.player_data.pitch_fx.translators.resolve_team_id import resolve_team_id
 
 innings = {}
 strikes = 0
@@ -29,13 +31,13 @@ def get_pitch_fx_data(year, driver_logger):
     start_time = time.time()
     logger.log("Downloading pitch fx data for " + str(year) + ' || Timestamp: ' + datetime.datetime.today().
                strftime('%Y-%m-%d %H:%M:%S'))
+    download_master_csv(driver_logger)
     db = DatabaseConnection()
     opening_day = db.read('select opening_day from years where year = ' + str(year) + ';')[0][0]
     db.close()
     for month in range(3, 12, 1):
-        # if month > 3:
+        # if month > 6:
         if month >= int(opening_day.split('-')[0]):
-            # continue
             for day in range(1, 32, 1):
                 if month == int(opening_day.split('-')[0]) and int(day) < int(opening_day.split('-')[1]):
                     continue
@@ -49,7 +51,7 @@ def get_pitch_fx_data(year, driver_logger):
                     this_month = str(month)
                 get_day_data(this_day, this_month, str(year))
     total_time = time_converter(time.time() - start_time)
-    logger.log("Done fetching " + str(year) + " pitch fx data: time = " + total_time + '\n\n')
+    logger.log("Done fetching " + str(year) + " pitch fx data: time = " + total_time + '\n\n\n\n')
     driver_logger.log("\t\tTime = " + total_time)
 
 
@@ -63,11 +65,13 @@ def get_day_data(day, month, year):
             if str(line.split('"day_' + str(day) + '/')[1])[:3] == 'gid':
                 global innings
                 innings = {}
-                game_time = time.time()
-                logger.log("\t\tDownloading data for game: " + line.split('gid_')[1].split('_')[3] + '_'
-                           + line.split('gid_')[1].split('_')[4])
                 innings_url = home_page_url[:-6] + line.split('<a href="')[1].split('">')[0] + 'inning/'
-                innings_page = str(BeautifulSoup(urlopen(innings_url), 'html.parser')).split('<li>')
+                logger.log("\t\tDownloading data for game: " + line.split('gid_')[1].split('_')[3] + '_'
+                           + line.split('gid_')[1].split('_')[4] + ' - ' + innings_url)
+                try:
+                    innings_page = str(BeautifulSoup(urlopen(innings_url), 'html.parser')).split('<li>')
+                except Exception:
+                    innings_page = []
                 with ThreadPoolExecutor(os.cpu_count()) as executor:
                     for inning in innings_page:
                         try:
@@ -80,7 +84,6 @@ def get_day_data(day, month, year):
                             continue
                 parse_innings(year)
                 clear_xmls()
-                logger.log("\t\t\t\tTime = " + time_converter(time.time() - game_time))
         except IndexError:
             clear_xmls()
             continue
@@ -97,10 +100,13 @@ def load_xml(inning_url, inning_num):
 
 
 def clear_xmls():
+    def remove(xml_file):
+        os.remove(xml_file)
     logger.log("\t\t\tClearing xml files")
     dir = "C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\src\\import_data\\player_data\\pitch_fx\\xml"
-    for xml_file in os.listdir(dir):
-        os.remove(dir + '\\' + xml_file)
+    with ThreadPoolExecutor(os.cpu_count()) as executor:
+        for xml_file in os.listdir(dir):
+            executor.submit(remove, dir + '\\' + xml_file)
 
 
 def parse_innings(year):
@@ -158,16 +164,17 @@ def parse_pitch(year, pitch, meta_data, last_pitch, pitcher_team, hitter_team):
     else:
         outcome, trajectory, field, direction = "none"
     with ThreadPoolExecutor(os.cpu_count()) as executor2:
-        executor2.submit(write_to_file, 'pitcher', meta_data['pitcher_id'], pitcher_team, year,
-                         meta_data['batter_orientation'], count, translate_pitch_type(pitch.getAttribute('pitch_type')),
-                         ball_strike, determine_swing_or_take(pitch.getAttribute('des')), outcome, trajectory, field,
-                         direction)
-        executor2.submit(write_to_file, 'batter', meta_data['batter_id'], hitter_team, year,
-                         meta_data['pitcher_orientation'], count,
+        executor2.submit(write_to_file, 'pitcher', resolve_player_id(meta_data['pitcher_id']),
+                         resolve_team_id(pitcher_team), year, meta_data['batter_orientation'], count,
+                         translate_pitch_type(pitch.getAttribute('pitch_type')), ball_strike,
+                         determine_swing_or_take(pitch.getAttribute('des')), outcome, trajectory, field, direction)
+        executor2.submit(write_to_file, 'batter', resolve_player_id(meta_data['batter_id']),
+                         resolve_team_id(hitter_team), year, meta_data['pitcher_orientation'], count,
                          translate_pitch_type(pitch.getAttribute('pitch_type')), ball_strike,
                          determine_swing_or_take(pitch.getAttribute('des')), outcome, trajectory, field, direction)
 
 
-# get_pitch_fx_data(2018, Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\"
-#                                "dump.log"))
+# for year in range(2017, 2019, 1):
+#     get_pitch_fx_data(year, Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\"
+#                                    "dump.log"))
 # get_day_data('10', '05', '2018')
