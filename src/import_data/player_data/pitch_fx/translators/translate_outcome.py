@@ -28,6 +28,8 @@ def translate_pitch_outcome(outcome, description):
                 this_outcome = 'fo'
             elif 'lines out' in description:
                 this_outcome = 'lo'
+            elif 'pops out' in description:
+                this_outcome = 'po'
             else:
                 print('\n\n' + outcome)
                 this_outcome = "none"
