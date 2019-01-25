@@ -2,3 +2,5 @@
 *.log
 *.pyc
 *.xml
+*.csv
+*.txt
