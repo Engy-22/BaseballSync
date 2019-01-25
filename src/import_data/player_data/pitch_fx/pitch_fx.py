@@ -26,7 +26,7 @@ logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\log
 
 
 def get_pitch_fx_data(year, driver_logger):
-    if year >= 2008:
+    if year < 2008:
         driver_logger.log("\tNo pitch fx data to download before 2008")
         return
     driver_logger.log("\tFetching " + str(year) + " pitch fx data")
@@ -166,18 +166,18 @@ def parse_pitch(year, pitch, meta_data, last_pitch, pitcher_team, hitter_team):
         direction = determine_direction(meta_data['ab_description'], meta_data['batter_orientation'])
     else:
         outcome, trajectory, field, direction = "none"
-    with ThreadPoolExecutor(os.cpu_count()) as executor2:
-        executor2.submit(write_to_file, 'pitcher', resolve_player_id(meta_data['pitcher_id']),
-                         resolve_team_id(pitcher_team), year, meta_data['batter_orientation'], count,
-                         translate_pitch_type(pitch.getAttribute('pitch_type')), ball_strike,
-                         determine_swing_or_take(pitch.getAttribute('des')), outcome, trajectory, field, direction)
-        executor2.submit(write_to_file, 'batter', resolve_player_id(meta_data['batter_id']),
-                         resolve_team_id(hitter_team), year, meta_data['pitcher_orientation'], count,
-                         translate_pitch_type(pitch.getAttribute('pitch_type')), ball_strike,
-                         determine_swing_or_take(pitch.getAttribute('des')), outcome, trajectory, field, direction)
+    # with ThreadPoolExecutor(os.cpu_count()) as executor2:
+    #     executor2.submit(write_to_file, 'pitcher', resolve_player_id(meta_data['pitcher_id']),
+    #                      resolve_team_id(pitcher_team), year, meta_data['batter_orientation'], count,
+    #                      translate_pitch_type(pitch.getAttribute('pitch_type')), ball_strike,
+    #                      determine_swing_or_take(pitch.getAttribute('des')), outcome, trajectory, field, direction)
+    #     executor2.submit(write_to_file, 'batter', resolve_player_id(meta_data['batter_id']),
+    #                      resolve_team_id(hitter_team), year, meta_data['pitcher_orientation'], count,
+    #                      translate_pitch_type(pitch.getAttribute('pitch_type')), ball_strike,
+    #                      determine_swing_or_take(pitch.getAttribute('des')), outcome, trajectory, field, direction)
 
 
-# for year in range(2017, 2019, 1):
-#     get_pitch_fx_data(year, Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\"
-#                                    "dump.log"))
+for year in range(2010, 2019, 1):
+    get_pitch_fx_data(year, Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\"
+                                   "dump.log"))
 # get_day_data('10', '05', '2018')
