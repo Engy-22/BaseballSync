@@ -69,10 +69,13 @@ def get_day_data(day, month, year):
                 global innings
                 innings = {}
                 innings_url = home_page_url[:-6] + line.split('<a href="')[1].split('">')[0] + 'inning/'
+                players_url = home_page_url[:-6] + line.split('<a href="')[1].split('">')[0] + 'players.xml'
                 logger.log("\t\tDownloading data for game: " + line.split('gid_')[1].split('_')[3] + '_'
                            + line.split('gid_')[1].split('_')[4] + ' - ' + innings_url)
                 try:
                     innings_page = str(BeautifulSoup(urlopen(innings_url), 'html.parser')).split('<li>')
+                    urlretrieve(players_url, 'C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\src\\'
+                                             'import_data\\player_data\\pitch_fx\\xml\\players.xml')
                 except Exception:
                     innings_page = []
                 with ThreadPoolExecutor(os.cpu_count()) as executor:
@@ -131,6 +134,8 @@ def parse_inning(year, xml_file):
 
 
 def parse_at_bat(year, at_bat, pitcher_team, hitter_team):
+    with open('C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\background\\team_dump.txt', 'a') as team_f:
+        team_f.write(pitcher_team + ',\n')
     meta_data = {'pitcher_id': at_bat.getAttribute('pitcher'), 'batter_id': at_bat.getAttribute('batter'),
                  'temp_outcome': at_bat.getAttribute('event'),
                  'ab_description': at_bat.getAttribute('des'),
@@ -167,11 +172,11 @@ def parse_pitch(year, pitch, meta_data, last_pitch, pitcher_team, hitter_team):
     else:
         outcome, trajectory, field, direction = "none"
     # with ThreadPoolExecutor(os.cpu_count()) as executor2:
-    #     executor2.submit(write_to_file, 'pitcher', resolve_player_id(meta_data['pitcher_id']),
+    #     executor2.submit(write_to_file, 'pitcher', resolve_player_id(meta_data['pitcher_id'], year),
     #                      resolve_team_id(pitcher_team), year, meta_data['batter_orientation'], count,
     #                      translate_pitch_type(pitch.getAttribute('pitch_type')), ball_strike,
     #                      determine_swing_or_take(pitch.getAttribute('des')), outcome, trajectory, field, direction)
-    #     executor2.submit(write_to_file, 'batter', resolve_player_id(meta_data['batter_id']),
+    #     executor2.submit(write_to_file, 'batter', resolve_player_id(meta_data['batter_id'], year),
     #                      resolve_team_id(hitter_team), year, meta_data['pitcher_orientation'], count,
     #                      translate_pitch_type(pitch.getAttribute('pitch_type')), ball_strike,
     #                      determine_swing_or_take(pitch.getAttribute('des')), outcome, trajectory, field, direction)
