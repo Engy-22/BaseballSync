@@ -8,3 +8,4 @@ def resolve_team_id(team_abv, year):
         for row in rows:
             if row[0] == team_abv:
                 return row[1]
+    return None
