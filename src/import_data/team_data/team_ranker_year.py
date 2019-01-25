@@ -39,8 +39,7 @@ def get_teams(year):
 
 def get_games(team, year):
     db = DatabaseConnection()
-    games = int(db.read('select g from team_years where teamid = "' + team + '" and year = '
-                                        + str(year) + ';')[0][0])
+    games = int(db.read('select g from team_years where teamid = "' + team + '" and year = ' + str(year) + ';')[0][0])
     db.close()
     return games
 
