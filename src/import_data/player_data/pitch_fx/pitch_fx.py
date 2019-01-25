@@ -132,8 +132,6 @@ def parse_inning(year, xml_file):
 
 
 def parse_at_bat(year, at_bat, pitcher_team, hitter_team):
-    with open('C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\background\\team_dump.txt', 'a') as team_f:
-        team_f.write(pitcher_team + ',\n')
     meta_data = {'pitcher_id': at_bat.getAttribute('pitcher'), 'batter_id': at_bat.getAttribute('batter'),
                  'temp_outcome': at_bat.getAttribute('event'),
                  'ab_description': at_bat.getAttribute('des'),
@@ -170,13 +168,13 @@ def parse_pitch(year, pitch, meta_data, last_pitch, pitcher_team, hitter_team):
     else:
         outcome, trajectory, field, direction = "none"
     # with ThreadPoolExecutor(os.cpu_count()) as executor2:
-    #     executor2.submit(write_to_file, 'pitcher', resolve_player_id(meta_data['pitcher_id']), year),
-    #                      resolve_team_id(pitcher_team), year, meta_data['batter_orientation'], count,
+    #     executor2.submit(write_to_file, 'pitcher', resolve_player_id(meta_data['pitcher_id'], year, 'pitching'),
+    #                      resolve_team_id(pitcher_team, year), year, meta_data['batter_orientation'], count,
     #                      translate_pitch_type(pitch.getAttribute('pitch_type')), ball_strike,
     #                      determine_swing_or_take(pitch.getAttribute('des')), outcome, trajectory, field, direction,
     #                      meta_data['pitcher_id'])
-    #     executor2.submit(write_to_file, 'batter', resolve_player_id(meta_data['batter_id']), year),
-    #                      resolve_team_id(hitter_team), year, meta_data['pitcher_orientation'], count,
+    #     executor2.submit(write_to_file, 'batter', resolve_player_id(meta_data['batter_id'], year, 'batting'),
+    #                      resolve_team_id(hitter_team, year), year, meta_data['pitcher_orientation'], count,
     #                      translate_pitch_type(pitch.getAttribute('pitch_type')), ball_strike,
     #                      determine_swing_or_take(pitch.getAttribute('des')), outcome, trajectory, field, direction,
     #                      meta_data['batter_id'])
