@@ -19,14 +19,13 @@ def resolve_player_id(player_num, year, player_type):
     else:
         player_id = resolve_further(pid, team, year, player_type)
     db.close()
-    if player_id is not None:
-        return player_id
-    else:
-        return None
+    return player_id
 
 
 def resolve_further(pid, team, year, player_type):
     this_team = resolve_team_id(team, year)
+    if this_team is None:
+        return None
     pt_uids = {}
     possible_match = []
     db = DatabaseConnection()
