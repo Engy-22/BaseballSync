@@ -15,7 +15,6 @@ from import_data.player_data.pitch_fx.translators.translate_pitch_type import tr
 from import_data.player_data.pitch_fx.translators.determine_trajectory import determine_trajectory
 from import_data.player_data.pitch_fx.translators.determine_field import determine_field
 from import_data.player_data.pitch_fx.translators.determine_direction import determine_direction
-from import_data.player_data.pitch_fx.download_master_csv import download_master_csv
 from import_data.player_data.pitch_fx.translators.resolve_player_id import resolve_player_id
 from import_data.player_data.pitch_fx.translators.resolve_team_id import resolve_team_id
 
@@ -26,12 +25,14 @@ logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\log
 
 
 def get_pitch_fx_data(year, driver_logger):
+    if year < 2008:
+        driver_logger.log("\tNo pitch fx data to download before 2008")
+        return
     driver_logger.log("\tFetching " + str(year) + " pitch fx data")
     print("Fetching " + str(year) + " pitch fx data")
     start_time = time.time()
     logger.log("Downloading pitch fx data for " + str(year) + ' || Timestamp: ' + datetime.datetime.today().
                strftime('%Y-%m-%d %H:%M:%S'))
-    download_master_csv(driver_logger)
     db = DatabaseConnection()
     opening_day = db.read('select opening_day from years where year = ' + str(year) + ';')[0][0]
     db.close()
@@ -66,10 +67,13 @@ def get_day_data(day, month, year):
                 global innings
                 innings = {}
                 innings_url = home_page_url[:-6] + line.split('<a href="')[1].split('">')[0] + 'inning/'
+                players_url = home_page_url[:-6] + line.split('<a href="')[1].split('">')[0] + 'players.xml'
                 logger.log("\t\tDownloading data for game: " + line.split('gid_')[1].split('_')[3] + '_'
                            + line.split('gid_')[1].split('_')[4] + ' - ' + innings_url)
                 try:
                     innings_page = str(BeautifulSoup(urlopen(innings_url), 'html.parser')).split('<li>')
+                    urlretrieve(players_url, 'C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\src\\'
+                                             'import_data\\player_data\\pitch_fx\\xml\\players.xml')
                 except Exception:
                     innings_page = []
                 with ThreadPoolExecutor(os.cpu_count()) as executor:
@@ -162,19 +166,24 @@ def parse_pitch(year, pitch, meta_data, last_pitch, pitcher_team, hitter_team):
         field = determine_field(outcome)
         direction = determine_direction(meta_data['ab_description'], meta_data['batter_orientation'])
     else:
-        outcome, trajectory, field, direction = "none"
+        outcome = "none"
+        trajectory = "none"
+        field = "none"
+        direction = "none"
     with ThreadPoolExecutor(os.cpu_count()) as executor2:
-        executor2.submit(write_to_file, 'pitcher', resolve_player_id(meta_data['pitcher_id']),
+        executor2.submit(write_to_file, 'pitcher', resolve_player_id(meta_data['pitcher_id'], year, 'pitching'),
                          resolve_team_id(pitcher_team), year, meta_data['batter_orientation'], count,
                          translate_pitch_type(pitch.getAttribute('pitch_type')), ball_strike,
-                         determine_swing_or_take(pitch.getAttribute('des')), outcome, trajectory, field, direction)
-        executor2.submit(write_to_file, 'batter', resolve_player_id(meta_data['batter_id']),
+                         determine_swing_or_take(pitch.getAttribute('des')), outcome, trajectory, field, direction,
+                         meta_data['pitcher_id'])
+        executor2.submit(write_to_file, 'batter', resolve_player_id(meta_data['batter_id'], year, 'batting'),
                          resolve_team_id(hitter_team), year, meta_data['pitcher_orientation'], count,
                          translate_pitch_type(pitch.getAttribute('pitch_type')), ball_strike,
-                         determine_swing_or_take(pitch.getAttribute('des')), outcome, trajectory, field, direction)
+                         determine_swing_or_take(pitch.getAttribute('des')), outcome, trajectory, field, direction,
+                         meta_data['batter_id'])
 
 
-# for year in range(2017, 2019, 1):
-#     get_pitch_fx_data(year, Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\"
-#                                    "dump.log"))
+for year in range(2017, 2019, 1):
+    get_pitch_fx_data(year, Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\"
+                                   "dump.log"))
 # get_day_data('10', '05', '2018')
