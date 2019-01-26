@@ -26,7 +26,7 @@ def resolve_player_id(player_num, year, player_type):
     return player_id
 
 
-def resolve_further(pid, team, year, player_type, checked_alterations_file):
+def resolve_further(pid, team, year, player_type):
     pt_uids = {}
     possible_match = []
     db = DatabaseConnection()
@@ -46,7 +46,4 @@ def resolve_further(pid, team, year, player_type, checked_alterations_file):
     if len(possible_match) == 1:
         return possible_match[0]
     else:
-        if checked_alterations_file:
-            return None
-        else:
-            return resolve_further(pid, team, year, player_type, True)
+        return None
