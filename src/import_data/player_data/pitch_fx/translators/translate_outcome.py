@@ -31,6 +31,8 @@ def translate_pitch_outcome(outcome, description):
                 this_outcome = 'lo'
             elif 'pops out' in description:
                 this_outcome = 'po'
+            elif 'double player' in description:
+                this_outcome = 'dp'
             else:
                 print('\n\n' + outcome)
                 this_outcome = "none"
