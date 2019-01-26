@@ -107,7 +107,7 @@ def extract_player_attributes(player_id, page, reversed_name):
     for ent in page.find_all('div'):
         str_ent = str(ent)
         if 'Throws: </strong>' in str_ent:
-            return {'lastName': reversed_name.split(',')[1], 'firstName': reversed_name.split(',')[0],
+            return {'lastName': reversed_name.split(',')[0], 'firstName': reversed_name.split(',')[1],
                     'throwsWith': str_ent.split('Bats: </strong>')[1][0], 'primaryPosition': 'N',
                     'batsWith': str_ent.split('Throws: </strong>')[1][0]}
 
