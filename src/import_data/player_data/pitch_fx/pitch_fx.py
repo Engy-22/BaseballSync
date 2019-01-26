@@ -166,7 +166,10 @@ def parse_pitch(year, pitch, meta_data, last_pitch, pitcher_team, hitter_team):
         field = determine_field(outcome)
         direction = determine_direction(meta_data['ab_description'], meta_data['batter_orientation'])
     else:
-        outcome, trajectory, field, direction = "none"
+        outcome = "none"
+        trajectory = "none"
+        field = "none"
+        direction = "none"
     with ThreadPoolExecutor(os.cpu_count()) as executor2:
         executor2.submit(write_to_file, 'pitcher', resolve_player_id(meta_data['pitcher_id'], year, 'pitching'),
                          resolve_team_id(pitcher_team, year), year, meta_data['batter_orientation'], count,
