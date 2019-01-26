@@ -31,17 +31,17 @@ def resolve_further(pid, team, year, player_type):
     possible_match = []
     db = DatabaseConnection()
     for player_id in pid:
-        print(player_id)
-        pt_uids[player_id] = []
-        for data in db.read('select pt_uniqueidentifier, teamid from player_teams where playerid = "' + player_id):
-            pt_uids[player_id].append(data[0])
-            pt_uids[player_id].append(data[1])
-        for pt_uid in pt_uids[player_id]:
+        pt_uids[player_id[0]] = []
+        for data in db.read('select pt_uniqueidentifier, teamid from player_teams where playerid = "' + player_id[0]
+                            + '"'):
+            pt_uids[player_id[0]].append(data)
+        for pt_uid in pt_uids[player_id[0]]:
             if team == pt_uid[1]:  # if this is true, then we have a possible match
                 for this_year in db.read('select year from player_' + player_type + ' where pt_uniqueidentifier = '
-                                         + pt_uid[0]):
-                    if this_year == str(year):
-                        possible_match.append(player_id)
+                                         + str(pt_uid[0])):
+                    if str(this_year[0]) == str(year):
+                        possible_match.append(player_id[0])
+                        break
     db.close()
     if len(possible_match) == 1:
         return possible_match[0]
