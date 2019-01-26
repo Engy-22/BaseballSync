@@ -13,7 +13,7 @@ def resolve_player_id(player_num, year, player_type):
             team = ent.getAttribute('team_abbrev')
             break
     db = DatabaseConnection()
-    pid = db.read('select playerid from players where lastName = ' + last_name + ' and firstName = ' + first_name + ';')
+    pid = db.read('select playerid from players where lastName="' + last_name + '" and firstName="' + first_name + '";')
     if len(pid) == 1:
         player_id = pid[0][0]
     else:
