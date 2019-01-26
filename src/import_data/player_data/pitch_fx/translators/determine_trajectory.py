@@ -41,6 +41,14 @@ def determine_trajectory(event, description):
                 trajectory = 'fb'
             elif description.split(' into ')[0].split(' ')[-1] == 'grounds':
                 trajectory = 'gb'
+            elif description.split(' into ')[0].split(' ')[-1] == 'bunts':
+                trajectory = 'gb'
+            elif 'fly ball' in description:
+                trajectory = 'fb'
+            elif 'ground ball' in description:
+                trajectory = 'gb'
+            elif 'line drive' in description:
+                trajectory = 'ld'
             elif "fielder's choice" in description:
                 trajectory = 'gb'
             elif 'challenged' in description:
