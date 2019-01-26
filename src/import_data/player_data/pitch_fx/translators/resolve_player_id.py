@@ -8,7 +8,11 @@ def resolve_player_id(player_num, year, player_type):
                                  'player_data\\pitch_fx\\xml\\players.xml')
     for ent in players_file.getElementsByTagName('player'):
         if ent.getAttribute('id') == str(player_num):
-            last_name = ent.getAttribute('last')
+            temp_last_name = ent.getAttribute('last')
+            if 'Jr.' in temp_last_name or 'Sr.' in temp_last_name:
+                last_name = temp_last_name[:-4]
+            else:
+                last_name = temp_last_name
             first_name = ent.getAttribute('first')
             team = ent.getAttribute('team_abbrev')
             break
