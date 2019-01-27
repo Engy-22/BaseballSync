@@ -1,6 +1,5 @@
 def determine_direction(event, bats_with):
     if 'grounds out' in event:
-        print(event)
         try:
             location = event.split('grounds out')[1].split(', ')[1].split(' ')[0]
         except IndexError:
