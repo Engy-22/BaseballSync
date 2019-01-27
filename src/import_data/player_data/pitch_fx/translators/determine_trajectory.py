@@ -59,11 +59,14 @@ def determine_trajectory(event, description):
                 print(description)
                 print(description.split(' into ')[0].split(' ')[-1])
         elif event == 'error':
-            error = event.split('by')[1].split(' ')[0]
-            if error in ['left', 'center', 'right']:
-                trajectory = 'fb'
-            else:
-                trajectory = 'gb'
+            try:
+                error = event.split('by')[1].split(' ')[0]
+                if error in ['left', 'center', 'right']:
+                    trajectory = 'fb'
+                else:
+                    trajectory = 'gb'
+            except IndexError:
+                trajectory = 'none'
         else:
             if event != 'cs':
                 print('\nasdfasdf')
