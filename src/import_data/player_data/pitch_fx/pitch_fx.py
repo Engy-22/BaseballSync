@@ -92,7 +92,8 @@ def get_day_data(day, month, year):
         except IndexError:
             clear_xmls()
             continue
-        except KeyError:
+        except KeyError as e:
+            raise e
             clear_xmls()
             continue
     logger.log("\tDone downloading data for " + month + '-' + day + '-' + year + ": time = "
@@ -176,15 +177,15 @@ def parse_pitch(year, pitch, meta_data, last_pitch):
         trajectory = "none"
         field = "none"
         direction = "none"
+    pitch_type = translate_pitch_type(pitch.getAttribute('pitch_type'))
+    swing_take = determine_swing_or_take(pitch.getAttribute('des'))
     with ThreadPoolExecutor(os.cpu_count()) as executor2:
         executor2.submit(write_to_file, 'pitcher', meta_data['pitcher_id'], meta_data['pitcher_team'], year,
-                         meta_data['batter_orientation'], count, translate_pitch_type(pitch.getAttribute('pitch_type')),
-                         ball_strike, determine_swing_or_take(pitch.getAttribute('des')), outcome, trajectory, field,
-                         direction, meta_data['original_pitcher_id'])
-        executor2.submit(write_to_file, 'batter', meta_data['batter_id'], meta_data['hitter_team'], year,
-                         meta_data['pitcher_orientation'], count, translate_pitch_type(pitch.getAttribute('pitch_type')),
-                         ball_strike, determine_swing_or_take(pitch.getAttribute('des')), outcome, trajectory, field,
-                         direction, meta_data['original_batter_id'])
+                         meta_data['batter_orientation'], count, pitch_type, ball_strike, swing_take, outcome,
+                         trajectory, field, direction, meta_data['original_pitcher_id'])
+        executor2.submit(write_to_file, 'batter', meta_data['batter_id'], meta_data['batter_team'], year,
+                         meta_data['pitcher_orientation'], count, pitch_type, ball_strike, swing_take, outcome,
+                         trajectory, field, direction, meta_data['original_batter_id'])
 
 
 for year in range(2018, 2019, 1):
