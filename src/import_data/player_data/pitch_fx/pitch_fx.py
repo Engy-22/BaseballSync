@@ -61,6 +61,7 @@ def get_day_data(day, month, year):
     logger.log("\tDownloading data for " + month + '-' + day + '-' + year)
     day_time = time.time()
     home_page_url = 'http://gd2.mlb.com/components/game/mlb/year_' + year + '/month_' + month + '/day_' + day
+    a=0
     home_page = str(BeautifulSoup(urlopen(home_page_url), 'html.parser')).split('<li>')
     for line in home_page:
         try:
@@ -71,7 +72,7 @@ def get_day_data(day, month, year):
                 players_url = home_page_url[:-6] + line.split('<a href="')[1].split('">')[0] + 'players.xml'
                 logger.log("\t\tDownloading data for game: " + line.split('gid_')[1].split('_')[3] + '_'
                            + line.split('gid_')[1].split('_')[4] + ' - ' + innings_url)
-                print("Downloading data for game: " + line.split('gid_')[1].split('_')[3] + '_' + line.split('gid_')[1]
+                print("\nDownloading data for game: " + line.split('gid_')[1].split('_')[3] + '_' + line.split('gid_')[1]
                       .split('_')[4])
                 try:
                     innings_page = str(BeautifulSoup(urlopen(innings_url), 'html.parser')).split('<li>')
@@ -91,11 +92,14 @@ def get_day_data(day, month, year):
                             continue
                 parse_innings(year)
                 clear_xmls()
-        except IndexError:
+        except IndexError as e:
+            a+=1
+            if a==3:
+                raise e
             clear_xmls()
             continue
         except KeyError as e:
-            raise e
+            print(e)
             clear_xmls()
             continue
     logger.log("\tDone downloading data for " + month + '-' + day + '-' + year + ": time = "
@@ -119,20 +123,29 @@ def clear_xmls():
 
 def parse_innings(year):
     dir = "C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\src\\import_data\\player_data\\pitch_fx\\xml"
+    doc = minidom.parse(dir + '\\players.xml')
+    away_team = resolve_team_id(doc.getElementsByTagName('team')[0].getAttribute('id'))
+    home_team = resolve_team_id(doc.getElementsByTagName('team')[1].getAttribute('id'))
+    print(home_team)
+    print(away_team)
     for xml_file in os.listdir(dir):
-        parse_inning(year, dir + '\\' + xml_file)
+        if 'players' not in xml_file:
+            parse_inning(year, dir + '\\' + xml_file, away_team, home_team)
 
 
-def parse_inning(year, xml_file):
+def parse_inning(year, xml_file, away_team, home_team):
+    print(xml_file)
     doc = minidom.parse(xml_file)
-    home_team = resolve_team_id([inning.getAttribute('home_team') for inning in doc.getElementsByTagName('inning')][0])
-    away_team = resolve_team_id([inning.getAttribute('away_team') for inning in doc.getElementsByTagName('inning')][0])
-    top_at_bats = doc.getElementsByTagName('inning')[0].getElementsByTagName('top')[0].getElementsByTagName('atbat')
-    bottom_at_bats = doc.getElementsByTagName('inning')[0].getElementsByTagName('bottom')[0].getElementsByTagName('atbat')
-    for at_bat in top_at_bats:
+    away_at_bats = doc.getElementsByTagName('inning')[0].getElementsByTagName('top')[0].getElementsByTagName('atbat')
+    for at_bat in away_at_bats:
         parse_at_bat(year, at_bat, home_team, away_team)
-    for at_bat in bottom_at_bats:
-        parse_at_bat(year, at_bat, away_team, home_team)
+    try:
+        home_at_bats = doc.getElementsByTagName('inning')[0].getElementsByTagName('bottom')[0]\
+            .getElementsByTagName('atbat')
+        for at_bat in home_at_bats:
+            parse_at_bat(year, at_bat, away_team, home_team)
+    except IndexError:
+        pass
 
 
 def parse_at_bat(year, at_bat, pitcher_team, hitter_team):
