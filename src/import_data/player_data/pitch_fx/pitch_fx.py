@@ -71,6 +71,8 @@ def get_day_data(day, month, year):
                 players_url = home_page_url[:-6] + line.split('<a href="')[1].split('">')[0] + 'players.xml'
                 logger.log("\t\tDownloading data for game: " + line.split('gid_')[1].split('_')[3] + '_'
                            + line.split('gid_')[1].split('_')[4] + ' - ' + innings_url)
+                print("Downloading data for game: " + line.split('gid_')[1].split('_')[3] + '_' + line.split('gid_')[1]
+                      .split('_')[4])
                 try:
                     innings_page = str(BeautifulSoup(urlopen(innings_url), 'html.parser')).split('<li>')
                     urlretrieve(players_url, 'C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\src\\'
@@ -177,15 +179,18 @@ def parse_pitch(year, pitch, meta_data, last_pitch):
         trajectory = "none"
         field = "none"
         direction = "none"
-    pitch_type = translate_pitch_type(pitch.getAttribute('pitch_type'))
-    swing_take = determine_swing_or_take(pitch.getAttribute('des'))
-    with ThreadPoolExecutor(os.cpu_count()) as executor2:
-        executor2.submit(write_to_file, 'pitcher', meta_data['pitcher_id'], meta_data['pitcher_team'], year,
-                         meta_data['batter_orientation'], count, pitch_type, ball_strike, swing_take, outcome,
-                         trajectory, field, direction, meta_data['original_pitcher_id'])
-        executor2.submit(write_to_file, 'batter', meta_data['batter_id'], meta_data['batter_team'], year,
-                         meta_data['pitcher_orientation'], count, pitch_type, ball_strike, swing_take, outcome,
-                         trajectory, field, direction, meta_data['original_batter_id'])
+    try:
+        pitch_type = translate_pitch_type(pitch.getAttribute('pitch_type'))
+        swing_take = determine_swing_or_take(pitch.getAttribute('des'))
+        with ThreadPoolExecutor(os.cpu_count()) as executor2:
+            executor2.submit(write_to_file, 'pitcher', meta_data['pitcher_id'], meta_data['pitcher_team'], year,
+                             meta_data['batter_orientation'], count, pitch_type, ball_strike, swing_take, outcome,
+                             trajectory, field, direction, meta_data['original_pitcher_id'])
+            executor2.submit(write_to_file, 'batter', meta_data['batter_id'], meta_data['batter_team'], year,
+                             meta_data['pitcher_orientation'], count, pitch_type, ball_strike, swing_take, outcome,
+                             trajectory, field, direction, meta_data['original_batter_id'])
+    except KeyError:
+        pass
 
 
 for year in range(2018, 2019, 1):
