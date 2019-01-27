@@ -135,9 +135,9 @@ def parse_inning(year, xml_file):
 def parse_at_bat(year, at_bat, pitcher_team, hitter_team):
     meta_data = {'original_pitcher_id': at_bat.getAttribute('pitcher'),
                  'original_batter_id': at_bat.getAttribute('batter'),
-                 'pitcher_id': resolve_player_id(at_bat.getAttribute('pitcher'), year, 'pitching'),
+                 'pitcher_id': resolve_player_id(at_bat.getAttribute('pitcher'), year, pitcher_team, 'pitching'),
                  'pitcher_team': pitcher_team,
-                 'batter_id': resolve_player_id(at_bat.getAttribute('batter'), year, 'batting'),
+                 'batter_id': resolve_player_id(at_bat.getAttribute('batter'), year, hitter_team, 'batting'),
                  'batter_team': hitter_team,
                  'temp_outcome': at_bat.getAttribute('event'),
                  'ab_description': at_bat.getAttribute('des'),
