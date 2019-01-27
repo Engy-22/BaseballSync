@@ -30,14 +30,11 @@ def determine_direction(event, bats_with):
         location = "none"
     else:
         location = "none"
-    if location != "none":
-        try:
-            directions = {'r': {'third': 'pulled', 'second': 'oppo', 'first': 'oppo', 'shortstop': 'pulled',
-                                'pitcher': 'middle', 'right': 'oppo', 'center': 'middle', 'left': 'pulled'},
-                          'l': {'third': 'oppo', 'second': 'pulled', 'first': 'pulled', 'shortstop': 'oppo',
-                                'pitcher': 'middle', 'right': 'pulled', 'center': 'middle', 'left': 'oppo'}}
-            return directions[bats_with[1]][location]
-        except KeyError:
-            return "none"
-    else:
-        return location
+    try:
+        directions = {'r': {'third': 'pulled', 'second': 'oppo', 'first': 'oppo', 'shortstop': 'pulled',
+                            'pitcher': 'middle', 'right': 'oppo', 'center': 'middle', 'left': 'pulled'},
+                      'l': {'third': 'oppo', 'second': 'pulled', 'first': 'pulled', 'shortstop': 'oppo',
+                            'pitcher': 'middle', 'right': 'pulled', 'center': 'middle', 'left': 'oppo'}}
+        return directions[bats_with[1]][location]
+    except KeyError:
+        return "none"
