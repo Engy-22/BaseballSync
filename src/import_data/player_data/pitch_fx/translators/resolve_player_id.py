@@ -1,6 +1,5 @@
 from utilities.dbconnect import DatabaseConnection
 from xml.dom import minidom
-from import_data.player_data.pitch_fx.translators.resolve_team_id import resolve_team_id
 from import_data.player_data.pitch_fx.translators.name_alterator import name_alterator
 
 
