@@ -123,14 +123,17 @@ def clear_xmls():
 
 def parse_innings(year):
     dir = "C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\src\\import_data\\player_data\\pitch_fx\\xml"
-    doc = minidom.parse(dir + '\\players.xml')
-    away_team = resolve_team_id(doc.getElementsByTagName('team')[0].getAttribute('id'))
-    home_team = resolve_team_id(doc.getElementsByTagName('team')[1].getAttribute('id'))
-    print(home_team)
-    print(away_team)
-    for xml_file in os.listdir(dir):
-        if 'players' not in xml_file:
-            parse_inning(year, dir + '\\' + xml_file, away_team, home_team)
+    try:
+        doc = minidom.parse(dir + '\\players.xml')
+        away_team = resolve_team_id(doc.getElementsByTagName('team')[0].getAttribute('id'))
+        home_team = resolve_team_id(doc.getElementsByTagName('team')[1].getAttribute('id'))
+        print(home_team)
+        print(away_team)
+        for xml_file in os.listdir(dir):
+            if 'players' not in xml_file:
+                parse_inning(year, dir + '\\' + xml_file, away_team, home_team)
+    except FileNotFoundError:
+        pass
 
 
 def parse_inning(year, xml_file, away_team, home_team):
