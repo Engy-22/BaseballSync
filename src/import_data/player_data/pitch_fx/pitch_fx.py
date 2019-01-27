@@ -40,17 +40,18 @@ def get_pitch_fx_data(year, driver_logger):
         # if month > 6:
         if month >= int(opening_day.split('-')[0]):
             for day in range(1, 32, 1):
-                if month == int(opening_day.split('-')[0]) and int(day) < int(opening_day.split('-')[1]):
-                    continue
-                if len(str(day)) == 1:
-                    this_day = '0' + str(day)
-                else:
-                    this_day = str(day)
-                if len(str(month)) == 1:
-                    this_month = '0' + str(month)
-                else:
-                    this_month = str(month)
-                get_day_data(this_day, this_month, str(year))
+                if day > 29:
+                    if month == int(opening_day.split('-')[0]) and int(day) < int(opening_day.split('-')[1]):
+                        continue
+                    if len(str(day)) == 1:
+                        this_day = '0' + str(day)
+                    else:
+                        this_day = str(day)
+                    if len(str(month)) == 1:
+                        this_month = '0' + str(month)
+                    else:
+                        this_month = str(month)
+                    get_day_data(this_day, this_month, str(year))
     total_time = time_converter(time.time() - start_time)
     logger.log("Done fetching " + str(year) + " pitch fx data: time = " + total_time + '\n\n\n\n')
     driver_logger.log("\t\tTime = " + total_time)
@@ -121,8 +122,8 @@ def parse_innings(year):
 
 def parse_inning(year, xml_file):
     doc = minidom.parse(xml_file)
-    home_team = [inning.getAttribute('home_team') for inning in doc.getElementsByTagName('inning')][0]
-    away_team = [inning.getAttribute('away_team') for inning in doc.getElementsByTagName('inning')][0]
+    home_team = resolve_team_id([inning.getAttribute('home_team') for inning in doc.getElementsByTagName('inning')][0])
+    away_team = resolve_team_id([inning.getAttribute('away_team') for inning in doc.getElementsByTagName('inning')][0])
     top_at_bats = doc.getElementsByTagName('inning')[0].getElementsByTagName('top')[0].getElementsByTagName('atbat')
     bottom_at_bats = doc.getElementsByTagName('inning')[0].getElementsByTagName('bottom')[0].getElementsByTagName('atbat')
     for at_bat in top_at_bats:
@@ -135,7 +136,9 @@ def parse_at_bat(year, at_bat, pitcher_team, hitter_team):
     meta_data = {'original_pitcher_id': at_bat.getAttribute('pitcher'),
                  'original_batter_id': at_bat.getAttribute('batter'),
                  'pitcher_id': resolve_player_id(at_bat.getAttribute('pitcher'), year, 'pitching'),
+                 'pitcher_team': pitcher_team,
                  'batter_id': resolve_player_id(at_bat.getAttribute('batter'), year, 'batting'),
+                 'batter_team': hitter_team,
                  'temp_outcome': at_bat.getAttribute('event'),
                  'ab_description': at_bat.getAttribute('des'),
                  'batter_orientation': 'v' + at_bat.getAttribute('stand="').lower() + 'hb',
@@ -146,13 +149,13 @@ def parse_at_bat(year, at_bat, pitcher_team, hitter_team):
     global balls
     balls = 0
     for pitch in pitches:
-        parse_pitch(year, pitch, meta_data, pitches.index(pitch)+1 == len(pitches), pitcher_team, hitter_team)
+        parse_pitch(year, pitch, meta_data, pitches.index(pitch)+1 == len(pitches))
     actions = at_bat.getElementsByTagName('action')
     if len(actions) > 0:
         print(actions)
 
 
-def parse_pitch(year, pitch, meta_data, last_pitch, pitcher_team, hitter_team):
+def parse_pitch(year, pitch, meta_data, last_pitch):
     global strikes
     global balls
     count = str(balls) + '-' + str(strikes)
@@ -174,11 +177,11 @@ def parse_pitch(year, pitch, meta_data, last_pitch, pitcher_team, hitter_team):
         field = "none"
         direction = "none"
     with ThreadPoolExecutor(os.cpu_count()) as executor2:
-        executor2.submit(write_to_file, 'pitcher', meta_data['pitcher_id'], resolve_team_id(pitcher_team), year,
+        executor2.submit(write_to_file, 'pitcher', meta_data['pitcher_id'], meta_data['pitcher_team'], year,
                          meta_data['batter_orientation'], count, translate_pitch_type(pitch.getAttribute('pitch_type')),
                          ball_strike, determine_swing_or_take(pitch.getAttribute('des')), outcome, trajectory, field,
                          direction, meta_data['original_pitcher_id'])
-        executor2.submit(write_to_file, 'batter', meta_data['batter_id'], resolve_team_id(hitter_team), year,
+        executor2.submit(write_to_file, 'batter', meta_data['batter_id'], meta_data['hitter_team'], year,
                          meta_data['pitcher_orientation'], count, translate_pitch_type(pitch.getAttribute('pitch_type')),
                          ball_strike, determine_swing_or_take(pitch.getAttribute('des')), outcome, trajectory, field,
                          direction, meta_data['original_batter_id'])
