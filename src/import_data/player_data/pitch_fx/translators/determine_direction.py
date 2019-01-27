@@ -11,7 +11,10 @@ def determine_direction(event, bats_with):
     elif 'pops out' in event:
         location = event.split('pops out to ')[1].split(' ')[0]
     elif 'lines out' in event:
-        location = event.split('lines out to ')[1].split(' ')[0]
+        try:
+            location = event.split('lines out to ')[1].split(' ')[0]
+        except IndexError:
+            location = event.split('lines out')[1].split('to ')[1].split(' ')[0]
     elif 'singles' in event or 'doubles' in event or 'triples' in event or 'homers' in event:
         location = event.split('to ')[1].split(' ')[0]
     elif 'sacrifice bunt, ' in event:
