@@ -14,7 +14,7 @@ def write_to_file(player_type, player_id, team_id, year, matchup, count, pitch_t
                        + direction + '", (select P' + player_type[0] + '_uniqueidentifier from player_'
                        + player_type[:-2] + 'ing where year = ' + str(year) + ' and pt_uniqueidentifier = (select '
                        'pt_uniqueidentifier from player_teams where playerid = "' + str(player_id) + '" and teamid = "'
-                       + team_id + '")));\n\n')
+                       + team_id + '")));\n')
     else:
         db = DatabaseConnection()
         db.write('insert into ' + player_type + '_pitches (pitchid, playerid, year, matchup, count, pitch_type, '
