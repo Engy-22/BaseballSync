@@ -134,7 +134,7 @@ def parse_innings(year):
 
 
 def parse_inning(year, xml_file, away_team, home_team):
-    print(xml_file)
+    # print(xml_file)
     doc = minidom.parse(xml_file)
     away_at_bats = doc.getElementsByTagName('inning')[0].getElementsByTagName('top')[0].getElementsByTagName('atbat')
     for at_bat in away_at_bats:
