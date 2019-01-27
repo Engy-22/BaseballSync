@@ -23,7 +23,7 @@ def determine_trajectory(event, description):
                 trajectory = 'fb'
             elif 'reaches' in description:
                 fielders = {'first': 'gb', 'second': 'gb', 'third': 'gb', 'shortstop': 'gb', 'left': 'fb',
-                            'right': 'fb', 'center': 'fb'}
+                            'right': 'fb', 'center': 'fb', 'catcher': 'gb', 'pitcher': 'gb'}
                 try:
                     trajectory = fielders[description.split('fielded by ')[1].split(' ')[0]]
                 except IndexError:
