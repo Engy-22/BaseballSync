@@ -11,6 +11,8 @@ def determine_trajectory(event, description):
                     trajectory = trajectories[description.split('on a ')[1].split(' ')[0]]
                 except KeyError:
                     trajectory = trajectories[description.split('on a ')[1].split(' ')[1]]
+                except IndexError:
+                    trajectory = 'none'
             else:
                 if 'bunt' in description:
                     trajectory = 'gb'
