@@ -6,10 +6,13 @@ def determine_trajectory(event, description):
     except KeyError:
         trajectories = {'line': 'ld', 'fly': 'fb', 'ground': 'gb', 'pop': 'fb'}
         if event in ['1b', '2b', '3b', 'hr']:
-            try:
-                trajectory = trajectories[description.split('on a ')[1].split(' ')[0]]
-            except KeyError:
-                trajectory = trajectories[description.split('on a ')[1].split(' ')[1]]
+            if 'grand slam' not in description:
+                try:
+                    trajectory = trajectories[description.split('on a ')[1].split(' ')[0]]
+                except KeyError:
+                    trajectory = trajectories[description.split('on a ')[1].split(' ')[1]]
+            else:
+                trajectory = trajectories['fly']
         elif event == 'fc':
             if description.split(' into ')[0].split(' ')[-1] == 'grounds':
                 trajectory = 'gb'
