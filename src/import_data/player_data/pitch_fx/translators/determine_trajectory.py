@@ -35,7 +35,10 @@ def determine_trajectory(event, description):
                 try:
                     trajectory = fielders[description.split('fielded by ')[1].split(' ')[0]]
                 except IndexError:
-                    trajectory = fielders[description.split(', ')[1].split(' ')[0]]
+                    try:
+                        trajectory = fielders[description.split(', ')[1].split(' ')[0]]
+                    except KeyError:
+                        trajectory = fielders[description.split(':')[1].split(', ')[1].split(' ')[0]]
             else:
                 print('\nasdf')
                 print(event)
