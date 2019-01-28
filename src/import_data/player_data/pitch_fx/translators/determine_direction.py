@@ -41,6 +41,6 @@ def determine_direction(event, bats_with):
                             'pitcher': 'middle', 'right': 'oppo', 'center': 'middle', 'left': 'pulled'},
                       'l': {'third': 'oppo', 'second': 'pulled', 'first': 'pulled', 'shortstop': 'oppo',
                             'pitcher': 'middle', 'right': 'pulled', 'center': 'middle', 'left': 'oppo'}}
-        return directions[bats_with[1]][location]
+        return directions[bats_with][location]
     except KeyError:
         return "none"
