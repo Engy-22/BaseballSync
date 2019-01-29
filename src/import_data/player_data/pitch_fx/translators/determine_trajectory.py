@@ -84,6 +84,7 @@ def determine_trajectory(event, description):
                 print(event)
                 print(description)
             else:
+                print(event, description)
                 raise Exception
                 trajectory = 'none'
     return trajectory
