@@ -80,11 +80,8 @@ def determine_trajectory(event, description):
                 trajectory = 'unknown'
         else:
             if event != 'cs':
-                print('\nasdfasdf')
-                print(event)
-                print(description)
-            else:
                 print(event, description)
                 raise Exception
+            else:
                 trajectory = 'none'
     return trajectory
