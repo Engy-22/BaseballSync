@@ -22,7 +22,13 @@ def determine_direction(event, bats_with):
         except IndexError:
             location = event.split('lines out')[1].split('to ')[1].split(' ')[0]
     elif 'singles' in event or 'doubles' in event or 'triples' in event or 'homers' in event:
-        location = event.split('to ')[1].split(' ')[0]
+        try:
+            location = event.split('to ')[1].split(' ')[0]
+        except IndexError:
+            if 'hit by batted ball' in event:
+                location = event.split(', ')[1].split(' ')[0]
+            else:
+                raise IndexError
     elif 'sacrifice bunt, ' in event:
         location = event.split('sacrifice bunt, ')[1].split(' ')[0]
     elif 'sacrifice fly' in event:
