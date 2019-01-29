@@ -30,10 +30,13 @@ def determine_field(event, description):
             else:
                 return 'if'
         elif event == 'error':
-            if description.split(' error by ')[1].split(' ')[0] in ['left', 'center', 'right']:
-                return 'of'
+            if 'catcher interference' not in description:
+                if description.split(' error by ')[1].split(' ')[0] in ['left', 'center', 'right']:
+                    return 'of'
+                else:
+                    return 'if'
             else:
-                return 'if'
+                return 'none'
         else:
             print(event, description)
             raise KeyError
