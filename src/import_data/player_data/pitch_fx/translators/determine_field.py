@@ -5,16 +5,20 @@ def determine_field(event, description):
         return outcomes[event]
     except KeyError:
         if event in ['1b', '2b', '3b', 'hr', 'lo']:
-            try:
-                if description.split(' to ')[1].split(' ')[0] in ['left', 'center', 'right']:
-                    return 'of'
-                else:
-                    return 'if'
-            except IndexError:
-                if description.split(' down the ')[1].split('-')[0] in ['left', 'center', 'right']:
-                    return 'of'
-                else:
-                    return 'if'
+            if 'hit by batted ball' not in description:
+                try:
+                    if description.split(' to ')[1].split(' ')[0] in ['left', 'center', 'right']:
+                        return 'of'
+                    else:
+                        return 'if'
+                except IndexError:
+                    print(event, description)
+                    if description.split(' down the ')[1].split('-')[0] in ['left', 'center', 'right']:
+                        return 'of'
+                    else:
+                        return 'if'
+            else:
+                return 'if'
         elif event == 'fc':
             if description.split(', ')[1].split(' ')[0] in ['left', 'center', 'right']:
                 return 'of'
