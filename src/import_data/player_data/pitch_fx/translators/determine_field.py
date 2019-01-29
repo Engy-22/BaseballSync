@@ -4,11 +4,16 @@ def determine_field(event, description):
     try:
         return outcomes[event]
     except KeyError:
-        if event in ['1b', '2b', '3b', 'hr']:
-            position = description.split('to ')[1].split(' ')[0]
-            if position in ['left', 'center', 'right']:
+        if event in ['1b', '2b', '3b', 'hr', 'lo']:
+            if description.split(' to ')[1].split(' ')[0] in ['left', 'center', 'right']:
+                return 'of'
+            else:
+                return 'if'
+        elif event == 'fc':
+            if description.split(', ')[1].split(' ')[0] in ['left', 'center', 'right']:
                 return 'of'
             else:
                 return 'if'
         else:
+            print(event, description)
             raise KeyError
