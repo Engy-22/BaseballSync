@@ -106,4 +106,4 @@
     *verify that player_batting, player_pitching and player_fielding numbers are accurate.
     *aggregate and consolidate pitch_fx data.
     *change some nones to unknowns
-    *change db pickoff fields to identify bases.
+    *change db pickoff columns to identify bases.
