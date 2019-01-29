@@ -4,4 +4,5 @@ def determine_field(event):
     try:
         return outcomes[event]
     except KeyError:
+        raise KeyError
         return "none"
