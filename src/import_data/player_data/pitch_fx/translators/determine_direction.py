@@ -28,7 +28,8 @@ def determine_direction(event, bats_with):
             if 'hit by batted ball' in event:
                 location = event.split(', ')[1].split(' ')[0]
             else:
-                raise IndexError
+                location = 'unknown'
+                print('\t\t\t' + event)
     elif 'sacrifice bunt, ' in event:
         location = event.split('sacrifice bunt, ')[1].split(' ')[0]
     elif 'sacrifice fly' in event:
@@ -41,6 +42,7 @@ def determine_direction(event, bats_with):
     elif 'walks' in event or 'strikes out' in event or 'called out on strikes' in event:
         location = "none"
     else:
+        raise Exception
         location = "none"
     try:
         directions = {'r': {'third': 'pulled', 'second': 'oppo', 'first': 'oppo', 'shortstop': 'pulled',
