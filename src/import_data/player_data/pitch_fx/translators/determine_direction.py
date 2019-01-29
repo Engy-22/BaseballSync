@@ -39,9 +39,10 @@ def determine_direction(event, bats_with):
             location = event.split('error by ')[1].split(' ')[0]
     elif 'double play' in event:
         location = event.split(', ')[1].split(' ')[0]
-    elif 'walks' in event or 'strikes out' in event or 'called out on strikes' in event:
+    elif 'walks' in event or 'strikes out' in event or 'called out on strikes' or 'hit by pitch' in event:
         location = "none"
     else:
+        print(event)
         raise Exception
         location = "none"
     try:
