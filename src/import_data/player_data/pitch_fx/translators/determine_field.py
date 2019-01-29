@@ -1,6 +1,6 @@
 def determine_field(event, description):
     outcomes = {'so': 'none', 'hr': 'of', 'go': 'if', 'fo': 'of', 'po': 'if', 'bb': 'none', 'hbp': 'none', 'sh': 'if',
-                'ibb': 'none', 'gdp': 'if', 'sf': 'of'}
+                'ibb': 'none', 'gdp': 'if', 'sf': 'of', 'cs': 'none'}
     try:
         return outcomes[event]
     except KeyError:
