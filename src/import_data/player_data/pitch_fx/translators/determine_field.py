@@ -19,6 +19,11 @@ def determine_field(event, description):
                 return 'of'
             else:
                 return 'if'
+        elif event == 'error':
+            if description.split(' error by ')[1].split(' ')[0] in ['left', 'center', 'right']:
+                return 'of'
+            else:
+                return 'if'
         else:
             print(event, description)
             raise KeyError
