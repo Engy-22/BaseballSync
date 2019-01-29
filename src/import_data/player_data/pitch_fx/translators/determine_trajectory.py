@@ -12,7 +12,7 @@ def determine_trajectory(event, description):
                 except KeyError:
                     trajectory = trajectories[description.split('on a ')[1].split(' ')[1]]
                 except IndexError:
-                    trajectory = 'none'
+                    trajectory = 'unknown'
             else:
                 if 'bunt' in description:
                     trajectory = 'gb'
@@ -77,12 +77,13 @@ def determine_trajectory(event, description):
                 else:
                     trajectory = 'gb'
             except IndexError:
-                trajectory = 'none'
+                trajectory = 'unknown'
         else:
             if event != 'cs':
                 print('\nasdfasdf')
                 print(event)
                 print(description)
             else:
+                raise Exception
                 trajectory = 'none'
     return trajectory
