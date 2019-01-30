@@ -38,8 +38,8 @@ def write_pickoff(pitcher, team, year, base, attempts_successes):
         db.write('update player_pitching set pickoff_' + base + intermediate_a_s + ' = 1 where pt_uniqueidentifier = '
                  + str(pt_uid) + ' and year = ' + str(year) + ';')
     else:
-        db.write('update player_pitching set pickoff_' + base + '_attempts = ' + str(int(db.read('select pickoff_'
-                 + base + intermediate_a_s + ' from player_pitching where pt_uniqueidentifier = ' + str(pt_uid)
-                 + ' and year = ' + str(year) + ';')[0][0]) + 1) + ' where pt_uniqueidentifier = ' + str(pt_uid)
-                 + ' and year = ' + str(year) + ';')
+        db.write('update player_pitching set pickoff_' + base + intermediate_a_s + ' = '
+                 + str(int(db.read('select pickoff_' + base + intermediate_a_s + ' from player_pitching where '
+                                   'pt_uniqueidentifier = ' + str(pt_uid) + ' and year = ' + str(year) + ';')[0][0])
+                       + 1) + ' where pt_uniqueidentifier = ' + str(pt_uid) + ' and year = ' + str(year) + ';')
     db.close()
