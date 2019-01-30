@@ -1,11 +1,11 @@
 def translate_pitch_outcome(outcome, description):
     outcomes = {'Single': '1b', 'Double': '2b', 'Triple': '3b', 'Strikeout': 'so', 'Home Run': 'hr', 'Groundout': 'go',
-                'Ground Out': 'go', 'Flyout': 'fo', 'Lineout': 'lo', 'Pop Out': 'po', 'Walk': 'bb',
-                'Hit By Pitch': 'hbp', 'Sac Bunt': 'sh', 'Intent Walk': 'ibb', 'Forceout': 'fc',
-                'Grounded Into DP': 'gdp', 'Double Play': 'dp', 'Triple Play': '3p', 'Field Error': 'error',
-                'Runner Out': 'cs', 'Sac Fly': 'sf', 'Bunt Groundout': 'go', 'Fielders Choice': 'fc',
-                'Fielders Choice Out': 'fc', 'Sac Fly DP': 'dp', 'Bunt Pop Out': 'po', 'Bunt Lineout': 'po',
-                'Strikeout - DP': 'so', 'Catcher Interference': 'error', 'Sacrifice Bunt DP': 'dp'}
+                'Ground Out': 'go', 'Flyout': 'fo', 'Lineout': 'lo', 'Pop Out': 'po', 'Walk': 'bb', 'Sac Bunt': 'sh',
+                'Hit By Pitch': 'hbp', 'Intent Walk': 'ibb', 'Forceout': 'fc', 'Line Out': 'lo', 'Field Error': 'error',
+                'Grounded Into DP': 'gdp', 'Double Play': 'dp', 'Triple Play': '3p', 'Runner Out': 'cs',
+                'Sac Fly': 'sf', 'Bunt Groundout': 'go', 'Fielders Choice': 'fc', 'Fielders Choice Out': 'fc',
+                'Sac Fly DP': 'dp', 'Bunt Pop Out': 'po', 'Bunt Lineout': 'po', 'Strikeout - DP': 'so',
+                'Catcher Interference': 'error', 'Sacrifice Bunt DP': 'dp', 'Fly Out': 'fo'}
     try:
         this_outcome = outcomes[outcome]
     except KeyError:
