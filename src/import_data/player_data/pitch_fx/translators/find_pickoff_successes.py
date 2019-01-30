@@ -6,11 +6,10 @@ def find_pickoff_successes(top_bottom, year, team, xml):
     with open(xml, 'r') as xml_file:
         half_inning = xml_file.read().replace('\n', '').split(top_bottom + '>')[1]
         if '.  " event="Pickoff ' in half_inning:
-            print('success here')
             for at_bat in half_inning.split('<atbat'):
                 if '.  " event="Pickoff ' in at_bat:
                     pitcher = resolve_player_id(at_bat.split('pitcher="')[1].split('"')[0], year, team, 'pitching')
-                    base = at_bat.split('.  " event="Pickoff ')[1].split('"')[0].replace(' ', '_')
+                    base = at_bat.split('.  " event="Pickoff ')[1].split('"')[0]
                     if pitcher in successes:
                         successes[pitcher].append(base)
                     else:
