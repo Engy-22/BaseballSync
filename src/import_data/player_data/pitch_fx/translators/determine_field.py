@@ -12,11 +12,13 @@ def determine_field(event, description):
                     else:
                         return 'if'
                 except IndexError:
-                    print(event, description)
-                    if description.split(' down the ')[1].split('-')[0] in ['left', 'center', 'right']:
-                        return 'of'
-                    else:
-                        return 'if'
+                    try:
+                        if description.split(' down the ')[1].split('-')[0] in ['left', 'center', 'right']:
+                            return 'of'
+                        else:
+                            return 'if'
+                    except IndexError:
+                        'unknown'
             else:
                 return 'if'
         elif event == 'fc':
