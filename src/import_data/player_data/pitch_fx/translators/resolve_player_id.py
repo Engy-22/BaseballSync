@@ -1,9 +1,9 @@
 from utilities.dbconnect import DatabaseConnection
 from xml.dom import minidom
-from import_data.player_data.pitch_fx.translators.resolve_team_id import resolve_team_id
+from import_data.player_data.pitch_fx.translators.name_alterator import name_alterator
 
 
-def resolve_player_id(player_num, year, player_type):
+def resolve_player_id(player_num, year, team, player_type):
     players_file = minidom.parse('C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\src\\import_data\\'
                                  'player_data\\pitch_fx\\xml\\players.xml')
     for ent in players_file.getElementsByTagName('player'):
@@ -14,10 +14,13 @@ def resolve_player_id(player_num, year, player_type):
             else:
                 last_name = temp_last_name
             first_name = ent.getAttribute('first')
-            team = ent.getAttribute('team_abbrev')
+            # team = ent.getAttribute('team_abbrev')
             break
     db = DatabaseConnection()
     pid = db.read('select playerid from players where lastName="' + last_name + '" and firstName="' + first_name + '";')
+    if len(pid) == 0:
+        pid = db.read('select playerid from players where lastName = "' + last_name + '" and firstName = "' +
+                      str(name_alterator(first_name)) + '";')
     if len(pid) == 1:
         player_id = pid[0][0]
     else:

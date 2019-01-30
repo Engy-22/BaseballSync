@@ -92,15 +92,10 @@
     *Still Need:
         -pitch type data.
             *include unknown pitches? maybe for pitch counts and stuff.
-        -pickoff data (pickoff attempts, pickoff successes, pickoff attempt frequency (can be calculated)).
-            *this can be done in pitchfx gathering. (say "if action in pitch....." then open a connection to db and
-             increment the pitcher's pickoff attempts and successes (if necessary)).
-            *must relate the mlbam playerid naming convention to my naming convention.
-            *must translate pitch_fx teamids to my teamid naming convention.
-            *determine fields
-            *determine directions
     *Find out when mlbam data is updated, if in real time then I can created a real time view similar to fantasycast.
 
 -Restart everything with concurrency, and make it clean in terms of folder hierarchy.
     *maybe decrease the amount which standard deviation affects team rankings in overall team ranker.
     *verify that player_batting, player_pitching and player_fielding numbers are accurate.
+    *aggregate and consolidate pitch_fx data.
+    *change some nones to unknowns

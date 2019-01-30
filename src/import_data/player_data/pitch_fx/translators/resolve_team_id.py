@@ -10,3 +10,6 @@ def resolve_team_id(team_abv):
                 if row[0] == team_abv:
                     return row[1]
     return None
+
+
+# print(resolve_team_id('tba'))

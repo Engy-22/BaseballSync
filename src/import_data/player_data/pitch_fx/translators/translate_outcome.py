@@ -16,6 +16,14 @@ def translate_pitch_outcome(outcome, description):
                 this_outcome = '2b'
             elif 'triple' in description:
                 this_outcome = '3b'
+            elif 'flies out' in description:
+                this_outcome = 'fo'
+            elif 'grounds out' in description:
+                this_outcome = 'go'
+            elif 'lines out' in description:
+                this_outcome = 'lo'
+            elif 'pops out' in description:
+                this_outcome = 'po'
             else:
                 this_outcome = 'hr'
         elif outcome == 'Batter Interference':

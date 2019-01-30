@@ -6,10 +6,18 @@ def determine_trajectory(event, description):
     except KeyError:
         trajectories = {'line': 'ld', 'fly': 'fb', 'ground': 'gb', 'pop': 'fb'}
         if event in ['1b', '2b', '3b', 'hr']:
-            try:
-                trajectory = trajectories[description.split('on a ')[1].split(' ')[0]]
-            except KeyError:
-                trajectory = trajectories[description.split('on a ')[1].split(' ')[1]]
+            if 'grand slam' not in description and 'bunt' not in description:
+                try:
+                    trajectory = trajectories[description.split('on a ')[1].split(' ')[0]]
+                except KeyError:
+                    trajectory = trajectories[description.split('on a ')[1].split(' ')[1]]
+                except IndexError:
+                    trajectory = 'unknown'
+            else:
+                if 'bunt' in description:
+                    trajectory = 'gb'
+                else:
+                    trajectory = trajectories['fly']
         elif event == 'fc':
             if description.split(' into ')[0].split(' ')[-1] == 'grounds':
                 trajectory = 'gb'
@@ -23,11 +31,14 @@ def determine_trajectory(event, description):
                 trajectory = 'fb'
             elif 'reaches' in description:
                 fielders = {'first': 'gb', 'second': 'gb', 'third': 'gb', 'shortstop': 'gb', 'left': 'fb',
-                            'right': 'fb', 'center': 'fb'}
+                            'right': 'fb', 'center': 'fb', 'catcher': 'gb', 'pitcher': 'gb'}
                 try:
                     trajectory = fielders[description.split('fielded by ')[1].split(' ')[0]]
                 except IndexError:
-                    trajectory = fielders[description.split(', ')[1].split(' ')[0]]
+                    try:
+                        trajectory = fielders[description.split(', ')[1].split(' ')[0]]
+                    except KeyError:
+                        trajectory = fielders[description.split(':')[1].split(', ')[1].split(' ')[0]]
             else:
                 print('\nasdf')
                 print(event)
@@ -59,16 +70,18 @@ def determine_trajectory(event, description):
                 print(description)
                 print(description.split(' into ')[0].split(' ')[-1])
         elif event == 'error':
-            error = event.split('by')[1].split(' ')[0]
-            if error in ['left', 'center', 'right']:
-                trajectory = 'fb'
-            else:
-                trajectory = 'gb'
+            try:
+                error = event.split('by')[1].split(' ')[0]
+                if error in ['left', 'center', 'right']:
+                    trajectory = 'fb'
+                else:
+                    trajectory = 'gb'
+            except IndexError:
+                trajectory = 'unknown'
         else:
             if event != 'cs':
-                print('\nasdfasdf')
-                print(event)
-                print(description)
+                print(event, description)
+                raise Exception
             else:
                 trajectory = 'none'
     return trajectory

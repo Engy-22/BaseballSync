@@ -108,8 +108,8 @@ def extract_player_attributes(player_id, page, reversed_name):
         str_ent = str(ent)
         if 'Throws: </strong>' in str_ent:
             return {'lastName': reversed_name.split(',')[0], 'firstName': reversed_name.split(',')[1],
-                    'throwsWith': str_ent.split('Bats: </strong>')[1][0], 'primaryPosition': 'N',
-                    'batsWith': str_ent.split('Throws: </strong>')[1][0]}
+                    'batsWith': str_ent.split('Bats: </strong>')[1][0], 'primaryPosition': 'N',
+                    'throwsWith': str_ent.split('Throws: </strong>')[1][0]}
 
 
 def intermediate(player_id, team, index, temp_player, row, row2):
