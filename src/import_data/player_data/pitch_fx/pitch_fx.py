@@ -227,7 +227,7 @@ def parse_pickoff_success(year, team, top_bottom, xml):
                 write_pickoff(pitcher, team, year, base, 'successes')
 
 
-for year in range(2018, 2019, 1):
-    get_pitch_fx_data(year, Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\"
-                                   "dump.log"))
+# for year in range(2005, 2019, 1):
+#     get_pitch_fx_data(year, Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\"
+#                                    "dump.log"))
 # get_day_data('10', '05', '2018')
