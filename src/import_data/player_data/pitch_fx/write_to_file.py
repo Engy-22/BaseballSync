@@ -28,17 +28,17 @@ def write_to_file(player_type, player_id, team_id, year, matchup, count, pitch_t
         db.close()
 
 
-def write_pickoff_attempt(pitcher, team, year, base):
+def write_pickoff(pitcher, team, year, base, attempts_successes):
     db = DatabaseConnection()
     pt_uid = db.read('select pt_uniqueidentifier from player_teams where playerid = "' + pitcher + '" and teamid = "'
                      + team + '";')[0][0]
-    if db.read('select pickoff_' + base + '_attempts from player_pitching where pt_uniqueidentifier = ' + str(pt_uid)
-               + ' and year = ' + str(year) + ';')[0][0] is None:
-        db.write('update player_pitching set pickoff_' + base + '_attempts = 1 where pt_uniqueidentifier = '
-                 + str(pt_uid) + ' and year = ' + str(year) + ';')
-    else:
-        attempts = int(db.read('select pickoff_' + base + '_attempts from player_pitching where pt_uniqueidentifier '
-                               '= ' + str(pt_uid) + ' and year = ' + str(year) + ';')[0][0])
-        db.write('update player_pitching set pickoff_' + base + '_attempts = ' + str(attempts+1) + ' where '
+    if db.read('select pickoff_' + base + '_' + attempts_successes + ' from player_pitching where pt_uniqueidentifier = '
+               + str(pt_uid) + ' and year = ' + str(year) + ';')[0][0] is None:
+        db.write('update player_pitching set pickoff_' + base + '_' + attempts_successes + ' = 1 where '
                  'pt_uniqueidentifier = ' + str(pt_uid) + ' and year = ' + str(year) + ';')
+    else:
+        db.write('update player_pitching set pickoff_' + base + '_attempts = ' + str(int(db.read('select pickoff_'
+                 + base + '_' + attempts_successes + ' from player_pitching where pt_uniqueidentifier = ' + str(pt_uid)
+                 + ' and year = ' + str(year) + ';')[0][0]) + 1) + ' where pt_uniqueidentifier = ' + str(pt_uid)
+                 + ' and year = ' + str(year) + ';')
     db.close()
