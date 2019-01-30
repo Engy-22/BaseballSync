@@ -26,3 +26,19 @@ def write_to_file(player_type, player_id, team_id, year, matchup, count, pitch_t
                  'pt_uniqueidentifier = (select pt_uniqueidentifier from player_teams where playerid = "' + player_id
                  + '" and teamid = "' + team_id + '")));')
         db.close()
+
+
+def write_pickoff_attempt(pitcher, team, year, base):
+    db = DatabaseConnection()
+    pt_uid = db.read('select pt_uniqueidentifier from player_teams where playerid = "' + pitcher + '" + and teamid = "'
+                     + team + '";')[0][0]
+    if len(db.read('select pickoff_' + base + '_attempts from player_pitching where pt_uniqueidentifier = '
+                   + pt_uid + ' and year = ' + str(year) + ';')) == 0:
+        db.write('update player_pitching set pickoff_' + base + '_attempts = 0 where pt_uniqueidentifier = ' + pt_uid
+                 + ' and year = ' + str(year) + ';')
+    else:
+        attempts = int(db.read('select pickoff_ ' + base + ' _attempts from player_pitching where pt_uniqueidentifier '
+                               '= ' + pt_uid + ' and year = ' + str(year) + ';')[0][0])
+        db.write('update player_pitching set pickoff_' + base + '_attempts = ' + str(attempts+1) + ' where '
+                 'pt_uniqueidentifier = ' + pt_uid + ' and year = ' + str(year) + ';')
+    db.close()
