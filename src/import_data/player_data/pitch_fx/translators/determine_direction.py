@@ -10,7 +10,11 @@ def determine_direction(event, bats_with):
         try:
             location = event.split('flies out to ')[1].split(' ')[0]
         except IndexError:
-            location = event.split('flies out')[1].split('to ')[1].split(' ')[0]
+            try:
+                location = event.split('flies out')[1].split('to ')[1].split(' ')[0]
+            except IndexError:
+                print(event)
+                location = 'unknown'
     elif 'pops out' in event:
         try:
             location = event.split('pops out to ')[1].split(' ')[0]
