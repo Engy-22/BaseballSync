@@ -29,7 +29,7 @@ def get_pitch_fx_data(year, driver_logger):
     if year < 2008:
         driver_logger.log("\tNo pitch fx data to download before 2008")
         return
-    driver_logger.log("\tFetching " + str(year) + " pitch fx data")
+    driver_logger.log("\tFetching pitch fx data")
     print("Fetching " + str(year) + " pitch fx data")
     start_time = time.time()
     logger.log("Downloading pitch fx data for " + str(year) + ' || Timestamp: ' + datetime.datetime.today().
