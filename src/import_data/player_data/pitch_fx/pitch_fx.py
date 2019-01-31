@@ -67,6 +67,8 @@ def get_day_data(day, month, year):
     for line in home_page:
         try:
             if str(line.split('"day_' + str(day) + '/')[1])[:3] == 'gid':
+                if not regular_season_game(home_page_url[:-6] + line.split('<a href="')[1].split('">')[0] + 'game.xml'):
+                    continue
                 global innings
                 innings = {}
                 innings_url = home_page_url[:-6] + line.split('<a href="')[1].split('">')[0] + 'inning/'
@@ -77,8 +79,10 @@ def get_day_data(day, month, year):
                     innings_page = str(BeautifulSoup(urlopen(innings_url), 'html.parser')).split('<li>')
                     urlretrieve(players_url, 'C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\src\\'
                                              'import_data\\player_data\\pitch_fx\\xml\\players.xml')
-                except Exception:
+                except IndexError:
                     innings_page = []
+                logger.log("\t\tDownloading data for game: " + line.split('gid_')[1].split('_')[3] + '_'
+                           + line.split('gid_')[1].split('_')[4] + ' - ' + innings_url)
                 with ThreadPoolExecutor(os.cpu_count()) as executor:
                     for inning in innings_page:
                         try:
@@ -225,6 +229,18 @@ def parse_pickoff_success(year, team, top_bottom, xml):
         for base in success:
             if 'Error' not in base:
                 write_pickoff(pitcher, team, year, base, 'successes')
+
+
+def regular_season_game(game_url):
+    urlretrieve(game_url, 'C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\src\\import_data\\'
+                          'player_data\\pitch_fx\\xml\\players.xml')
+    doc = minidom.parse('C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\src\\import_data\\player_data\\'
+                        'pitch_fx\\xml\\players.xml')
+    temp = doc.getElementsByTagName('game')[0]
+    if temp.getAttribute('type') == 'R':
+        return True
+    else:
+        return False
 
 
 # for year in range(2005, 2019, 1):
