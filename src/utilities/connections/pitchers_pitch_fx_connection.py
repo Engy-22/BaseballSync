@@ -1,7 +1,7 @@
 import pymysql
 
 
-class DatabaseConnection:
+class PitcherPitchFXDatabaseConnection:
     def __init__(self):
         self.db = pymysql.connect("localhost", "root", "Invader1401asdf", "batters_pitch_fx")
         self.cursor = self.db.cursor()
