@@ -6,4 +6,3 @@ def simulate_inning(game):
 def simulate_half_inning(game, half):
     if game.get_inning() == 9 and half == 'bottom' and game.home_score > game.away_score:
         return
-
