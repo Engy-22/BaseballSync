@@ -4,7 +4,7 @@ from urllib.request import urlopen
 from bs4 import BeautifulSoup
 import time
 import datetime
-from utilities.dbconnect import DatabaseConnection
+from utilities.baseball_data_connection import DatabaseConnection
 from utilities.logger import Logger
 from utilities.time_converter import time_converter
 
