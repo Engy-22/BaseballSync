@@ -17,7 +17,7 @@ from import_data.team_data.ballpark_and_manager_data import ballpark_and_manager
 from import_data.leagues.league_standings import league_standings
 from import_data.team_data.team_offensive_statistics import team_offensive_statistics
 from import_data.team_data.team_defensive_statistics import team_defensive_statistics
-from import_data.player_data.pitch_fx import pitch_fx
+from import_data.player_data.pitch_fx.pitch_fx import get_pitch_fx_data
 from import_data.player_data.batting.batters import batting_constructor
 from import_data.player_data.pitching.pitchers import pitching_constructor
 from import_data.player_data.fielding.fielders import fielding_constructor
@@ -47,10 +47,10 @@ def driver(year, driver_log):
     league_standings(year, driver_log)
     team_offensive_statistics(year, driver_log)
     team_defensive_statistics(year, driver_log)
-    # get_pitch_fx_data(year, driver_log)
     batting_constructor(year, driver_log)
     pitching_constructor(year, driver_log)
     fielding_constructor(year, driver_log)
+    get_pitch_fx_data(year, driver_log)
     team_fielding_file_constructor(year, driver_log)
     team_batting_order_constructor(year, driver_log)
     team_pitching_rotation_constructor(year, driver_log)
@@ -60,7 +60,6 @@ def driver(year, driver_log):
     hitter_spray_chart_constructor(year, driver_log)
     pitcher_spray_chart_constructor(year, driver_log)
     team_certainties(year, driver_log)
-    # rank_driver(year, driver_log)
     award_winner_driver(year, driver_log)
     driver_log.log('Time taken to download ' + str(year) + ' data: ' + time_converter(time.time() - driver_time) + '\n')
 
@@ -73,7 +72,7 @@ if __name__ == '__main__':
     league_table_constructor(main_logger)
     manager_table_constructor(main_logger)
     years = []
-    for year in range(2010, 2017, 1):
+    for year in range(2008, 2010, 1):
         years.append(year)
         driver(year, main_logger)
     rank_driver(years[-1], main_logger)
