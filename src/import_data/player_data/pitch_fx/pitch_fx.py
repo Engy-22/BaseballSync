@@ -79,7 +79,7 @@ def get_day_data(day, month, year):
                     innings_page = str(BeautifulSoup(urlopen(innings_url), 'html.parser')).split('<li>')
                     urlretrieve(players_url, 'C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\src\\'
                                              'import_data\\player_data\\pitch_fx\\xml\\players.xml')
-                except IndexError:
+                except Exception:
                     innings_page = []
                 logger.log("\t\tDownloading data for game: " + line.split('gid_')[1].split('_')[3] + '_'
                            + line.split('gid_')[1].split('_')[4] + ' - ' + innings_url)
