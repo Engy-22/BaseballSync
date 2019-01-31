@@ -1,4 +1,4 @@
-from utilities.dbconnect import DatabaseConnection
+from utilities.baseball_data_connection import DatabaseConnection
 
 
 def gather_players(year, player_type, all, logger):
