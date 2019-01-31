@@ -81,8 +81,6 @@ def get_day_data(day, month, year):
                                              'import_data\\player_data\\pitch_fx\\xml\\players.xml')
                 except Exception:
                     innings_page = []
-                logger.log("\t\tDownloading data for game: " + line.split('gid_')[1].split('_')[3] + '_'
-                           + line.split('gid_')[1].split('_')[4] + ' - ' + innings_url)
                 with ThreadPoolExecutor(os.cpu_count()) as executor:
                     for inning in innings_page:
                         try:
@@ -132,13 +130,14 @@ def parse_innings(year):
         if None in [away_team, home_team]:
             raise Exception('None team')
         for xml_file in os.listdir(dir):
-            if 'players' not in xml_file:
+            if 'players' not in xml_file and 'game' not in xml_file:
                 parse_inning(year, dir + '\\' + xml_file, away_team, home_team)
     except FileNotFoundError:
         pass
 
 
 def parse_inning(year, xml_file, away_team, home_team):
+    print(xml_file)
     doc = minidom.parse(xml_file)
     away_at_bats = doc.getElementsByTagName('inning')[0].getElementsByTagName('top')[0].getElementsByTagName('atbat')
     for at_bat in away_at_bats:
@@ -233,9 +232,9 @@ def parse_pickoff_success(year, team, top_bottom, xml):
 
 def regular_season_game(game_url):
     urlretrieve(game_url, 'C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\src\\import_data\\'
-                          'player_data\\pitch_fx\\xml\\players.xml')
+                          'player_data\\pitch_fx\\xml\\game.xml')
     doc = minidom.parse('C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\src\\import_data\\player_data\\'
-                        'pitch_fx\\xml\\players.xml')
+                        'pitch_fx\\xml\\game.xml')
     temp = doc.getElementsByTagName('game')[0]
     if temp.getAttribute('type') == 'R':
         return True
