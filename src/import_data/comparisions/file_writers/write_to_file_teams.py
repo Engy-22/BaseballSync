@@ -1,5 +1,5 @@
 import os
-from utilities.dbconnect import DatabaseConnection
+from utilities.baseball_data_connection import DatabaseConnection
 from concurrent.futures import ThreadPoolExecutor
 
 
