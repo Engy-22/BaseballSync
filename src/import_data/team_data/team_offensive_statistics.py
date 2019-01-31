@@ -3,7 +3,7 @@ import datetime
 from utilities.logger import Logger
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
-from utilities.dbconnect import DatabaseConnection
+from utilities.baseball_data_connection import DatabaseConnection
 from utilities.translate_team_id import translate_team_id
 from utilities.time_converter import time_converter
 from utilities.anomaly_team import anomaly_team
