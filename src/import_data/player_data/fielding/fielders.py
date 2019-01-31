@@ -4,7 +4,7 @@ import datetime
 from urllib.request import urlopen, urlretrieve
 from bs4 import BeautifulSoup
 from concurrent.futures import ThreadPoolExecutor
-from utilities.dbconnect import DatabaseConnection
+from utilities.baseball_data_connection import DatabaseConnection
 from utilities.translate_team_id import translate_team_id
 from utilities.time_converter import time_converter
 from utilities.logger import Logger
