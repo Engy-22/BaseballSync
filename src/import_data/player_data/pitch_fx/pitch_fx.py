@@ -231,14 +231,17 @@ def parse_pickoff_success(year, team, top_bottom, xml):
 
 
 def regular_season_game(game_url):
-    urlretrieve(game_url, 'C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\src\\import_data\\'
-                          'player_data\\pitch_fx\\xml\\game.xml')
-    doc = minidom.parse('C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\src\\import_data\\player_data\\'
-                        'pitch_fx\\xml\\game.xml')
-    temp = doc.getElementsByTagName('game')[0]
-    if temp.getAttribute('type') == 'R':
-        return True
-    else:
+    try:
+        urlretrieve(game_url, 'C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\src\\import_data\\'
+                              'player_data\\pitch_fx\\xml\\game.xml')
+        doc = minidom.parse('C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\src\\import_data\\'
+                            'player_data\\pitch_fx\\xml\\game.xml')
+        temp = doc.getElementsByTagName('game')[0]
+        if temp.getAttribute('type') == 'R':
+            return True
+        else:
+            return False
+    except Exception:
         return False
 
 
