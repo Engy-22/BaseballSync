@@ -1,5 +1,5 @@
 import time
-from utilities.dbconnect import DatabaseConnection
+from utilities.baseball_data_connection import DatabaseConnection
 from utilities.translate_team_id import translate_team_id
 from statistics import mean
 from utilities.time_converter import time_converter
