@@ -1,9 +1,7 @@
-import os
-from utilities.baseball_data_connection import DatabaseConnection
+from utilities.connections.baseball_data_connection import DatabaseConnection
 from utilities.logger import Logger
 import time
 import datetime
-from concurrent.futures import ThreadPoolExecutor
 
 logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\logs\\import_data\\"
                 "aggregate_pitch_fx_data.log")
