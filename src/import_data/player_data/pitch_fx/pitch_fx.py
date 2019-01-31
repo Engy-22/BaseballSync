@@ -18,6 +18,7 @@ from import_data.player_data.pitch_fx.translators.determine_direction import det
 from import_data.player_data.pitch_fx.translators.resolve_player_id import resolve_player_id
 from import_data.player_data.pitch_fx.translators.resolve_team_id import resolve_team_id
 from import_data.player_data.pitch_fx.translators.find_pickoff_successes import find_pickoff_successes
+from import_data.player_data.pitch_fx.aggregate_pitch_fx_data import aggregate_pitch_fx_data
 
 innings = {}
 strikes = 0
@@ -53,9 +54,9 @@ def get_pitch_fx_data(year, driver_logger):
                     else:
                         this_month = str(month)
                     get_day_data(this_day, this_month, str(year))
-    total_time = time_converter(time.time() - start_time)
-    logger.log("Done fetching " + str(year) + " pitch fx data: time = " + total_time + '\n\n\n\n')
-    driver_logger.log("\t\tTime = " + total_time)
+    logger.log("Done fetching " + str(year) + " pitch fx data: time = " + str(time.time() - start_time) + '\n\n\n\n')
+    aggregate_pitch_fx_data(year, logger)
+    driver_logger.log("\t\tTime = " + str(time.time() - start_time))
 
 
 def get_day_data(day, month, year):
