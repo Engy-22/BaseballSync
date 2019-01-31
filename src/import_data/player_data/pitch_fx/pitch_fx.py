@@ -134,7 +134,7 @@ def parse_innings(year):
         for xml_file in os.listdir(dir):
             if 'players' not in xml_file:
                 parse_inning(year, dir + '\\' + xml_file, away_team, home_team)
-    except FileNotFoundError as e:
+    except FileNotFoundError:
         pass
 
 
