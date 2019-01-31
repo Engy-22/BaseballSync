@@ -3,7 +3,7 @@ from utilities.time_converter import time_converter
 import urllib.request
 from bs4 import BeautifulSoup as bs
 from concurrent.futures import ThreadPoolExecutor
-from utilities.dbconnect import DatabaseConnection
+from utilities.baseball_data_connection import DatabaseConnection
 from utilities.logger import Logger
 import datetime
 import time
