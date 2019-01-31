@@ -30,6 +30,7 @@ def write_to_file(player_type, player_id, team_id, year, matchup, count, pitch_t
 
 def write_pickoff(pitcher, team, year, base, attempts_successes):
     # print(base + ' ' + attempts_successes)
+    # print(pitcher, team, year, base, attempts_successes)
     db = DatabaseConnection()
     pt_uid = db.read('select pt_uniqueidentifier from player_teams where playerid = "' + pitcher + '" and teamid = "'
                      + team + '";')[0][0]
