@@ -5,7 +5,8 @@ def translate_pitch_outcome(outcome, description):
                 'Grounded Into DP': 'gdp', 'Double Play': 'dp', 'Triple Play': '3p', 'Runner Out': 'cs',
                 'Sac Fly': 'sf', 'Bunt Groundout': 'go', 'Fielders Choice': 'fc', 'Fielders Choice Out': 'fc',
                 'Sac Fly DP': 'dp', 'Bunt Pop Out': 'po', 'Bunt Lineout': 'po', 'Strikeout - DP': 'so',
-                'Catcher Interference': 'error', 'Sacrifice Bunt DP': 'dp', 'Fly Out': 'fo', 'Force Out': 'fc'}
+                'Catcher Interference': 'error', 'Sacrifice Bunt DP': 'dp', 'Fly Out': 'fo', 'Force Out': 'fc',
+                'Bunt Ground Out': 'go'}
     try:
         this_outcome = outcomes[outcome]
     except KeyError:
