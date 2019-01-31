@@ -1,2 +1,2 @@
-def aggreagate_pitch_fx_data(year):
+def aggregate_pitch_fx_data(year):
     pass
