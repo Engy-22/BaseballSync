@@ -1,4 +1,4 @@
-from utilities.baseball_data_connection import DatabaseConnection
+from utilities.connections.baseball_data_connection import DatabaseConnection
 
 
 def write_to_file(player_type, player_id, team_id, year, matchup, count, pitch_type, ball_strike, swing_take, outcome,
