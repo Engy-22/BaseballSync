@@ -1,7 +1,8 @@
 class Pitch:
 
-    def __init__(self, pitcher, count):
+    def __init__(self, pitcher, balls, strikes):
         self.pitcher = pitcher
-        self.count = count
+        self.balls = balls
+        self.strikes = strikes
         self.pitch_type = ''
         self.strike = ''  # bool
