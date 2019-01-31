@@ -14,6 +14,14 @@ def aggregate_pitch_fx_data(year, driver_logger):
     start_time = time.time()
     logger.log("Aggregating pitch fx data for " + str(year) + ' || Timestamp: ' + datetime.datetime.today().
                strftime('%Y-%m-%d %H:%M:%S'))
+    pitcher_time = time.time()
+    logger.log("\tAggregating pitching data")
+
+    logger.log("\tDone aggregating pitching data: Time = " + str(time.time() - pitcher_time))
+    batter_time = time.time()
+    logger.log("\tAggregating batting data")
+    
+    logger.log("\tDone aggregating batting data: Time = " + str(time.time() - batter_time))
     db = DatabaseConnection()
     db.close()
     total_time = str(time.time() - start_time)
