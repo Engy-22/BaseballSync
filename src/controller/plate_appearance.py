@@ -15,7 +15,7 @@ def simulate_plate_appearance(batter_id, pitcher_id, driver_logger):
     plate_appearance = PlateAppearance(batter_id, pitcher_id)
     outcome = None
     while plate_appearance.get_balls() < 4 and plate_appearance.get_strikes() < 3 and outcome is None:
-        pitch_data = simulate_pitch(plate_appearance.get_balls(), plate_appearance.get_strikes())
+        pitch_data = simulate_pitch(plate_appearance.get_balls(), plate_appearance.get_strikes(), logger)
     total_time = time_converter(time.time() - start_time)
     logger.log("Done simulating plate appearance: Time = " + total_time + '\n\n')
     driver_logger.log("\t\t\tTime = " + total_time)
