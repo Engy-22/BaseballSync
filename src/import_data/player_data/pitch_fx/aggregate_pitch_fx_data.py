@@ -20,7 +20,7 @@ def aggregate_pitch_fx_data(year, driver_logger):
     logger.log("\tDone aggregating pitching data: Time = " + str(time.time() - pitcher_time))
     batter_time = time.time()
     logger.log("\tAggregating batting data")
-    
+
     logger.log("\tDone aggregating batting data: Time = " + str(time.time() - batter_time))
     db = DatabaseConnection()
     db.close()
