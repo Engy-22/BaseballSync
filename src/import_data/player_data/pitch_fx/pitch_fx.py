@@ -244,7 +244,7 @@ def regular_season_game(game_url):
         return False
 
 
-for year in range(2008, 2009, 1):
-    get_pitch_fx_data(year, Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\"
-                                   "dump.log"))
+# for year in range(2008, 2009, 1):
+#     get_pitch_fx_data(year, Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\"
+#                                    "dump.log"))
 # get_day_data('10', '05', '2018')
