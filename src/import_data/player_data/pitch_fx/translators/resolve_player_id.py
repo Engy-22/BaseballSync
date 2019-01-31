@@ -14,7 +14,6 @@ def resolve_player_id(player_num, year, team, player_type):
             else:
                 last_name = temp_last_name
             first_name = ent.getAttribute('first')
-            # team = ent.getAttribute('team_abbrev')
             break
     db = DatabaseConnection()
     pid = db.read('select playerid from players where lastName="' + last_name + '" and firstName="' + first_name + '";')
@@ -50,3 +49,6 @@ def resolve_further(pid, team, year, player_type):
         return possible_match[0]
     else:
         return None
+
+
+# print(resolve_player_id('425834', 2008, 'TBR', 'batting'))
