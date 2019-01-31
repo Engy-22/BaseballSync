@@ -1,0 +1,2 @@
+def inning(game):
+    pass
