@@ -29,7 +29,7 @@ def get_pitch_fx_data(year, driver_logger):
     if year < 2008:
         driver_logger.log("\tNo pitch fx data to download before 2008")
         return
-    driver_logger.log("\tFetching " + str(year) + " pitch fx data")
+    driver_logger.log("\tFetching pitch fx data")
     print("Fetching " + str(year) + " pitch fx data")
     start_time = time.time()
     logger.log("Downloading pitch fx data for " + str(year) + ' || Timestamp: ' + datetime.datetime.today().
@@ -38,10 +38,10 @@ def get_pitch_fx_data(year, driver_logger):
     opening_day = db.read('select opening_day from years where year = ' + str(year) + ';')[0][0]
     db.close()
     for month in range(3, 12, 1):
-        if month > 8:
+        if month > 3:
             if month >= int(opening_day.split('-')[0]):
                 for day in range(1, 32, 1):
-                    if day > 15:
+                    if day > 25:
                         if month == int(opening_day.split('-')[0]) and int(day) < int(opening_day.split('-')[1]):
                             continue
                         if len(str(day)) == 1:
@@ -67,6 +67,8 @@ def get_day_data(day, month, year):
     for line in home_page:
         try:
             if str(line.split('"day_' + str(day) + '/')[1])[:3] == 'gid':
+                if not regular_season_game(home_page_url[:-6] + line.split('<a href="')[1].split('">')[0] + 'game.xml'):
+                    continue
                 global innings
                 innings = {}
                 innings_url = home_page_url[:-6] + line.split('<a href="')[1].split('">')[0] + 'inning/'
@@ -128,9 +130,9 @@ def parse_innings(year):
         if None in [away_team, home_team]:
             raise Exception('None team')
         for xml_file in os.listdir(dir):
-            if 'players' not in xml_file:
+            if 'players' not in xml_file and 'game' not in xml_file:
                 parse_inning(year, dir + '\\' + xml_file, away_team, home_team)
-    except FileNotFoundError as e:
+    except FileNotFoundError:
         pass
 
 
@@ -227,7 +229,22 @@ def parse_pickoff_success(year, team, top_bottom, xml):
                 write_pickoff(pitcher, team, year, base, 'successes')
 
 
-for year in range(2018, 2019, 1):
+def regular_season_game(game_url):
+    try:
+        urlretrieve(game_url, 'C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\src\\import_data\\'
+                              'player_data\\pitch_fx\\xml\\game.xml')
+        doc = minidom.parse('C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\src\\import_data\\'
+                            'player_data\\pitch_fx\\xml\\game.xml')
+        temp = doc.getElementsByTagName('game')[0]
+        if temp.getAttribute('type') == 'R':
+            return True
+        else:
+            return False
+    except Exception:
+        return False
+
+
+for year in range(2008, 2009, 1):
     get_pitch_fx_data(year, Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\"
                                    "dump.log"))
 # get_day_data('10', '05', '2018')

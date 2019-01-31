@@ -9,11 +9,12 @@ def find_pickoff_successes(top_bottom, year, team, xml):
             for at_bat in half_inning.split('<atbat'):
                 if '.  " event="Pickoff ' in at_bat:
                     pitcher = resolve_player_id(at_bat.split('pitcher="')[1].split('"')[0], year, team, 'pitching')
-                    base = at_bat.split('.  " event="Pickoff ')[1].split('"')[0]
-                    if pitcher in successes:
-                        successes[pitcher].append(base)
-                    else:
-                        successes[pitcher] = [base]
+                    base = at_bat.split('.  " event="Pickoff ')[1][:2]
+                    if base != 'Er':
+                        if pitcher in successes:
+                            successes[pitcher].append(base)
+                        else:
+                            successes[pitcher] = [base]
         else:
             pass
     return successes
