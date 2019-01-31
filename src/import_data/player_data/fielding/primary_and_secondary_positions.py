@@ -1,6 +1,6 @@
 import time
 import datetime
-from utilities.baseball_data_connection import DatabaseConnection
+from utilities.connections.baseball_data_connection import DatabaseConnection
 from utilities.logger import Logger
 from utilities.time_converter import time_converter
 
