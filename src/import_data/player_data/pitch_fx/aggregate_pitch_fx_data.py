@@ -16,4 +16,6 @@ def aggregate_pitch_fx_data(year, driver_logger):
                strftime('%Y-%m-%d %H:%M:%S'))
     db = DatabaseConnection()
     db.close()
-    driver_logger.log("\t\tTime = " + str(time.time() - start_time))
+    total_time = str(time.time() - start_time)
+    logger.log("Done aggregating " + str(year) + " pitch fx data: Time = " + total_time)
+    driver_logger.log("\t\tTime = " + total_time)
