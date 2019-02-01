@@ -8,10 +8,11 @@ logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\lo
 
 
 def simulate_inning(game, driver_logger):
-    inning = Inning()
     inning_num = str(game.get_inning())
     driver_logger.log('\tInning ' + inning_num)
     start_time = time.time()
+    inning = Inning()
+    inning_data = {}
     logger.log("Starting inning simulation: " + game.get_away_team() + " @ " + game.get_home_team() + " - " + inning_num)
     for half in range(2):
         inning.switch_half_inning()
@@ -21,6 +22,7 @@ def simulate_inning(game, driver_logger):
     driver_logger.log('\t\tTime = ' + total_time)
     logger.log("Done simulating inning: " + game.get_away_team() + " @ " + game.get_home_team() + " - " + inning_num
                + ": Time = " + total_time + '\n\n')
+    return inning_data
 
 
 def simulate_half_inning(game, inning, half):
@@ -28,8 +30,10 @@ def simulate_half_inning(game, inning, half):
     if inning == '9' and half == 'bottom' and game.home_score > game.away_score:
         return
     logger.log('\tSimulating the ' + half + ' of the ' + inning + ' inning')
+    half_inning_data = {}
     outs = 0
     while outs < 3:
-        simulate_plate_appearance('', '', logger)
+        plate_appearance_data = simulate_plate_appearance('', '', logger)
     logger.log('\tDone simulating the ' + half + 'of the ' + inning + ' inning: Time = '
                + time_converter(time.time() - start_time))
+    return half_inning_data
