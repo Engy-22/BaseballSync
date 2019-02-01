@@ -18,7 +18,7 @@ def resolve_player_id(player_num, year, team, player_type):
         try:
             pid = db.read('select playerid from players where lastName = "' + name.split('.')[1] + '" and firstName = "'
                           + name.split('.')[0] + '";')
-        except IndexError:
+        except AttributeError:
             pid = name
     if len(pid) == 1:
         player_id = pid[0][0]
