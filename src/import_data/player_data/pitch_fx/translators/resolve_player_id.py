@@ -20,11 +20,15 @@ def resolve_player_id(player_num, year, team, player_type):
                           + name.split('.')[0] + '";')
         except AttributeError:
             pid = name
-    if len(pid) == 1:
-        player_id = pid[0][0]
-    else:
-        player_id = resolve_further(pid, team, year, player_type)
     db.close()
+    if pid is not None:
+        if len(pid) == 1:
+            player_id = pid[0][0]
+        else:
+            player_id = resolve_further(pid, team, year, player_type)
+
+    else:
+        player_id = None
     return player_id
 
 
