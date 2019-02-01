@@ -16,8 +16,8 @@ def resolve_player_id(player_num, year, team, player_type):
     if len(pid) == 0:
         name = name_alterator(first_name, last_name)
         try:
-            pid = db.read('select playerid from players where lastName = "' + name.split('.')[1] + '" and firstName = "'
-                          + name.split('.')[0] + '";')
+            pid = db.read('select playerid from players where lastName = "' + name.split(';')[1] + '" and firstName = "'
+                          + name.split(';')[0] + '";')
         except AttributeError:
             pid = name
     db.close()
