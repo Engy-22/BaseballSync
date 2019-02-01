@@ -14,8 +14,12 @@ def resolve_player_id(player_num, year, team, player_type):
     db = DatabaseConnection()
     pid = db.read('select playerid from players where lastName="' + last_name + '" and firstName="' + first_name + '";')
     if len(pid) == 0:
-        pid = db.read('select playerid from players where lastName = "' + last_name + '" and firstName = "' +
-                      str(name_alterator(first_name, last_name)) + '";')
+        name = name_alterator(first_name, last_name)
+        try:
+            pid = db.read('select playerid from players where lastName = "' + name.split('.')[1] + '" and firstName = "'
+                          + name.split('.')[0] + '";')
+        except IndexError:
+            pid = name
     if len(pid) == 1:
         player_id = pid[0][0]
     else:
