@@ -39,21 +39,21 @@ def get_pitch_fx_data(year, driver_logger):
     opening_day = db.read('select opening_day from years where year = ' + str(year) + ';')[0][0]
     db.close()
     for month in range(3, 12, 1):
-        # if month > 6:
-        if month >= int(opening_day.split('-')[0]):
-            for day in range(1, 32, 1):
-                # if day > 11:
-                if month == int(opening_day.split('-')[0]) and int(day) < int(opening_day.split('-')[1]):
-                    continue
-                if len(str(day)) == 1:
-                    this_day = '0' + str(day)
-                else:
-                    this_day = str(day)
-                if len(str(month)) == 1:
-                    this_month = '0' + str(month)
-                else:
-                    this_month = str(month)
-                get_day_data(this_day, this_month, str(year))
+        if month > 3:
+            if month >= int(opening_day.split('-')[0]):
+                for day in range(1, 32, 1):
+                    # if day > 11:
+                    if month == int(opening_day.split('-')[0]) and int(day) < int(opening_day.split('-')[1]):
+                        continue
+                    if len(str(day)) == 1:
+                        this_day = '0' + str(day)
+                    else:
+                        this_day = str(day)
+                    if len(str(month)) == 1:
+                        this_month = '0' + str(month)
+                    else:
+                        this_month = str(month)
+                    get_day_data(this_day, this_month, str(year))
     logger.log("Done fetching " + str(year) + " pitch fx data: time = " + str(time.time() - start_time) + '\n\n\n\n')
     aggregate_pitch_fx_data(year, logger)
     driver_logger.log("\t\tTime = " + str(time.time() - start_time))
