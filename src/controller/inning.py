@@ -16,6 +16,7 @@ def simulate_inning(game, driver_logger):
     for half in range(2):
         inning.switch_half_inning()
         simulate_half_inning(game, inning_num, inning.get_half_inning())
+    game.increment_inning()
     total_time = time_converter(time.time() - start_time)
     driver_logger.log('\t\tTime = ' + total_time)
     logger.log("Done simulating inning: " + game.get_away_team() + " @ " + game.get_home_team() + " - " + inning_num
