@@ -15,7 +15,6 @@ def simulate_game(away_team, home_team, driver_logger):
     game = Game(away_team, home_team)
     while game.get_inning() <= 9 or game.away_score == game.home_score:
         simulate_inning(game, logger)
-        game.increment_inning()
     total_time = time_converter(time.time() - start_time)
     logger.log("Done simulating game: " + away_team + " @ " + home_team + ": Time = " + total_time + '\n\n')
     driver_logger.log("Done simulating game: " + away_team + " @ " + home_team + ": Time = " + total_time)
