@@ -6,7 +6,6 @@ class Game:
         self.away_score = 0
         self.home_score = 0
         self.inning = 0
-        self.half_inning = 'top'
 
     def increment_away_score(self, added_runs):
         self.away_score += added_runs
@@ -16,12 +15,6 @@ class Game:
 
     def increment_inning(self):
         self.inning += 1
-
-    def switch_half_inning(self):
-        if self.half_inning == 'top':
-            self.half_inning = 'bottom'
-        else:
-            self.half_inning = 'top'
 
 ############ Getters ############
     def get_home_score(self):
