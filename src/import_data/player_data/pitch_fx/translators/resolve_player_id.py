@@ -8,18 +8,14 @@ def resolve_player_id(player_num, year, team, player_type):
                                  'player_data\\pitch_fx\\xml\\players.xml')
     for ent in players_file.getElementsByTagName('player'):
         if ent.getAttribute('id') == str(player_num):
-            temp_last_name = ent.getAttribute('last')
-            if 'Jr.' in temp_last_name or 'Sr.' in temp_last_name:
-                last_name = temp_last_name[:-4]
-            else:
-                last_name = temp_last_name
+            last_name = ent.getAttribute('last')
             first_name = ent.getAttribute('first')
             break
     db = DatabaseConnection()
     pid = db.read('select playerid from players where lastName="' + last_name + '" and firstName="' + first_name + '";')
     if len(pid) == 0:
         pid = db.read('select playerid from players where lastName = "' + last_name + '" and firstName = "' +
-                      str(name_alterator(first_name)) + '";')
+                      str(name_alterator(first_name, last_name)) + '";')
     if len(pid) == 1:
         player_id = pid[0][0]
     else:
