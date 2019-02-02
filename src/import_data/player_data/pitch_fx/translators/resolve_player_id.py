@@ -55,4 +55,4 @@ def resolve_further(pid, team, year, player_type):
         return None
 
 
-# print(resolve_player_id('425834', 2008, 'TBR', 'batting'))
+# print(resolve_player_id('466918', 2008, 'COL', 'pitching'))
