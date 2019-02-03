@@ -33,7 +33,6 @@ def determine_direction(event, bats_with):
                 location = event.split(', ')[1].split(' ')[0]
             else:
                 location = 'unknown'
-                print('\t\t\t' + event)
     elif 'sacrifice bunt, ' in event:
         location = event.split('sacrifice bunt, ')[1].split(' ')[0]
     elif 'sacrifice fly' in event:
@@ -41,7 +40,7 @@ def determine_direction(event, bats_with):
             location = event.split('sacrifice fly to ')[1].split(' ')[0]
         else:
             location = event.split('error by ')[1].split(' ')[0]
-    elif 'double play' in event:
+    elif 'double play' in event or 'triple play' in event:
         location = event.split(', ')[1].split(' ')[0]
     elif 'walks' in event or 'strikes out' in event or 'called out on strikes' or 'hit by pitch' in event:
         location = "none"
@@ -51,9 +50,11 @@ def determine_direction(event, bats_with):
         location = "none"
     try:
         directions = {'r': {'third': 'pulled', 'second': 'oppo', 'first': 'oppo', 'shortstop': 'pulled',
-                            'pitcher': 'middle', 'right': 'oppo', 'center': 'middle', 'left': 'pulled'},
+                            'pitcher': 'middle', 'right': 'oppo', 'center': 'middle', 'left': 'pulled',
+                            'unknown': 'unknown'},
                       'l': {'third': 'oppo', 'second': 'pulled', 'first': 'pulled', 'shortstop': 'oppo',
-                            'pitcher': 'middle', 'right': 'pulled', 'center': 'middle', 'left': 'oppo'}}
+                            'pitcher': 'middle', 'right': 'pulled', 'center': 'middle', 'left': 'oppo',
+                            'unknown': 'unknown'}}
         return directions[bats_with][location]
     except KeyError:
         return "none"

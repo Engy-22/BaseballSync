@@ -1,4 +1,4 @@
-from utilities.dbconnect import DatabaseConnection
+from utilities.connections.baseball_data_connection import DatabaseConnection
 
 
 def get_hitter_stats(hitter, year):
