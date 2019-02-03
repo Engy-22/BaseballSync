@@ -5,12 +5,16 @@ class Game:
         self.home_team = home_team
         self.away_score = 0
         self.home_score = 0
+        self.inning = 0
 
     def increment_away_score(self, added_runs):
         self.away_score += added_runs
 
     def increment_home_score(self, added_runs):
         self.home_score += added_runs
+
+    def increment_inning(self):
+        self.inning += 1
 
 ############ Getters ############
     def get_home_score(self):
@@ -24,4 +28,10 @@ class Game:
 
     def get_home_team(self):
         return self.home_team
+
+    def get_inning(self):
+        return self.inning
+
+    def get_half_inning(self):
+        return self.half_inning
 ############ Getters ############
