@@ -10,7 +10,7 @@ def find_pickoff_successes(top_bottom, year, team, xml):
                 if '.  " event="Pickoff ' in at_bat:
                     pitcher = resolve_player_id(at_bat.split('pitcher="')[1].split('"')[0], year, team, 'pitching')
                     base = at_bat.split('.  " event="Pickoff ')[1][:2]
-                    if base != 'Er':
+                    if base not in ['Er', 'At']:
                         if pitcher in successes:
                             successes[pitcher].append(base)
                         else:
