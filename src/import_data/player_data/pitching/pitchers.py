@@ -84,10 +84,11 @@ def pitching_constructor(year, driver_logger, sandbox_mode):
                 for index, dictionary3 in dictionary2.items():
                     try:
                         executor.submit(intermediate, player_id, team, index, dictionary3['temp_player'],
-                                        dictionary3['row'], batting_against_rows[player_id][team][index]['row'])
+                                        dictionary3['row'], batting_against_rows[player_id][team][index]['row'],
+                                        sandbox_mode)
                     except KeyError:
                         executor.submit(intermediate, player_id, team, index, dictionary3['temp_player'],
-                                        dictionary3['row'], [])
+                                        dictionary3['row'], [], sandbox_mode)
     for player_id, dictionary in data.items():
         for team, dictionary2 in dictionary.items():
             try:
@@ -112,14 +113,14 @@ def extract_player_attributes(player_id, page, reversed_name):
                     'throwsWith': str_ent.split('Throws: </strong>')[1][0]}
 
 
-def intermediate(player_id, team, index, temp_player, row, row2):
-    page = load_url(player_id)
+def intermediate(player_id, team, index, temp_player, row, row2, sandbox_mode):
+    page = load_url(player_id, sandbox_mode)
     if page is not None:
         if "-0" in temp_player:
             reversed_name = temp_player.split("-0")[0].replace("'", "\'")
         else:
             reversed_name = temp_player.split("0")[0].replace("'", "\'")
-        write_to_db(player_id, extract_player_attributes(player_id, page, reversed_name))
+        write_to_db(player_id, extract_player_attributes(player_id, page, reversed_name), sandbox_mode)
     get_stats(player_id, team, index, row, row2)
 
 
