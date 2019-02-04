@@ -31,7 +31,7 @@ def manager_table_constructor(driver_logger, sandbox_mode):
                     wins = this_row.split('data-stat="W">')[1].split('<')[0]
                     loses = this_row.split('data-stat="L">')[1].split('<')[0]
                     executor.submit(write_to_file, '"' + manager_id + '","' + last + '","' + first + '",' + wins + ','
-                                                   + loses)
+                                                   + loses, sandbox_mode)
                 except AttributeError:
                     continue
     total_time = time.time() - start_time
@@ -39,8 +39,8 @@ def manager_table_constructor(driver_logger, sandbox_mode):
     driver_logger.log('\t\tTime = ' + time_converter(total_time))
 
 
-def write_to_file(data):
-    db = DatabaseConnection()
+def write_to_file(data, sandbox_mode):
+    db = DatabaseConnection(sandbox_mode)
     db.write('insert into managers (managerId, lastName, firstName, wins, loses) values (' + data + ');')
     db.close()
 
