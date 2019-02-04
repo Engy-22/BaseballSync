@@ -26,7 +26,7 @@ balls = 0
 logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\logs\\import_data\\pitch_fx.log")
 
 
-def get_pitch_fx_data(year, driver_logger):
+def get_pitch_fx_data(year, driver_logger, sandbox_mode):
     if year < 2008:
         driver_logger.log("\tNo pitch fx data to download before 2008")
         return
@@ -35,7 +35,7 @@ def get_pitch_fx_data(year, driver_logger):
     start_time = time.time()
     logger.log("Downloading pitch fx data for " + str(year) + ' || Timestamp: ' + datetime.datetime.today().
                strftime('%Y-%m-%d %H:%M:%S'))
-    db = DatabaseConnection()
+    db = DatabaseConnection(sandbox_mode)
     opening_day = db.read('select opening_day from years where year = ' + str(year) + ';')[0][0]
     db.close()
     for month in range(3, 12, 1):
@@ -248,5 +248,5 @@ def regular_season_game(game_url):
 
 for year in range(2009, 2010, 1):
     get_pitch_fx_data(year, Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\"
-                                   "dump.log"))
+                                   "dump.log"), True)
 # get_day_data('10', '05', '2018')
