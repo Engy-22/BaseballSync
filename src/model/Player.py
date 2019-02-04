@@ -3,20 +3,20 @@ from utilities.connections.baseball_data_connection import DatabaseConnection
 
 class Player:
     
-    def __init__(self, player_id: str, team_id: str, year: int):
+    def __init__(self, player_id: str, team_id: str, year: int, sandbox_mode):
         self.player_id = player_id
         self.year = year
-        self.primary_position = self.import_primary_position(player_id, team_id)
+        self.primary_position = self.import_primary_position(player_id, sandbox_mode, team_id)
         self.secondary_positions = []
         self.throws_with = ""
         self.bats_with = ""
         self.battingStats = {}
         self.pitchingStats = {}
         self.fieldingStats = {}
-        self.imageURL = self.create_image_url(player_id)
+        # self.imageURL = self.create_image_url(player_id)
 
-    def import_primary_position(self, player_id, team_id, year="ALL"):
-        db = DatabaseConnection()
+    def import_primary_position(self, player_id, team_id, sandbox_mode, year="ALL"):
+        db = DatabaseConnection(sandbox_mode)
         if year == "ALL":
             position = db.read('select primaryPosition from players where playerId = "' + player_id + '";')[0][0]
         else:
