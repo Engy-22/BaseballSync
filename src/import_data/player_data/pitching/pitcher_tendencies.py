@@ -10,7 +10,7 @@ logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\lo
                 "pitcher_tendencies.log")
 
 
-def pitcher_tendencies(year, driver_logger):
+def pitcher_tendencies(year, driver_logger, sandbox_mode):
     print("storing pitcher tendencies")
     start_time = time.time()
     logger.log("Downloading " + str(year) + " pitcher tendencies || Timestamp: " + datetime.datetime.today()\
@@ -33,7 +33,7 @@ def pitcher_tendencies(year, driver_logger):
                 stat_dictionary[player_id] = temp_stats
                 prev_player_id = player_id
         for player_id, stats in stat_dictionary.items():
-            write_to_file(year, player_id, stats)
+            write_to_file(year, player_id, stats, sandbox_mode)
         fill_pitchers_with_0_pa(year)
         total_time = time_converter(time.time() - format_time)
         logger.log("\t\tTime = " + total_time)
@@ -75,8 +75,8 @@ def intermediate(row, prev_player_id):
     return player_id, stats
 
 
-def write_to_file(year, player_id, stat_list):
-    db = DatabaseConnection()
+def write_to_file(year, player_id, stat_list, sandbox_mode):
+    db = DatabaseConnection(sandbox_mode)
     pa = []
     records = []
     pt_uids = list(db.read('select PT_uniqueidentifier from player_teams where playerId = "' + player_id + '";'))
@@ -105,14 +105,14 @@ def write_to_file(year, player_id, stat_list):
     db.close()
 
 
-def fill_fields(year):
-    db = DatabaseConnection()
+def fill_fields(year, sandbox_mode):
+    db = DatabaseConnection(sandbox_mode)
     db.write('update player_pitching set certainty = 0.0 where year = ' + str(year) + ';')
     db.close()
 
 
-def fill_pitchers_with_0_pa(year):
-    db = DatabaseConnection()
+def fill_pitchers_with_0_pa(year, sandbox_mode):
+    db = DatabaseConnection(sandbox_mode)
     db.write("update player_pitching set certainty = 0.0 where pa = 0 and year = " + str(year) + ";")
     db.close()
 
