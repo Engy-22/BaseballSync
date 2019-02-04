@@ -12,7 +12,7 @@ logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\lo
 def hitter_tendencies(year, driver_logger, sandbox_mode):
     print("storing hitter tendencies")
     start_time = time.time()
-    logger.log("Downloading " + str(year) + " hitter tendencies || Timestamp: " + datetime.datetime.today()\
+    logger.log("Downloading " + str(year) + " hitter tendencies || Timestamp: " + datetime.datetime.today()
                .strftime('%Y-%m-%d %H:%M:%S'))
     if year >= 1988:
         driver_logger.log("\tStoring hitter tendencies")
