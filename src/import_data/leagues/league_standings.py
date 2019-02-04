@@ -10,7 +10,7 @@ from utilities.time_converter import time_converter
 logger = Logger('C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\league_standings.log')
 
 
-def league_standings(year, driver_logger):
+def league_standings(year, driver_logger, sandbox_mode):
     driver_logger.log("\tAdding to team_years (standings)")
     print("Adding to team_years (standings)")
     start_time = time.time()
@@ -108,16 +108,16 @@ def league_standings(year, driver_logger):
                                                                split('a href="/teams/')[2].split('/')[0], year)
         except IndexError:
             playoff_picture['ws_runnerup'] = None
-        write_ws_data(year, playoff_picture)
+        write_ws_data(year, playoff_picture, sandbox_mode)
     else:
-        write_league_champs_non_ws(champs, year)
+        write_league_champs_non_ws(champs, year, sandbox_mode)
     total_time = time_converter(time.time() - start_time)
     logger.log('Done organizing league standings for ' + str(year) + ': time = ' + total_time + '\n\n')
     driver_logger.log("\t\tTime = " + total_time)
 
 
-def write_league_champs_non_ws(champs, year):
-    db = DatabaseConnection()
+def write_league_champs_non_ws(champs, year, sandbox_mode):
+    db = DatabaseConnection(sandbox_mode)
     query_string = 'update years set '
     team_count = 0
     for league, team in champs.items():
@@ -128,9 +128,9 @@ def write_league_champs_non_ws(champs, year):
     db.close()
 
 
-def write_ws_data(year, ws_data):
+def write_ws_data(year, ws_data, sandbox_mode):
     if ws_data['ws_champ'] is not None:
-        db = DatabaseConnection()
+        db = DatabaseConnection(sandbox_mode)
         champ_league = str(db.read('select league from team_years where teamId = "' + ws_data['ws_champ']
                                    + '" and year = ' + str(year) + ';')[0][0])
         runnerup_league = str(db.read('select league from team_years where teamId = "' + ws_data['ws_runnerup']
@@ -188,9 +188,9 @@ def is_in_playoffs(playoffs, team_key, year):
     return is_in
 
 
-def write_to_db(this_string, team_id, year):
+def write_to_db(this_string, team_id, year, sandbox_mode):
     logger.log("\tWriting " + team_id + " to team_years")
-    db = DatabaseConnection()
+    db = DatabaseConnection(sandbox_mode)
     if len(db.read('select TY_uniqueidentifier from team_years where teamId = "' + team_id + '" and year = '
                    + str(year) + ';')) == 0:
         db.write('Insert into team_years (TY_uniqueidentifier, teamId, year, league, division, wins, loses, playoffs, '
