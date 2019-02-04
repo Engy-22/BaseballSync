@@ -37,7 +37,7 @@ from import_data.player_data.awards.hof_finder import hof_finder
 from utilities.clean_up_deadlocked_file import clean_up_deadlocked_file
 
 
-def driver(year, driver_log):
+def driver(year, driver_log, sandbox_mode):
     driver_log.log(str(year))
     driver_time = time.time()
     print('\n\n' + str(year))
@@ -68,13 +68,14 @@ if __name__ == '__main__':
     main_logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\driver.log")
     main_logger.log('Begin Driver || Timestamp: ' + datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S'))
     start_time = time.time()
-    most_recent_year = get_most_recent_year(main_logger)
-    league_table_constructor(main_logger)
-    manager_table_constructor(main_logger)
+    sandbox_mode = True
+    most_recent_year = get_most_recent_year(main_logger, sandbox_mode)
+    league_table_constructor(main_logger, sandbox_mode)
+    manager_table_constructor(main_logger, sandbox_mode)
     years = []
     for year in range(2009, 2010, 1):
         years.append(year)
-        driver(year, main_logger)
+        driver(year, main_logger, sandbox_mode)
     rank_driver(years[-1], main_logger)
     comparisons_driver(years[-1], main_logger)
     hof_finder(main_logger)
