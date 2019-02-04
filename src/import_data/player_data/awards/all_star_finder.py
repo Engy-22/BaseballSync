@@ -9,7 +9,7 @@ from bs4 import BeautifulSoup
 logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\all_star_finder.log")
 
 
-def all_star_finder(year, normal, driver_logger):
+def all_star_finder(year, normal, driver_logger, sandbox_mode):
     driver_logger.log("\tFinding " + str(year) + " all stars")
     start_time = time.time()
     logger.log("Finding All Stars || Timestamp: " + datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S'))
@@ -21,7 +21,7 @@ def all_star_finder(year, normal, driver_logger):
         al_table = all_star_table.split('<table>')[1].split('</table>')[0]
         all_stars += get_all_stars(nl_table, '<tr class="">')
         all_stars += get_all_stars(al_table, '<tr class="">')
-        write_to_file(year, all_stars)
+        write_to_file(year, all_stars, sandbox_mode)
     else:
         leagues = ['NL', 'AL']
         for league in leagues:
@@ -34,7 +34,7 @@ def all_star_finder(year, normal, driver_logger):
                 all_star_table2 = all_star_table.split('<h2>League All-Stars</h2>')[2].split('<tbody>')[1].\
                                                  split('</tbody')[0]
                 all_stars += get_all_stars(all_star_table2, '<tr >')
-        write_to_file(year, all_stars)
+        write_to_file(year, all_stars, sandbox_mode)
     total_time = time_converter(time.time() - start_time)
     logger.log("All star finder complete: time = " + total_time)
     driver_logger.log("\t\tTime = " + total_time)
@@ -51,8 +51,8 @@ def get_all_stars(table, delimeter):
     return players
 
 
-def write_to_file(year, all_stars):
-    db = DatabaseConnection()
+def write_to_file(year, all_stars, sandbox_mode):
+    db = DatabaseConnection(sandbox_mode)
     for player in all_stars:
         pt_uids = db.read('select PT_uniqueidentifier from player_teams ' + 'where playerId = "' + player + '";')
         for pt_uid in pt_uids:
