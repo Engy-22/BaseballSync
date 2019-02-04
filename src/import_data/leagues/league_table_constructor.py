@@ -17,7 +17,7 @@ def league_table_constructor(driver_logger, sandbox_mode):
                'PL': 'Players League',
                'UA': 'Union Association',
                'NA': 'National Association'}
-    db = DatabaseConnection()
+    db = DatabaseConnection(sandbox_mode)
     for league_id, league_name in leagues.items():
         db.write('insert into leagues (leagueId, leagueName) values ("' + league_id + '", "' + league_name + '");')
     db.close()
