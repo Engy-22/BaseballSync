@@ -14,7 +14,7 @@ logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\lo
                 "ballpark_and_manager_data.log")
 
 
-def ballpark_and_manager_data(year, driver_logger):
+def ballpark_and_manager_data(year, driver_logger, sandbox_mode):
     driver_logger.log('\tGathering ballpark and manager data')
     print("Gathering ballpark and manager data")
     start_time = time.time()
@@ -43,7 +43,7 @@ def ballpark_and_manager_data(year, driver_logger):
     team_count = len(teams)
     with ThreadPoolExecutor(os.cpu_count()) as executor2:
         for team_key, team_id in teams.items():
-            executor2.submit(gather_team_home_numbers, team_id, team_key, year, team_count)
+            executor2.submit(gather_team_home_numbers, team_id, team_key, year, team_count, sandbox_mode)
     logger.log("\tDone calculating and writing ballpark numbers and downloading manager data: time = "
                + time_converter(time.time() - calc_and_download_time))
     total_time = time_converter(time.time() - start_time)
@@ -51,9 +51,9 @@ def ballpark_and_manager_data(year, driver_logger):
     driver_logger.log('\t\tTime = ' + total_time)
 
 
-def gather_team_home_numbers(team_id, team_key, year, team_count):
+def gather_team_home_numbers(team_id, team_key, year, team_count, sandbox_mode):
     logger.log("\tCalculating home numbers and downloading manager data: " + team_id)
-    db = DatabaseConnection()
+    db = DatabaseConnection(sandbox_mode)
     if len(db.read('select BY_uniqueidentifier from ballpark_years where teamId = "' + team_id + '" and year = '
                    + str(year) + ';')) == 0:
         global pages
@@ -149,7 +149,7 @@ def gather_team_home_numbers(team_id, team_key, year, team_count):
         except IndexError as e:
             logger.log('\t\t' + str(e))
             park_name = "No Home Field"
-        write_to_db(team_id, location, trajectory, manager_ids, year, park_name)
+        write_to_db(team_id, location, trajectory, manager_ids, year, park_name, sandbox_mode)
 
 
 def load_url(year, team_key):
@@ -159,8 +159,8 @@ def load_url(year, team_key):
                                             + '&year=' + str(year)), 'html.parser')
 
 
-def write_to_db(team_id, stats, trajectory, manager_ids, year, park_name):
-    db = DatabaseConnection()
+def write_to_db(team_id, stats, trajectory, manager_ids, year, park_name, sandbox_mode):
+    db = DatabaseConnection(sandbox_mode)
     if len(db.read('select parkId from ballparks where parkName = "' + park_name + '";')) == 0:
         db.write('insert into ballparks (parkId, parkName) values (default, "' + park_name + '");')
     if len(db.read('select BY_uniqueidentifier from ballpark_years where teamId = "' + team_id + '" and year = '
