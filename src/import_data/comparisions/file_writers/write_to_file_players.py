@@ -32,7 +32,7 @@ def write_to_file(year, comps, comp_type, sandbox_mode):
                                               + comp.split(';')[0] + '", comp_year = ' + comp.split(';')[1]
                                               + ', comp_pull = ' + str(comp_pull) + ', comp_stat_id = '
                                               + str(comp_stat_id) + ' where ' + 'comp_id = ' + str(comp_id) + ';',
-                                    sandbox_mode)
+                                              sandbox_mode)
     db.close()
 
 
