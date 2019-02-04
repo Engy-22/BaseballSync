@@ -13,11 +13,12 @@ pages = {}
 
 
 def manager_tendencies(year, driver_logger, sandbox_mode):
+    driver_logger.log("\tStoring manager tendencies")
     print("storing manager tendencies")
     start_time = time.time()
-    driver_logger.log("\tStoring manager tendencies")
     logger.log("Downloading " + str(year) + " manager tendencies || Timestamp: " + datetime.datetime.today()
                .strftime('%Y-%m-%d %H:%M:%S'))
+    logger.log('\Making HTTP requests')
     db = DatabaseConnection(sandbox_mode)
     managers = db.write('select manager_teams.managerid from manager_teams, manager_year where manager_year.year = '
                         + str(year) + ' and manager_year.mt_uniqueidentifier = manager_teams.mt_uniqueidentifier;')
@@ -25,6 +26,18 @@ def manager_tendencies(year, driver_logger, sandbox_mode):
     with ThreadPoolExecutor(os.cpu_count()) as executor:
         for manager in managers:
             executor.submit(load_url, manager[0])
+    logger.log('\t\tTime = ' + time_converter(time.time() - start_time))
+    process_time = time.time()
+    logger.log('\tProcessing manager tendencies')
+
+    logger.log('\t\tTime = ' + time_converter(time.time() - process_time))
+    write_time = time.time()
+    # logger.log('\tWriting data to database')
+    # global pages
+    # with ThreadPoolExecutor(os.cpu_count()) as executor2:
+    #     for manager_id, tendencies in pages.items():
+    #         executor2.submit(write_to_file, manager_id, tendencies, sandbox_mode)
+    # logger.log('\t\tTime = ' + time_converter(time.time() - write_time))
     total_time = time_converter(time.time() - start_time)
     driver_logger.log("\t\tTime = " + total_time)
     logger.log("Done storing manager tendencies: time = " + total_time + '\n\n')
@@ -36,6 +49,6 @@ def load_url(manager_id):
                                       'html.parser')
 
 
-def write_to_file(manager_id, sandbox_mode):
+def write_to_file(manager_id, tendencies, sandbox_mode):
     db = DatabaseConnection(sandbox_mode)
     db.close()
