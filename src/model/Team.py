@@ -71,13 +71,14 @@ class Team:
 ### Getters ###
 
 ### SETTERS ###
-    def setRoster(self):
-        db = DatabaseConnection()
+    def setRoster(self, sandbox_mode):
+        db = DatabaseConnection(sandbox_mode)
         team_id = db.read("select TY_uniqueidentifier from team_years where teamId = '" + self.teamId + "' and year = "
                           + str(self.year) + ";")
         print(team_id)
         #data = db.read("select playerId from playerPositions where TY_uniqueidentifier = " + str(team_id))
 ### SETTERS ###
 
-team = Team("CLE", 2017)
-team.setRoster()
+
+# team = Team("CLE", 2017)
+# team.setRoster(True)
