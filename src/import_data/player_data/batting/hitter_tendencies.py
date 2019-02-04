@@ -9,7 +9,7 @@ from utilities.time_converter import time_converter
 logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\hitter_tendecies.log")
 
 
-def hitter_tendencies(year, driver_logger):
+def hitter_tendencies(year, driver_logger, sandbox_mode):
     print("storing hitter tendencies")
     start_time = time.time()
     logger.log("Downloading " + str(year) + " hitter tendencies || Timestamp: " + datetime.datetime.today()\
@@ -32,15 +32,15 @@ def hitter_tendencies(year, driver_logger):
                 stat_dictionary[player_id] = temp_stats
                 prev_player_id = player_id
         for player_id, stats in stat_dictionary.items():
-            write_to_file(year, player_id, stats)
-        fill_batters_with_0_pa(year)
+            write_to_file(year, player_id, stats, sandbox_mode)
+        fill_batters_with_0_pa(year, sandbox_mode)
         total_time = time_converter(time.time() - format_time)
         logger.log("\t\tTime = " + total_time)
         driver_logger.log("\t\tTime = " + total_time)
     else:
         driver_logger.log("\tNo hitter tendency data before 1988")
         logger.log("\tNo hitter tendency data before 1988")
-        fill_fields(year)
+        fill_fields(year, sandbox_mode)
     logger.log("Done storing hitter tendencies: time = " + time_converter(time.time() - start_time) + '\n\n')
 
 
