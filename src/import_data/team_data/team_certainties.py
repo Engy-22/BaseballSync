@@ -7,12 +7,12 @@ from utilities.logger import Logger
 logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\team_certainties.log")
 
 
-def team_certainties(year, driver_logger):
+def team_certainties(year, driver_logger, sandbox_mode):
     print('aggregating team statistic certainties')
     driver_logger.log("\tAggregating team statistic certainties")
     start_time = time.time()
     logger.log("Calculating team certainties || Timestamp: " + datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S'))
-    db = DatabaseConnection()
+    db = DatabaseConnection(sandbox_mode)
     stat_types = ["batting", "pitching"]
     for stat_type in stat_types:
         ty_uids = db.read('select ty_uniqueidentifier, teamid from team_years where year = ' + str(year))
