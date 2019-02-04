@@ -100,5 +100,5 @@
     *maybe decrease the amount which standard deviation affects team rankings in overall team ranker.
     *verify that player_batting, player_pitching and player_fielding numbers are accurate.
     *aggregate and consolidate pitch_fx data.
-    *pitch_fx records should relate only to TOT if player played on multiple teams that year.
-    *make a sandbox database to test a year out before importing it to the master database.
+        -When aggregating, pitch_fx records should relate only to TOT if player played on multiple teams that year.
+            -The data for players who fit this category will have their pitches written to their teams and not TOT.
