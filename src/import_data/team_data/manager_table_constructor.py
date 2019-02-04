@@ -12,7 +12,7 @@ logger = Logger('C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\lo
                 'manager_table_constructor.log')
 
 
-def manager_table_constructor(driver_logger):
+def manager_table_constructor(driver_logger, sandbox_mode):
     driver_logger.log('\tGathering manager data (all-time)')
     print("Gathering manager data (all-time)")
     start_time = time.time()
