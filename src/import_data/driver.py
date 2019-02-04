@@ -27,6 +27,7 @@ from import_data.team_data.team_pitching_rotation_constructor import team_pitchi
 from import_data.player_data.fielding.primary_and_secondary_positions import primary_and_secondary_positions
 from import_data.player_data.batting.hitter_tendencies import hitter_tendencies
 from import_data.player_data.pitching.pitcher_tendencies import pitcher_tendencies
+from import_data.team_data.manager_tendencies import manager_tendencies
 from import_data.player_data.batting.hitter_spray_chart_constructor import hitter_spray_chart_constructor
 from import_data.player_data.pitching.pitching_spray_chart_constructor import pitcher_spray_chart_constructor
 from import_data.team_data.team_certainties import team_certainties
@@ -57,6 +58,7 @@ def driver(year, driver_log, sandbox_mode):
     primary_and_secondary_positions(year, driver_log, sandbox_mode)
     hitter_tendencies(year, driver_log, sandbox_mode)
     pitcher_tendencies(year, driver_log, sandbox_mode)
+    manager_tendencies(year, driver_log, sandbox_mode)
     hitter_spray_chart_constructor(year, driver_log, sandbox_mode)
     pitcher_spray_chart_constructor(year, driver_log, sandbox_mode)
     team_certainties(year, driver_log, sandbox_mode)
