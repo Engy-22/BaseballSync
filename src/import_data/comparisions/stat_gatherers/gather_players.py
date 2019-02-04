@@ -1,8 +1,8 @@
 from utilities.connections.baseball_data_connection import DatabaseConnection
 
 
-def gather_players(year, player_type, all, logger):
-    db = DatabaseConnection()
+def gather_players(year, player_type, all, logger, sandbox_mode):
+    db = DatabaseConnection(sandbox_mode)
     query = "select playerId from player_teams, player_" + player_type + " where player_" + player_type + ".PT_unique"\
             "identifier = player_teams.PT_uniqueidentifier and player_" + player_type + ".year = " + str(year)
     if all:
