@@ -27,7 +27,7 @@ def hitter_spray_chart_constructor(year, driver_logger, sandbox_mode):
         db.close()
         with ThreadPoolExecutor(os.cpu_count()) as executor:
             for ent in pt_uid_players:
-                executor.submit(reduce_functionality, year, ent)
+                executor.submit(reduce_functionality, year, ent, sandbox_mode)
         driver_logger.log("\t\tTime = " + time_converter(time.time() - start_time))
     else:
         driver_logger.log("\tNo hitter spray chart data before 1988")
