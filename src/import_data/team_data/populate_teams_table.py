@@ -9,14 +9,14 @@ logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\lo
                 "log")
 
 
-def populate_teams_table(year, driver_logger):
+def populate_teams_table(year, driver_logger, sandbox_mode):
     driver_logger.log('\tPopulating teams table')
     print("Populating teams table")
     start_time = time.time()
     logger.log('Begin populating teams table for ' + str(year) + ' || Timestamp: ' + datetime.datetime.today()\
                .strftime('%Y-%m-%d %H:%M:%S'))
     with open('C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\background\\yearTeams.txt', 'rt') as file:
-        db = DatabaseConnection()
+        db = DatabaseConnection(sandbox_mode)
         for line in file:
             if str(year) in line:
                 temp_line = line.split(',')[1:-1]
