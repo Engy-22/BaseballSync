@@ -8,8 +8,8 @@ class League:
         self.year = year
         self.league = ''
 
-    def set_league(self):
-        db = DatabaseConnection()
+    def set_league(self, sandbox_mode):
+        db = DatabaseConnection(sandbox_mode)
         self.league = db.read('select league from team_years where teamid = ' + self.home_team + ' and year = '
                               + str(self.year) + ';')
         db.close()
