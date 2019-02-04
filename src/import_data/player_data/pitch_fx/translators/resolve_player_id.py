@@ -25,7 +25,7 @@ def resolve_player_id(player_num, year, team, player_type, sandbox_mode):
         if len(pid) == 1:
             player_id = pid[0][0]
         else:
-            player_id = resolve_further(pid, team, year, player_type)
+            player_id = resolve_further(pid, team, year, player_type, sandbox_mode)
 
     else:
         player_id = None
