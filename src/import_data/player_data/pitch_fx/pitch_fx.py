@@ -42,18 +42,18 @@ def get_pitch_fx_data(year, driver_logger, sandbox_mode):
         if month > 4:
             if month >= int(opening_day.split('-')[0]):
                 for day in range(1, 32, 1):
-                    # if day > 23:
-                    if month == int(opening_day.split('-')[0]) and int(day) < int(opening_day.split('-')[1]):
-                        continue
-                    if len(str(day)) == 1:
-                        this_day = '0' + str(day)
-                    else:
-                        this_day = str(day)
-                    if len(str(month)) == 1:
-                        this_month = '0' + str(month)
-                    else:
-                        this_month = str(month)
-                    get_day_data(this_day, this_month, str(year), sandbox_mode)
+                    if day > 15:
+                        if month == int(opening_day.split('-')[0]) and int(day) < int(opening_day.split('-')[1]):
+                            continue
+                        if len(str(day)) == 1:
+                            this_day = '0' + str(day)
+                        else:
+                            this_day = str(day)
+                        if len(str(month)) == 1:
+                            this_month = '0' + str(month)
+                        else:
+                            this_month = str(month)
+                        get_day_data(this_day, this_month, str(year), sandbox_mode)
     logger.log("Done fetching " + str(year) + " pitch fx data: time = " + time_converter(time.time() - start_time)
                + '\n\n\n\n')
     aggregate_pitch_fx_data(year, logger, sandbox_mode)
@@ -173,13 +173,13 @@ def parse_at_bat(year, at_bat, pitcher_team, hitter_team, sandbox_mode):
     global balls
     balls = 0
     for pitch in pitches:
-        parse_pitch(year, pitch, meta_data, pitches.index(pitch)+1 == len(pitches))
+        parse_pitch(year, pitch, meta_data, pitches.index(pitch)+1 == len(pitches), sandbox_mode)
     pickoff_attempts = at_bat.getElementsByTagName('po')
     for pickoff_attempt in pickoff_attempts:
         parse_pickoff_attempt(pickoff_attempt, meta_data['pitcher_id'], pitcher_team, year, sandbox_mode)
 
 
-def parse_pitch(year, pitch, meta_data, last_pitch):
+def parse_pitch(year, pitch, meta_data, last_pitch, sandbox_mode):
     global strikes
     global balls
     count = str(balls) + '-' + str(strikes)
@@ -206,10 +206,10 @@ def parse_pitch(year, pitch, meta_data, last_pitch):
         with ThreadPoolExecutor(os.cpu_count()) as executor2:
             executor2.submit(write_to_file, 'pitcher', meta_data['pitcher_id'], meta_data['pitcher_team'], year,
                              meta_data['batter_orientation'], count, pitch_type, ball_strike, swing_take, outcome,
-                             trajectory, field, direction, meta_data['original_pitcher_id'])
+                             trajectory, field, direction, meta_data['original_pitcher_id'], sandbox_mode)
             executor2.submit(write_to_file, 'batter', meta_data['batter_id'], meta_data['batter_team'], year,
                              meta_data['pitcher_orientation'], count, pitch_type, ball_strike, swing_take, outcome,
-                             trajectory, field, direction, meta_data['original_batter_id'])
+                             trajectory, field, direction, meta_data['original_batter_id'], sandbox_mode)
     except KeyError:
         pass
 
@@ -227,7 +227,7 @@ def parse_pickoff_attempt(pickoff_attempt, pitcher, team, year, sandbox_mode):
 
 
 def parse_pickoff_success(year, team, top_bottom, xml, sandbox_mode):
-    successes = find_pickoff_successes(top_bottom, year, team, xml)
+    successes = find_pickoff_successes(top_bottom, year, team, xml, sandbox_mode)
     for pitcher, success in successes.items():
         for base in success:
             if 'Error' not in base:
