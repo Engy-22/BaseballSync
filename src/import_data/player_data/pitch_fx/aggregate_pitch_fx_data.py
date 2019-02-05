@@ -6,6 +6,7 @@ from utilities.logger import Logger
 import time
 import datetime
 from concurrent.futures import ThreadPoolExecutor
+from utilities.time_converter import time_converter
 
 logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\logs\\import_data\\"
                 "aggregate_pitch_fx_data.log")
@@ -16,11 +17,32 @@ def aggregate_pitch_fx_data(year, driver_logger, sandbox_mode):
     start_time = time.time()
     logger.log("Aggregating pitch fx data for " + str(year) + ' || Timestamp: ' + datetime.datetime.today().
                strftime('%Y-%m-%d %H:%M:%S'))
+    create_tables(year)
     aggregate_and_write(year, 'pitching', PitcherPitchFXDatabaseConnection, sandbox_mode)
     aggregate_and_write(year, 'batting', BatterPitchFXDatabaseConnection, sandbox_mode)
-    total_time = str(time.time() - start_time)
+    total_time = time_converter(time.time() - start_time)
     logger.log("Done aggregating " + str(year) + " pitch fx data: Time = " + total_time)
     driver_logger.log("\t\tTime = " + total_time)
+
+
+def create_tables(year):
+    logger.log('\tCreating tables')
+    start_time = time.time()
+    pitcher_db = PitcherPitchFXDatabaseConnection()
+    batter_db = BatterPitchFXDatabaseConnection()
+    if len(pitcher_db.read('show tables')) == 0:
+        with open('C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\background\\pitch_fx_tables', 'r') as file:
+            with ThreadPoolExecutor(os.cpu_count()) as executor:
+                for line in file:
+                    executor.submit(pitcher_db.write(str(year) + line))
+    if len(batter_db.read('show tables')) == 0:
+        with open('C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\background\\pitch_fx_tables', 'r') as file:
+            with ThreadPoolExecutor(os.cpu_count()) as executor:
+                for line in file:
+                    executor.submit(batter_db.write(str(year) + line))
+    pitcher_db.close()
+    batter_db.close()
+    logger.log('\t\tTime = ' + time_converter(time.time() - start_time))
 
 
 def aggregate_and_write(year, player_type, db_connection, sandbox_mode):
@@ -70,7 +92,7 @@ def aggregate(year, player_id, player_type, sandbox_mode):
 
 
 def write_to_file(data):
-
+    pass
 
 
 # print(aggregate(2008, 'pitching', PitcherPitchFXDatabaseConnection, False))
