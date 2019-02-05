@@ -100,7 +100,7 @@ def write_pitch_usage(player_id, p_uid, year, matchup, balls, strikes, pitch_typ
         fields += ', ' + pitch[0]
         values += ', ' + str((total/length))
     db.write('insert into ' + matchup + '_' + str(balls) + str(strikes) + '_pitch_type (uid, playerid, year' + fields
-             + 'p_uid) values (default, "' + player_id + '", ' + str(year) + values + ', ' + str(p_uid) + ');')
+             + ', p_uid) values (default, "' + player_id + '", ' + str(year) + values + ', ' + str(p_uid) + ');')
     db.close()
 
 
