@@ -49,7 +49,7 @@ def aggregate(year, player_id, player_type, sandbox_mode):
         for ball in balls:
             for strike in strikes:
                 bulk_query = 'from ' + table + ' where playerid = "' + player_id + '" and year = ' + str(year) + ' and'\
-                             ' matchup = "' + matchup + opponent + '" and count = "' + str(ball) + '-' + str(strike)
+                             ' matchup = "' + matchup + opponent + '" and count="' + str(ball) + '-' + str(strike) + '"'
                 pitch_types = db.read('select pitch_type ' + bulk_query)
                 pitch_types_dict = {}
                 for pitch_type in pitch_types:
@@ -57,20 +57,21 @@ def aggregate(year, player_id, player_type, sandbox_mode):
                         pitch_types_dict[pitch_type] += 1
                     else:
                         pitch_types_dict[pitch_type] = 0
-                write_to_file(player_id, year, matchup + opponent, balls, strikes, pitch_types_dict, player_type, sandbox_mode)
+                write_to_file(player_id, year, matchup + opponent, balls, strikes, pitch_types_dict, player_type,
+                              sandbox_mode)
                 for pitch_type in set(pitch_types):
-                    bulk_query += ' and pitch_type = ' + pitch_type[0]
-                    for swing_take in set(db.read('select swing_take ' + bulk_query)):
-                        bulk_query += ' and swing_take = ' + swing_take
-                        for ball_strike in set(db.read('select ball_strike ' + bulk_query)):
-                            bulk_query += ' and ball_strike = ' + ball_strike
-                            for outcome in set(db.read('select outcome ' + bulk_query)):
-                                bulk_query += ' and outcome = ' + outcome
-                                for trajectory in set(db.read('select trjectory ' + bulk_query)):
-                                    bulk_query += ' and trajectory = ' + trajectory
-                                    for field in set(db.read('select field ' + bulk_query)):
-                                        bulk_query += ' and field = ' + field
-                                        for directions in set(db.read('select direction ' + bulk_query)):
+                    bulk_query += ' and pitch_type = "' + pitch_type[0] + '"'
+                    for swing_take in set(db.read('select swing_take ' + bulk_query + ';')):
+                        bulk_query += ' and swing_take = "' + swing_take[0] + '"'
+                        for ball_strike in set(db.read('select ball_strike ' + bulk_query + ';')):
+                            bulk_query += ' and ball_strike = "' + ball_strike[0] + '"'
+                            for outcome in set(db.read('select outcome ' + bulk_query + ';')):
+                                bulk_query += ' and outcome = "' + outcome[0] + '"'
+                                for trajectory in set(db.read('select trajectory ' + bulk_query + ';')):
+                                    bulk_query += ' and trajectory = "' + trajectory[0] + '"'
+                                    for field in set(db.read('select field ' + bulk_query + ';')):
+                                        bulk_query += ' and field = "' + field[0] + '"'
+                                        for directions in set(db.read('select direction ' + bulk_query + ';')):
                                             count = 0
                                             for direction in directions:
                                                 count += 1
@@ -78,12 +79,12 @@ def aggregate(year, player_id, player_type, sandbox_mode):
 
 
 def write_to_file(player_id, year, matchup, balls, strikes, pitch_type, player_type, sandbox_mode):
+    print(player_id)
     if player_type == 'pitching':
         db = PitcherPitchFXDatabaseConnection(sandbox_mode)
     else:
         db = BatterPitchFXDatabaseConnection(sandbox_mode)
-    db.write('create table ' + str(year) + '-' + matchup + '_' + str(balls) + str(strikes) + ' ();')
     db.close()
 
 
-# print(aggregate(2008, 'pitching', PitcherPitchFXDatabaseConnection, False))
+aggregate(2008, 'perezod01', 'pitching', False)
