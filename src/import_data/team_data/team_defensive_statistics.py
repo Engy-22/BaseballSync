@@ -12,7 +12,7 @@ logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\lo
                 "team_defensive_statistics.log")
 
 
-def team_defensive_statistics(year, driver_logger):
+def team_defensive_statistics(year, driver_logger, sandbox_mode):
     driver_logger.log("\tGathering team defensive statistics")
     print('Gathering team defensive statistics')
     start_time = time.time()
@@ -33,14 +33,14 @@ def team_defensive_statistics(year, driver_logger):
               'ERA': 'ERA', 'whip': 'WHIP'}
     stats2 = {'PA': 'PAA', 'AB': 'ABA', '2B': '2BA', '3B': '3BA', 'batting_avg': 'BAA', 'onbase_perc': 'OBA',
               'slugging_perc': 'SLGA', 'onbase_plus_slugging': 'OPSA', 'batting_avg_bip': 'BABIPA'}
-    extract_data(standard_pitching_rows, stats1, year)
-    extract_data(batting_against_rows, stats2, year)
+    extract_data(standard_pitching_rows, stats1, year, sandbox_mode)
+    extract_data(batting_against_rows, stats2, year, sandbox_mode)
     total_time = time_converter(time.time() - start_time)
     logger.log("Done donwloading team defensive data for " + str(year) + ': time = ' + total_time + '\n\n')
     driver_logger.log('\t\tTime = ' + total_time)
 
 
-def extract_data(data, stats, year):
+def extract_data(data, stats, year, sandbox_mode):
     needed_data = {}
     for datum in data:
         try:
@@ -55,11 +55,11 @@ def extract_data(data, stats, year):
                 needed_data[team_id][stat_name] = datum.split('data-stat="' + stat_key + '">')[1].split('<')[0]
             else:
                 needed_data[team_id][stat_name] = datum.split('ERA: ')[1].split('&')[0]
-    write_to_file(needed_data, year)
+    write_to_file(needed_data, year, sandbox_mode)
 
 
-def write_to_file(team_data, year):
-    db = DatabaseConnection()
+def write_to_file(team_data, year, sandbox_mode):
+    db = DatabaseConnection(sandbox_mode)
     for team, data in team_data.items():
         logger.log("\tWriting " + team + " data to database")
         sets = ''

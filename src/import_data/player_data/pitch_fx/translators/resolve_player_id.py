@@ -3,7 +3,7 @@ from xml.dom import minidom
 from import_data.player_data.pitch_fx.translators.name_alterator import name_alterator
 
 
-def resolve_player_id(player_num, year, team, player_type):
+def resolve_player_id(player_num, year, team, player_type, sandbox_mode):
     players_file = minidom.parse('C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\src\\import_data\\'
                                  'player_data\\pitch_fx\\xml\\players.xml')
     for ent in players_file.getElementsByTagName('player'):
@@ -11,7 +11,7 @@ def resolve_player_id(player_num, year, team, player_type):
             last_name = ent.getAttribute('last')
             first_name = ent.getAttribute('first')
             break
-    db = DatabaseConnection()
+    db = DatabaseConnection(sandbox_mode)
     pid = db.read('select playerid from players where lastName="' + last_name + '" and firstName="' + first_name + '";')
     if len(pid) == 0:
         name = name_alterator(first_name, last_name)
@@ -25,17 +25,17 @@ def resolve_player_id(player_num, year, team, player_type):
         if len(pid) == 1:
             player_id = pid[0][0]
         else:
-            player_id = resolve_further(pid, team, year, player_type)
+            player_id = resolve_further(pid, team, year, player_type, sandbox_mode)
 
     else:
         player_id = None
     return player_id
 
 
-def resolve_further(pid, team, year, player_type):
+def resolve_further(pid, team, year, player_type, sandbox_mode):
     pt_uids = {}
     possible_match = []
-    db = DatabaseConnection()
+    db = DatabaseConnection(sandbox_mode)
     for player_id in pid:
         pt_uids[player_id[0]] = []
         for data in db.read('select pt_uniqueidentifier, teamid from player_teams where playerid = "' + player_id[0]

@@ -15,7 +15,7 @@ logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\lo
                 "award_winner_driver.log")
 
 
-def award_winner_driver(year, driver_logger):
+def award_winner_driver(year, driver_logger, sandbox_mode):
     print("gathering award winner data")
     driver_logger.log("\tGathering award winner data")
     start_time = time.time()
@@ -26,7 +26,7 @@ def award_winner_driver(year, driver_logger):
     t4, t5 = gold_glove_winners(year, logger)
     t6, t7 = silver_slugger_winners(year, logger)
     t8, t9 = triple_crown_winners(year, logger)
-    write_to_file(year, [t1, t2, t3, t4, t5, t6, t7, t8, t9])
+    write_to_file(year, [t1, t2, t3, t4, t5, t6, t7, t8, t9], sandbox_mode)
     if year >= 1933:
         if year not in [1945, 1959, 1960, 1961, 1962]:
             all_star_finder(year, True, logger)
@@ -37,10 +37,10 @@ def award_winner_driver(year, driver_logger):
     driver_logger.log("\t\tTime = " + total_time)
 
 
-def write_to_file(year, awards_dict_list):
+def write_to_file(year, awards_dict_list, sandbox_mode):
     if len(awards_dict_list[0]) + len(awards_dict_list[1]) + len(awards_dict_list[2]) + len(awards_dict_list[3]) \
            + len(awards_dict_list[4]) + len(awards_dict_list[5]) > 0:
-        db = DatabaseConnection()
+        db = DatabaseConnection(sandbox_mode)
         this_string = ""
         for dictionary in awards_dict_list:
             for key, value in dictionary.items():

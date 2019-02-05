@@ -6,7 +6,7 @@ logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\lo
                 "league_table_constructor.log")
 
 
-def league_table_constructor(driver_logger):
+def league_table_constructor(driver_logger, sandbox_mode):
     driver_logger.log('\tPopulating leagues table (all-time)')
     print('Populating leagues table (all-time)')
     logger.log('Begin populating leagues table || Timestamp: ' + datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S'))
@@ -17,7 +17,7 @@ def league_table_constructor(driver_logger):
                'PL': 'Players League',
                'UA': 'Union Association',
                'NA': 'National Association'}
-    db = DatabaseConnection()
+    db = DatabaseConnection(sandbox_mode)
     for league_id, league_name in leagues.items():
         db.write('insert into leagues (leagueId, leagueName) values ("' + league_id + '", "' + league_name + '");')
     db.close()

@@ -89,15 +89,11 @@
             subtract from the max in that list and multiply by the number of years that the possible_comp played
             during that decade to weight by favoring those who played in more years (larger sample size = more
             confident comparisons).
-    *Still Need:
-        -pitch type data.
-            *include unknown pitches? maybe for pitch counts and stuff.
-        -managerial tendencies data.
-            *ex.) https://www.baseball-reference.com/managers/terrybi01.shtml#all_manager_tendencies
     *Find out when mlbam data is updated, if in real time then I can created a real time view similar to fantasycast.
 
 -Restart everything with concurrency, and make it clean in terms of folder hierarchy.
     *maybe decrease the amount which standard deviation affects team rankings in overall team ranker.
     *verify that player_batting, player_pitching and player_fielding numbers are accurate.
     *aggregate and consolidate pitch_fx data.
-    *pitch_fx records should relate only to TOT if player played on multiple teams that year.
+        -When aggregating, pitch_fx records should relate only to TOT if player played on multiple teams that year.
+            -The data for players who fit this category will have their pitches written to their teams and not TOT.

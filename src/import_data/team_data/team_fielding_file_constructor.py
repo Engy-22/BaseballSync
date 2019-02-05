@@ -13,7 +13,7 @@ logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\lo
                 "team_fielding_file_constructor.log")
 
 
-def team_fielding_file_constructor(year, driver_logger):
+def team_fielding_file_constructor(year, driver_logger, sandbox_mode):
     print('getting team fielding positions')
     driver_logger.log("\tGetting team fielding positions")
     start_time = time.time()
@@ -35,7 +35,7 @@ def team_fielding_file_constructor(year, driver_logger):
     logger.log("\t\tTime = " + time_converter(time.time() - start_time))
     logger.log("\tOrganizing team position data")
     write_time = time.time()
-    write_to_file(year)
+    write_to_file(year, sandbox_mode)
     logger.log("\t\tTime = " + time_converter(time.time() - write_time))
     total_time = time_converter(time.time() - start_time)
     logger.log("Done downloading team fielding data: time = " + total_time + '\n\n')
@@ -49,10 +49,10 @@ def load_url(year, team_id, team_key):
         .split('</tbody>')[0].split('<tr')
 
 
-def write_to_file(year):
+def write_to_file(year, sandbox_mode):
     for team_id, table in pages.items():
         logger.log("\t\tgathering and writing " + team_id + " positions")
-        db = DatabaseConnection()
+        db = DatabaseConnection(sandbox_mode)
         primary_keys = []
         try:
             for row in table:

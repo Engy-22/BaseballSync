@@ -13,7 +13,7 @@ strings = {}
 logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\year_data.log")
 
 
-def get_year_data(year, driver_logger):
+def get_year_data(year, driver_logger, sandbox_mode):
     driver_logger.log('\tGathering year data')
     print("Gathering year data")
     start_time = time.time()
@@ -30,11 +30,11 @@ def get_year_data(year, driver_logger):
                      'strikeouts_per_nine': 'k_9', 'strikeouts_per_base_on_balls': 'k_bb'}
     fielding_list = {'E_def': 'e', 'fielding_perc': 'f_percent'}
     stat_list = {"batting": batting_list, "pitching": pitching_list, "fielding": fielding_list}
-    db = DatabaseConnection()
+    db = DatabaseConnection(sandbox_mode)
     if len(db.read('select * from years where year = ' + str(year) + ';')) == 0:
         db.write('insert into years (year) values (' + str(year) + ');')
     db.close()
-    write_opening_day(year)
+    write_opening_day(year, sandbox_mode)
     download_start = time.time()
     logger.log("making HTTP requests for year data")
     with ThreadPoolExecutor(3) as executor1:
@@ -47,7 +47,7 @@ def get_year_data(year, driver_logger):
     logger.log("writing to database")
     with ThreadPoolExecutor(3) as executor2:
         for key, value in stat_list.items():
-            executor2.submit(write_to_db, year, strings[key], key)
+            executor2.submit(write_to_db, year, strings[key], key, sandbox_mode)
     logger.log("\tdone writing to database: time = " + time_converter(time.time() - write_start))
     total_time = time_converter(time.time() - start_time)
     logger.log('year_data download completed: time = ' + total_time + '\n\n')
@@ -61,9 +61,9 @@ def load_url(year, stat_type):
                                              + "-standard-" + stat_type + ".shtml"), 'html.parser')
 
 
-def write_opening_day(year):
+def write_opening_day(year, sandbox_mode):
     start_time = time.time()
-    db = DatabaseConnection()
+    db = DatabaseConnection(sandbox_mode)
     logger.log('Getting date of opening day')
     mlb_schedule = str(BeautifulSoup(urlopen('https://www.baseball-reference.com/leagues/MLB/' + str(year)
                                              + '-schedule.shtml'), 'html.parser'))
@@ -100,9 +100,9 @@ def assemble_stats(stat_type, stats, page):
     strings[stat_type] = this_string
 
 
-def write_to_db(year, stat_string, stat_type):
+def write_to_db(year, stat_string, stat_type, sandbox_mode):
     logger.log("writing " + stat_type + " stats to database")
-    db = DatabaseConnection()
+    db = DatabaseConnection(sandbox_mode)
     db.write('update years set ' + stat_string[:-2] + ' where year = ' + str(year) + ';')
     db.close()
 
