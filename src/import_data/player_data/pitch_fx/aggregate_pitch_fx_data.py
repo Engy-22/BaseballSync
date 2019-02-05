@@ -28,6 +28,7 @@ def aggregate(year, player_type, db_connection, sandbox_mode):
     for player_id in set(db.read('select playerid from ' + player_type[:-3] + 'er_pitches')):
         player_id[0]
     db.close()
+    new_db = db_connection()
     logger.log("\tDone aggregating " + player_type + " data: Time = " + str(time.time() - pitcher_time))
 
 
