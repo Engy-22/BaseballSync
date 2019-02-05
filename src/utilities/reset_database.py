@@ -7,7 +7,7 @@ from concurrent.futures import ThreadPoolExecutor
 from utilities.time_converter import time_converter
 
 start_time = time.time()
-sandbox_mode = True
+sandbox_mode = False
 db = DatabaseConnection(sandbox_mode)
 with open("..\\..\\background\\table_definitions.txt", 'rt') as file:
     table_defs = file.readlines()
