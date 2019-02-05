@@ -41,7 +41,6 @@ def aggregate_and_write(year, player_type, db_connection, sandbox_mode):
 def aggregate(year, player_id, player_type, sandbox_mode):
     table = player_type[:-3] + 'er_pitches'
     matchups = ['vr', 'vl']
-    opponent = 'b' if player_type == 'pitching' else 'p'
     balls = [ball for ball in range(4)]
     strikes = [strike for strike in range(3)]
     db = DatabaseConnection(sandbox_mode)
