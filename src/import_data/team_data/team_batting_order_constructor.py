@@ -13,7 +13,7 @@ logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\lo
                 "team_batting_order_constructor.log")
 
 
-def team_batting_order_constructor(year, driver_logger):
+def team_batting_order_constructor(year, driver_logger, sandbox_mode):
     if year >= 1908:
         print("getting team batting order data")
         driver_logger.log("\tGetting team batting order data")
@@ -35,7 +35,7 @@ def team_batting_order_constructor(year, driver_logger):
         logger.log("\t\t\tTime = " + time_converter(time.time() - start_time))
         logger.log("\tOrganizing batting orders")
         write_time = time.time()
-        get_hitters(year)
+        get_hitters(year, sandbox_mode)
         logger.log("\t\t\tTime = " + time_converter(time.time() - write_time))
         total_time = time_converter(time.time() - start_time)
         logger.log("Done downloading team batting order data: time = " + total_time + '\n\n')
@@ -52,7 +52,7 @@ def load_url(year, team_id, team_key):
         .split('Most-<small>Games</small>')[0].split('tbody>')[1].split('<tr')
 
 
-def get_hitters(year):
+def get_hitters(year, sandbox_mode):
     for team_id, children in pages.items():
         logger.log("\t\tGetting " + team_id + " batting order data")
         temp_order = []
@@ -85,20 +85,20 @@ def get_hitters(year):
                 batting_order.append([])
                 for p in range(len(final_order[n])):
                     batting_order[n].append(final_order[n][p] + ',' + str(order_count[n][p]))
-            write_to_file(team_id, year, batting_order)
+            write_to_file(team_id, year, batting_order, sandbox_mode)
         except IndexError:
             pass
 
 
-def write_to_file(team, year, batting_order):
+def write_to_file(team, year, batting_order, sandbox_mode):
     with ThreadPoolExecutor(os.cpu_count()) as executor2:
         for place in range(len(batting_order)):
             for hitter in batting_order[place]:
-                executor2.submit(transact, hitter, team, year, place)
+                executor2.submit(transact, hitter, team, year, place, sandbox_mode)
 
 
-def transact(hitter, team, year, place):
-    db = DatabaseConnection()
+def transact(hitter, team, year, place, sandbox_mode):
+    db = DatabaseConnection(sandbox_mode)
     ty_uid = db.read('select TY_uniqueidentifier from team_years where teamId = "' + team + '" and year = '
                      + str(year))[0][0]
     if len(db.read('select * from hitter_spots where playerId = "' + hitter.split(',')[0] + '" and TY_uniqueidentifier '

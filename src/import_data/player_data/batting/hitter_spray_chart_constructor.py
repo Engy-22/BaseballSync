@@ -13,7 +13,7 @@ logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\lo
                 "hitter_spray_chart_constructor.log")
 
 
-def hitter_spray_chart_constructor(year, driver_logger):
+def hitter_spray_chart_constructor(year, driver_logger, sandbox_mode):
     print("creating hitter spray charts")
     start_time = time.time()
     global bad_gateway_data
@@ -22,22 +22,22 @@ def hitter_spray_chart_constructor(year, driver_logger):
                .strftime('%Y-%m-%d %H:%M:%S'))
     if year >= 1988:
         driver_logger.log("\tCreating hitter spray charts")
-        db = DatabaseConnection()
+        db = DatabaseConnection(sandbox_mode)
         pt_uid_players = set(db.read('select PT_uniqueidentifier from player_batting where year = ' + str(year) + ';'))
         db.close()
         with ThreadPoolExecutor(os.cpu_count()) as executor:
             for ent in pt_uid_players:
-                executor.submit(reduce_functionality, year, ent)
+                executor.submit(reduce_functionality, year, ent, sandbox_mode)
         driver_logger.log("\t\tTime = " + time_converter(time.time() - start_time))
     else:
         driver_logger.log("\tNo hitter spray chart data before 1988")
         logger.log("\tNo hitter spray chart data before 1988")
     if len(bad_gateway_data) > 0:
-        revisit_bad_gateways(year, bad_gateway_data)
+        revisit_bad_gateways(year, bad_gateway_data, sandbox_mode)
     logger.log("Done downloading hitter spray charts: time = " + time_converter(time.time() - start_time) + '\n\n')
 
 
-def reduce_functionality(year, ent):
+def reduce_functionality(year, ent, sandbox_mode):
     stats1 = {"To Infield_PA": ["pa_infield", ""],
               "To Outfield_PA": ["pa_outfield", ""],
               "To Infield_H": ["infield_hits", ""],
@@ -99,7 +99,7 @@ def reduce_functionality(year, ent):
               "Line_Drives_2B": "",
               "Line_Drives_3B": "",
               "Line_Drives_HR": ""}
-    db = DatabaseConnection()
+    db = DatabaseConnection(sandbox_mode)
     player_id = db.read("select playerId from player_teams where PT_uniqueidentifier = " + str(ent[0]) + ";")[0][0]
     if db.read('select pa_infield from player_batting where PT_uniqueidentifier = ' + str(ent[0]) + ' and year = '
                + str(year) + ';')[0][0] is None:
@@ -137,11 +137,11 @@ def reduce_functionality(year, ent):
             for key, value in stats2.items():
                 stats2[key] = '0'
         finally:
-            write_to_file(year, ent[0], stats1, stats2)
+            write_to_file(year, ent[0], stats1, stats2, sandbox_mode)
 
 
-def write_to_file(year, pt_uid, stat_list1, stat_list2):
-    db = DatabaseConnection()
+def write_to_file(year, pt_uid, stat_list1, stat_list2, sandbox_mode):
+    db = DatabaseConnection(sandbox_mode)
     query_string = ""
     for key, value in stat_list1.items():
         if value[1] == '':
@@ -156,9 +156,9 @@ def write_to_file(year, pt_uid, stat_list1, stat_list2):
     db.close()
 
 
-def revisit_bad_gateways(year, data):
+def revisit_bad_gateways(year, data, sandbox_mode):
     for datum in data:
-        reduce_functionality(year, datum[0])
+        reduce_functionality(year, datum[0], sandbox_mode)
 
 
 # dump_logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\dump.log")

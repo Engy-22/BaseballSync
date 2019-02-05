@@ -6,7 +6,7 @@ from utilities.time_converter import time_converter
 from utilities.logger import Logger
 
 
-def team_ranker_ovr(data, greater_than, field, standard_deviation, average_deviation):
+def team_ranker_ovr(data, greater_than, field, standard_deviation, average_deviation, sandbox_mode):
     logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\"
                     "team_ranker_ovr.log")
     logger.log("Calculating overall team ranks: " + field)
@@ -41,13 +41,13 @@ def team_ranker_ovr(data, greater_than, field, standard_deviation, average_devia
                         #                         + standard_deviation[str(key)]])
                         final_data[year].append([ent[0], ((ent[1] - team_value[1])
                                                           - (average_deviation - standard_deviation[str(year)]))])
-    write_to_file(final_data, greater_than, field)
+    write_to_file(final_data, greater_than, field, sandbox_mode)
     total_time = time_converter(time.time() - start_time)
     logger.log("\tTime = " + total_time + '\n\n')
 
 
-def write_to_file(final_data, greater_than, field):
-    db = DatabaseConnection()
+def write_to_file(final_data, greater_than, field, sandbox_mode):
+    db = DatabaseConnection(sandbox_mode)
     counter = 0
     while len(final_data) > 0:
         target = None

@@ -30,40 +30,40 @@ def team_ranker_year(year):
     return scored, allowed, difference
 
 
-def get_teams(year):
-    db = DatabaseConnection()
+def get_teams(year, sandbox_mode):
+    db = DatabaseConnection(sandbox_mode)
     teams = db.read('select teamid from team_years where year = ' + str(year) + ';')
     db.close()
     return teams
 
 
-def get_games(team, year):
-    db = DatabaseConnection()
+def get_games(team, year, sandbox_mode):
+    db = DatabaseConnection(sandbox_mode)
     games = int(db.read('select g from team_years where teamid = "' + team + '" and year = ' + str(year) + ';')[0][0])
     db.close()
     return games
 
 
-def get_runs_for(team, year):
-    db = DatabaseConnection()
+def get_runs_for(team, year, sandbox_mode):
+    db = DatabaseConnection(sandbox_mode)
     runs_for = int(db.read('select r from team_years where teamid = "' + team + '" and year=' + str(year) + ';')[0][0])
     db.close()
     return runs_for
 
 
-def get_runs_against(team, year):
+def get_runs_against(team, year, sandbox_mode):
     global runs_against
-    db = DatabaseConnection()
+    db = DatabaseConnection(sandbox_mode)
     runs_against = int(db.read('select ra from team_years where teamid = "' + team + '" and year = ' + str(year)
                                + ';')[0][0])
     db.close()
     return runs_against
 
 
-def write_to_file(stats, year, stat_type):
+def write_to_file(stats, year, stat_type, sandbox_mode):
     logger.log("\tWriting " + stat_type + " data")
     start_time = time.time()
-    db = DatabaseConnection()
+    db = DatabaseConnection(sandbox_mode)
     counter = 0
     for team in stats:
         team_id = translate_team_id(team[0], year)

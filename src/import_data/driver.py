@@ -27,6 +27,7 @@ from import_data.team_data.team_pitching_rotation_constructor import team_pitchi
 from import_data.player_data.fielding.primary_and_secondary_positions import primary_and_secondary_positions
 from import_data.player_data.batting.hitter_tendencies import hitter_tendencies
 from import_data.player_data.pitching.pitcher_tendencies import pitcher_tendencies
+from import_data.team_data.manager_tendencies import manager_tendencies
 from import_data.player_data.batting.hitter_spray_chart_constructor import hitter_spray_chart_constructor
 from import_data.player_data.pitching.pitching_spray_chart_constructor import pitcher_spray_chart_constructor
 from import_data.team_data.team_certainties import team_certainties
@@ -37,30 +38,31 @@ from import_data.player_data.awards.hof_finder import hof_finder
 from utilities.clean_up_deadlocked_file import clean_up_deadlocked_file
 
 
-def driver(year, driver_log):
+def driver(year, driver_log, sandbox_mode):
     driver_log.log(str(year))
     driver_time = time.time()
     print('\n\n' + str(year))
-    populate_teams_table(year, driver_log)
-    get_year_data(year, driver_log)
-    ballpark_and_manager_data(year, driver_log)
-    league_standings(year, driver_log)
-    team_offensive_statistics(year, driver_log)
-    team_defensive_statistics(year, driver_log)
-    batting_constructor(year, driver_log)
-    pitching_constructor(year, driver_log)
-    fielding_constructor(year, driver_log)
-    get_pitch_fx_data(year, driver_log)
-    team_fielding_file_constructor(year, driver_log)
-    team_batting_order_constructor(year, driver_log)
-    team_pitching_rotation_constructor(year, driver_log)
-    primary_and_secondary_positions(year, driver_log)
-    hitter_tendencies(year, driver_log)
-    pitcher_tendencies(year, driver_log)
-    hitter_spray_chart_constructor(year, driver_log)
-    pitcher_spray_chart_constructor(year, driver_log)
-    team_certainties(year, driver_log)
-    award_winner_driver(year, driver_log)
+    populate_teams_table(year, driver_log, sandbox_mode)
+    get_year_data(year, driver_log, sandbox_mode)
+    ballpark_and_manager_data(year, driver_log, sandbox_mode)
+    league_standings(year, driver_log, sandbox_mode)
+    team_offensive_statistics(year, driver_log, sandbox_mode)
+    team_defensive_statistics(year, driver_log, sandbox_mode)
+    batting_constructor(year, driver_log, sandbox_mode)
+    pitching_constructor(year, driver_log, sandbox_mode)
+    fielding_constructor(year, driver_log, sandbox_mode)
+    get_pitch_fx_data(year, driver_log, sandbox_mode)
+    team_fielding_file_constructor(year, driver_log, sandbox_mode)
+    team_batting_order_constructor(year, driver_log, sandbox_mode)
+    team_pitching_rotation_constructor(year, driver_log, sandbox_mode)
+    primary_and_secondary_positions(year, driver_log, sandbox_mode)
+    hitter_tendencies(year, driver_log, sandbox_mode)
+    pitcher_tendencies(year, driver_log, sandbox_mode)
+    manager_tendencies(year, driver_log, sandbox_mode)
+    hitter_spray_chart_constructor(year, driver_log, sandbox_mode)
+    pitcher_spray_chart_constructor(year, driver_log, sandbox_mode)
+    team_certainties(year, driver_log, sandbox_mode)
+    award_winner_driver(year, driver_log, sandbox_mode)
     driver_log.log('Time taken to download ' + str(year) + ' data: ' + time_converter(time.time() - driver_time) + '\n')
 
 
@@ -68,16 +70,17 @@ if __name__ == '__main__':
     main_logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\driver.log")
     main_logger.log('Begin Driver || Timestamp: ' + datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S'))
     start_time = time.time()
-    most_recent_year = get_most_recent_year(main_logger)
-    league_table_constructor(main_logger)
-    manager_table_constructor(main_logger)
+    sandbox_mode = True
+    most_recent_year = get_most_recent_year(main_logger, sandbox_mode)
+    league_table_constructor(main_logger, sandbox_mode)
+    manager_table_constructor(main_logger, sandbox_mode)
     years = []
-    for year in range(2008, 2010, 1):
+    for year in range(2009, 2010, 1):
         years.append(year)
-        driver(year, main_logger)
+        driver(year, main_logger, sandbox_mode)
     rank_driver(years[-1], main_logger)
     comparisons_driver(years[-1], main_logger)
-    hof_finder(main_logger)
-    clean_up_deadlocked_file(main_logger)
+    hof_finder(main_logger, sandbox_mode)
+    clean_up_deadlocked_file(main_logger, sandbox_mode)
     main_logger.log('Driver complete for year' + stringify_list(years) + ': time = '
                     + time_converter(time.time() - start_time) + '\n\n\n')

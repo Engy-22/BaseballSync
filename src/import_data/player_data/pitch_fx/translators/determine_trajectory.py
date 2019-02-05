@@ -10,7 +10,10 @@ def determine_trajectory(event, description):
                 try:
                     trajectory = trajectories[description.split('on a ')[1].split(' ')[0]]
                 except KeyError:
-                    trajectory = trajectories[description.split('on a ')[1].split(' ')[1]]
+                    try:
+                        trajectory = trajectories[description.split('on a ')[1].split(' ')[1]]
+                    except KeyError:
+                        trajectory = 'unknown'
                 except IndexError:
                     trajectory = 'unknown'
             else:

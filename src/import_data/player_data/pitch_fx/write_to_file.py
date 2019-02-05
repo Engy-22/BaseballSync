@@ -2,7 +2,7 @@ from utilities.connections.baseball_data_connection import DatabaseConnection
 
 
 def write_to_file(player_type, player_id, team_id, year, matchup, count, pitch_type, ball_strike, swing_take, outcome,
-                  trajectory, field, direction, original_player_id):
+                  trajectory, field, direction, original_player_id, sandbox_mode):
     if player_id is None:
         with open('C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\src\\import_data\\player_data\\pitch_fx'
                   '\\multiple_players.csv', 'a') as file:
@@ -16,7 +16,7 @@ def write_to_file(player_type, player_id, team_id, year, matchup, count, pitch_t
                        'pt_uniqueidentifier from player_teams where playerid = "' + str(player_id) + '" and teamid = "'
                        + team_id + '")));\n')
     else:
-        db = DatabaseConnection()
+        db = DatabaseConnection(sandbox_mode)
         db.write('insert into ' + player_type + '_pitches (pitchid, playerid, year, matchup, count, pitch_type, '
                  'swing_take, ball_strike, outcome, trajectory, field, direction, P' + player_type[0]
                  + '_uniqueidentifier) values (default, "' + player_id + '", ' + str(year) + ', "' + matchup + '", "'
@@ -28,10 +28,10 @@ def write_to_file(player_type, player_id, team_id, year, matchup, count, pitch_t
         db.close()
 
 
-def write_pickoff(pitcher, team, year, base, attempts_successes):
+def write_pickoff(pitcher, team, year, base, attempts_successes, sandbox_mode):
     # print(base + ' ' + attempts_successes)
     # print(pitcher, team, year, base, attempts_successes)
-    db = DatabaseConnection()
+    db = DatabaseConnection(sandbox_mode)
     pt_uid = db.read('select pt_uniqueidentifier from player_teams where playerid = "' + pitcher + '" and teamid = "'
                      + team + '";')[0][0]
     if db.read('select pickoff_' + base + '_' + attempts_successes + ' from player_pitching where '

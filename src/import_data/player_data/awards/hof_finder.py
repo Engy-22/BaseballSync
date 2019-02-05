@@ -9,7 +9,7 @@ from bs4 import BeautifulSoup
 logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\hof_finder.log")
 
 
-def hof_finder(driver_logger):
+def hof_finder(driver_logger, sandbox_mode):
     print("adding HOF data")
     driver_logger.log("\tAdding HOF data")
     start_time = time.time()
@@ -17,7 +17,7 @@ def hof_finder(driver_logger):
     hof_table = str(BeautifulSoup(urlopen('https://www.baseball-reference.com/awards/hof.shtml'), 'html.parser')).\
         split('<tbody>')[1].split('</tbody>')[0]
     rows = hof_table.split('<tr>')[1:]
-    db = DatabaseConnection()
+    db = DatabaseConnection(sandbox_mode)
     for row in rows:
         person = row.split('data-append-csv="')[1].split('"')[0]
         year = row.split('<a href="/awards/hof_')[1].split('.shtml')[0]
