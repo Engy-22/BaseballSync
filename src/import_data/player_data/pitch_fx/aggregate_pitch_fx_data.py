@@ -40,7 +40,7 @@ def aggregate_and_write(year, player_type, db_connection, sandbox_mode):
 
 def aggregate(year, player_id, player_type, sandbox_mode):
     table = player_type[:-3] + 'er_pitches'
-    matchups = ['vrh', 'vlh']
+    matchups = ['vr', 'vl']
     opponent = 'b' if player_type == 'pitching' else 'p'
     balls = [ball for ball in range(4)]
     strikes = [strike for strike in range(3)]
@@ -49,7 +49,7 @@ def aggregate(year, player_id, player_type, sandbox_mode):
         for ball in balls:
             for strike in strikes:
                 bulk_query = 'from ' + table + ' where playerid = "' + player_id + '" and year = ' + str(year) + ' and'\
-                             ' matchup = "' + matchup + opponent + '" and count="' + str(ball) + '-' + str(strike) + '"'
+                             ' matchup = "' + matchup + '" and count="' + str(ball) + '-' + str(strike) + '"'
                 pitch_types = db.read('select pitch_type ' + bulk_query)
                 pitch_types_dict = {}
                 for pitch_type in pitch_types:
@@ -58,7 +58,7 @@ def aggregate(year, player_id, player_type, sandbox_mode):
                     else:
                         pitch_types_dict[pitch_type] = 0
                 write_to_file(player_id, year, matchup + opponent, balls, strikes, pitch_types_dict, player_type,
-                              sandbox_mode)
+                              len(pitch_types), sandbox_mode)
                 for pitch_type in set(pitch_types):
                     bulk_query += ' and pitch_type = "' + pitch_type[0] + '"'
                     for swing_take in set(db.read('select swing_take ' + bulk_query + ';')):
@@ -78,12 +78,19 @@ def aggregate(year, player_id, player_type, sandbox_mode):
     db.close()
 
 
-def write_to_file(player_id, year, matchup, balls, strikes, pitch_type, player_type, sandbox_mode):
+def write_to_file(player_id, year, matchup, balls, strikes, pitch_type, player_type, length, sandbox_mode):
     print(player_id)
     if player_type == 'pitching':
         db = PitcherPitchFXDatabaseConnection(sandbox_mode)
     else:
         db = BatterPitchFXDatabaseConnection(sandbox_mode)
+    fields = ''
+    values = ''
+    for pitch, total in pitch_type.items():
+        fields += ', ' + pitch
+        values += ', ' + str((total/length))
+    db.write('insert into ' + matchup + '_' + str(balls) + str(strikes) + '_pitch_type (uid, playerid, year' + fields
+             + ') values (default, "' + player_id + '", ' + str(year) + values + ');')
     db.close()
 
 
