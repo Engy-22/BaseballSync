@@ -92,8 +92,6 @@
     *Still Need:
         -pitch type data.
             *include unknown pitches? maybe for pitch counts and stuff.
-        -managerial tendencies data.
-            *ex.) https://www.baseball-reference.com/managers/terrybi01.shtml#all_manager_tendencies
     *Find out when mlbam data is updated, if in real time then I can created a real time view similar to fantasycast.
 
 -Restart everything with concurrency, and make it clean in terms of folder hierarchy.
