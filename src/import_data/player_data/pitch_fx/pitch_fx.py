@@ -42,7 +42,7 @@ def get_pitch_fx_data(year, driver_logger, sandbox_mode):
         if month > 6:
             if month >= int(opening_day.split('-')[0]):
                 for day in range(1, 32, 1):
-                    if day > 4:
+                    if day > 25:
                         if month == int(opening_day.split('-')[0]) and int(day) < int(opening_day.split('-')[1]):
                             continue
                         if len(str(day)) == 1:
