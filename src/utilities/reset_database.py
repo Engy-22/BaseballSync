@@ -6,13 +6,32 @@ from concurrent.futures import ThreadPoolExecutor
 
 
 sandbox_mode = True
-db = DatabaseConnection(sandbox_mode)
-with open("..\\..\\background\\table_definitions.txt", 'rt') as file:
+# db = DatabaseConnection(sandbox_mode)
+# with open("..\\..\\background\\table_definitions.txt", 'rt') as file:
+#     table_defs = file.readlines()
+#     if sandbox_mode:
+#         print("removing existing tables - sandbox")
+#     else:
+#         print("removing existing tables - production")
+#     with ThreadPoolExecutor(os.cpu_count()) as executor:
+#         for line in reversed(table_defs):
+#             executor.submit(db.write("drop table " + line.split('create table ')[1].split(' (')[0] + ';'))
+#     if sandbox_mode:
+#         print("creating new tables - sandbox")
+#     else:
+#         print("creating new tables - production")
+#     with ThreadPoolExecutor(os.cpu_count()) as executor2:
+#         for line in table_defs:
+#             executor2.submit(db.write(line))
+# db.close()
+
+db = PitcherPitchFXDatabaseConnection()
+with open("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\background\\pitch_fx_tables", 'rt') as file:
     table_defs = file.readlines()
     if sandbox_mode:
-        print("removing existing tables - sandbox")
+        print("removing existing pitcher pitch fx tables - sandbox")
     else:
-        print("removing existing tables - production")
+        print("removing existing pitcher pitch fx tables - production")
     with ThreadPoolExecutor(os.cpu_count()) as executor:
         for line in reversed(table_defs):
             executor.submit(db.write("drop table " + line.split('create table ')[1].split(' (')[0] + ';'))
@@ -25,15 +44,21 @@ with open("..\\..\\background\\table_definitions.txt", 'rt') as file:
             executor2.submit(db.write(line))
 db.close()
 
-db = PitcherPitchFXDatabaseConnection()
-with ThreadPoolExecutor(os.cpu_count()) as executor:
-    tables = db.read('show tables')
-    for delete_table in tables:
-        executor.submit(db.write('drop table ' + delete_table[0] + ';'))
-db.close()
 db = BatterPitchFXDatabaseConnection()
-with ThreadPoolExecutor(os.cpu_count()) as executor:
-    tables = db.read('show tables')
-    for delete_table in tables:
-        executor.submit(db.write('drop table ' + delete_table[0] + ';'))
+with open("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\background\\pitch_fx_tables", 'rt') as file:
+    table_defs = file.readlines()
+    if sandbox_mode:
+        print("removing existing batter pitch fx tables - sandbox")
+    else:
+        print("removing existing batter pitch fx tables - production")
+    with ThreadPoolExecutor(os.cpu_count()) as executor:
+        for line in reversed(table_defs):
+            executor.submit(db.write("drop table " + line.split('create table ')[1].split(' (')[0] + ';'))
+    if sandbox_mode:
+        print("creating new tables - sandbox")
+    else:
+        print("creating new tables - production")
+    with ThreadPoolExecutor(os.cpu_count()) as executor2:
+        for line in table_defs:
+            executor2.submit(db.write(line))
 db.close()
