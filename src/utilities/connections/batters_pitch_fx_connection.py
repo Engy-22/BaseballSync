@@ -2,8 +2,11 @@ import pymysql
 
 
 class BatterPitchFXDatabaseConnection:
-    def __init__(self):
-        self.db = pymysql.connect("localhost", "root", "Invader1401asdf", "batters_pitch_fx")
+    def __init__(self, sandbox_mode):
+        if sandbox_mode:
+            self.db = pymysql.connect("localhost", "root", "Invader1401asdf", "batters_pitch_fx_sandbox")
+        else:
+            self.db = pymysql.connect("localhost", "root", "Invader1401asdf", "batters_pitch_fx")
         self.cursor = self.db.cursor()
 
     def write(self, action):
