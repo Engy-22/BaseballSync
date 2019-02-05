@@ -57,8 +57,8 @@ def aggregate(year, player_id, player_type, sandbox_mode):
                         pitch_types_dict[pitch_type] += 1
                     else:
                         pitch_types_dict[pitch_type] = 0
-                write_to_file(player_id, year, matchup + opponent, balls, strikes, pitch_types_dict, player_type,
-                              len(pitch_types), sandbox_mode)
+                write_to_file(player_id, year, matchup, ball, strike, pitch_types_dict, player_type, len(pitch_types),
+                              sandbox_mode)
                 for pitch_type in set(pitch_types):
                     bulk_query += ' and pitch_type = "' + pitch_type[0] + '"'
                     for swing_take in set(db.read('select swing_take ' + bulk_query + ';')):
