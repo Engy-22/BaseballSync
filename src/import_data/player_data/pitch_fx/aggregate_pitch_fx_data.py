@@ -17,32 +17,11 @@ def aggregate_pitch_fx_data(year, driver_logger, sandbox_mode):
     start_time = time.time()
     logger.log("Aggregating pitch fx data for " + str(year) + ' || Timestamp: ' + datetime.datetime.today().
                strftime('%Y-%m-%d %H:%M:%S'))
-    create_tables(year)
     aggregate_and_write(year, 'pitching', PitcherPitchFXDatabaseConnection, sandbox_mode)
     aggregate_and_write(year, 'batting', BatterPitchFXDatabaseConnection, sandbox_mode)
     total_time = time_converter(time.time() - start_time)
     logger.log("Done aggregating " + str(year) + " pitch fx data: Time = " + total_time)
     driver_logger.log("\t\tTime = " + total_time)
-
-
-def create_tables(year):
-    logger.log('\tCreating tables')
-    start_time = time.time()
-    pitcher_db = PitcherPitchFXDatabaseConnection()
-    batter_db = BatterPitchFXDatabaseConnection()
-    if len(pitcher_db.read('show tables')) == 0:
-        with open('C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\background\\pitch_fx_tables', 'r') as file:
-            with ThreadPoolExecutor(os.cpu_count()) as executor:
-                for line in file:
-                    executor.submit(pitcher_db.write(str(year) + line))
-    if len(batter_db.read('show tables')) == 0:
-        with open('C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\background\\pitch_fx_tables', 'r') as file:
-            with ThreadPoolExecutor(os.cpu_count()) as executor:
-                for line in file:
-                    executor.submit(batter_db.write(str(year) + line))
-    pitcher_db.close()
-    batter_db.close()
-    logger.log('\t\tTime = ' + time_converter(time.time() - start_time))
 
 
 def aggregate_and_write(year, player_type, db_connection, sandbox_mode):
@@ -71,8 +50,16 @@ def aggregate(year, player_id, player_type, sandbox_mode):
             for strike in strikes:
                 bulk_query = 'from ' + table + ' where playerid = "' + player_id + '" and year = ' + str(year) + ' and'\
                              ' matchup = "' + matchup + opponent + '" and count = "' + str(ball) + '-' + str(strike)
-                for pitch_type in set(db.read('select pitch_type ' + bulk_query)):
-                    bulk_query += ' and pitch_type = ' + pitch_type
+                pitch_types = db.read('select pitch_type ' + bulk_query)
+                pitch_types_dict = {}
+                for pitch_type in pitch_types:
+                    if pitch_type in pitch_types_dict:
+                        pitch_types_dict[pitch_type] += 1
+                    else:
+                        pitch_types_dict[pitch_type] = 0
+                write_to_file(player_id, year, matchup + opponent, balls, strikes, pitch_types_dict, player_type)
+                for pitch_type in set(pitch_types):
+                    bulk_query += ' and pitch_type = ' + pitch_type[0]
                     for swing_take in set(db.read('select swing_take ' + bulk_query)):
                         bulk_query += ' and swing_take = ' + swing_take
                         for ball_strike in set(db.read('select ball_strike ' + bulk_query)):
@@ -87,12 +74,16 @@ def aggregate(year, player_id, player_type, sandbox_mode):
                                             count = 0
                                             for direction in directions:
                                                 count += 1
-                                            write_to_file(data)
     db.close()
 
 
-def write_to_file(data):
-    pass
+def write_to_file(player_id, year, matchup, balls, strikes, pitch_type, player_type):
+    if player_type == 'pitching':
+        db = PitcherPitchFXDatabaseConnection()
+    else:
+        db = BatterPitchFXDatabaseConnection()
+    db.write('create table ' + str(year) + '-' + matchup + '_' + str(balls) + str(strikes) + ' ();')
+    db.close()
 
 
 # print(aggregate(2008, 'pitching', PitcherPitchFXDatabaseConnection, False))
