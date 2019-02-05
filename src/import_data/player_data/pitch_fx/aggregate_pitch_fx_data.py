@@ -45,12 +45,14 @@ def aggregate(year, player_id, player_type, sandbox_mode):
     balls = [ball for ball in range(4)]
     strikes = [strike for strike in range(3)]
     db = DatabaseConnection(sandbox_mode)
-    team_id = db.read('select teamid from player_teams where playerid = "' + player_id + '";')
-    if len(team_id) > 1:
+    temp_team_id = db.read('select teamid from player_teams where playerid = "' + player_id + '";')
+    if len(temp_team_id) > 1:
         team_id = 'TOT'
-    p_uid = db.read('select p' + player_type[0] + '_uniqueidenitifier from player_' + player_type + ' where year = '
+    else:
+        team_id = temp_team_id[0][0]
+    p_uid = db.read('select p' + player_type[0] + '_uniqueidentifier from player_' + player_type + ' where year = '
                     + str(year) + ' and pt_uniqueidentifier = (select pt_uniqueidentifier from player_teams where '
-                    'playerid = "' + player_id + '" and teamid = ' + team_id + ')' + ';')[0][0]
+                    'playerid = "' + player_id + '" and teamid = "' + team_id + '")' + ';')[0][0]
     for matchup in matchups:
         for ball in balls:
             for strike in strikes:
@@ -98,7 +100,7 @@ def write_pitch_usage(player_id, p_uid, year, matchup, balls, strikes, pitch_typ
         fields += ', ' + pitch[0]
         values += ', ' + str((total/length))
     db.write('insert into ' + matchup + '_' + str(balls) + str(strikes) + '_pitch_type (uid, playerid, year' + fields
-             + 'p_uid) values (default, "' + player_id + '", ' + str(year) + values + ', ' + p_uid + ');')
+             + 'p_uid) values (default, "' + player_id + '", ' + str(year) + values + ', ' + str(p_uid) + ');')
     db.close()
 
 
