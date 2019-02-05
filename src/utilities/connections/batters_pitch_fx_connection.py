@@ -3,7 +3,7 @@ import pymysql
 
 class BatterPitchFXDatabaseConnection:
     def __init__(self):
-        self.db = pymysql.connect("localhost", "root", "Invader1401asdf", "pitchers_pitch_fx")
+        self.db = pymysql.connect("localhost", "root", "Invader1401asdf", "batters_pitch_fx")
         self.cursor = self.db.cursor()
 
     def write(self, action):
