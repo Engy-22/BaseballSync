@@ -64,4 +64,4 @@ with open("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\backgrou
         for line in table_defs:
             executor2.submit(db.write(line))
 db.close()
-time_converter(time.time() - start_time)
+print(time_converter(time.time() - start_time))
