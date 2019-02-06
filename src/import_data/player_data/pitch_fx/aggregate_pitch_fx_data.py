@@ -30,6 +30,7 @@ def aggregate_and_write(year, player_type, db_connection, sandbox_mode):
     logger.log("\tAggregating " + player_type + " data and writing to database")
     db = DatabaseConnection(sandbox_mode)
     players = set(db.read('select playerid from ' + player_type[:-3] + 'er_pitches'))
+    print(len(players))
     db.close()
     with ThreadPoolExecutor(os.cpu_count()) as executor:
         for player_id in players:
@@ -40,6 +41,7 @@ def aggregate_and_write(year, player_type, db_connection, sandbox_mode):
 
 
 def aggregate(year, player_id, player_type, sandbox_mode):
+    print(player_id)
     table = player_type[:-3] + 'er_pitches'
     matchups = ['vr', 'vl']
     opponent = 'hb' if player_type == 'pitching' else 'hp'
@@ -89,9 +91,6 @@ def aggregate(year, player_id, player_type, sandbox_mode):
 
 def write_pitch_usage(player_id, p_uid, year, matchup, balls, strikes, pitch_type_dict, player_type, length,
                       sandbox_mode):
-    if balls == 0 and strikes == 0:
-        print('\n' + player_id)
-        print(pitch_type_dict)
     if player_type == 'pitching':
         db = PitcherPitchFXDatabaseConnection(sandbox_mode)
     else:
@@ -100,7 +99,7 @@ def write_pitch_usage(player_id, p_uid, year, matchup, balls, strikes, pitch_typ
     values = ''
     for pitch, total in pitch_type_dict.items():
         fields += ', ' + pitch[0]
-        values += ', ' + str(round(total/length, 2))
+        values += ', ' + str(round(total/length, 3))
     db.write('insert into ' + matchup + '_' + str(balls) + str(strikes) + '_pitch_type (uid, playerid, year' + fields
              + ', p_uid) values (default, "' + player_id + '", ' + str(year) + values + ', ' + str(p_uid) + ');')
     db.close()
