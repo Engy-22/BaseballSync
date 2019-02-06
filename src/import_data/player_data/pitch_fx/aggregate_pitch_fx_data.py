@@ -65,7 +65,7 @@ def aggregate(year, player_id, player_type, sandbox_mode):
                     if pitch_type in pitch_types_dict:
                         pitch_types_dict[pitch_type] += 1
                     else:
-                        pitch_types_dict[pitch_type] = 0
+                        pitch_types_dict[pitch_type] = 1
                 write_pitch_usage(player_id, p_uid, year, matchup, ball, strike, pitch_types_dict, player_type,
                                   len(pitch_types), sandbox_mode)
                 for pitch_type in set(pitch_types):
@@ -89,6 +89,9 @@ def aggregate(year, player_id, player_type, sandbox_mode):
 
 def write_pitch_usage(player_id, p_uid, year, matchup, balls, strikes, pitch_type_dict, player_type, length,
                       sandbox_mode):
+    if balls == 0 and strikes == 0:
+        print('\n' + player_id)
+        print(pitch_type_dict)
     if player_type == 'pitching':
         db = PitcherPitchFXDatabaseConnection(sandbox_mode)
     else:
@@ -103,6 +106,5 @@ def write_pitch_usage(player_id, p_uid, year, matchup, balls, strikes, pitch_typ
     db.close()
 
 
-# aggregate(2008, 'perezod01', 'pitching', False)
-# aggregate_pitch_fx_data(2008, Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\"
-#                                      "dump.log"), False)
+aggregate_pitch_fx_data(2009, Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\"
+                                     "dump.log"), False)
