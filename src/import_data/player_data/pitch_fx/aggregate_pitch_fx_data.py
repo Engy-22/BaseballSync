@@ -79,22 +79,22 @@ def aggregate(year, player_id, player_type, sandbox_mode):
                 pitches_length_swing_take_and_ball_strike[matchup][str(ball) + str(strike)] = {}
                 for pitch_type in pitch_types:
                     if pitch_type in pitch_types_dict:
-                        pitch_types_dict[matchup][str(ball) + str(strike)][pitch_type] += 1
-                        pitches_length_swing_take_and_ball_strike[matchup][str(ball) + str(strike)][pitch_type] += 1
+                        pitch_types_dict[matchup][str(ball) + str(strike)][pitch_type[0]] += 1
+                        pitches_length_swing_take_and_ball_strike[matchup][str(ball) + str(strike)][pitch_type[0]] += 1
                     else:
-                        pitch_types_dict[matchup][str(ball) + str(strike)][pitch_type] = 1
-                        swings_by_pitch_dict[matchup][str(ball) + str(strike)][pitch_type] = 0
-                        strikes_by_pitch_dict[matchup][str(ball) + str(strike)][pitch_type] = 0
-                        pitches_length_swing_take_and_ball_strike[matchup][str(ball) + str(strike)][pitch_type] = 1
+                        pitch_types_dict[matchup][str(ball) + str(strike)][pitch_type[0]] = 1
+                        swings_by_pitch_dict[matchup][str(ball) + str(strike)][pitch_type[0]] = 0
+                        strikes_by_pitch_dict[matchup][str(ball) + str(strike)][pitch_type[0]] = 0
+                        pitches_length_swing_take_and_ball_strike[matchup][str(ball) + str(strike)][pitch_type[0]] = 1
                 for pitch_type in set(pitch_types):
                     bulk_query += ' and pitch_type = "' + pitch_type[0] + '"'
                     for swing_take in set(db.read('select swing_take ' + bulk_query + ';')):
                         if swing_take[0] == 'swing':
-                            swings_by_pitch_dict[matchup][str(ball) + str(strike)][pitch_type] += 1
+                            swings_by_pitch_dict[matchup][str(ball) + str(strike)][pitch_type[0]] += 1
                         bulk_query += ' and swing_take = "' + swing_take[0] + '"'
                         for ball_strike in set(db.read('select ball_strike ' + bulk_query + ';')):
                             if ball_strike[0] == 'strike':
-                                strikes_by_pitch_dict[matchup][str(ball) + str(strike)][pitch_type] += 1
+                                strikes_by_pitch_dict[matchup][str(ball) + str(strike)][pitch_type[0]] += 1
                             bulk_query += ' and ball_strike = "' + ball_strike[0] + '"'
                             for outcome in set(db.read('select outcome ' + bulk_query + ';')):
                                 bulk_query += ' and outcome = "' + outcome[0] + '"'
@@ -126,7 +126,7 @@ def write_pitch_usage(player_id, p_uid, year, pitch_type_dict, player_type, leng
             fields = ''
             values = ''
             for pitch, total in pitch_types.items():
-                fields += ', ' + pitch[0]
+                fields += ', ' + pitch
                 values += ', ' + str(round(total/length[matchup][count], 3))
             db.write('insert into ' + matchup + '_' + count + '_pitch_type (uid, playerid, year' + fields + ', p_uid)'
                      ' values (default, "' + player_id + '", ' + str(year) + values + ', ' + str(p_uid) + ');')
@@ -144,7 +144,7 @@ def write_swing_take_by_pitch(player_id, p_uid, year, pitch_type_dict, swing_tak
             fields = ''
             values = ''
             for pitch, total in pitch_types.items():
-                fields += ', ' + pitch[0]
+                fields += ', ' + pitch
                 values += ', ' + str(round(swing_take_dict[matchup][count]/length[matchup][count][pitch], 3))
             db.write('insert into ' + matchup + '_' + count + '_swing_take (uid, playerid, year' + fields + ', p_uid)'
                      ' values (default, "' + player_id + '", ' + str(year) + values + ', ' + str(p_uid) + ');')
@@ -162,7 +162,7 @@ def write_ball_strike_by_pitch(player_id, p_uid, year, pitch_type_dict, ball_str
             fields = ''
             values = ''
             for pitch, total in pitch_types.items():
-                fields += ', ' + pitch[0]
+                fields += ', ' + pitch
                 values += ', ' + str(round(ball_strike_dict[matchup][count] / length[matchup][count][pitch], 3))
             db.write('insert into ' + matchup + '_' + count + '_ball_strike (uid, playerid, year' + fields + ', p_uid)'
                      ' values (default, "' + player_id + '", ' + str(year) + values + ', ' + str(p_uid) + ');')
