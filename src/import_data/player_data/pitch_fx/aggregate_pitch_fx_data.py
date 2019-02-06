@@ -13,6 +13,7 @@ logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\log
 
 
 def aggregate_pitch_fx_data(year, driver_logger, sandbox_mode):
+    print('Aggregating pitch fx data')
     driver_logger.log("\tAggregating pitch fx data")
     start_time = time.time()
     logger.log("Aggregating pitch fx data for " + str(year) + ' || Timestamp: ' + datetime.datetime.today().
@@ -88,8 +89,6 @@ def aggregate(year, player_id, player_type, sandbox_mode):
 
 def write_pitch_usage(player_id, p_uid, year, matchup, balls, strikes, pitch_type_dict, player_type, length,
                       sandbox_mode):
-    print('\n' + player_id + ' - ' + str(balls) + str(strikes))
-    print(pitch_type_dict)
     if player_type == 'pitching':
         db = PitcherPitchFXDatabaseConnection(sandbox_mode)
     else:
@@ -98,10 +97,12 @@ def write_pitch_usage(player_id, p_uid, year, matchup, balls, strikes, pitch_typ
     values = ''
     for pitch, total in pitch_type_dict.items():
         fields += ', ' + pitch[0]
-        values += ', ' + str((total/length))
+        values += ', ' + str(round(total/length, 2))
     db.write('insert into ' + matchup + '_' + str(balls) + str(strikes) + '_pitch_type (uid, playerid, year' + fields
              + ', p_uid) values (default, "' + player_id + '", ' + str(year) + values + ', ' + str(p_uid) + ');')
     db.close()
 
 
-aggregate(2008, 'perezod01', 'pitching', False)
+# aggregate(2008, 'perezod01', 'pitching', False)
+# aggregate_pitch_fx_data(2008, Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\"
+#                                      "dump.log"), False)
