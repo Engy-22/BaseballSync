@@ -7,7 +7,7 @@ from concurrent.futures import ThreadPoolExecutor
 from utilities.time_converter import time_converter
 
 start_time = time.time()
-sandbox_mode = True
+sandbox_mode = False
 db = DatabaseConnection(sandbox_mode)
 with open("..\\..\\background\\table_definitions.txt", 'rt') as file:
     table_defs = file.readlines()
@@ -64,4 +64,4 @@ with open("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\backgrou
         for line in table_defs:
             executor2.submit(db.write(line))
 db.close()
-time_converter(time.time() - start_time)
+print(time_converter(time.time() - start_time))

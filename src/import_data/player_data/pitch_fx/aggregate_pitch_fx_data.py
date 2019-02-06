@@ -13,6 +13,7 @@ logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\log
 
 
 def aggregate_pitch_fx_data(year, driver_logger, sandbox_mode):
+    print('Aggregating pitch fx data')
     driver_logger.log("\tAggregating pitch fx data")
     start_time = time.time()
     logger.log("Aggregating pitch fx data for " + str(year) + ' || Timestamp: ' + datetime.datetime.today().
@@ -40,25 +41,33 @@ def aggregate_and_write(year, player_type, db_connection, sandbox_mode):
 
 def aggregate(year, player_id, player_type, sandbox_mode):
     table = player_type[:-3] + 'er_pitches'
-    matchups = ['vrh', 'vlh']
-    opponent = 'b' if player_type == 'pitching' else 'p'
+    matchups = ['vr', 'vl']
+    opponent = 'hb' if player_type == 'pitching' else 'hp'
     balls = [ball for ball in range(4)]
     strikes = [strike for strike in range(3)]
     db = DatabaseConnection(sandbox_mode)
+    temp_team_id = db.read('select teamid from player_teams where playerid = "' + player_id + '";')
+    if len(temp_team_id) > 1:
+        team_id = 'TOT'
+    else:
+        team_id = temp_team_id[0][0]
+    p_uid = db.read('select p' + player_type[0] + '_uniqueidentifier from player_' + player_type + ' where year = '
+                    + str(year) + ' and pt_uniqueidentifier = (select pt_uniqueidentifier from player_teams where '
+                    'playerid = "' + player_id + '" and teamid = "' + team_id + '")' + ';')[0][0]
     for matchup in matchups:
         for ball in balls:
             for strike in strikes:
                 bulk_query = 'from ' + table + ' where playerid = "' + player_id + '" and year = ' + str(year) + ' and'\
                              ' matchup = "' + matchup + opponent + '" and count="' + str(ball) + '-' + str(strike) + '"'
-                pitch_types = db.read('select pitch_type ' + bulk_query)
+                pitch_types = db.read('select pitch_type ' + bulk_query + ';')
                 pitch_types_dict = {}
                 for pitch_type in pitch_types:
                     if pitch_type in pitch_types_dict:
                         pitch_types_dict[pitch_type] += 1
                     else:
                         pitch_types_dict[pitch_type] = 0
-                write_to_file(player_id, year, matchup + opponent, balls, strikes, pitch_types_dict, player_type,
-                              sandbox_mode)
+                write_pitch_usage(player_id, p_uid, year, matchup, ball, strike, pitch_types_dict, player_type,
+                                  len(pitch_types), sandbox_mode)
                 for pitch_type in set(pitch_types):
                     bulk_query += ' and pitch_type = "' + pitch_type[0] + '"'
                     for swing_take in set(db.read('select swing_take ' + bulk_query + ';')):
@@ -78,13 +87,22 @@ def aggregate(year, player_id, player_type, sandbox_mode):
     db.close()
 
 
-def write_to_file(player_id, year, matchup, balls, strikes, pitch_type, player_type, sandbox_mode):
-    print(player_id)
+def write_pitch_usage(player_id, p_uid, year, matchup, balls, strikes, pitch_type_dict, player_type, length,
+                      sandbox_mode):
     if player_type == 'pitching':
         db = PitcherPitchFXDatabaseConnection(sandbox_mode)
     else:
         db = BatterPitchFXDatabaseConnection(sandbox_mode)
+    fields = ''
+    values = ''
+    for pitch, total in pitch_type_dict.items():
+        fields += ', ' + pitch[0]
+        values += ', ' + str(round(total/length, 2))
+    db.write('insert into ' + matchup + '_' + str(balls) + str(strikes) + '_pitch_type (uid, playerid, year' + fields
+             + ', p_uid) values (default, "' + player_id + '", ' + str(year) + values + ', ' + str(p_uid) + ');')
     db.close()
 
 
-aggregate(2008, 'perezod01', 'pitching', False)
+# aggregate(2008, 'perezod01', 'pitching', False)
+# aggregate_pitch_fx_data(2008, Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\"
+#                                      "dump.log"), False)
