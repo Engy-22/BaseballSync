@@ -116,8 +116,6 @@ def aggregate(year, player_id, player_type, sandbox_mode):
 
 def write_pitch_usage(player_id, p_uid, year, pitch_type_dict, player_type, length, sandbox_mode):
     print(pitch_type_dict)
-    start_time = time.time()
-    logger.log('\t\tWriting pitch usage data')
     if player_type == 'pitching':
         db = PitcherPitchFXDatabaseConnection(sandbox_mode)
     else:
@@ -133,13 +131,10 @@ def write_pitch_usage(player_id, p_uid, year, pitch_type_dict, player_type, leng
             db.write('insert into ' + matchup + '_' + count + '_pitch_type (uid, playerid, year' + fields + ', p_uid)'
                      ' values (default, "' + player_id + '", ' + str(year) + values + ', ' + str(p_uid) + ');')
     db.close()
-    logger.log('\t\t\tTime = ' + time_converter(time.time() - start_time))
 
 
 def write_swing_take_by_pitch(player_id, p_uid, year, pitch_type_dict, swing_take_dict, player_type, length,
                               sandbox_mode):
-    start_time = time.time()
-    logger.log('\t\tWriting swing % data')
     if player_type == 'pitching':
         db = PitcherPitchFXDatabaseConnection(sandbox_mode)
     else:
@@ -154,13 +149,10 @@ def write_swing_take_by_pitch(player_id, p_uid, year, pitch_type_dict, swing_tak
             db.write('insert into ' + matchup + '_' + count + '_swing_take (uid, playerid, year' + fields + ', p_uid)'
                      ' values (default, "' + player_id + '", ' + str(year) + values + ', ' + str(p_uid) + ');')
     db.close()
-    logger.log('\t\t\tTime = ' + time_converter(time.time() - start_time))
 
 
 def write_ball_strike_by_pitch(player_id, p_uid, year, pitch_type_dict, ball_strike_dict, player_type, length,
                                sandbox_mode):
-    start_time = time.time()
-    logger.log('\t\tWriting strike % data')
     if player_type == 'pitching':
         db = PitcherPitchFXDatabaseConnection(sandbox_mode)
     else:
@@ -175,7 +167,6 @@ def write_ball_strike_by_pitch(player_id, p_uid, year, pitch_type_dict, ball_str
             db.write('insert into ' + matchup + '_' + count + '_ball_strike (uid, playerid, year' + fields + ', p_uid)'
                      ' values (default, "' + player_id + '", ' + str(year) + values + ', ' + str(p_uid) + ');')
     db.close()
-    logger.log('\t\t\tTime = ' + time_converter(time.time() - start_time))
 
 
 aggregate_pitch_fx_data(2009, Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\"
