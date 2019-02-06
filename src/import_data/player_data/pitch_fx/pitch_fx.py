@@ -56,7 +56,7 @@ def get_pitch_fx_data(year, driver_logger, sandbox_mode):
                 get_day_data(this_day, this_month, str(year), sandbox_mode)
     logger.log("Done fetching " + str(year) + " pitch fx data: time = " + time_converter(time.time() - start_time)
                + '\n\n\n\n')
-    aggregate_pitch_fx_data(year, logger, sandbox_mode)
+    aggregate_pitch_fx_data(year, driver_logger, sandbox_mode)
     driver_logger.log("\t\tTime = " + time_converter(time.time() - start_time))
 
 
