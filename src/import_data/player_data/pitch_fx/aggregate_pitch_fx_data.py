@@ -18,8 +18,8 @@ def aggregate_pitch_fx_data(year, driver_logger, sandbox_mode):
     start_time = time.time()
     logger.log("Aggregating pitch fx data for " + str(year) + ' || Timestamp: ' + datetime.datetime.today().
                strftime('%Y-%m-%d %H:%M:%S'))
-    # aggregate_and_write(year, 'pitching', sandbox_mode)
-    aggregate_and_write(year, 'batting', sandbox_mode)
+    aggregate_and_write(year, 'pitching', sandbox_mode)
+    # aggregate_and_write(year, 'batting', sandbox_mode)
     total_time = time_converter(time.time() - start_time)
     logger.log("Done aggregating " + str(year) + " pitch fx data: Time = " + total_time + '\n\n')
     driver_logger.log("\t\tTime = " + total_time)
@@ -33,7 +33,7 @@ def aggregate_and_write(year, player_type, sandbox_mode):
     db.close()
     for player_id in players:
         aggregate(year, player_id[0], player_type, sandbox_mode)
-        # break
+        break
     logger.log("\tDone aggregating and writing " + player_type + " data: Time = "
                + time_converter(time.time() - pitcher_time))
 
@@ -51,6 +51,7 @@ def aggregate(year, player_id, player_type, sandbox_mode):
     swings_by_pitch_dict = {}
     strikes_by_pitch_dict = {}
     outcomes_by_pitch_type = {}
+    outcomes_by_pitch_type_length = {}
     db = DatabaseConnection(sandbox_mode)
     temp_p_uid = []
     for pt_uid in db.read('select pt_uniqueidentifier from player_teams where playerid = "' + player_id + '";'):
@@ -73,12 +74,14 @@ def aggregate(year, player_id, player_type, sandbox_mode):
         swings_by_pitch_dict[matchup] = {}
         strikes_by_pitch_dict[matchup] = {}
         outcomes_by_pitch_type[matchup] = {}
+        outcomes_by_pitch_type_length[matchup] = {}
         for ball in balls:
             for strike in strikes:
                 pitch_types_dict[matchup][str(ball)+str(strike)] = {}
                 swings_by_pitch_dict[matchup][str(ball)+str(strike)] = {}
                 strikes_by_pitch_dict[matchup][str(ball)+str(strike)] = {}
                 outcomes_by_pitch_type[matchup][str(ball)+str(strike)] = {}
+                outcomes_by_pitch_type_length[matchup][str(ball)+str(strike)] = {}
                 bulk_query = 'from ' + table + ' where playerid = "' + player_id + '" and year = ' + str(year) + ' and'\
                              ' matchup = "' + matchup + opponent + '" and count="' + str(ball) + '-' + str(strike) + '"'
                 pitch_types = db.read('select pitch_type ' + bulk_query + ';')
@@ -94,12 +97,14 @@ def aggregate(year, player_id, player_type, sandbox_mode):
                 for pitch_type in set(pitch_types):
                     strikes_by_pitch_dict[matchup][str(ball)+str(strike)][pitch_type[0]] = 0
                     outcomes_by_pitch_type[matchup][str(ball)+str(strike)][pitch_type[0]] = {}
+                    outcomes_by_pitch_type_length[matchup][str(ball)+str(strike)][pitch_type[0]] = 0
                     temp_bulk_query = bulk_query + ' and pitch_type = "' + pitch_type[0] + '"'
-                    for outcome in db.read('select outcome ' + temp_bulk_query + ';'):
+                    for outcome in db.read('select outcome ' + temp_bulk_query + ' and swing_take = "swing";'):
                         if outcome[0] in outcomes_by_pitch_type[matchup][str(ball)+str(strike)][pitch_type[0]]:
                             outcomes_by_pitch_type[matchup][str(ball)+str(strike)][pitch_type[0]][outcome[0]] += 1
                         else:
                             outcomes_by_pitch_type[matchup][str(ball)+str(strike)][pitch_type[0]][outcome[0]] = 1
+                        outcomes_by_pitch_type_length[matchup][str(ball) + str(strike)][pitch_type[0]] += 1
                     for swing_take in set(db.read('select swing_take ' + temp_bulk_query + ';')):
                         temp_bulk_query = bulk_query + ' and pitch_type = "' + pitch_type[0] + '" and swing_take = "'\
                                           + swing_take[0] + '"'
@@ -125,12 +130,13 @@ def aggregate(year, player_id, player_type, sandbox_mode):
                             #             for direction in db.read('select direction ' + temp_bulk_query + ';'):
                             #                 print(direction)
                             #                 count += 1
-    write_pitch_usage(player_id, p_uid, year, pitch_types_dict, player_type, pitches_length_pitch_type, sandbox_mode)
-    write_swing_take_by_pitch(player_id, p_uid, year, swings_by_pitch_dict, player_type,
-                              pitches_length_swing_take_and_ball_strike, sandbox_mode)
-    write_ball_strike_by_pitch(player_id, p_uid, year, strikes_by_pitch_dict, player_type,
-                               pitches_length_swing_take_and_ball_strike, sandbox_mode)
-    write_outcome_by_pitch_type(player_id, p_uid, year, outcomes_by_pitch_type, player_type, sandbox_mode)
+    # write_pitch_usage(player_id, p_uid, year, pitch_types_dict, player_type, pitches_length_pitch_type, sandbox_mode)
+    # write_swing_take_by_pitch(player_id, p_uid, year, swings_by_pitch_dict, player_type,
+    #                           pitches_length_swing_take_and_ball_strike, sandbox_mode)
+    # write_ball_strike_by_pitch(player_id, p_uid, year, strikes_by_pitch_dict, player_type,
+    #                            pitches_length_swing_take_and_ball_strike, sandbox_mode)
+    write_outcome_by_pitch_type(player_id, p_uid, year, outcomes_by_pitch_type, outcomes_by_pitch_type_length,
+                                player_type, sandbox_mode)
     # write_trajectory_by_outcome()
     # write_field_by_outcome()
     # write_direction_by_outcome()
@@ -194,11 +200,17 @@ def write_ball_strike_by_pitch(player_id, p_uid, year, ball_strike_dict, player_
     db.close()
 
 
-def write_outcome_by_pitch_type(player_id, p_uid, year, outcomes_by_pitch_type, player_type, sandbox_mode):
+def write_outcome_by_pitch_type(player_id, p_uid, year, outcomes_by_pitch_type, length, player_type, sandbox_mode):
     if player_type == 'pitching':
         db = PitcherPitchFXDatabaseConnection(sandbox_mode)
     else:
         db = BatterPitchFXDatabaseConnection(sandbox_mode)
+    with ThreadPoolExecutor(os.cpu_count()) as executor4:
+        for matchup, counts in outcomes_by_pitch_type.items():
+            for count, pitch_types in counts.items():
+                for pitch_type, outcomes in pitch_types.items():
+                    for outcome, total in outcomes.items():
+                        
     db.close()
 
 
