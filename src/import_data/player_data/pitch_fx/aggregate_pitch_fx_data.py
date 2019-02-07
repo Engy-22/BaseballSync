@@ -212,7 +212,7 @@ def write_outcome_by_pitch_type(player_id, p_uid, year, outcomes_by_pitch_type, 
                 fields = ''
                 records = {}
                 for pitch_type, outcomes in pitch_types.items():
-                    fields += pitch_type + ' float, '
+                    fields += ', ' + pitch_type + ' float'
                     for outcome, total in outcomes.items():
                         if outcome in records:
                             if pitch_type in records[outcome]:
@@ -222,12 +222,12 @@ def write_outcome_by_pitch_type(player_id, p_uid, year, outcomes_by_pitch_type, 
                         else:
                             records[outcome] = {}
                             records[outcome][pitch_type] = 1
-                db.write('create table ' + table + ' (' + fields[:-2] + ');')
+                db.write('create table ' + table + ' (outcome text' + fields + ');')
                 for outcome, pitch_types in records.items():
                     for pitch_type, total in pitch_types.items():
-                        if len(db.read('select * from ' + table + ' where outcome = ' + outcome + ';')) == 0:
-                            db.write('insert into ' + table + '(outcome, ' + pitch_type + ') values ( ' + outcome
-                                     + ', ' + str(round(total/length[matchup][count][pitch_type], 3)) + ' );')
+                        if outcome in db.read('select outcome from ' + table + ';'):
+                            db.write('insert into ' + table + '(outcome, ' + pitch_type + ') values ( "' + outcome
+                                     + '", ' + str(round(total/length[matchup][count][pitch_type], 3)) + ' );')
                         else:
                             db.write('update ' + table + 'set ' + pitch_type + ' = '
                                      + str(round(total/length[matchup][count][pitch_type], 3)) + ' where outcome = "'
