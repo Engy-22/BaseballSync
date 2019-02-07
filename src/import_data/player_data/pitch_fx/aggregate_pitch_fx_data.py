@@ -66,7 +66,6 @@ def aggregate(year, player_id, player_type, sandbox_mode):
     else:
         p_uid = temp_p_uid[0]
     for matchup in matchups:
-        print('\n' + matchup)
         pitches_length_pitch_type[matchup] = {}
         pitches_length_swing_take_and_ball_strike[matchup] = {}
         pitch_types_dict[matchup] = {}
@@ -74,7 +73,6 @@ def aggregate(year, player_id, player_type, sandbox_mode):
         strikes_by_pitch_dict[matchup] = {}
         for ball in balls:
             for strike in strikes:
-                print(str(ball) + '-' + str(strike))
                 pitch_types_dict[matchup][str(ball)+str(strike)] = {}
                 swings_by_pitch_dict[matchup][str(ball)+str(strike)] = {}
                 strikes_by_pitch_dict[matchup][str(ball)+str(strike)] = {}
