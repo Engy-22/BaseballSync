@@ -21,7 +21,7 @@ def aggregate_pitch_fx_data(year, driver_logger, sandbox_mode):
     aggregate_and_write(year, 'pitching', sandbox_mode)
     # aggregate_and_write(year, 'batting', sandbox_mode)
     total_time = time_converter(time.time() - start_time)
-    logger.log("Done aggregating " + str(year) + " pitch fx data: Time = " + total_time)
+    logger.log("Done aggregating " + str(year) + " pitch fx data: Time = " + total_time + '\n\n')
     driver_logger.log("\t\tTime = " + total_time)
 
 
@@ -34,7 +34,8 @@ def aggregate_and_write(year, player_type, sandbox_mode):
     for player_id in players:
         aggregate(year, player_id[0], player_type, sandbox_mode)
         break
-    logger.log("\tDone aggregating and writing " + player_type + " data: Time = " + str(time.time() - pitcher_time))
+    logger.log("\tDone aggregating and writing " + player_type + " data: Time = "
+               + time_converter(time.time() - pitcher_time))
 
 
 def aggregate(year, player_id, player_type, sandbox_mode):
@@ -65,6 +66,7 @@ def aggregate(year, player_id, player_type, sandbox_mode):
     else:
         p_uid = temp_p_uid[0]
     for matchup in matchups:
+        print(matchup)
         pitches_length_pitch_type[matchup] = {}
         pitches_length_swing_take_and_ball_strike[matchup] = {}
         pitch_types_dict[matchup] = {}
