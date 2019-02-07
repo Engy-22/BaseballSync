@@ -97,4 +97,4 @@
     *aggregate and consolidate pitch_fx data.
         -When aggregating, pitch_fx records should relate only to TOT if player played on multiple teams that year.
             -The data for players who fit this category will have their pitches written to their teams and not TOT.
-    *make a UI for the reset_database file.
+    *make a UI for the reset_database script.
