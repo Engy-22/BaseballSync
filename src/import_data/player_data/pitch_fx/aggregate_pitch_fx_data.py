@@ -42,6 +42,7 @@ def aggregate(year, player_id, player_type, sandbox_mode):
     print(player_id)
     table = player_type[:-3] + 'er_pitches'
     matchups = ['vr', 'vl']
+    aggregate_hbp(player_id, year, matchups, sandbox_mode)
     opponent = 'hb' if player_type == 'pitching' else 'hp'
     balls = [ball for ball in range(4)]
     strikes = [strike for strike in range(3)]
@@ -106,8 +107,8 @@ def aggregate(year, player_id, player_type, sandbox_mode):
                             outcomes_by_pitch_type[matchup][str(ball)+str(strike)][pitch_type[0]][outcome[0]] = 1
                         outcomes_by_pitch_type_length[matchup][str(ball) + str(strike)][pitch_type[0]] += 1
                     for swing_take in set(db.read('select swing_take ' + temp_bulk_query + ';')):
-                        temp_bulk_query = bulk_query + ' and pitch_type = "' + pitch_type[0] + '" and (swing_take = "'\
-                                          + swing_take[0] + '" or outcome = "hbp")'
+                        temp_bulk_query = bulk_query + ' and pitch_type = "' + pitch_type[0] + '" and swing_take = "'\
+                                          + swing_take[0] + '" '#or outcome = "hbp")'
                         if swing_take[0] == 'swing':
                             swings_by_pitch_dict[matchup][str(ball)+str(strike)][pitch_type[0]] = \
                                     int(db.read('select count(*) ' + temp_bulk_query + ';')[0][0])
@@ -236,5 +237,33 @@ def write_outcome_by_pitch_type(player_id, p_uid, year, outcomes_by_pitch_type, 
     db.close()
 
 
-aggregate_pitch_fx_data(2009, Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\"
-                                     "dump.log"), False)
+def aggregate_hbp(player_id, year, matchups, sandbox_mode):
+    hbps = {}
+    pitches = {}
+    new_db = PitcherPitchFXDatabaseConnection(sandbox_mode)
+    if len(new_db.read('select hbp_id from hbp_vrhb_pitch_type where playerid = "' + player_id + '" and year = "'
+                   + str(year) + '";')) == 0:
+        new_db.close()
+        for matchup in matchups:
+            db = DatabaseConnection(sandbox_mode)
+            hbps[matchup] = db.read('select pitch_type, count(*) from pitcher_pitches where year = ' + str(year)
+                                    + ' and playerid = "' + player_id + '" and matchup = "' + matchup + 'hb" and '
+                                    'outcome = "hbp" group by pitch_type;')
+            for pitch_type in db.read('select pitch_type, count(*) from pitcher_pitches where year = ' + str(year)
+                                      + ' and playerid = "' + player_id + '" and matchup="vrhb" group by pitch_type;'):
+                pitches[pitch_type[0]] = pitch_type[1]
+            db.close()
+        new_db = PitcherPitchFXDatabaseConnection(sandbox_mode)
+        for matchup, hbp_by_pitch_type in hbps.items():
+            fields = ''
+            values = ''
+            for hbp in hbp_by_pitch_type:
+                fields += ', ' + hbp[0]
+                values += ', ' + str(round(hbp[1]/pitches[hbp[0]], 3))
+            new_db.write('insert into hbp_' + matchup + 'hb_pitch_type (hbp_id, playerid, year' + fields + ') values '
+                         '(default, "' + player_id + '", ' + str(year) + values + ');')
+        new_db.close()
+
+
+# aggregate_pitch_fx_data(2009, Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\"
+#                                      "dump.log"), False)
