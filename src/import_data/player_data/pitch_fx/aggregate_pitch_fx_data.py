@@ -225,13 +225,19 @@ def write_outcome_by_pitch_type(player_id, p_uid, year, outcomes_by_pitch_type, 
                 db.write('create table ' + table + ' (outcome text' + fields + ');')
                 for outcome, pitch_types in records.items():
                     for pitch_type, total in pitch_types.items():
-                        if outcome in db.read('select outcome from ' + table + ';'):
+                        print(db.read('select outcome from ' + table + ';'))
+                        if outcome not in db.read('select outcome from ' + table + ';'):
+                            print('insert into ' + table + '(outcome, ' + pitch_type + ') values ( "' + outcome
+                                  + '", ' + str(round(total/length[matchup][count][pitch_type], 3)) + ' );')
                             db.write('insert into ' + table + '(outcome, ' + pitch_type + ') values ( "' + outcome
                                      + '", ' + str(round(total/length[matchup][count][pitch_type], 3)) + ' );')
                         else:
-                            db.write('update ' + table + 'set ' + pitch_type + ' = '
+                            print('update ' + table + ' set ' + pitch_type + ' = '
+                                  + str(round(total/length[matchup][count][pitch_type], 3)) + ' where outcome = "'
+                                  + outcome + '";')
+                            db.write('update ' + table + ' set ' + pitch_type + ' = '
                                      + str(round(total/length[matchup][count][pitch_type], 3)) + ' where outcome = "'
-                                     + outcome + '", );')
+                                     + outcome + '";')
     db.close()
 
 
