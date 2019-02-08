@@ -99,3 +99,5 @@
             -The data for players who fit this category will have their pitches written to their teams and not TOT.
     *make a UI for the reset_database script.
     *add hbp to outcome_by_pitch_type.
+    *need an hbp table for pitchers_pitch_fx db.
+        -sink_hbp / sink_count, 4sm_hbp / 4sm_count, etc.
