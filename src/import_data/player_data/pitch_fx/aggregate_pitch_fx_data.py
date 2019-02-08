@@ -106,11 +106,11 @@ def aggregate(year, player_id, player_type, sandbox_mode):
                             outcomes_by_pitch_type[matchup][str(ball)+str(strike)][pitch_type[0]][outcome[0]] = 1
                         outcomes_by_pitch_type_length[matchup][str(ball) + str(strike)][pitch_type[0]] += 1
                     for swing_take in set(db.read('select swing_take ' + temp_bulk_query + ';')):
-                        temp_bulk_query = bulk_query + ' and pitch_type = "' + pitch_type[0] + '" and swing_take = "'\
-                                          + swing_take[0] + '"'
+                        temp_bulk_query = bulk_query + ' and pitch_type = "' + pitch_type[0] + '" and (swing_take = "'\
+                                          + swing_take[0] + '" or outcome = "hbp")'
                         if swing_take[0] == 'swing':
                             swings_by_pitch_dict[matchup][str(ball)+str(strike)][pitch_type[0]] = \
-                                    int(db.read('select count(*) ' + temp_bulk_query)[0][0])
+                                    int(db.read('select count(*) ' + temp_bulk_query + ';')[0][0])
                         for ball_strike in set(db.read('select ball_strike ' + temp_bulk_query + ';')):
                             temp_bulk_query = bulk_query + ' and pitch_type = "' + pitch_type[0] + '" and swing_take='\
                                               + '"' + swing_take[0] + '" and ball_strike = "' + ball_strike[0] + '"'
@@ -225,19 +225,14 @@ def write_outcome_by_pitch_type(player_id, p_uid, year, outcomes_by_pitch_type, 
                 db.write('create table ' + table + ' (outcome text' + fields + ');')
                 for outcome, pitch_types in records.items():
                     for pitch_type, total in pitch_types.items():
-                        print(db.read('select outcome from ' + table + ';'))
-                        if outcome not in db.read('select outcome from ' + table + ';'):
-                            print('insert into ' + table + '(outcome, ' + pitch_type + ') values ( "' + outcome
-                                  + '", ' + str(round(total/length[matchup][count][pitch_type], 3)) + ' );')
-                            db.write('insert into ' + table + '(outcome, ' + pitch_type + ') values ( "' + outcome
-                                     + '", ' + str(round(total/length[matchup][count][pitch_type], 3)) + ' );')
+                        if outcome not in [temp[0] for temp in set(db.read('select outcome from ' + table + ';'))]:
+                            executor4.submit(db.write('insert into ' + table + '(outcome, ' + pitch_type + ') values ("'
+                                                      + outcome + '", '
+                                                      + str(round(total/length[matchup][count][pitch_type], 3)) + ');'))
                         else:
-                            print('update ' + table + ' set ' + pitch_type + ' = '
-                                  + str(round(total/length[matchup][count][pitch_type], 3)) + ' where outcome = "'
-                                  + outcome + '";')
-                            db.write('update ' + table + ' set ' + pitch_type + ' = '
-                                     + str(round(total/length[matchup][count][pitch_type], 3)) + ' where outcome = "'
-                                     + outcome + '";')
+                            executor4.submit(db.write('update ' + table + ' set ' + pitch_type + ' = '
+                                                      + str(round(total/length[matchup][count][pitch_type], 3))
+                                                      + ' where outcome = "' + outcome + '";'))
     db.close()
 
 
