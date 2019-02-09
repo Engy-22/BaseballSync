@@ -136,8 +136,8 @@ def aggregate(year, player_id, player_type, sandbox_mode):
     #                           pitches_length_swing_take_and_ball_strike, sandbox_mode)
     # write_ball_strike_by_pitch(player_id, p_uid, year, strikes_by_pitch_dict, player_type,
     #                            pitches_length_swing_take_and_ball_strike, sandbox_mode)
-    write_outcome_by_pitch_type(player_id, p_uid, year, outcomes_by_pitch_type, outcomes_by_pitch_type_length,
-                                player_type, sandbox_mode)
+    write_outcome_by_pitch_type(player_id, year, outcomes_by_pitch_type, outcomes_by_pitch_type_length, player_type,
+                                sandbox_mode)
     # write_trajectory_by_outcome()
     # write_field_by_outcome()
     # write_direction_by_outcome()
@@ -201,7 +201,7 @@ def write_ball_strike_by_pitch(player_id, p_uid, year, ball_strike_dict, player_
     db.close()
 
 
-def write_outcome_by_pitch_type(player_id, p_uid, year, outcomes_by_pitch_type, length, player_type, sandbox_mode):
+def write_outcome_by_pitch_type(player_id, year, outcomes_by_pitch_type, length, player_type, sandbox_mode):
     if player_type == 'pitching':
         db = PitcherPitchFXDatabaseConnection(sandbox_mode)
     else:
@@ -209,7 +209,7 @@ def write_outcome_by_pitch_type(player_id, p_uid, year, outcomes_by_pitch_type, 
     with ThreadPoolExecutor(os.cpu_count()) as executor4:
         for matchup, counts in outcomes_by_pitch_type.items():
             for count, pitch_types in counts.items():
-                table = player_id + '_' + matchup + '_' + count + '_outcomes'
+                table = str(year) + '_' + player_id + '_' + matchup + '_' + count + '_outcomes'
                 fields = ''
                 records = {}
                 for pitch_type, outcomes in pitch_types.items():
@@ -242,7 +242,7 @@ def aggregate_hbp(player_id, year, matchups, sandbox_mode):
     pitches = {}
     new_db = PitcherPitchFXDatabaseConnection(sandbox_mode)
     if len(new_db.read('select hbp_id from hbp_vrhb_pitch_type where playerid = "' + player_id + '" and year = "'
-                   + str(year) + '";')) == 0:
+                       + str(year) + '";')) == 0:
         new_db.close()
         for matchup in matchups:
             db = DatabaseConnection(sandbox_mode)
@@ -265,5 +265,5 @@ def aggregate_hbp(player_id, year, matchups, sandbox_mode):
         new_db.close()
 
 
-# aggregate_pitch_fx_data(2009, Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\"
-#                                      "dump.log"), False)
+aggregate_pitch_fx_data(2009, Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\"
+                                     "dump.log"), False)
