@@ -6,11 +6,13 @@ from concurrent.futures import ThreadPoolExecutor
 import tkinter
 import time
 from utilities.time_converter import time_converter
+from utilities.clear_logs import clear_logs
 
 
 def driver(vars):
     start_time = time.time()
     frame.withdraw()
+    clear_logs()
     for env, dbs in vars.items():
         for db, bool in dbs.items():
             if bool.get():
