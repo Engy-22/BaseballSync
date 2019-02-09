@@ -139,7 +139,7 @@ def parse_inning(year, xml_file, players_url, away_team, home_team, sandbox_mode
         home_at_bats = doc.getElementsByTagName('inning')[0].getElementsByTagName('bottom')[0]\
             .getElementsByTagName('atbat')
         for at_bat in home_at_bats:
-            parse_at_bat(year, at_bat, away_team, home_team, sandbox_mode)
+            parse_at_bat(players_url, year, at_bat, away_team, home_team, sandbox_mode)
         parse_pickoff_success(year, away_team, 'bottom', xml_file, sandbox_mode)
     except IndexError:
         pass
@@ -250,7 +250,6 @@ def clear_xmls():
             executor.submit(remove, dir + '\\' + xml_file)
 
 
-# for year in range(2009, 2010, 1):
-#     get_pitch_fx_data(year, Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\"
-#                                    "dump.log"), False)
-# get_day_data('10', '05', '2018')
+for year in range(2018, 2019, 1):
+    get_pitch_fx_data(year, Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\"
+                                   "dump.log"), True)
