@@ -250,7 +250,7 @@ def clear_xmls():
             executor.submit(remove, dir + '\\' + xml_file)
 
 
-for year in range(2009, 2010, 1):
-    get_pitch_fx_data(year, Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\"
-                                   "dump.log"), False)
+# for year in range(2009, 2010, 1):
+#     get_pitch_fx_data(year, Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\"
+#                                    "dump.log"), False)
 # get_day_data('10', '05', '2018')
