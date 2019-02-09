@@ -265,5 +265,5 @@ def aggregate_hbp(player_id, year, matchups, sandbox_mode):
         new_db.close()
 
 
-aggregate_pitch_fx_data(2009, Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\"
-                                     "dump.log"), False)
+# aggregate_pitch_fx_data(2009, Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\"
+#                                      "dump.log"), False)
