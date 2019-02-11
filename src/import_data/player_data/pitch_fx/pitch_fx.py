@@ -25,6 +25,8 @@ strikes = 0
 balls = 0
 logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\logs\\import_data\\pitch_fx.log")
 
+# done: 2008, 2009
+
 
 def get_pitch_fx_data(year, driver_logger, sandbox_mode):
     if year < 2008:
@@ -39,10 +41,10 @@ def get_pitch_fx_data(year, driver_logger, sandbox_mode):
     opening_day = db.read('select opening_day from years where year = ' + str(year) + ';')[0][0]
     db.close()
     for month in range(3, 12, 1):
-        if month > 3:
+        if month == 9:
             if month >= int(opening_day.split('-')[0]):
                 for day in range(1, 32, 1):
-                    if day > 1:
+                    if day > 12:
                         if month == int(opening_day.split('-')[0]) and int(day) < int(opening_day.split('-')[1]):
                             continue
                         if len(str(day)) == 1:
