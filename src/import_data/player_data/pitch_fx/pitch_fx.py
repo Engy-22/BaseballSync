@@ -41,21 +41,21 @@ def get_pitch_fx_data(year, driver_logger, sandbox_mode):
     opening_day = db.read('select opening_day from years where year = ' + str(year) + ';')[0][0]
     db.close()
     for month in range(3, 12, 1):
-        if month > 9:
-            if month >= int(opening_day.split('-')[0]):
-                for day in range(1, 32, 1):
-                    # if day > 12:
-                    if month == int(opening_day.split('-')[0]) and int(day) < int(opening_day.split('-')[1]):
-                        continue
-                    if len(str(day)) == 1:
-                        this_day = '0' + str(day)
-                    else:
-                        this_day = str(day)
-                    if len(str(month)) == 1:
-                        this_month = '0' + str(month)
-                    else:
-                        this_month = str(month)
-                    get_day_data(this_day, this_month, str(year), sandbox_mode)
+        # if month > 9:
+        if month >= int(opening_day.split('-')[0]):
+            for day in range(1, 32, 1):
+                # if day > 12:
+                if month == int(opening_day.split('-')[0]) and int(day) < int(opening_day.split('-')[1]):
+                    continue
+                if len(str(day)) == 1:
+                    this_day = '0' + str(day)
+                else:
+                    this_day = str(day)
+                if len(str(month)) == 1:
+                    this_month = '0' + str(month)
+                else:
+                    this_month = str(month)
+                get_day_data(this_day, this_month, str(year), sandbox_mode)
     logger.log("Done fetching " + str(year) + " pitch fx data: time = " + time_converter(time.time() - start_time)
                + '\n\n\n\n')
     aggregate_pitch_fx_data(year, driver_logger, sandbox_mode)
@@ -251,6 +251,6 @@ def clear_xmls():
             executor.submit(remove, dir + '\\' + xml_file)
 
 
-for year in range(2018, 2019, 1):
-    get_pitch_fx_data(year, Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\"
-                                   "dump.log"), True)
+# for year in range(2018, 2019, 1):
+#     get_pitch_fx_data(year, Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\"
+#                                    "dump.log"), True)
