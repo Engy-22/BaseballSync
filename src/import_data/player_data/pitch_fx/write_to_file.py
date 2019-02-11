@@ -1,7 +1,7 @@
 from utilities.connections.baseball_data_connection import DatabaseConnection
 
 
-def write_to_file(players_url, player_type, player_id, team_id, year, matchup, count, pitch_type, ball_strike,
+def write_to_file(innings_url, player_type, player_id, team_id, year, matchup, count, pitch_type, ball_strike,
                   swing_take, outcome, trajectory, field, direction, original_player_id, sandbox_mode):
     if player_id is None:
         with open('C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\src\\import_data\\player_data\\pitch_fx'
@@ -14,7 +14,7 @@ def write_to_file(players_url, player_type, player_id, team_id, year, matchup, c
                        + direction + '", (select P' + player_type[0] + '_uniqueidentifier from player_'
                        + player_type[:-2] + 'ing where year = ' + str(year) + ' and pt_uniqueidentifier = (select '
                        'pt_uniqueidentifier from player_teams where playerid = "' + str(player_id) + '" and teamid = "'
-                       + team_id + '"))); -- ' + players_url + '\n')
+                       + team_id + '"))); -- ' + innings_url + '\n')
     else:
         db = DatabaseConnection(sandbox_mode)
         db.write('insert into ' + player_type + '_pitches (pitchid, playerid, year, matchup, count, pitch_type, '
