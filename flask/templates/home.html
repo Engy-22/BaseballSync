@@ -1,9 +1,0 @@
-{%extends "layout.html"%}
-
-{%block content%}
-    <h1>Home Page</h1>
-    {%for post in posts%}
-        <h2>{{post.author}}</h2>
-        <p>{{post.title}}</p>
-    {%endfor%}
-{%endblock content%}
