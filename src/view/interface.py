@@ -16,5 +16,10 @@ def about():
     return render_template('about.html', title="About")
 
 
+@app.route("/simulate")
+def simulate():
+    return render_template('simulate.html', title="Simulate")
+
+
 if __name__ == '__main__':
     app.run(debug=True)
