@@ -22,7 +22,7 @@ def batting_constructor(year, driver_logger, sandbox_mode):
     print('Downloading batter images and attributes')
     driver_logger.log("\tDownloading batter images and attributes")
     start_time = time.time()
-    logger.log("Downloading batter " + str(year) + " data || Timestamp: " + datetime.datetime.today()\
+    logger.log("Downloading batter " + str(year) + " data || Timestamp: " + datetime.datetime.today()
                .strftime('%Y-%m-%d %H:%M:%S'))
     logger.log("\tAssembling list of players")
     table = str(BeautifulSoup(urlopen("https://www.baseball-reference.com/leagues/MLB/" + str(year)
@@ -62,9 +62,9 @@ def batting_constructor(year, driver_logger, sandbox_mode):
     for player_id, dictionary in data.items():
         for team, dictionary2 in dictionary.items():
             try:
-                write_teams_and_stats(player_id, dictionary2, ratios[player_id], team, year)
+                write_teams_and_stats(player_id, dictionary2, ratios[player_id], team, year, sandbox_mode)
             except KeyError:
-                write_teams_and_stats(player_id, dictionary2, [], team, year)
+                write_teams_and_stats(player_id, dictionary2, [], team, year, sandbox_mode)
     logger.log("\t\tTime = " + time_converter(time.time() - bulk_time))
     total_time = time_converter(time.time() - start_time)
     logger.log("Done downloading player images and attributes: time = " + total_time + '\n\n')

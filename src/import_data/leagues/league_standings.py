@@ -95,7 +95,7 @@ def league_standings(year, driver_logger, sandbox_mode):
             this_string += ',' + is_in_playoffs(playoffs, team_key, year)
         except IndexError:
             continue
-        write_to_db(this_string, team_id, year)
+        write_to_db(this_string, team_id, year, sandbox_mode)
     if year == 1903 or year > 1904:  # the first world series (1903); didn't play a WS in 1904
         playoff_picture = {}
         try:
