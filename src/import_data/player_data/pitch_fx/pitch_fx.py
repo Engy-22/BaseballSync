@@ -41,7 +41,7 @@ def get_pitch_fx_data(year, driver_logger, sandbox_mode):
     opening_day = db.read('select opening_day from years where year = ' + str(year) + ';')[0][0]
     db.close()
     for month in range(3, 12, 1):
-        if month > 4:
+        if month > 5:
             if month >= int(opening_day.split('-')[0]):
                 for day in range(1, 32, 1):
                     # if day > 22:
