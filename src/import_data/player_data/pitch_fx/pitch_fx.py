@@ -41,7 +41,7 @@ def get_pitch_fx_data(year, driver_logger, sandbox_mode):
     opening_day = db.read('select opening_day from years where year = ' + str(year) + ';')[0][0]
     db.close()
     for month in range(3, 12, 1):
-        if month > 8:
+        if month > 9:
             if month >= int(opening_day.split('-')[0]):
                 for day in range(1, 32, 1):
                     # if day > 29:
@@ -251,6 +251,6 @@ def clear_xmls():
             executor.submit(remove, dir + '\\' + xml_file)
 
 
-for year in range(2017, 2018, 1):
-    get_pitch_fx_data(year, Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\"
-                                   "dump.log"), True)
+# for year in range(2017, 2018, 1):
+#     get_pitch_fx_data(year, Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\"
+#                                    "dump.log"), True)
