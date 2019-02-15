@@ -60,16 +60,8 @@
 *here's a problem, david ross played 11 games for the padres in 2005, but that doesn't show up on his career profile.
 *here's another problem, pitchers who were kept in the game at some other position to face a hitter later have that position listed as a position they play.
 	-See 2016 cubs full roster.
-*change the icon in the top left corner of the application for all pages.
-	-Maybe not, slows everything down.
-*standings (both) are messed up.
 *if the user selects the "switch home and away", make sure it switches everything else that needs switched (e.g. additionalPlayers, etc...).
-*problem if you do a mousewheel while hovering over the scrollbar.
 *make a part of player and career profile show graphs about things like gb/fb (pie), at bat outcomes (pie), production over time (line), etc...
-*idea (difficult) - What if there was a way to change a player's image, most notable their hat, if they are on a different team than what their picture shows; whether it be another year, or placed on a new team using WIS or CCT
-	-This will be hard with black and white photos.
-	-Many old photos also do not have hats.
-	-There's no standard image.
 *make a way to rank franchise years to see best years for each franchise based on finish, stats, year weights, etc...
 *make a way to compare players to other players in different eras based on stats, position, skillset, tendencies, etc...
 	-e.g. who is Mike Trout's comp from the 1920's?
