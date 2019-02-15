@@ -79,10 +79,6 @@
 **convert everything over to GSDB:
     *adjust home park numbers for the team's pitching staff that year.
         -Think this is done, check!
-    *determine if teamRanker_ovr is correct or not.
-    *fields for which data is unknown should just be left as null rather than -1.
-    *write a test for league_batting/pitching/fielding to ensure that the number are correct.
-        -Develop some views to see the data in GSDB for validation.
     *Create a way to get the comps for players from any specified decade.
         -Only get players from these years to use as possible_comps.
         -Create an aggregate number for each player in the decade for how close they are to the given player, then
@@ -92,7 +88,8 @@
     *Find out when mlbam data is updated, if in real time then I can created a real time view similar to fantasycast.
 
 -Restart everything with concurrency, and make it clean in terms of folder hierarchy.
-    *maybe decrease the amount which standard deviation affects team rankings in overall team ranker.
+    *determine if teamRanker_ovr is correct or not.
+        -Maybe decrease the amount which standard deviation affects team rankings in overall team ranker.
     *verify that player_batting, player_pitching and player_fielding numbers are accurate.
     *aggregate and consolidate pitch_fx data.
         -When aggregating, pitch_fx records should relate only to TOT if player played on multiple teams that year.
