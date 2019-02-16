@@ -94,8 +94,21 @@ a.article-title:hover {
 
 .navbar-brand:hover {
   text-shadow:
-      0rem 0rem 0 #000,
-      0rem 0rem 0 #000,
-      0rem 0rem 0 #000,
-      0rem 0rem 0 #000;
+      0rem 0rem 0 #fff,
+      0rem 0rem 0 #fff,
+      0rem 0rem 0 #fff,
+      0rem 0rem 0 #fff;
+}
+
+.emblem:hover {
+  transition: 1.0s;
+  -webkit-transition: 1.0s;
+  -moz-transition: 1.0s;
+  -ms-transition: 1.0s;
+  -o-transition: 1.0s;
+  -webkit-transform: rotate(180deg);
+  -moz-transform: rotate(180deg);
+  -o-transform: rotate(180deg);
+  -ms-transform: rotate(180deg);
+  transform: rotate(180deg);
 }
