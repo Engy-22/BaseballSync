@@ -32,8 +32,20 @@ class Post(db.Model):
         return f"User('{self.title}', '{self.date_posted}')"
 
 
-posts = [{'author': 'me', 'title': 'flask'},
-         {'author': 'John Doe', 'title': 'tutorial'}]
+posts = [
+    {
+        'author': 'Corey Schafer',
+        'title': 'Blog Post 1',
+        'content': 'First post content',
+        'date_posted': 'April 20, 2018'
+    },
+    {
+        'author': 'Jane Doe',
+        'title': 'Blog Post 2',
+        'content': 'Second post content',
+        'date_posted': 'April 21, 2018'
+    }
+]
 
 
 @app.route("/")
