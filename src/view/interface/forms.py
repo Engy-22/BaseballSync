@@ -2,7 +2,7 @@ from interface.models import User
 from flask_wtf.file import FileField, FileAllowed
 from flask_wtf import FlaskForm
 from flask_login import current_user
-from wtforms import StringField, PasswordField, SubmitField, BooleanField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextAreaField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
 
 
@@ -42,3 +42,9 @@ class UpdateAccountForm(FlaskForm):
     def validate_email(self, email):
         if email.data != current_user.email and User.query.filter_by(email=email.data).first():
             raise ValidationError('That email is already in user. Please register with a different email.')
+
+
+class PostForm(FlaskForm):
+    title = StringField('Title', validators=[DataRequired()])
+    content = TextAreaField('Content', validators=[DataRequired()])
+    submit = SubmitField('Post')
