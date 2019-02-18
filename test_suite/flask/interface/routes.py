@@ -1,8 +1,8 @@
-from flask import render_template, url_for, flash, redirect
+from flask import render_template, url_for, flash, redirect, request
 from interface import app, db, bcrypt
 from interface.models import User, Post
 from interface.forms import RegistrationForm, LoginForm
-from flask_login import login_user, logout_user
+from flask_login import login_user, logout_user, current_user, login_required
 
 
 posts = [
@@ -34,6 +34,8 @@ def about():
 
 @app.route("/register", methods=['GET', 'POST'])
 def register():
+    if current_user.is_authenticated:
+        return redirect(url_for('home'))
     form = RegistrationForm()
     if form.validate_on_submit():
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
@@ -47,6 +49,8 @@ def register():
 
 @app.route("/login", methods=['GET', 'POST'])
 def login():
+    if current_user.is_authenticated:
+        return redirect(url_for('home'))
     form = LoginForm()
     if form.validate_on_submit():
         email = User.query.filter_by(email=form.username_or_email.data).first()
@@ -54,11 +58,13 @@ def login():
         if email and bcrypt.check_password_hash(email.password, form.password.data):
             flash('Welcome, ' + email.username, 'success')
             login_user(email, remember=form.remember.data)
-            return redirect(url_for('home'))
+            next_page = request.args.get('next')
+            return redirect(next_page) if next_page else redirect(url_for('home'))
         elif username and bcrypt.check_password_hash(username.password, form.password.data):
-            login_user(username, remember=form.remember.data)
             flash('Welcome, ' + username.username, 'success')
-            return redirect(url_for('home'))
+            login_user(username, remember=form.remember.data)
+            next_page = request.args.get('next')
+            return redirect(next_page) if next_page else redirect(url_for('home'))
         else:
             flash('Login Unsuccessful. Please check username and password', 'danger')
     return render_template('login.html', title='Login', form=form)
@@ -71,5 +77,6 @@ def logout():
 
 
 @app.route("/account")
+@login_required
 def account():
     return render_template('account.html', title='Account')
