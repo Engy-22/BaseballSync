@@ -87,3 +87,6 @@
         -When aggregating, pitch_fx records should relate only to TOT if player played on multiple teams that year.
             -The data for players who fit this category will have their pitches written to their teams and not TOT.
     *make a way to delete data from one particular year (or a range of years) with a UI.
+
+-WebApp
+    *look into SQL injection protection
