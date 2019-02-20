@@ -1,69 +1,39 @@
-*allow the user to save the ouput of any given simulation to a back-end database if desired.
+*allow the user to save the ouput of any given simulation if desired.
 *make advanced stats.
-*reformat the pitching statistics output.
-*finish formating standard and expanded cumulative output.
-	-must have sh, & gdp first.
 *make pitching changes.
 	-keep track of pitch counts.
-	-calculate the number of pitchers per outing for each pitcher by multiplying (ppa*pa)/appearances.
+	-calculate the number of pitchers per outing for each pitcher.
 *determine which fielder makes each play.
-*add team totals on the bottom of the team statline output.
 *allow users an option to simulate a season for two teams against each other.
 	-or one team against the league like an actual season.
+	                                or against the league average team.
 	-Idea: two teams against each other: switch home and away after 81 games.
-*Reformat all output to be interactive GUI instead of output to the console.
-	-Use Labels to display statistics.
-	-Have column headers be buttons with flat relief which sort data when clicked.
-	-Display all data and then index each column in the background.
+*All output should be interactive (sort, filter, etc.)
 *allow for the user to change a pitcher's numbers or a fielder's numbers in the adjust player attributes window.
-	-Make a new frame for pitchers and fielder's respectively. Let the user access them with the typical toggle options.
-*go back and make sure that all self.root.titles are correct for each frame.
-*autocomplete comboboxes in manual lineup selection and (maybe) entry box in what if.
-*Implement the franchise class.
-*make sure the add player's label is deleted from the remaining players section when they are added to the lineup.
-*add a list of keyboard commands to the help menu.
+still needed? *Implement the franchise class.
+                  -In the Franchise class, put the history of team logos in chronological order.
+still needed? *add a list of keyboard commands to the help menu.
 *make an option for the user to not allow a player to be in the lineup.
 	-If player x from team A is added to team B and the two teams play against one another, prompt the user and ask them if they want player x on team A as well as team B.
-*download data on managers.
-*figure out how to delete buttons from the canvas.
-*if the user selects a link (specifically a player), then that player should be marked as clicked elsewhere in the frame if they appear in it.
-*try to add new stats added to the stat converter to the SearchInterface sortBy combobox.
-*see about adding right-clicks to the program.
-*add "showFunctions" capability to all functions and methods throughout the applciation.
 *here's a thought: when determining which stadium to get the numbers on when the user does not select a neutral site; if it's a single team vs the league simulation, the user should have the option if they want that team to always be home, always be away, or split the games up somehow.
-*get all ballpark data.
-*figure out what to do about the pitches hitting data on baseball-reference. (it only goes back to 1988).
-	-i.e. https://www.baseball-reference.com/leagues/MLB/2017-pitches-batting.shtml
-*in the Franchise class, put the history of team logos in chronological order.
 *add a gui to show the user the progess of the simulation (other than the progress bar).
 *add a progress bar to the SearchInterface.
-	-Can only do this in the UserInterface because that is where the SearchEngine is called from there.
 *figure out what kind of error the "statistics.StatisticsError: no unique mode; found 2 equally common values" error is.
 *problem with baseballReference.com: they are missing a games from DET & CHW 1979 season.
 	-Found here: https://www.baseball-reference.com/teams/DET/1979-lineups.shtml
 	-Found here: https://www.baseball-reference.com/teams/CHW/1979-lineups.shtml
-*after 1890 the TeamSelection frame gets dicey.
-*add a scrollbar to the CTM teamInfo page if the number of players added exceeds a certain number of players.
 *add fielding stats to careerProfile.
 *create batting orders and pitching rotations for all teams from 1907-1876.
 	-Do this using some kind of comparison algorithm using data that's already present.
 *change player positions that say "OF" to be more specific.
-*something is wrong with the way IP are shown for careerProfiles.
-	-It must be in the way that IP is gathered and added up.
-*write a script to go through every year and create a player profile for each player from that year.
-	-Do a similar thing where it loops through every player and creates their career profile to make sure they all work smoothly.
-*when I do a "select All" in the what-if version of the searchInterface it says there's no input, but it works fine when i do it from the create custom team part.
-	-Seems like it only happens if one of the teams is a custom team.
-*something is wrong with the indexing of custom teams when the custom team is the home team for example.
 *add a way for a team from before 1973 to include a DH in their lineup if they're playing in an American League park after 1972.
-*the CHW 2017 TeamInfo page is all jacked up, figure that one out.
-*here's a problem, david ross played 11 games for the padres in 2005, but that doesn't show up on his career profile.
-*here's another problem, pitchers who were kept in the game at some other position to face a hitter later have that position listed as a position they play.
+still an issue? *here's a problem, david ross played 11 games for the padres in 2005, but that doesn't show up on his career profile.
+*here's a problem, pitchers who were kept in the game at some other position to face a hitter later have that position listed as a position they play.
 	-See 2016 cubs full roster.
-*if the user selects the "switch home and away", make sure it switches everything else that needs switched (e.g. additionalPlayers, etc...).
-*make a part of player and career profile show graphs about things like gb/fb (pie), at bat outcomes (pie), production over time (line), etc...
-*make a way to rank franchise years to see best years for each franchise based on finish, stats, year weights, etc...
-*make a way to compare players to other players in different eras based on stats, position, skillset, tendencies, etc...
+*if the user selects the "switch home and away", make sure it switches everything else that needs switched (e.g. additionalPlayers, etc.).
+*make a part of player and career profile show graphs about things like gb/fb (pie), at bat outcomes (pie), production over time (line), etc.
+*make a way to rank franchise years to see best years for each franchise based on finish, stats, year weights, etc.
+*make a way to compare players to other players in different eras based on stats, position, skillset, tendencies, etc.
 	-e.g. who is Mike Trout's comp from the 1920's?
 *when simulating, determine if a ball is in play or not, if so gb, fb or line drive; then determine outcome from that.
 
@@ -77,6 +47,7 @@
             subtract from the max in that list and multiply by the number of years that the possible_comp played
             during that decade to weight by favoring those who played in more years (larger sample size = more
             confident comparisons).
+        -Set a minimum number of years for players that can be comparisons (e.g. player must have played 5+ year in this decade to be a possible comp).
     *Find out when mlbam data is updated, if in real time then I can created a real time view similar to fantasycast.
 
 -Restart everything with concurrency, and make it clean in terms of folder hierarchy.
