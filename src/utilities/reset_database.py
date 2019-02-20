@@ -47,7 +47,6 @@ def driver(previous_frame, vars, all_years, begin_year, end_year):
         do_reset(vars, 'ALL')
     else:
         years = range(begin_year, end_year)
-        print(years)
         for year in years:
             do_reset(vars, year)
     print(time_converter(time.time() - start_time))
@@ -88,23 +87,21 @@ def baseball_data(sandbox_mode, year):
             with ThreadPoolExecutor(os.cpu_count()) as executor:
                 for line in reversed(table_defs):
                     executor.submit(db.write("drop table " + line.split('create table ')[1].split(' (')[0] + ';'))
-            if sandbox_mode:
-                print("creating new tables - sandbox")
-            else:
-                print("creating new tables - production")
-            with ThreadPoolExecutor(os.cpu_count()) as executor2:
-                for line in table_defs:
-                    executor2.submit(db.write(line))
     else:
         if db.read('select year from years where year = ' + str(year) + ';'):
-            baseball_data_year(year)
+            baseball_data_year(db, year)
         else:
             print(str(year) + ' is not found in the database.')
+    with open("..\\..\\background\\table_definitions.txt", 'rt') as file:
+        table_defs = file.readlines()
+        if sandbox_mode:
+            print("creating new tables - sandbox")
+        else:
+            print("creating new tables - production")
+        with ThreadPoolExecutor(os.cpu_count()) as executor2:
+            for line in table_defs:
+                executor2.submit(db.write(line))
     db.close()
-
-
-def baseball_data_year(year):
-    print('deleting ' + str(year) + ' baseballData')
 
 
 def pitchers_pitch_fx(sandbox_mode, year):
@@ -122,26 +119,23 @@ def pitchers_pitch_fx(sandbox_mode, year):
             with ThreadPoolExecutor(os.cpu_count()) as executor2:
                 for table in db.read('show tables;'):
                     executor2.submit(db.write('drop table ' + table[0] + ';'))
-            if sandbox_mode:
-                print("creating new pitcher pitch fx tables - sandbox")
-            else:
-                print("creating new pitcher pitch fx tables - production")
-            with ThreadPoolExecutor(os.cpu_count()) as executor3:
-                for line in table_defs:
-                    executor3.submit(db.write(line))
+            with open("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\background\\pitch_fx_tables", 'rt') as file:
+                table_defs = file.readlines()
+                if sandbox_mode:
+                    print("creating new pitcher pitch fx tables - sandbox")
+                else:
+                    print("creating new pitcher pitch fx tables - production")
+                with ThreadPoolExecutor(os.cpu_count()) as executor3:
+                    for line in table_defs:
+                        executor3.submit(db.write(line))
     else:
-        pitchers_pitch_fx_year(year)
+        pitch_fx_year(db, year)
     db.close()
-
-
-def pitchers_pitch_fx_year(year):
-    print('deleting ' + str(year) + ' pitchers_pitch_fx')
 
 
 def batters_pitch_fx(sandbox_mode, year):
     db = BatterPitchFXDatabaseConnection(sandbox_mode)
     if year == 'ALL':
-        print('all')
         with open("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\background\\pitch_fx_tables", 'rt') as file:
             table_defs = file.readlines()
             if sandbox_mode:
@@ -155,20 +149,32 @@ def batters_pitch_fx(sandbox_mode, year):
                 for table in db.read('show tables;'):
                     if 'hbp_' not in table[0]:
                         executor2.submit(db.write('drop table ' + table[0] + ';'))
-            if sandbox_mode:
-                print("creating new batter pitch fx tables - sandbox")
-            else:
-                print("creating new batther pitch fx tables - production")
-            with ThreadPoolExecutor(os.cpu_count()) as executor3:
-                for line in table_defs:
-                    executor3.submit(db.write(line))
+            with open("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\background\\pitch_fx_tables", 'rt') as file:
+                table_defs = file.readlines()
+                if sandbox_mode:
+                    print("creating new batter pitch fx tables - sandbox")
+                else:
+                    print("creating new batther pitch fx tables - production")
+                with ThreadPoolExecutor(os.cpu_count()) as executor3:
+                    for line in table_defs:
+                        executor3.submit(db.write(line))
     else:
-        batters_pitch_fx_year(year)
+        pitch_fx_year(db, year)
     db.close()
 
 
-def batters_pitch_fx_year(year):
-    print('deleting ' + str(year) + ' batters_pitch_fx')
+def pitch_fx_year(db, year):
+    print('resetting ' + str(year) + ' pitch fx')
+    for table in db.read('show tables;'):
+        if table[0].split('_')[0] in ['vr', 'vl', 'hbp']:
+            db.write('delete from ' + table[0] + ' where year = ' + str(year) + ';')
+        else:
+            if str(year) in table[0]:
+                db.write('drop table ' + table[0] + ';')
+
+
+def baseball_data_year(db, year):
+    print('deleting ' + str(year) + ' baseballData')
 
 
 root = tkinter.Tk()
@@ -188,6 +194,6 @@ for num, env in {1: 'Production', 2: 'Sandbox'}.items():
         vars[env][db].set(False)
         tkinter.Checkbutton(frame, text=db, font=font, variable=vars[env][db], cursor="hand2").\
             grid(row=num2+1, column=num, padx=10, pady=5, sticky='w')
-tkinter.Button(frame, text="Submit", command=lambda: select_years(vars, frame), font=font, bg='white', cursor='hand2')\
+tkinter.Button(frame, text="Next", command=lambda: select_years(vars, frame), font=font, bg='white', cursor='hand2')\
     .grid(columnspan=4, padx=5, pady=5)
 root.mainloop()
