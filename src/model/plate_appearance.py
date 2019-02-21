@@ -1,3 +1,7 @@
+from utilities.connections.batters_pitch_fx_connection import BatterPitchFXDatabaseConnection
+from model.properties import sandbox_mode
+
+
 class PlateAppearance:
 
     def __init__(self, batter, pitcher):
@@ -6,16 +10,21 @@ class PlateAppearance:
         self.balls = 0
         self.strikes = 0
 
+### RETRIEVERS ###
+### END RETRIEVERS ###
+
+### SETTERS ###
     def increment_balls(self):
         self.balls += 1
 
     def increment_strikes(self):
         self.strikes += 1
+### END SETTERS ###
 
-################ Getters ################
+### GETTERS ###
     def get_balls(self):
         return self.balls
 
     def get_strikes(self):
         return self.strikes
-################ Getters ################
+### END GETTERS ###

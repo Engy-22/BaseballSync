@@ -1,4 +1,4 @@
-from model.PlateAppearance import PlateAppearance
+from model.plate_appearance import PlateAppearance
 from controller.pitch import simulate_pitch
 import time
 from utilities.logger import Logger

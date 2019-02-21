@@ -28,6 +28,7 @@ logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\log
 # done: 2008, 2009, 2010, 2015, 2016, 2017, 2018
 # don't forget about days 22-30 in april of 2011
 
+
 def get_pitch_fx_data(year, driver_logger, sandbox_mode):
     if year < 2008:
         driver_logger.log("\tNo pitch fx data to download before 2008")

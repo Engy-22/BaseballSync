@@ -1,4 +1,4 @@
-from model.Inning import Inning
+from model.inning import Inning
 from utilities.logger import Logger
 from controller.plate_appearance import simulate_plate_appearance
 import time

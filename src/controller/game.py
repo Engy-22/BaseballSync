@@ -1,5 +1,5 @@
 from utilities.logger import Logger
-from model.Game import Game
+from model.game import Game
 from controller.inning import simulate_inning
 import time
 from utilities.time_converter import time_converter

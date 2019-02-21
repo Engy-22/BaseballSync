@@ -3,18 +3,20 @@ class Inning:
         self.outs = 0
         self.away_runs = 0
         self.home_runs = 0
-        self.half_inning = ''
+        self.half_inning = 'top'
 
+### RETRIEVERS ###
+### END RETRIEVERS ###
+
+### SETTERS ###
     def switch_half_inning(self):
-        if self.half_inning == 'top':
-            self.half_inning = 'bottom'
-        else:
-            self.half_inning = 'top'
+        self.half_inning = 'bottom'
 
     def increment_outs(self):
         self.outs += 1
+### END SETTERS ###
 
-################### Getters ###################
+### GETTERS ###
     def get_away_runs(self):
         return self.away_runs
 
@@ -26,4 +28,4 @@ class Inning:
 
     def get_half_inning(self):
         return self.half_inning
-################### Getters ###################
+### END GETTERS ###
