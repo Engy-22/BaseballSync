@@ -57,6 +57,9 @@ still an issue? *here's a problem, david ross played 11 games for the padres in 
     *aggregate and consolidate pitch_fx data.
         -When aggregating, pitch_fx records should relate only to TOT if player played on multiple teams that year.
             -The data for players who fit this category will have their pitches written to their teams and not TOT.
+    *add way to delete data from given years through reset_database.py
 
 -WebApp
     *look into SQL injection protection
+    *test "remember me" functionality
+    *check out other websites for ideas

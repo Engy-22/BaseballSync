@@ -75,7 +75,7 @@ if __name__ == '__main__':
     league_table_constructor(main_logger, sandbox_mode)
     manager_table_constructor(main_logger, sandbox_mode)
     years = []
-    for year in range(2010, 2011, 1):
+    for year in range(2011, 2012, 1):
         years.append(year)
         driver(year, main_logger, sandbox_mode)
     rank_driver(years[-1], main_logger)
