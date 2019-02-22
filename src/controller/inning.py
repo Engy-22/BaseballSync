@@ -14,10 +14,10 @@ def simulate_inning(game, driver_logger):
     inning = Inning()
     inning_data = {}
     logger.log("Starting inning simulation: " + game.get_away_team() + " @ " + game.get_home_team() + " - " + inning_num)
-    for half in range(2):
-        inning.switch_half_inning()
+    for half in ['top', 'bottom']:
+        inning.set_half_inning(half)
         half_inning = inning.get_half_inning()
-        for key, value in simulate_half_inning(game, inning_num, half_inning).items():
+        for key, value in simulate_half_inning(game, inning).items():
             inning_data[half_inning] = ''  # put the half inning data into the inning data dictionary
     game.increment_inning()
     total_time = time_converter(time.time() - start_time)
@@ -27,15 +27,17 @@ def simulate_inning(game, driver_logger):
     return inning_data
 
 
-def simulate_half_inning(game, inning, half):
+def simulate_half_inning(game, inning):
     start_time = time.time()
-    if inning == '9' and half == 'bottom' and game.home_score > game.away_score:
+    inning_num = game.get_inning
+    half_inning = inning.get_half_inning()
+    if inning_num == '9' and half_inning == 'bottom' and game.home_score > game.away_score:
         return
-    logger.log('\tSimulating the ' + half + ' of the ' + inning + ' inning')
+    logger.log('\tSimulating the ' + half_inning + ' of the ' + inning_num + ' inning')
     half_inning_data = {}
     outs = 0
     while outs < 3:
         plate_appearance_data = simulate_plate_appearance('', '', logger)
-    logger.log('\tDone simulating the ' + half + 'of the ' + inning + ' inning: Time = '
+    logger.log('\tDone simulating the ' + half_inning + 'of the ' + inning_num + ' inning: Time = '
                + time_converter(time.time() - start_time))
     return half_inning_data

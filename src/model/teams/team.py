@@ -1,6 +1,7 @@
 from utilities.connections.baseball_data_connection import DatabaseConnection
 from model.properties import sandbox_mode
 from utilities.num_to_word import num_to_word
+from model.teams.lineup_creator.driver import create_lineup
 
 
 class Team:
@@ -11,7 +12,7 @@ class Team:
         self.roster = self.retrieve_roster()
         self.batting_spots = self.retrieve_batting_spots()
         self.batting_order = []
-        self.defensive_lineup = []
+        self.defensive_lineup = {}
         self.year_off_rank = None
         self.year_def_rank = None
         self.year_ovr_rank = None
@@ -37,7 +38,7 @@ class Team:
         batting_spots = {}
         query_fields = ''
         for num in range(9):
-            query_fields += num_to_word(num+1) + ', '
+            query_fields += num_to_word(num + 1) + ', '
         for data in db.read('select playerId, ' + query_fields[:-2] + ' from hitter_spots where ty_uniqueidentifier'
                             ' = (select ty_uniqueidentifier from team_years where teamid = "' + self.team_id + '" and'
                             ' year = ' + str(self.year) + ');'):
@@ -47,9 +48,11 @@ class Team:
                 spots[spot] = total
                 spot += 1
             batting_spots[data[0]] = spots
-
         db.close()
         return batting_spots
+
+    def create_lineup(self, game_num):
+        return create_lineup(self.team_id, self.year, self.roster, self.batting_spots, game_num)
 ### END RETRIEVERS ###
 
 ### SETTERS ###
@@ -97,4 +100,4 @@ class Team:
 
 
 # team = Team("TEX", 2016)
-# print(team.get_batting_spots())
+# print(team.get_roster())
