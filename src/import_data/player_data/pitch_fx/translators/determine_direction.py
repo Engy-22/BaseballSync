@@ -13,7 +13,7 @@ def determine_direction(event, bats_with):
             try:
                 location = event.split('flies out')[1].split('to ')[1].split(' ')[0]
             except IndexError:
-                print(event)
+                print('directions asdf ' + event)
                 location = 'unknown'
     elif 'pops out' in event:
         try:
@@ -45,7 +45,7 @@ def determine_direction(event, bats_with):
     elif 'walks' in event or 'strikes out' in event or 'called out on strikes' or 'hit by pitch' in event:
         location = "none"
     else:
-        print(event)
+        print('directions lkjh ' + event)
         raise Exception
         location = "none"
     try:

@@ -1,7 +1,3 @@
-from utilities.connections.pitchers_pitch_fx_connection import PitcherPitchFXDatabaseConnection as db
-from model.properties import sandbox_mode
-
-
 class Pitch:
 
     def __init__(self, pitcher, balls, strikes):

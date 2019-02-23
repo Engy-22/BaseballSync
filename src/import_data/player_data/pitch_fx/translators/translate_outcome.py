@@ -43,9 +43,9 @@ def translate_pitch_outcome(outcome, description):
             elif 'double play' in description:
                 this_outcome = 'dp'
             else:
-                print('\nasdfasdf\n' + outcome)
+                print('\nOutcomes asdfasdf' + outcome)
                 this_outcome = "none"
         else:
-            print('\n;lkj;lkj\n' + outcome)
+            print('\nOutcomes ;lkj;lkj' + outcome)
             this_outcome = "none"
     return this_outcome

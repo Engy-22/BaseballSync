@@ -3,7 +3,7 @@ import random
 from File import File
 from Translator import Translator
 from Utility import Utility
-import time
+
 
 class LineupCreator:
 

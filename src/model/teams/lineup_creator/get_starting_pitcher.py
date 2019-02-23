@@ -1,5 +1,5 @@
 from utilities.connections.baseball_data_connection import DatabaseConnection
-from model.properties import sandbox_mode
+from utilities.properties import sandbox_mode
 
 
 def get_starting_pitcher(team_id, year, game_number):

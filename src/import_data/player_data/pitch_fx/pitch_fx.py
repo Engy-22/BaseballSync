@@ -25,7 +25,7 @@ strikes = 0
 balls = 0
 logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\logs\\import_data\\pitch_fx.log")
 
-# done: 2008, 2009, 2010, 2015, 2016, 2017, 2018
+# done: 2008, 2009, 2010, 2011, 2015, 2016, 2017, 2018
 # don't forget about days 22-30 in april of 2011
 
 
@@ -36,16 +36,16 @@ def get_pitch_fx_data(year, driver_logger, sandbox_mode):
     driver_logger.log("\tFetching pitch fx data")
     print("Fetching " + str(year) + " pitch fx data")
     start_time = time.time()
-    logger.log("Downloading pitch fx data for " + str(year) + ' || Timestamp: ' + datetime.datetime.today().
+    logger.log("Downloading pitch fx data for " + str(year) + " || Timestamp: " + datetime.datetime.today().
                strftime('%Y-%m-%d %H:%M:%S'))
     db = DatabaseConnection(sandbox_mode)
     opening_day = db.read('select opening_day from years where year = ' + str(year) + ';')[0][0]
     db.close()
     for month in range(3, 12, 1):
-        if month > 4:
+        if month > 5:
             if month >= int(opening_day.split('-')[0]):
                 for day in range(1, 32, 1):
-                    # if day > 9:
+                    # if day > 6:
                     if month == int(opening_day.split('-')[0]) and int(day) < int(opening_day.split('-')[1]):
                         continue
                     if len(str(day)) == 1:
@@ -252,6 +252,6 @@ def clear_xmls():
             executor.submit(remove, dir + '\\' + xml_file)
 
 
-for year in range(2011, 2012, 1):
+for year in range(2012, 2013, 1):
     get_pitch_fx_data(year, Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\"
                                    "dump.log"), True)

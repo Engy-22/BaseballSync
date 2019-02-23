@@ -1,7 +1,7 @@
 from utilities.connections.baseball_data_connection import DatabaseConnection
-from model.properties import sandbox_mode
-from utilities.num_to_word import num_to_word
+from utilities.properties import sandbox_mode
 from model.teams.lineup_creator.driver import create_lineup
+from model.players.player import Player
 
 
 class Team:
@@ -9,8 +9,8 @@ class Team:
     def __init__(self, team_id: str, year: int):
         self.team_id = team_id
         self.year = year
+        self.team_info = self.retrieve_team_info()
         self.roster = self.retrieve_roster()
-        self.batting_spots = self.retrieve_batting_spots()
         self.batting_order = []
         self.defensive_lineup = {}
         self.year_off_rank = None
@@ -22,45 +22,37 @@ class Team:
         self.image_url = ""
 
 ### RETRIEVERS ###
+    def retrieve_team_info(self):
+        db = DatabaseConnection(sandbox_mode)
+        team_info = db.read('select team_info from team_years where teamId = "' + self.team_id + '" and year = '
+                            + str(self.year) + ';')[0][0]
+        db.close()
+        return team_info
+
     def retrieve_roster(self):
-        db = DatabaseConnection(sandbox_mode)
-        players_positions = {}
-        for player, positions in dict(db.read('select playerId, positions from player_positions where '
-                                              'ty_uniqueidentifier = (select TY_uniqueidentifier from team_years where '
-                                              'teamId = "' + self.team_id + '" and year = ' + str(self.year)
-                                              + ');')).items():
-            players_positions[player] = positions.split(',')
-        db.close()
-        return players_positions
+        roster = []
+        for data in self.team_info.split(',&')[:-1]:
+            datum = data.split('-')
+            roster.append(Player(datum[0], self.team_id, self.year))
+            batting_info = datum[1].split(',|')[0].split(',')
+            position_info = datum[1].split(',|')[1].split(',')
+            batting_spots = {}
+            for ent in batting_info:
+                try:
+                    batting_spots[int(ent.split(':')[0])] = int(ent.split(':')[1])
+                except ValueError:
+                    batting_spots[int(ent.split(':')[0])] = 0
+            roster[-1].set_batting_spots(batting_spots)
+            roster[-1].set_year_positions(position_info)
+        return roster
 
-    def retrieve_batting_spots(self):
-        db = DatabaseConnection(sandbox_mode)
-        batting_spots = {}
-        query_fields = ''
-        for num in range(9):
-            query_fields += num_to_word(num + 1) + ', '
-        for data in db.read('select playerId, ' + query_fields[:-2] + ' from hitter_spots where ty_uniqueidentifier'
-                            ' = (select ty_uniqueidentifier from team_years where teamid = "' + self.team_id + '" and'
-                            ' year = ' + str(self.year) + ');'):
-            spot = 1
-            spots = {}
-            for total in data[1:]:
-                spots[spot] = total
-                spot += 1
-            batting_spots[data[0]] = spots
-        db.close()
-        return batting_spots
-
-    def create_lineup(self, game_num):
-        return create_lineup(self.team_id, self.year, self.roster, self.batting_spots, game_num)
+    def set_lineup(self, game_num, use_dh):
+        return create_lineup(self.team_id, self.year, self.roster, game_num, use_dh)
 ### END RETRIEVERS ###
 
 ### SETTERS ###
     def add_player_to_roster(self, player_id, positions):
         self.roster[player_id] = positions
-
-    def add_player_to_batting_spots(self, player_id, spots):
-        self.batting_spots[player_id] = spots
 ### SETTERS ###
 
 ### GETTERS ###
@@ -72,9 +64,6 @@ class Team:
 
     def get_roster(self):
         return self.roster
-
-    def get_batting_spots(self):
-        return self.batting_spots
 
     def get_year_off_rank(self):
         return self.year_off_rank
@@ -100,4 +89,3 @@ class Team:
 
 
 # team = Team("TEX", 2016)
-# print(team.get_roster())

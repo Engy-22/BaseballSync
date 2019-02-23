@@ -1,5 +1,5 @@
 from utilities.connections.baseball_data_connection import DatabaseConnection
-from model.properties import sandbox_mode
+from utilities.properties import sandbox_mode
 
 
 class Player:
@@ -10,6 +10,8 @@ class Player:
         self.year = year
         self.primary_position = self.retrieve_primary_position()
         self.secondary_positions = self.retrieve_secondary_positions()
+        self.batting_spots = {}
+        self.year_positions = []
         self.throws_with = self.throwing_handedness()
         self.bats_with = self.batting_handedness()
         self.batting_stats = self.retrieve_batting_stats()
@@ -56,6 +58,11 @@ class Player:
 ### END Retrievers ###
 
 ### SETTERS ###
+    def set_batting_spots(self, batting_spots):
+        self.batting_spots = batting_spots
+
+    def set_year_positions(self, year_positions):
+        self.year_positions = year_positions
 ### END SETTERS ###
 
 ### Getters ###
@@ -80,6 +87,9 @@ class Player:
     def get_throwing_handedness(self):
         return self.throws_with
 
+    def get_year_positions(self):
+        return self.year_positions
+
     def get_batting_stats(self):
         return self.batting_stats
 
@@ -91,8 +101,11 @@ class Player:
 
     def get_image_url(self):
         return self.image_url
+
+    def get_batting_spots(self):
+        return self.batting_spots
 ### End Getters ###
 
 
-# p = Player('lindofr01', 'CLE', 2018)
-# print(p.get_image_url())
+# p = Player('lindofr01', 'CLE', 2016)
+# print(p.get_batting_spots())

@@ -1,7 +1,3 @@
-from utilities.connections.batters_pitch_fx_connection import BatterPitchFXDatabaseConnection
-from model.properties import sandbox_mode
-
-
 class PlateAppearance:
 
     def __init__(self, batter, pitcher):

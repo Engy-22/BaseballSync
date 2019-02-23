@@ -36,6 +36,7 @@ from import_data.player_data.awards.award_winner_driver import award_winner_driv
 from import_data.comparisions.comparisons_driver import comparisons_driver
 from import_data.player_data.awards.hof_finder import hof_finder
 from utilities.clean_up_deadlocked_file import clean_up_deadlocked_file
+from import_data.consolidata.driver import consolidate_data
 
 
 def driver(year, driver_log, sandbox_mode):
@@ -75,12 +76,13 @@ if __name__ == '__main__':
     league_table_constructor(main_logger, sandbox_mode)
     manager_table_constructor(main_logger, sandbox_mode)
     years = []
-    for year in range(2011, 2012, 1):
+    for year in range(2012, 2013, 1):
         years.append(year)
         driver(year, main_logger, sandbox_mode)
     rank_driver(years[-1], main_logger)
     comparisons_driver(years[-1], main_logger)
     hof_finder(main_logger, sandbox_mode)
     clean_up_deadlocked_file(main_logger, sandbox_mode)
+    consolidate_data(main_logger)
     main_logger.log('Driver complete for year' + stringify_list(years) + ': time = '
                     + time_converter(time.time() - start_time) + '\n\n\n')

@@ -4,7 +4,7 @@ from controller.plate_appearance import simulate_plate_appearance
 import time
 from utilities.time_converter import time_converter
 
-logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\controller\\game.log")
+logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\controller\\inning.log")
 
 
 def simulate_inning(game, driver_logger):
