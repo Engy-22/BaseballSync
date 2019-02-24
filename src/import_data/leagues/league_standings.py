@@ -6,11 +6,12 @@ from utilities.connections.baseball_data_connection import DatabaseConnection
 from utilities.translate_team_id import translate_team_id
 from utilities.logger import Logger
 from utilities.time_converter import time_converter
+from utilities.properties import sandbox_mode, import_driver_logger as driver_logger
 
 logger = Logger('C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\league_standings.log')
 
 
-def league_standings(year, driver_logger, sandbox_mode):
+def league_standings(year):
     driver_logger.log("\tAdding to team_years (standings)")
     print("Adding to team_years (standings)")
     start_time = time.time()
@@ -95,7 +96,7 @@ def league_standings(year, driver_logger, sandbox_mode):
             this_string += ',' + is_in_playoffs(playoffs, team_key, year)
         except IndexError:
             continue
-        write_to_db(this_string, team_id, year, sandbox_mode)
+        write_to_db(this_string, team_id, year)
     if year == 1903 or year > 1904:  # the first world series (1903); didn't play a WS in 1904
         playoff_picture = {}
         try:
@@ -108,15 +109,15 @@ def league_standings(year, driver_logger, sandbox_mode):
                                                                split('a href="/teams/')[2].split('/')[0], year)
         except IndexError:
             playoff_picture['ws_runnerup'] = None
-        write_ws_data(year, playoff_picture, sandbox_mode)
+        write_ws_data(year, playoff_picture)
     else:
-        write_league_champs_non_ws(champs, year, sandbox_mode)
+        write_league_champs_non_ws(champs, year)
     total_time = time_converter(time.time() - start_time)
     logger.log('Done organizing league standings for ' + str(year) + ': time = ' + total_time + '\n\n')
     driver_logger.log("\t\tTime = " + total_time)
 
 
-def write_league_champs_non_ws(champs, year, sandbox_mode):
+def write_league_champs_non_ws(champs, year):
     db = DatabaseConnection(sandbox_mode)
     query_string = 'update years set '
     team_count = 0
@@ -128,7 +129,7 @@ def write_league_champs_non_ws(champs, year, sandbox_mode):
     db.close()
 
 
-def write_ws_data(year, ws_data, sandbox_mode):
+def write_ws_data(year, ws_data):
     if ws_data['ws_champ'] is not None:
         db = DatabaseConnection(sandbox_mode)
         champ_league = str(db.read('select league from team_years where teamId = "' + ws_data['ws_champ']
@@ -188,7 +189,7 @@ def is_in_playoffs(playoffs, team_key, year):
     return is_in
 
 
-def write_to_db(this_string, team_id, year, sandbox_mode):
+def write_to_db(this_string, team_id, year):
     logger.log("\tWriting " + team_id + " to team_years")
     db = DatabaseConnection(sandbox_mode)
     if len(db.read('select TY_uniqueidentifier from team_years where teamId = "' + team_id + '" and year = '

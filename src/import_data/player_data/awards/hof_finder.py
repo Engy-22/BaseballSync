@@ -5,11 +5,12 @@ from utilities.logger import Logger
 from utilities.connections.baseball_data_connection import DatabaseConnection
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
+from utilities.properties import sandbox_mode, import_driver_logger as driver_logger
 
 logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\hof_finder.log")
 
 
-def hof_finder(driver_logger, sandbox_mode):
+def hof_finder():
     print("adding HOF data")
     driver_logger.log("\tAdding HOF data")
     start_time = time.time()

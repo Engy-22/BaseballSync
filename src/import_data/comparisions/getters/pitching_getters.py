@@ -1,7 +1,8 @@
 from utilities.connections.baseball_data_connection import DatabaseConnection
+from utilities.properties import sandbox_mode
 
 
-def get_pitcher_stats(pitcher, year, sandbox_mode):
+def get_pitcher_stats(pitcher, year):
     stats = {'IP': 0, 'H': 0, '2B': 0, '3B': 0, 'HR': 0, 'SO': 0, 'BB': 0, 'ER': 0, 'SV': 0}
     db = DatabaseConnection(sandbox_mode)
     pa = int(db.read('select player_pitching.pa from player_pitching, player_teams where player_pitching.'
@@ -18,7 +19,7 @@ def get_pitcher_stats(pitcher, year, sandbox_mode):
     return pa, stats
 
 
-def get_year_totals(year, logger, sandbox_mode):
+def get_year_totals(year, logger):
     logger.log('\t\t\tGetting ' + str(year) + ' pitching totals')
     year_totals = {'IP': 0, 'H': 0, '2B': 0, '3B': 0, 'HR': 0, 'SO': 0, 'BB': 0, 'ER': 0, 'SV': 0}
     db = DatabaseConnection(sandbox_mode)

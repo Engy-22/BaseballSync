@@ -4,6 +4,7 @@ from utilities.connections.baseball_data_connection import DatabaseConnection
 from utilities.translate_team_id import translate_team_id
 from utilities.time_converter import time_converter
 from utilities.logger import Logger
+from utilities.properties import sandbox_mode
 
 logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\team_ranker_year.log")
 
@@ -30,28 +31,28 @@ def team_ranker_year(year):
     return scored, allowed, difference
 
 
-def get_teams(year, sandbox_mode):
+def get_teams(year):
     db = DatabaseConnection(sandbox_mode)
     teams = db.read('select teamid from team_years where year = ' + str(year) + ';')
     db.close()
     return teams
 
 
-def get_games(team, year, sandbox_mode):
+def get_games(team, year):
     db = DatabaseConnection(sandbox_mode)
     games = int(db.read('select g from team_years where teamid = "' + team + '" and year = ' + str(year) + ';')[0][0])
     db.close()
     return games
 
 
-def get_runs_for(team, year, sandbox_mode):
+def get_runs_for(team, year):
     db = DatabaseConnection(sandbox_mode)
     runs_for = int(db.read('select r from team_years where teamid = "' + team + '" and year=' + str(year) + ';')[0][0])
     db.close()
     return runs_for
 
 
-def get_runs_against(team, year, sandbox_mode):
+def get_runs_against(team, year):
     global runs_against
     db = DatabaseConnection(sandbox_mode)
     runs_against = int(db.read('select ra from team_years where teamid = "' + team + '" and year = ' + str(year)
@@ -60,7 +61,7 @@ def get_runs_against(team, year, sandbox_mode):
     return runs_against
 
 
-def write_to_file(stats, year, stat_type, sandbox_mode):
+def write_to_file(stats, year, stat_type):
     logger.log("\tWriting " + stat_type + " data")
     start_time = time.time()
     db = DatabaseConnection(sandbox_mode)

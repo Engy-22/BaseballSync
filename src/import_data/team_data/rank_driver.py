@@ -6,11 +6,12 @@ from import_data.team_data.team_ranker_ovr import team_ranker_ovr
 from statistics import stdev, mean
 from utilities.time_converter import time_converter
 from utilities.logger import Logger
+from utilities.properties import import_driver_logger as driver_logger
 
 logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\rank_driver.log")
 
 
-def rank_driver(year, driver_logger):
+def rank_driver(year):
     print("\n\ncalculating team ranks (year)")
     driver_logger.log("\n\tBeginning rank driver")
     start_time = time.time()
@@ -21,7 +22,7 @@ def rank_driver(year, driver_logger):
     difference = {}
     standard_deviation = {}
     driver_logger.log("\t\tCalculating team ranks (year)")
-    for data_year in range(year, get_oldest_year(driver_logger)-1, -1):
+    for data_year in range(year, get_oldest_year()-1, -1):
         runs[data_year], allowed[data_year], difference[data_year] = team_ranker_year(data_year)
         standard_deviation[str(data_year)] = stdev([team_runs[1] for team_runs in runs[data_year]])
     total_time = time_converter(time.time() - start_time)

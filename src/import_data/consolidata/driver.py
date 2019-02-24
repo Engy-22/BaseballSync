@@ -1,7 +1,7 @@
 from utilities.connections.baseball_data_connection import DatabaseConnection
 from import_data.consolidata.team_roster_info import consolidate_hitter_spots, consolidate_player_positions, write_roster_info
 from utilities.logger import Logger
-from utilities.properties import sandbox_mode
+from utilities.properties import sandbox_mode, import_driver_logger as driver_logger
 from utilities.time_converter import time_converter
 import datetime
 import time
@@ -9,7 +9,8 @@ import time
 logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\consolidata.log")
 
 
-def consolidate_data(driver_logger):
+def consolidate_data():
+    # year = [2016]
     driver_logger.log("\tConsolidating data")
     print("Consolidating data")
     start_time = time.time()

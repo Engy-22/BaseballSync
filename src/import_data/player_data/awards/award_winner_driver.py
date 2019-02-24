@@ -10,12 +10,13 @@ from import_data.player_data.awards.gold_glove_winners import gold_glove_winners
 from import_data.player_data.awards.silver_slugger_winners import silver_slugger_winners
 from import_data.player_data.awards.triple_crown_winners import triple_crown_winners
 from import_data.player_data.awards.all_star_finder import all_star_finder
+from utilities.properties import sandbox_mode, import_driver_logger as driver_logger
 
 logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\"
                 "award_winner_driver.log")
 
 
-def award_winner_driver(year, driver_logger, sandbox_mode):
+def award_winner_driver(year):
     print("gathering award winner data")
     driver_logger.log("\tGathering award winner data")
     start_time = time.time()
@@ -26,7 +27,7 @@ def award_winner_driver(year, driver_logger, sandbox_mode):
     t4, t5 = gold_glove_winners(year, logger)
     t6, t7 = silver_slugger_winners(year, logger)
     t8, t9 = triple_crown_winners(year, logger)
-    write_to_file(year, [t1, t2, t3, t4, t5, t6, t7, t8, t9], sandbox_mode)
+    write_to_file(year, [t1, t2, t3, t4, t5, t6, t7, t8, t9])
     if year >= 1933:
         if year not in [1945, 1959, 1960, 1961, 1962]:
             all_star_finder(year, True, logger)
@@ -37,7 +38,7 @@ def award_winner_driver(year, driver_logger, sandbox_mode):
     driver_logger.log("\t\tTime = " + total_time)
 
 
-def write_to_file(year, awards_dict_list, sandbox_mode):
+def write_to_file(year, awards_dict_list):
     if len(awards_dict_list[0]) + len(awards_dict_list[1]) + len(awards_dict_list[2]) + len(awards_dict_list[3]) \
            + len(awards_dict_list[4]) + len(awards_dict_list[5]) > 0:
         db = DatabaseConnection(sandbox_mode)

@@ -9,19 +9,20 @@ from utilities.translate_team_id import translate_team_id
 from utilities.time_converter import time_converter
 from utilities.logger import Logger
 from utilities.anomaly_team import anomaly_team
+from utilities.properties import sandbox_mode, import_driver_logger as driver_logger
 
 data = {}
 
 logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\fielders.log")
 
 
-def fielding_constructor(year, driver_logger, sandbox_mode):
+def fielding_constructor(year):
     print('Downloading fielder images and attributes')
     driver_logger.log("\tDownloading fielder images and attributes")
     start_time = time.time()
     global data
     data = {}
-    logger.log("Downloading fielder " + str(year) + " data || Timestamp: " + datetime.datetime.today()\
+    logger.log("Downloading fielder " + str(year) + " data || Timestamp: " + datetime.datetime.today()
                .strftime('%Y-%m-%d %H:%M:%S'))
     logger.log("\tAssembling list of players")
     table = str(BeautifulSoup(urlopen("https://www.baseball-reference.com/leagues/MLB/" + str(year)
@@ -56,10 +57,10 @@ def fielding_constructor(year, driver_logger, sandbox_mode):
             for team, dictionary2 in dictionary.items():
                 for index, dictionary3 in dictionary2.items():
                     executor.submit(intermediate, player_id, team, index, dictionary3['temp_player'],
-                                    dictionary3['row'], sandbox_mode)
+                                    dictionary3['row'])
     for player_id, dictionary in data.items():
         for team, dictionary2 in dictionary.items():
-            write_teams_and_stats(player_id, dictionary2, team, year, sandbox_mode)
+            write_teams_and_stats(player_id, dictionary2, team, year)
     logger.log("\t\tTime = " + time_converter(time.time() - bulk_time))
     total_time = time_converter(time.time() - start_time)
     logger.log("Done downloading player images and attributes: time = " + total_time + '\n\n')
@@ -77,14 +78,14 @@ def extract_player_attributes(player_id, page, reversed_name):
                     'throwsWith': str_ent.split('Throws: </strong>')[1][0]}
 
 
-def intermediate(player_id, team, index, temp_player, row, sandbox_mode):
-    page = load_url(player_id, sandbox_mode)
+def intermediate(player_id, team, index, temp_player, row):
+    page = load_url(player_id)
     if page is not None:
         if "-0" in temp_player:
             reversed_name = temp_player.split("-0")[0].replace("'", "\'")
         else:
             reversed_name = temp_player.split("0")[0].replace("'", "\'")
-        write_to_db(player_id, extract_player_attributes(player_id, page, reversed_name), sandbox_mode)
+        write_to_db(player_id, extract_player_attributes(player_id, page, reversed_name))
     get_stats(player_id, team, index, row)
 
 
@@ -102,7 +103,7 @@ def get_stats(player_id, team, index, row):
     data[player_id][team][index]['stats'] = stat_dictionary
 
 
-def load_url(player_id, sandbox_mode):
+def load_url(player_id):
     page = None
     db = DatabaseConnection(sandbox_mode)
     if len(db.read('select * from players where playerid = "' + player_id + '";')) == 0:
@@ -112,7 +113,7 @@ def load_url(player_id, sandbox_mode):
     return page
 
 
-def write_to_db(player_id, player_attributes, sandbox_mode):
+def write_to_db(player_id, player_attributes):
     fields = ''
     values = ''
     for field, value in player_attributes.items():
@@ -124,7 +125,7 @@ def write_to_db(player_id, player_attributes, sandbox_mode):
     db.close()
 
 
-def write_teams_and_stats(player_id, stats, team, year, sandbox_mode):
+def write_teams_and_stats(player_id, stats, team, year):
     stat_nums = {}
     for index, numbers in stats.items():
         for field, value in numbers['stats'].items():

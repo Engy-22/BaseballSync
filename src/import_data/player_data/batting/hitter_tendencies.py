@@ -5,11 +5,12 @@ from bs4 import BeautifulSoup
 from utilities.connections.baseball_data_connection import DatabaseConnection
 from utilities.logger import Logger
 from utilities.time_converter import time_converter
+from utilities.properties import sandbox_mode, import_driver_logger as driver_logger
 
 logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\hitter_tendecies.log")
 
 
-def hitter_tendencies(year, driver_logger, sandbox_mode):
+def hitter_tendencies(year):
     print("storing hitter tendencies")
     start_time = time.time()
     logger.log("Downloading " + str(year) + " hitter tendencies || Timestamp: " + datetime.datetime.today()
@@ -32,15 +33,15 @@ def hitter_tendencies(year, driver_logger, sandbox_mode):
                 stat_dictionary[player_id] = temp_stats
                 prev_player_id = player_id
         for player_id, stats in stat_dictionary.items():
-            write_to_file(year, player_id, stats, sandbox_mode)
-        fill_batters_with_0_pa(year, sandbox_mode)
+            write_to_file(year, player_id, stats)
+        fill_batters_with_0_pa(year)
         total_time = time_converter(time.time() - format_time)
         logger.log("\t\tTime = " + total_time)
         driver_logger.log("\t\tTime = " + total_time)
     else:
         driver_logger.log("\tNo hitter tendency data before 1988")
         logger.log("\tNo hitter tendency data before 1988")
-        fill_fields(year, sandbox_mode)
+        fill_fields(year)
     logger.log("Done storing hitter tendencies: time = " + time_converter(time.time() - start_time) + '\n\n')
 
 
@@ -75,7 +76,7 @@ def intermediate(row, prev_player_id):
     return player_id, stats
 
 
-def write_to_file(year, player_id, stat_list, sandbox_mode):
+def write_to_file(year, player_id, stat_list):
     db = DatabaseConnection(sandbox_mode)
     pa = []
     records = []
@@ -102,13 +103,13 @@ def write_to_file(year, player_id, stat_list, sandbox_mode):
     db.close()
 
 
-def fill_fields(year, sandbox_mode):
+def fill_fields(year):
     db = DatabaseConnection(sandbox_mode)
     db.write('update player_batting set certainty = 0.0 where year = ' + str(year) + ';')
     db.close()
 
 
-def fill_batters_with_0_pa(year, sandbox_mode):
+def fill_batters_with_0_pa(year):
     db = DatabaseConnection(sandbox_mode)
     db.write("update player_batting set certainty = 0.0 where pa = 0 and year = " + str(year) + ";")
     db.close()

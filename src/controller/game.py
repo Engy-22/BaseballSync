@@ -5,11 +5,12 @@ from model.league import League
 from controller.inning import simulate_inning
 import time
 from utilities.time_converter import time_converter
+from utilities.properties import controller_driver_logger as driver_logger
 
 logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\controller\\game.log")
 
 
-def simulate_game(game_num, away_team_id, away_year, home_team_id, home_year, driver_logger):
+def simulate_game(game_num, away_team_id, away_year, home_team_id, home_year):
     driver_logger.log("\tStarting game simulation: " + away_team_id + " @ " + home_team_id)
     start_time = time.time()
     logger.log("Starting game simulation: " + away_team_id + " @ " + home_team_id)
@@ -34,5 +35,6 @@ def simulate_game(game_num, away_team_id, away_year, home_team_id, home_year, dr
     return game_data
 
 
-simulate_game(1, 'CLE', 2016, 'TEX', 2016, Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\"
-                                                  "controller\\dump.log"))
+# for game in range(200):
+#     simulate_game(game+1, 'CLE', 2016, 'CHC', 2012, Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\"
+#                                                            "baseball-sync\\logs\\controller\\dump.log"))

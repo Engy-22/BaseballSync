@@ -1,9 +1,10 @@
 from utilities.connections.baseball_data_connection import DatabaseConnection
 from xml.dom import minidom
 from import_data.player_data.pitch_fx.translators.name_alterator import name_alterator
+from utilities.properties import sandbox_mode
 
 
-def resolve_player_id(player_num, year, team, player_type, sandbox_mode):
+def resolve_player_id(player_num, year, team, player_type):
     players_file = minidom.parse('C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\src\\import_data\\'
                                  'player_data\\pitch_fx\\xml\\players.xml')
     for ent in players_file.getElementsByTagName('player'):
@@ -25,14 +26,14 @@ def resolve_player_id(player_num, year, team, player_type, sandbox_mode):
         if len(pid) == 1:
             player_id = pid[0][0]
         else:
-            player_id = resolve_further(pid, team, year, player_type, sandbox_mode)
+            player_id = resolve_further(pid, team, year, player_type)
 
     else:
         player_id = None
     return player_id
 
 
-def resolve_further(pid, team, year, player_type, sandbox_mode):
+def resolve_further(pid, team, year, player_type):
     pt_uids = {}
     possible_match = []
     db = DatabaseConnection(sandbox_mode)

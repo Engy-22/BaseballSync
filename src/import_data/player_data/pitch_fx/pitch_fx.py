@@ -19,17 +19,18 @@ from import_data.player_data.pitch_fx.translators.resolve_player_id import resol
 from import_data.player_data.pitch_fx.translators.resolve_team_id import resolve_team_id
 from import_data.player_data.pitch_fx.translators.find_pickoff_successes import find_pickoff_successes
 from import_data.player_data.pitch_fx.aggregate_pitch_fx_data import aggregate_pitch_fx_data
+from utilities.properties import sandbox_mode, import_driver_logger as driver_logger
 
 innings = {}
 strikes = 0
 balls = 0
 logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\logs\\import_data\\pitch_fx.log")
 
-# done: 2008, 2009, 2010, 2011, 2015, 2016, 2017, 2018
+# done: 2008, 2009, 2010, 2011, 2012, 2015, 2016, 2017, 2018
 # don't forget about days 22-30 in april of 2011
 
 
-def get_pitch_fx_data(year, driver_logger, sandbox_mode):
+def get_pitch_fx_data(year):
     if year < 2008:
         driver_logger.log("\tNo pitch fx data to download before 2008")
         return
@@ -42,28 +43,28 @@ def get_pitch_fx_data(year, driver_logger, sandbox_mode):
     opening_day = db.read('select opening_day from years where year = ' + str(year) + ';')[0][0]
     db.close()
     for month in range(3, 12, 1):
-        if month > 5:
-            if month >= int(opening_day.split('-')[0]):
-                for day in range(1, 32, 1):
-                    # if day > 6:
-                    if month == int(opening_day.split('-')[0]) and int(day) < int(opening_day.split('-')[1]):
-                        continue
-                    if len(str(day)) == 1:
-                        this_day = '0' + str(day)
-                    else:
-                        this_day = str(day)
-                    if len(str(month)) == 1:
-                        this_month = '0' + str(month)
-                    else:
-                        this_month = str(month)
-                    get_day_data(this_day, this_month, str(year), sandbox_mode)
+        # if month == 4:
+        if month >= int(opening_day.split('-')[0]):
+            for day in range(1, 32, 1):
+                # if day > 21:
+                if month == int(opening_day.split('-')[0]) and int(day) < int(opening_day.split('-')[1]):
+                    continue
+                if len(str(day)) == 1:
+                    this_day = '0' + str(day)
+                else:
+                    this_day = str(day)
+                if len(str(month)) == 1:
+                    this_month = '0' + str(month)
+                else:
+                    this_month = str(month)
+                get_day_data(this_day, this_month, str(year))
     logger.log("Done fetching " + str(year) + " pitch fx data: time = " + time_converter(time.time() - start_time)
                + '\n\n\n\n')
-    aggregate_pitch_fx_data(year, driver_logger, sandbox_mode)
+    aggregate_pitch_fx_data(year)
     driver_logger.log("\t\tTime = " + time_converter(time.time() - start_time))
 
 
-def get_day_data(day, month, year, sandbox_mode):
+def get_day_data(day, month, year):
     logger.log("\tDownloading data for " + month + '-' + day + '-' + year)
     day_time = time.time()
     home_page_url = 'http://gd2.mlb.com/components/game/mlb/year_' + year + '/month_' + month + '/day_' + day
@@ -95,7 +96,7 @@ def get_day_data(day, month, year, sandbox_mode):
                                                 individual_inning_url.split('_')[1].split('.xml')[0])
                         except IndexError:
                             continue
-                parse_innings(year, innings_url, sandbox_mode)
+                parse_innings(year, innings_url)
                 clear_xmls()
         except IndexError as e:
             a += 1
@@ -116,7 +117,7 @@ def load_xml(inning_url, inning_num):
                             "\\pitch_fx\\xml\\" + str(inning_num) + ".xml")
 
 
-def parse_innings(year, innings_url, sandbox_mode):
+def parse_innings(year, innings_url):
     dir = "C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\src\\import_data\\player_data\\pitch_fx\\xml"
     try:
         playersdoc = minidom.parse(dir + '\\players.xml')
@@ -126,35 +127,33 @@ def parse_innings(year, innings_url, sandbox_mode):
             raise Exception('None team')
         for xml_file in os.listdir(dir):
             if 'players' not in xml_file and 'game' not in xml_file:
-                parse_inning(year, dir + '\\' + xml_file, innings_url, away_team, home_team, sandbox_mode)
+                parse_inning(year, dir + '\\' + xml_file, innings_url, away_team, home_team)
     except FileNotFoundError:
         pass
 
 
-def parse_inning(year, xml_file, innings_url, away_team, home_team, sandbox_mode):
+def parse_inning(year, xml_file, innings_url, away_team, home_team):
     doc = minidom.parse(xml_file)
     away_at_bats = doc.getElementsByTagName('inning')[0].getElementsByTagName('top')[0].getElementsByTagName('atbat')
     for at_bat in away_at_bats:
-        parse_at_bat(innings_url, year, at_bat, home_team, away_team, sandbox_mode)
-    parse_pickoff_success(year, home_team, 'top', xml_file, sandbox_mode)
+        parse_at_bat(innings_url, year, at_bat, home_team, away_team)
+    parse_pickoff_success(year, home_team, 'top', xml_file)
     try:
         home_at_bats = doc.getElementsByTagName('inning')[0].getElementsByTagName('bottom')[0]\
             .getElementsByTagName('atbat')
         for at_bat in home_at_bats:
-            parse_at_bat(innings_url, year, at_bat, away_team, home_team, sandbox_mode)
-        parse_pickoff_success(year, away_team, 'bottom', xml_file, sandbox_mode)
+            parse_at_bat(innings_url, year, at_bat, away_team, home_team)
+        parse_pickoff_success(year, away_team, 'bottom', xml_file)
     except IndexError:
         pass
 
 
-def parse_at_bat(innings_url, year, at_bat, pitcher_team, hitter_team, sandbox_mode):
+def parse_at_bat(innings_url, year, at_bat, pitcher_team, hitter_team):
     meta_data = {'original_pitcher_id': at_bat.getAttribute('pitcher'),
                  'original_batter_id': at_bat.getAttribute('batter'),
-                 'pitcher_id': resolve_player_id(at_bat.getAttribute('pitcher'), year, pitcher_team, 'pitching',
-                                                 sandbox_mode),
+                 'pitcher_id': resolve_player_id(at_bat.getAttribute('pitcher'), year, pitcher_team, 'pitching'),
                  'pitcher_team': pitcher_team,
-                 'batter_id': resolve_player_id(at_bat.getAttribute('batter'), year, hitter_team, 'batting',
-                                                sandbox_mode),
+                 'batter_id': resolve_player_id(at_bat.getAttribute('batter'), year, hitter_team, 'batting'),
                  'batter_team': hitter_team,
                  'temp_outcome': at_bat.getAttribute('event'),
                  'ab_description': at_bat.getAttribute('des'),
@@ -166,13 +165,13 @@ def parse_at_bat(innings_url, year, at_bat, pitcher_team, hitter_team, sandbox_m
     global balls
     balls = 0
     for pitch in pitches:
-        parse_pitch(innings_url, year, pitch, meta_data, pitches.index(pitch) + 1 == len(pitches), sandbox_mode)
+        parse_pitch(innings_url, year, pitch, meta_data, pitches.index(pitch) + 1 == len(pitches))
     pickoff_attempts = at_bat.getElementsByTagName('po')
     for pickoff_attempt in pickoff_attempts:
-        parse_pickoff_attempt(pickoff_attempt, meta_data['pitcher_id'], pitcher_team, year, sandbox_mode)
+        parse_pickoff_attempt(pickoff_attempt, meta_data['pitcher_id'], pitcher_team, year)
 
 
-def parse_pitch(innings_url, year, pitch, meta_data, last_pitch, sandbox_mode):
+def parse_pitch(innings_url, year, pitch, meta_data, last_pitch):
     global strikes
     global balls
     count = str(balls) + '-' + str(strikes)
@@ -199,32 +198,31 @@ def parse_pitch(innings_url, year, pitch, meta_data, last_pitch, sandbox_mode):
         with ThreadPoolExecutor(os.cpu_count()) as executor2:
             executor2.submit(write_to_file, innings_url, 'pitcher', meta_data['pitcher_id'], meta_data['pitcher_team'],
                              year, meta_data['batter_orientation'], count, pitch_type, ball_strike, swing_take,
-                             outcome, trajectory, field, direction, meta_data['original_pitcher_id'], sandbox_mode)
+                             outcome, trajectory, field, direction, meta_data['original_pitcher_id'])
             executor2.submit(write_to_file, innings_url, 'batter', meta_data['batter_id'], meta_data['batter_team'],
                              year, meta_data['pitcher_orientation'], count, pitch_type, ball_strike, swing_take,
-                             outcome, trajectory, field, direction, meta_data['original_batter_id'], sandbox_mode)
+                             outcome, trajectory, field, direction, meta_data['original_batter_id'])
     except KeyError:
         pass
 
 
-def parse_pickoff_attempt(pickoff_attempt, pitcher, team, year, sandbox_mode):
+def parse_pickoff_attempt(pickoff_attempt, pitcher, team, year):
     try:
-        write_pickoff(pitcher, team, year, pickoff_attempt.getAttribute('des').split('Pickoff Error ')[1], 'error',
-                      sandbox_mode)
+        write_pickoff(pitcher, team, year, pickoff_attempt.getAttribute('des').split('Pickoff Error ')[1], 'error')
     except IndexError:
         try:
             write_pickoff(pitcher, team, year, pickoff_attempt.getAttribute('des').split('Pickoff Attempt ')[1],
-                          'attempts', sandbox_mode)
+                          'attempts')
         except IndexError:
             pass
 
 
-def parse_pickoff_success(year, team, top_bottom, xml, sandbox_mode):
-    successes = find_pickoff_successes(top_bottom, year, team, xml, sandbox_mode)
+def parse_pickoff_success(year, team, top_bottom, xml):
+    successes = find_pickoff_successes(top_bottom, year, team, xml)
     for pitcher, success in successes.items():
         for base in success:
             if 'Error' not in base:
-                write_pickoff(pitcher, team, year, base, 'successes', sandbox_mode)
+                write_pickoff(pitcher, team, year, base, 'successes')
 
 
 def regular_season_game(game_url):
@@ -252,6 +250,5 @@ def clear_xmls():
             executor.submit(remove, dir + '\\' + xml_file)
 
 
-for year in range(2012, 2013, 1):
-    get_pitch_fx_data(year, Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\"
-                                   "dump.log"), True)
+for year in range(2011, 2012, 1):
+    get_pitch_fx_data(year)

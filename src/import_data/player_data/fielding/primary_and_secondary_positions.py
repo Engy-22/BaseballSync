@@ -3,12 +3,13 @@ import datetime
 from utilities.connections.baseball_data_connection import DatabaseConnection
 from utilities.logger import Logger
 from utilities.time_converter import time_converter
+from utilities.properties import sandbox_mode, import_driver_logger as driver_logger
 
 logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\"
                 "primary_and_secondary_positions.log")
 
 
-def primary_and_secondary_positions(year, driver_logger, sandbox_mode):
+def primary_and_secondary_positions(year):
     print("adding primary and secondary positions")
     driver_logger.log("\tAdding primary and secondary positions")
     start_time = time.time()
@@ -34,7 +35,7 @@ def primary_and_secondary_positions(year, driver_logger, sandbox_mode):
     for player in player_positions:
         player_position_string = get_player_positions(player, player_positions_range)
         player_positions_dict = determine_primary_position(player_position_string)
-        write_to_file(player[0].replace("'", "\'"), player_positions_dict, sandbox_mode)
+        write_to_file(player[0].replace("'", "\'"), player_positions_dict)
     db.close()
     logger.log("\t\tTime = " + time_converter(time.time() - determination_time))
     total_time = time_converter(time.time() - start_time)
@@ -42,7 +43,7 @@ def primary_and_secondary_positions(year, driver_logger, sandbox_mode):
     driver_logger.log("\t\tTime = " + total_time)
 
 
-def write_to_file(player, positions_dict, sandbox_mode):
+def write_to_file(player, positions_dict):
     db = DatabaseConnection(sandbox_mode)
     positions = sorted(positions_dict.items(), key=lambda kv: kv[1], reverse=True)
     secondary = positions[1:]

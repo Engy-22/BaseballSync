@@ -7,12 +7,13 @@ from utilities.connections.baseball_data_connection import DatabaseConnection
 from utilities.logger import Logger
 from utilities.time_converter import time_converter
 from concurrent.futures import ThreadPoolExecutor
+from utilities.properties import sandbox_mode, import_driver_logger as driver_logger
 
 logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\manager_tendecies.log")
 pages = {}
 stats = {}
 
-def manager_tendencies(year, driver_logger, sandbox_mode):
+def manager_tendencies(year):
     driver_logger.log("\tStoring manager tendencies")
     print("storing manager tendencies")
     start_time = time.time()
@@ -34,7 +35,7 @@ def manager_tendencies(year, driver_logger, sandbox_mode):
     global stats
     with ThreadPoolExecutor(os.cpu_count()) as executor2:
         for manager_team, tendencies in stats.items():
-            executor2.submit(write_to_file, year, manager_team, tendencies, sandbox_mode)
+            executor2.submit(write_to_file, year, manager_team, tendencies)
     logger.log('\t\tTime = ' + time_converter(time.time() - write_time))
     total_time = time_converter(time.time() - start_time)
     driver_logger.log("\t\tTime = " + total_time)
@@ -72,7 +73,7 @@ def process_manager_tendencies(year):
     logger.log('\t\tTime = ' + time_converter(time.time() - start_time))
 
 
-def write_to_file(year, manager_team, tendencies, sandbox_mode):
+def write_to_file(year, manager_team, tendencies):
     db = DatabaseConnection(sandbox_mode)
     sets = ''
     for stat, total in tendencies.items():

@@ -7,13 +7,14 @@ import datetime
 from utilities.connections.baseball_data_connection import DatabaseConnection
 from utilities.logger import Logger
 from utilities.time_converter import time_converter
+from utilities.properties import sandbox_mode, import_driver_logger as driver_logger
 
 pages = {}
 strings = {}
 logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\year_data.log")
 
 
-def get_year_data(year, driver_logger, sandbox_mode):
+def get_year_data(year):
     driver_logger.log('\tGathering year data')
     print("Gathering year data")
     start_time = time.time()
@@ -34,7 +35,7 @@ def get_year_data(year, driver_logger, sandbox_mode):
     if len(db.read('select * from years where year = ' + str(year) + ';')) == 0:
         db.write('insert into years (year) values (' + str(year) + ');')
     db.close()
-    write_opening_day(year, sandbox_mode)
+    write_opening_day(year)
     download_start = time.time()
     logger.log("making HTTP requests for year data")
     with ThreadPoolExecutor(3) as executor1:
@@ -47,7 +48,7 @@ def get_year_data(year, driver_logger, sandbox_mode):
     logger.log("writing to database")
     with ThreadPoolExecutor(3) as executor2:
         for key, value in stat_list.items():
-            executor2.submit(write_to_db, year, strings[key], key, sandbox_mode)
+            executor2.submit(write_to_db, year, strings[key], key)
     logger.log("\tdone writing to database: time = " + time_converter(time.time() - write_start))
     total_time = time_converter(time.time() - start_time)
     logger.log('year_data download completed: time = ' + total_time + '\n\n')
@@ -61,7 +62,7 @@ def load_url(year, stat_type):
                                              + "-standard-" + stat_type + ".shtml"), 'html.parser')
 
 
-def write_opening_day(year, sandbox_mode):
+def write_opening_day(year):
     start_time = time.time()
     db = DatabaseConnection(sandbox_mode)
     logger.log('Getting date of opening day')
@@ -100,7 +101,7 @@ def assemble_stats(stat_type, stats, page):
     strings[stat_type] = this_string
 
 
-def write_to_db(year, stat_string, stat_type, sandbox_mode):
+def write_to_db(year, stat_string, stat_type):
     logger.log("writing " + stat_type + " stats to database")
     db = DatabaseConnection(sandbox_mode)
     db.write('update years set ' + stat_string[:-2] + ' where year = ' + str(year) + ';')

@@ -4,12 +4,13 @@ from utilities.logger import Logger
 from utilities.time_converter import time_converter
 import datetime
 import time
+from utilities.properties import sandbox_mode, import_driver_logger as driver_logger
 
 logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\populate_teams_table."
                 "log")
 
 
-def populate_teams_table(year, driver_logger, sandbox_mode):
+def populate_teams_table(year):
     driver_logger.log('\tPopulating teams table')
     print("Populating teams table")
     start_time = time.time()

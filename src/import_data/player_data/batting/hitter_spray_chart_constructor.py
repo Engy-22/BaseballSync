@@ -7,13 +7,14 @@ from utilities.connections.baseball_data_connection import DatabaseConnection
 from utilities.time_converter import time_converter
 from utilities.logger import Logger
 from concurrent.futures import ThreadPoolExecutor
+from utilities.properties import sandbox_mode, import_driver_logger as driver_logger
 
 bad_gateway_data = []
 logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\"
                 "hitter_spray_chart_constructor.log")
 
 
-def hitter_spray_chart_constructor(year, driver_logger, sandbox_mode):
+def hitter_spray_chart_constructor(year):
     print("creating hitter spray charts")
     start_time = time.time()
     global bad_gateway_data
@@ -27,17 +28,17 @@ def hitter_spray_chart_constructor(year, driver_logger, sandbox_mode):
         db.close()
         with ThreadPoolExecutor(os.cpu_count()) as executor:
             for ent in pt_uid_players:
-                executor.submit(reduce_functionality, year, ent, sandbox_mode)
+                executor.submit(reduce_functionality, year, ent)
         driver_logger.log("\t\tTime = " + time_converter(time.time() - start_time))
     else:
         driver_logger.log("\tNo hitter spray chart data before 1988")
         logger.log("\tNo hitter spray chart data before 1988")
     if len(bad_gateway_data) > 0:
-        revisit_bad_gateways(year, bad_gateway_data, sandbox_mode)
+        revisit_bad_gateways(year, bad_gateway_data)
     logger.log("Done downloading hitter spray charts: time = " + time_converter(time.time() - start_time) + '\n\n')
 
 
-def reduce_functionality(year, ent, sandbox_mode):
+def reduce_functionality(year, ent):
     stats1 = {"To Infield_PA": ["pa_infield", ""],
               "To Outfield_PA": ["pa_outfield", ""],
               "To Infield_H": ["infield_hits", ""],
@@ -137,10 +138,10 @@ def reduce_functionality(year, ent, sandbox_mode):
             for key, value in stats2.items():
                 stats2[key] = '0'
         finally:
-            write_to_file(year, ent[0], stats1, stats2, sandbox_mode)
+            write_to_file(year, ent[0], stats1, stats2)
 
 
-def write_to_file(year, pt_uid, stat_list1, stat_list2, sandbox_mode):
+def write_to_file(year, pt_uid, stat_list1, stat_list2):
     db = DatabaseConnection(sandbox_mode)
     query_string = ""
     for key, value in stat_list1.items():
@@ -156,9 +157,9 @@ def write_to_file(year, pt_uid, stat_list1, stat_list2, sandbox_mode):
     db.close()
 
 
-def revisit_bad_gateways(year, data, sandbox_mode):
+def revisit_bad_gateways(year, data):
     for datum in data:
-        reduce_functionality(year, datum[0], sandbox_mode)
+        reduce_functionality(year, datum[0])
 
 
 # dump_logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\dump.log")

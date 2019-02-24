@@ -36,7 +36,7 @@ still an issue? *here's a problem, david ross played 11 games for the padres in 
 *make a way to compare players to other players in different eras based on stats, position, skillset, tendencies, etc.
 	-e.g. who is Mike Trout's comp from the 1920's?
 *when simulating, determine if a ball is in play or not, if so gb, fb or line drive; then determine outcome from that.
-
+*when simulating, if the two teams are the same, just get their team_info once from the database. this db call is 0.60 seconds on average (creating a team's lineup for a game takes seconds on average).
 
 **convert everything over to GSDB:
     *adjust home park numbers for the team's pitching staff that year.

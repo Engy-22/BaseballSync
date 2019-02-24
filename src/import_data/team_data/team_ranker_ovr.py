@@ -4,9 +4,10 @@ from utilities.translate_team_id import translate_team_id
 from statistics import mean
 from utilities.time_converter import time_converter
 from utilities.logger import Logger
+from utilities.properties import sandbox_mode
 
 
-def team_ranker_ovr(data, greater_than, field, standard_deviation, average_deviation, sandbox_mode):
+def team_ranker_ovr(data, greater_than, field, standard_deviation, average_deviation):
     logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\"
                     "team_ranker_ovr.log")
     logger.log("Calculating overall team ranks: " + field)

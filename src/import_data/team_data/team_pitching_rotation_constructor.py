@@ -8,13 +8,14 @@ from utilities.translate_team_id import translate_team_id
 from utilities.logger import Logger
 from utilities.time_converter import time_converter
 from concurrent.futures import ThreadPoolExecutor
+from utilities.properties import sandbox_mode, import_driver_logger as driver_logger
 
 pages = {}
 logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\"
                 "team_pitching_rotation_constructor.log")
 
 
-def team_pitching_rotation_constructor(year, driver_logger, sandbox_mode):
+def team_pitching_rotation_constructor(year):
     if year < 1908:
         logger.log("No team pitching rotation data to download. (before 1908).")
         driver_logger.log("\tNo team pitching rotation data to download. (before 1908).")
@@ -39,7 +40,7 @@ def team_pitching_rotation_constructor(year, driver_logger, sandbox_mode):
     logger.log("\t\tTime = " + time_converter(time.time() - start_time))
     logger.log("\tOrganizing schedules and pitching rotations")
     write_time = time.time()
-    get_pitchers(year, sandbox_mode)
+    get_pitchers(year)
     logger.log("\t\t\tTime = " + time_converter(time.time() - write_time))
     total_time = time_converter(time.time() - start_time)
     logger.log("Done downloading team pitching rotation data: time = " + total_time + '\n\n')
@@ -53,7 +54,7 @@ def load_url(year, team_id, team_key):
         split('grid_table sortable')[1].split('tbody')[1].split('<tr')
 
 
-def get_pitchers(year, sandbox_mode):
+def get_pitchers(year):
     global pages
     for team_id, def_lineups in pages.items():
         logger.log("\t\tGathering " + team_id + " schedule and pitching rotations")
@@ -73,13 +74,13 @@ def get_pitchers(year, sandbox_mode):
                     schedule[game_num].append(date[0])
                     schedule[game_num].append(date[1])
             with ThreadPoolExecutor(os.cpu_count()) as executor2:
-                executor2.submit(write_to_file_pitchers, team_id, year, pitcher_list, sandbox_mode)
-                executor2.submit(write_to_file_schedule, team_id, year, schedule, sandbox_mode)
+                executor2.submit(write_to_file_pitchers, team_id, year, pitcher_list)
+                executor2.submit(write_to_file_schedule, team_id, year, schedule)
         except IndexError:
             pass
 
 
-def write_to_file_pitchers(team, year, pitchers, sandbox_mode):
+def write_to_file_pitchers(team, year, pitchers):
     db = DatabaseConnection(sandbox_mode)
     for i in range(len(pitchers)):
         if len(db.read('select starterId from starting_pitchers where playerId = "' + pitchers[i] + '" and gameNum = '
@@ -91,7 +92,7 @@ def write_to_file_pitchers(team, year, pitchers, sandbox_mode):
     db.close()
 
 
-def write_to_file_schedule(team_id, year, schedule, sandbox_mode):
+def write_to_file_schedule(team_id, year, schedule):
     db = DatabaseConnection(sandbox_mode)
     ty_uid = db.read('select ty_uniqueidentifier from team_years where teamid = "' + team_id + '" and year = '
                      + str(year) + ';')[0][0]
@@ -107,4 +108,4 @@ def write_to_file_schedule(team_id, year, schedule, sandbox_mode):
 
 # dump_logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\dump.log")
 # for year in range(1996, 1998, 1):
-#     team_pitching_rotation_constructor(2018, dump_logger)
+# team_pitching_rotation_constructor(2012, dump_logger)

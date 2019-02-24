@@ -3,11 +3,12 @@ import datetime
 from utilities.connections.baseball_data_connection import DatabaseConnection
 from utilities.time_converter import time_converter
 from utilities.logger import Logger
+from utilities.properties import sandbox_mode, import_driver_logger as driver_logger
 
 logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\team_certainties.log")
 
 
-def team_certainties(year, driver_logger, sandbox_mode):
+def team_certainties(year):
     print('aggregating team statistic certainties')
     driver_logger.log("\tAggregating team statistic certainties")
     start_time = time.time()

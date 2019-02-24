@@ -1,7 +1,8 @@
 from utilities.connections.baseball_data_connection import DatabaseConnection
+from utilities.properties import sandbox_mode, import_driver_logger as driver_logger
 
 
-def get_most_recent_year(driver_logger, sandbox_mode):
+def get_most_recent_year():
     driver_logger.log('\t* Getting most recent year listed in the database *')
     db = DatabaseConnection(sandbox_mode)
     try:

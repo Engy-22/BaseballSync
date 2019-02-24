@@ -7,14 +7,14 @@ from utilities.time_converter import time_converter
 from concurrent.futures import ThreadPoolExecutor
 from urllib.request import urlopen, urlretrieve
 from bs4 import BeautifulSoup
-
+from utilities.properties import sandbox_mode, import_driver_logger as driver_logger
 
 pages = {}
 logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\"
                 "ballpark_and_manager_data.log")
 
 
-def ballpark_and_manager_data(year, driver_logger, sandbox_mode):
+def ballpark_and_manager_data(year):
     driver_logger.log('\tGathering ballpark and manager data')
     print("Gathering ballpark and manager data")
     start_time = time.time()
@@ -43,7 +43,7 @@ def ballpark_and_manager_data(year, driver_logger, sandbox_mode):
     team_count = len(teams)
     with ThreadPoolExecutor(os.cpu_count()) as executor2:
         for team_key, team_id in teams.items():
-            executor2.submit(gather_team_home_numbers, team_id, team_key, year, team_count, sandbox_mode)
+            executor2.submit(gather_team_home_numbers, team_id, team_key, year, team_count)
     logger.log("\tDone calculating and writing ballpark numbers and downloading manager data: time = "
                + time_converter(time.time() - calc_and_download_time))
     total_time = time_converter(time.time() - start_time)
@@ -51,7 +51,7 @@ def ballpark_and_manager_data(year, driver_logger, sandbox_mode):
     driver_logger.log('\t\tTime = ' + total_time)
 
 
-def gather_team_home_numbers(team_id, team_key, year, team_count, sandbox_mode):
+def gather_team_home_numbers(team_id, team_key, year, team_count):
     logger.log("\tCalculating home numbers and downloading manager data: " + team_id)
     db = DatabaseConnection(sandbox_mode)
     if len(db.read('select BY_uniqueidentifier from ballpark_years where teamId = "' + team_id + '" and year = '
@@ -149,7 +149,7 @@ def gather_team_home_numbers(team_id, team_key, year, team_count, sandbox_mode):
         except IndexError as e:
             logger.log('\t\t' + str(e))
             park_name = "No Home Field"
-        write_to_db(team_id, location, trajectory, manager_ids, year, park_name, sandbox_mode)
+        write_to_db(team_id, location, trajectory, manager_ids, year, park_name)
 
 
 def load_url(year, team_key):
@@ -159,7 +159,7 @@ def load_url(year, team_key):
                                             + '&year=' + str(year)), 'html.parser')
 
 
-def write_to_db(team_id, stats, trajectory, manager_ids, year, park_name, sandbox_mode):
+def write_to_db(team_id, stats, trajectory, manager_ids, year, park_name):
     db = DatabaseConnection(sandbox_mode)
     if len(db.read('select parkId from ballparks where parkName = "' + park_name + '";')) == 0:
         db.write('insert into ballparks (parkId, parkName) values (default, "' + park_name + '");')

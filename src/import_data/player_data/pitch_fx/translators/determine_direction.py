@@ -36,8 +36,10 @@ def determine_direction(event, bats_with):
     elif 'sacrifice bunt, ' in event:
         location = event.split('sacrifice bunt, ')[1].split(' ')[0]
     elif 'sacrifice fly' in event:
-        if 'error' not in event:
+        if 'sacrifice fly to ' in event:
             location = event.split('sacrifice fly to ')[1].split(' ')[0]
+        elif 'out on a sacrifice fly' in event:
+            location = event.split(', ')[1].split(' ')[0]
         else:
             location = event.split('error by ')[1].split(' ')[0]
     elif 'double play' in event or 'triple play' in event:

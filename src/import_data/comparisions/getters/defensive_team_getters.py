@@ -1,7 +1,8 @@
 from utilities.connections.baseball_data_connection import DatabaseConnection
+from utilities.properties import sandbox_mode
 
 
-def get_defensive_stats(ty_uid, sandbox_mode):
+def get_defensive_stats(ty_uid):
     stats = {'ER': 0, 'HA': 0, '2BA': 0, '3BA': 0, 'HRA': 0, 'BBA': 0, 'K': 0}
     db = DatabaseConnection(sandbox_mode)
     pa = int(db.read('select pa from team_years where ty_uniqueidentifier=' + str(ty_uid) + ';')[0][0])
@@ -12,7 +13,7 @@ def get_defensive_stats(ty_uid, sandbox_mode):
     return pa, stats
 
 
-def get_year_totals(year, logger, sandbox_mode):
+def get_year_totals(year, logger):
     logger.log('\t\t\tGathering ' + str(year) + ' defensive totals')
     year_totals = {'ER': ['ER', 0], 'HA': ['H', 0], '2BA': ['2B', 0], '3BA': ['3B', 0], 'HRA': ['HR', 0],
                    'BBA': ['BB', 0], 'K': ['SO', 0]}

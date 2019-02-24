@@ -7,12 +7,13 @@ from utilities.connections.baseball_data_connection import DatabaseConnection
 from utilities.translate_team_id import translate_team_id
 from utilities.time_converter import time_converter
 from utilities.anomaly_team import anomaly_team
+from utilities.properties import sandbox_mode, import_driver_logger as driver_logger
 
 logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\"
                 "team_defensive_statistics.log")
 
 
-def team_defensive_statistics(year, driver_logger, sandbox_mode):
+def team_defensive_statistics(year):
     driver_logger.log("\tGathering team defensive statistics")
     print('Gathering team defensive statistics')
     start_time = time.time()
@@ -33,14 +34,14 @@ def team_defensive_statistics(year, driver_logger, sandbox_mode):
               'ERA': 'ERA', 'whip': 'WHIP'}
     stats2 = {'PA': 'PAA', 'AB': 'ABA', '2B': '2BA', '3B': '3BA', 'batting_avg': 'BAA', 'onbase_perc': 'OBA',
               'slugging_perc': 'SLGA', 'onbase_plus_slugging': 'OPSA', 'batting_avg_bip': 'BABIPA'}
-    extract_data(standard_pitching_rows, stats1, year, sandbox_mode)
-    extract_data(batting_against_rows, stats2, year, sandbox_mode)
+    extract_data(standard_pitching_rows, stats1, year)
+    extract_data(batting_against_rows, stats2, year)
     total_time = time_converter(time.time() - start_time)
     logger.log("Done donwloading team defensive data for " + str(year) + ': time = ' + total_time + '\n\n')
     driver_logger.log('\t\tTime = ' + total_time)
 
 
-def extract_data(data, stats, year, sandbox_mode):
+def extract_data(data, stats, year):
     needed_data = {}
     for datum in data:
         try:
@@ -55,10 +56,10 @@ def extract_data(data, stats, year, sandbox_mode):
                 needed_data[team_id][stat_name] = datum.split('data-stat="' + stat_key + '">')[1].split('<')[0]
             else:
                 needed_data[team_id][stat_name] = datum.split('ERA: ')[1].split('&')[0]
-    write_to_file(needed_data, year, sandbox_mode)
+    write_to_file(needed_data, year)
 
 
-def write_to_file(team_data, year, sandbox_mode):
+def write_to_file(team_data, year,):
     db = DatabaseConnection(sandbox_mode)
     for team, data in team_data.items():
         logger.log("\tWriting " + team + " data to database")

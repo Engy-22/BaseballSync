@@ -7,22 +7,24 @@ from utilities.connections.baseball_data_connection import DatabaseConnection
 from utilities.time_converter import time_converter
 from utilities.logger import Logger
 from concurrent.futures import ThreadPoolExecutor
+from utilities.properties import sandbox_mode, import_driver_logger as driver_logger
 
 pages = {}
 logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\"
                 "team_fielding_file_constructor.log")
 
 
-def team_fielding_file_constructor(year, driver_logger, sandbox_mode):
+def team_fielding_file_constructor(year):
     print('getting team fielding positions')
     driver_logger.log("\tGetting team fielding positions")
     start_time = time.time()
     global pages
     pages = {}
-    logger.log("Downloading " + str(year) + " team fielding positions || Timestamp: " + datetime.datetime.today()\
+    logger.log("Downloading " + str(year) + " team fielding positions || Timestamp: " + datetime.datetime.today()
                .strftime('%Y-%m-%d %H:%M:%S'))
     logger.log("\tDownloading team pages")
-    with open("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\background\\yearTeams.txt", 'r') as year_file:
+    with open("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\background\\yearTeams.txt",
+              'r') as year_file:
         with ThreadPoolExecutor(os.cpu_count()) as executor:
             for line in year_file:
                 if str(year) in line:
@@ -35,7 +37,7 @@ def team_fielding_file_constructor(year, driver_logger, sandbox_mode):
     logger.log("\t\tTime = " + time_converter(time.time() - start_time))
     logger.log("\tOrganizing team position data")
     write_time = time.time()
-    write_to_file(year, sandbox_mode)
+    write_to_file(year)
     logger.log("\t\tTime = " + time_converter(time.time() - write_time))
     total_time = time_converter(time.time() - start_time)
     logger.log("Done downloading team fielding data: time = " + total_time + '\n\n')
@@ -49,7 +51,7 @@ def load_url(year, team_id, team_key):
         .split('</tbody>')[0].split('<tr')
 
 
-def write_to_file(year, sandbox_mode):
+def write_to_file(year):
     for team_id, table in pages.items():
         logger.log("\t\tgathering and writing " + team_id + " positions")
         db = DatabaseConnection(sandbox_mode)
@@ -83,4 +85,4 @@ def write_to_file(year, sandbox_mode):
 
 
 # dump_logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\dump.log")
-# team_fielding_file_constructor(1877, dump_logger)
+# team_fielding_file_constructor(2012, dump_logger)

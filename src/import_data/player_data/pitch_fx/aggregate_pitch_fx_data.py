@@ -7,42 +7,43 @@ import time
 import datetime
 from concurrent.futures import ThreadPoolExecutor
 from utilities.time_converter import time_converter
+from utilities.properties import sandbox_mode, import_driver_logger as driver_logger
 
 logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\logs\\import_data\\"
                 "aggregate_pitch_fx_data.log")
 
 
-def aggregate_pitch_fx_data(year, driver_logger, sandbox_mode):
+def aggregate_pitch_fx_data(year):
     print('Aggregating pitch fx data')
     driver_logger.log("\tAggregating pitch fx data")
     start_time = time.time()
     logger.log("Aggregating pitch fx data for " + str(year) + ' || Timestamp: ' + datetime.datetime.today().
                strftime('%Y-%m-%d %H:%M:%S'))
-    aggregate_and_write(year, 'pitching', sandbox_mode)
-    # aggregate_and_write(year, 'batting', sandbox_mode)
+    aggregate_and_write(year, 'pitching')
+    # aggregate_and_write(year, 'batting')
     total_time = time_converter(time.time() - start_time)
     logger.log("Done aggregating " + str(year) + " pitch fx data: Time = " + total_time + '\n\n')
     driver_logger.log("\t\tTime = " + total_time)
 
 
-def aggregate_and_write(year, player_type, sandbox_mode):
+def aggregate_and_write(year, player_type):
     pitcher_time = time.time()
     logger.log("\tAggregating " + player_type + " data and writing to database")
     db = DatabaseConnection(sandbox_mode)
     players = set(db.read('select playerid from ' + player_type[:-3] + 'er_pitches;'))
     db.close()
     for player_id in players:
-        aggregate(year, player_id[0], player_type, sandbox_mode)
+        aggregate(year, player_id[0], player_type)
         break
     logger.log("\tDone aggregating and writing " + player_type + " data: Time = "
                + time_converter(time.time() - pitcher_time))
 
 
-def aggregate(year, player_id, player_type, sandbox_mode):
+def aggregate(year, player_id, player_type):
     print(player_id)
     table = player_type[:-3] + 'er_pitches'
     matchups = ['vr', 'vl']
-    aggregate_hbp(player_id, year, matchups, sandbox_mode)
+    aggregate_hbp(player_id, year, matchups)
     opponent = 'hb' if player_type == 'pitching' else 'hp'
     balls = [ball for ball in range(4)]
     strikes = [strike for strike in range(3)]
@@ -131,20 +132,19 @@ def aggregate(year, player_id, player_type, sandbox_mode):
                             #             for direction in db.read('select direction ' + temp_bulk_query + ';'):
                             #                 print(direction)
                             #                 count += 1
-    # write_pitch_usage(player_id, p_uid, year, pitch_types_dict, player_type, pitches_length_pitch_type, sandbox_mode)
+    # write_pitch_usage(player_id, p_uid, year, pitch_types_dict, player_type, pitches_length_pitch_type)
     # write_swing_take_by_pitch(player_id, p_uid, year, swings_by_pitch_dict, player_type,
-    #                           pitches_length_swing_take_and_ball_strike, sandbox_mode)
+    #                           pitches_length_swing_take_and_ball_strike)
     # write_ball_strike_by_pitch(player_id, p_uid, year, strikes_by_pitch_dict, player_type,
-    #                            pitches_length_swing_take_and_ball_strike, sandbox_mode)
-    write_outcome_by_pitch_type(player_id, year, outcomes_by_pitch_type, outcomes_by_pitch_type_length, player_type,
-                                sandbox_mode)
+    #                            pitches_length_swing_take_and_ball_strike)
+    write_outcome_by_pitch_type(player_id, year, outcomes_by_pitch_type, outcomes_by_pitch_type_length, player_type)
     # write_trajectory_by_outcome()
     # write_field_by_outcome()
     # write_direction_by_outcome()
     db.close()
 
 
-def write_pitch_usage(player_id, p_uid, year, pitch_type_dict, player_type, length, sandbox_mode):
+def write_pitch_usage(player_id, p_uid, year, pitch_type_dict, player_type, length):
     if player_type == 'pitching':
         db = PitcherPitchFXDatabaseConnection(sandbox_mode)
     else:
@@ -163,7 +163,7 @@ def write_pitch_usage(player_id, p_uid, year, pitch_type_dict, player_type, leng
     db.close()
 
 
-def write_swing_take_by_pitch(player_id, p_uid, year, swing_take_dict, player_type, length, sandbox_mode):
+def write_swing_take_by_pitch(player_id, p_uid, year, swing_take_dict, player_type, length):
     if player_type == 'pitching':
         db = PitcherPitchFXDatabaseConnection(sandbox_mode)
     else:
@@ -182,7 +182,7 @@ def write_swing_take_by_pitch(player_id, p_uid, year, swing_take_dict, player_ty
     db.close()
 
 
-def write_ball_strike_by_pitch(player_id, p_uid, year, ball_strike_dict, player_type, length, sandbox_mode):
+def write_ball_strike_by_pitch(player_id, p_uid, year, ball_strike_dict, player_type, length):
     if player_type == 'pitching':
         db = PitcherPitchFXDatabaseConnection(sandbox_mode)
     else:
@@ -201,7 +201,7 @@ def write_ball_strike_by_pitch(player_id, p_uid, year, ball_strike_dict, player_
     db.close()
 
 
-def write_outcome_by_pitch_type(player_id, year, outcomes_by_pitch_type, length, player_type, sandbox_mode):
+def write_outcome_by_pitch_type(player_id, year, outcomes_by_pitch_type, length, player_type):
     if player_type == 'pitching':
         db = PitcherPitchFXDatabaseConnection(sandbox_mode)
     else:
@@ -237,7 +237,7 @@ def write_outcome_by_pitch_type(player_id, year, outcomes_by_pitch_type, length,
     db.close()
 
 
-def aggregate_hbp(player_id, year, matchups, sandbox_mode):
+def aggregate_hbp(player_id, year, matchups):
     hbps = {}
     pitches = {}
     new_db = PitcherPitchFXDatabaseConnection(sandbox_mode)

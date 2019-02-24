@@ -7,12 +7,13 @@ from utilities.connections.baseball_data_connection import DatabaseConnection
 from utilities.logger import Logger
 import datetime
 import time
+from utilities.properties import sandbox_mode, import_driver_logger as driver_logger
 
 logger = Logger('C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\'
                 'manager_table_constructor.log')
 
 
-def manager_table_constructor(driver_logger, sandbox_mode):
+def manager_table_constructor():
     driver_logger.log('\tGathering manager data (all-time)')
     print("Gathering manager data (all-time)")
     start_time = time.time()
@@ -31,7 +32,7 @@ def manager_table_constructor(driver_logger, sandbox_mode):
                     wins = this_row.split('data-stat="W">')[1].split('<')[0]
                     loses = this_row.split('data-stat="L">')[1].split('<')[0]
                     executor.submit(write_to_file, '"' + manager_id + '","' + last + '","' + first + '",' + wins + ','
-                                                   + loses, sandbox_mode)
+                                                   + loses)
                 except AttributeError:
                     continue
     total_time = time.time() - start_time
@@ -39,7 +40,7 @@ def manager_table_constructor(driver_logger, sandbox_mode):
     driver_logger.log('\t\tTime = ' + time_converter(total_time))
 
 
-def write_to_file(data, sandbox_mode):
+def write_to_file(data):
     db = DatabaseConnection(sandbox_mode)
     db.write('insert into managers (managerId, lastName, firstName, wins, loses) values (' + data + ');')
     db.close()

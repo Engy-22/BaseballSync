@@ -8,18 +8,20 @@ class League:
         self.home_team = home_team
         self.year = year
         self.league = self.retrieve_league()
-        self.use_dh = False
+        self.use_dh = self.set_rules()
 
     def retrieve_league(self):
         db = DatabaseConnection(sandbox_mode)
         league = db.read('select league from team_years where teamid = "' + self.home_team + '" and year = '
-                         + str(self.year) + ';')
+                         + str(self.year) + ';')[0][0].upper()
         db.close()
         return league
 
     def set_rules(self):
         if self.league == 'AL' and self.year >= 1973:
-            self.use_dh = True
+            return True
+        else:
+            return False
 
     def get_rules(self):
         return self.use_dh

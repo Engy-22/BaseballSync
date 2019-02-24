@@ -1,8 +1,9 @@
 from utilities.connections.baseball_data_connection import DatabaseConnection
+from utilities.properties import sandbox_mode, import_driver_logger as driver_logger
 
 
 def write_to_file(innings_url, player_type, player_id, team_id, year, matchup, count, pitch_type, ball_strike,
-                  swing_take, outcome, trajectory, field, direction, original_player_id, sandbox_mode):
+                  swing_take, outcome, trajectory, field, direction, original_player_id):
     if player_id is None:
         with open('C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\src\\import_data\\player_data\\pitch_fx'
                   '\\multiple_players.csv', 'a') as file:
@@ -28,7 +29,7 @@ def write_to_file(innings_url, player_type, player_id, team_id, year, matchup, c
         db.close()
 
 
-def write_pickoff(pitcher, team, year, base, attempts_successes, sandbox_mode):
+def write_pickoff(pitcher, team, year, base, attempts_successes):
     # print(base + ' ' + attempts_successes)
     # print(pitcher, team, year, base, attempts_successes)
     db = DatabaseConnection(sandbox_mode)
