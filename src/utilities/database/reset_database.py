@@ -1,7 +1,7 @@
 import os
-from utilities.connections.baseball_data_connection import DatabaseConnection
-from utilities.connections.pitchers_pitch_fx_connection import PitcherPitchFXDatabaseConnection
-from utilities.connections.batters_pitch_fx_connection import BatterPitchFXDatabaseConnection
+from utilities.database.wrappers.baseball_data_connection import DatabaseConnection
+from utilities.database.wrappers.pitchers_pitch_fx_connection import PitcherPitchFXDatabaseConnection
+from utilities.database.wrappers.batters_pitch_fx_connection import BatterPitchFXDatabaseConnection
 from concurrent.futures import ThreadPoolExecutor
 import tkinter
 import time
@@ -78,7 +78,8 @@ def do_reset(vars, year):
 def baseball_data(sandbox_mode, year):
     db = DatabaseConnection(sandbox_mode)
     if year == 'ALL':
-        with open("..\\..\\background\\table_definitions.txt", 'rt') as file:
+        with open("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\background\\table_definitions.txt",
+                  'rt') as file:
             table_defs = file.readlines()
             if sandbox_mode:
                 print("removing existing tables - sandbox")
@@ -92,7 +93,8 @@ def baseball_data(sandbox_mode, year):
             baseball_data_year(db, year)
         else:
             print(str(year) + ' is not found in the database.')
-    with open("..\\..\\background\\table_definitions.txt", 'rt') as file:
+    with open("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\background\\table_definitions.txt",
+              'rt') as file:
         table_defs = file.readlines()
         if sandbox_mode:
             print("creating new tables - sandbox")

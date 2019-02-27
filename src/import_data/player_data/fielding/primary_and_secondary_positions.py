@@ -1,6 +1,6 @@
 import time
 import datetime
-from utilities.connections.baseball_data_connection import DatabaseConnection
+from utilities.database.wrappers.baseball_data_connection import DatabaseConnection
 from utilities.logger import Logger
 from utilities.time_converter import time_converter
 from utilities.properties import sandbox_mode, import_driver_logger as driver_logger

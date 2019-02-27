@@ -1,7 +1,7 @@
 import os
-from utilities.connections.baseball_data_connection import DatabaseConnection
-from utilities.connections.pitchers_pitch_fx_connection import PitcherPitchFXDatabaseConnection
-from utilities.connections.batters_pitch_fx_connection import BatterPitchFXDatabaseConnection
+from utilities.database.wrappers.baseball_data_connection import DatabaseConnection
+from utilities.database.wrappers.pitchers_pitch_fx_connection import PitcherPitchFXDatabaseConnection
+from utilities.database.wrappers.batters_pitch_fx_connection import BatterPitchFXDatabaseConnection
 from utilities.logger import Logger
 import time
 import datetime

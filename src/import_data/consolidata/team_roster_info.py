@@ -1,4 +1,4 @@
-from utilities.connections.baseball_data_connection import DatabaseConnection
+from utilities.database.wrappers.baseball_data_connection import DatabaseConnection
 from utilities.properties import sandbox_mode
 from utilities.num_to_word import num_to_word
 

@@ -53,12 +53,12 @@ def driver(year):
     batting_constructor(year)
     pitching_constructor(year)
     fielding_constructor(year)
-    get_pitch_fx_data(year)
     team_fielding_file_constructor(year)
     team_batting_order_constructor(year)
     team_pitching_rotation_constructor(year)
     primary_and_secondary_positions(year)
     determine_pitcher_roles_year(year)
+    get_pitch_fx_data(year)
     hitter_tendencies(year)
     pitcher_tendencies(year)
     manager_tendencies(year)
@@ -77,7 +77,7 @@ if __name__ == '__main__':
     league_table_constructor()
     manager_table_constructor()
     years = []
-    for year in range(2012, 2013, 1):
+    for year in range(2014, 2015, 1):
         years.append(year)
         driver(year)
     rank_driver(years[-1])

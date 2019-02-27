@@ -1,4 +1,4 @@
-from utilities.connections.baseball_data_connection import DatabaseConnection
+from utilities.database.wrappers.baseball_data_connection import DatabaseConnection
 from xml.dom import minidom
 from import_data.player_data.pitch_fx.translators.name_alterator import name_alterator
 from utilities.properties import sandbox_mode

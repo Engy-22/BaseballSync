@@ -36,5 +36,4 @@ def simulate_game(game_num, away_team_id, away_year, home_team_id, home_year):
 
 
 # for game in range(200):
-#     simulate_game(game+1, 'CLE', 2016, 'CHC', 2012, Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\"
-#                                                            "baseball-sync\\logs\\controller\\dump.log"))
+#     simulate_game(game+1, 'DET', 2013, 'STL', 2013)

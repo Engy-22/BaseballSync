@@ -2,7 +2,7 @@ import time
 import datetime
 from utilities.time_converter import time_converter
 from utilities.logger import Logger
-from utilities.connections.baseball_data_connection import DatabaseConnection
+from utilities.database.wrappers.baseball_data_connection import DatabaseConnection
 from import_data.player_data.awards.mvp_cy_young import mvp_cy_young
 from import_data.player_data.awards.roy_gatherer import roy_gatherer
 from import_data.player_data.awards.moy_gatherer import moy_gatherer

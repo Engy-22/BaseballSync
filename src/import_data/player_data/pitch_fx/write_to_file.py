@@ -1,5 +1,5 @@
-from utilities.connections.baseball_data_connection import DatabaseConnection
-from utilities.properties import sandbox_mode, import_driver_logger as driver_logger
+from utilities.database.wrappers.baseball_data_connection import DatabaseConnection
+from utilities.properties import sandbox_mode
 
 
 def write_to_file(innings_url, player_type, player_id, team_id, year, matchup, count, pitch_type, ball_strike,

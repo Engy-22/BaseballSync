@@ -2,7 +2,7 @@ import time
 import datetime
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
-from utilities.connections.baseball_data_connection import DatabaseConnection
+from utilities.database.wrappers.baseball_data_connection import DatabaseConnection
 from utilities.translate_team_id import translate_team_id
 from utilities.logger import Logger
 from utilities.time_converter import time_converter

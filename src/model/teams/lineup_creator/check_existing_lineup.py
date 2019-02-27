@@ -10,3 +10,9 @@ def position_available(position_list, position):
         if this_position == position:
             return False
     return True
+
+
+def sp_can_bat_here(pitcher, place):
+    if pitcher.get_batting_spots()[place] == 0:
+        print('caught')
+    return pitcher.get_batting_spots()[place] > 0

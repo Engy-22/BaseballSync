@@ -1,6 +1,6 @@
 from model.teams.lineup_creator.get_starting_pitcher import get_starting_pitcher
 from model.teams.lineup_creator.reorganize_data import reorganize_batting_spots
-from model.teams.lineup_creator.check_existing_lineup import player_available, position_available
+from model.teams.lineup_creator.check_existing_lineup import player_available, position_available, sp_can_bat_here
 from random import randint
 from utilities.logger import Logger
 from utilities.time_converter import time_converter
@@ -15,11 +15,11 @@ def create_lineup(team_id, year, roster, game_num, use_dh):
     starting_pitcher = get_starting_pitcher(team_id, year, game_num)
     batting_order = []
     position_list = []
-    print('\n')
+    # print('\n')
     place = 1
     while place <= 9:
         logger.log('\tPlace ' + str(place))
-        if not use_dh and place == 9 and 'SP' not in position_list and 'RP' not in position_list:
+        if not use_dh and place == 9 and 'SP' not in position_list:
             logger.log('\t\tAdding starting pitcher')
             batting_order.append(starting_pitcher)
             position_list.append('SP')
@@ -33,11 +33,14 @@ def create_lineup(team_id, year, roster, game_num, use_dh):
                     place = 1
                     logger.log('\n---------restart---------\n')
                     continue
-            batting_order.append(batter)
+            if position == 'SP':
+                batting_order.append(starting_pitcher)
+            else:
+                batting_order.append(batter)
             position_list.append(position)
         place += 1
-    for i in range(9):
-        print(batting_order[i].get_player_id() + '\t' + str(position_list[i]))
+    # for i in range(9):
+    #     print(batting_order[i].get_player_id() + '\t' + str(position_list[i]))
     logger.log('Time = ' + time_converter(time.time() - start_time) + '\n\n')
 
 
@@ -51,7 +54,7 @@ def get_player_randomly(roster, spot, position_list, use_dh):
     temp_count = 0
     for player, starts in options.items():
         if picker <= temp_count + starts:
-            return player, get_position_incrementally(position_list, player.get_year_positions(), use_dh)
+            return player, get_position_incrementally(player, position_list, player.get_year_positions(), use_dh, spot)
         else:
             temp_count += starts
 
@@ -62,14 +65,14 @@ def get_player_incrementally(roster, batting_order, spot, position_list, use_dh,
         player = sorted(reorganize_batting_spots(roster, spot).items(), key=lambda kv: kv[1], reverse=True)[index][0]
     except IndexError:
         return None, None
-    position = get_position_incrementally(position_list, player.get_year_positions(), use_dh)
+    position = get_position_incrementally(player, position_list, player.get_year_positions(), use_dh, spot)
     if not(player_available(batting_order, player)) or position is None:
         return get_player_incrementally(roster, batting_order, spot, position_list, use_dh, index+1)
     else:
         return player, position
 
 
-def get_position_incrementally(position_list, player_position_options, use_dh, index=0):
+def get_position_incrementally(player, position_list, player_position_options, use_dh, place, index=0):
     logger.log('\t\t\tGetting position incrementally')
     try:
         new_position = player_position_options[index]
@@ -78,13 +81,15 @@ def get_position_incrementally(position_list, player_position_options, use_dh, i
                 if new_position != 'SP':
                     return new_position
                 else:
-                    return get_position_incrementally(position_list, player_position_options, use_dh, index + 1)
+                    return get_position_incrementally(player, position_list, player_position_options, use_dh, place,
+                                                      index + 1)
             else:
-                if new_position != 'DH':
+                if new_position != 'DH' or (new_position == 'SP' and sp_can_bat_here(player, place)):
                     return new_position
                 else:
-                    return get_position_incrementally(position_list, player_position_options, use_dh, index + 1)
+                    return get_position_incrementally(player, position_list, player_position_options, use_dh, place,
+                                                      index + 1)
         else:
-            return get_position_incrementally(position_list, player_position_options, use_dh, index + 1)
+            return get_position_incrementally(player, position_list, player_position_options, use_dh, place, index + 1)
     except IndexError:
         return None

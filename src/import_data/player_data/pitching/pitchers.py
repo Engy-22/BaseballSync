@@ -4,7 +4,7 @@ import datetime
 from urllib.request import urlopen, urlretrieve
 from bs4 import BeautifulSoup
 from concurrent.futures import ThreadPoolExecutor
-from utilities.connections.baseball_data_connection import DatabaseConnection
+from utilities.database.wrappers.baseball_data_connection import DatabaseConnection
 from import_data.player_data.pitching.league_pitching_ratios_constructor import league_pitching_ratios_constructor
 from utilities.translate_team_id import translate_team_id
 from utilities.time_converter import time_converter
@@ -73,7 +73,7 @@ def pitching_constructor(year):
                     this_index = len(batting_against_rows[player_id][team]) + 1
                 else:
                     continue
-            batting_against_rows[player_id][team][this_index] = {'row': row.split('data-stat'), 'temp_player': row.\
+            batting_against_rows[player_id][team][this_index] = {'row': row.split('data-stat'), 'temp_player': row.
                 split('ata-stat="player" csk="')[1].split('" >')[0]}
     logger.log("\t\tDone assembling list of players")
     bulk_time = time.time()
@@ -85,8 +85,7 @@ def pitching_constructor(year):
                 for index, dictionary3 in dictionary2.items():
                     try:
                         executor.submit(intermediate, player_id, team, index, dictionary3['temp_player'],
-                                        dictionary3['row'], batting_against_rows[player_id][team][index]['row'],
-                                        sandbox_mode)
+                                        dictionary3['row'], batting_against_rows[player_id][team][index]['row'])
                     except KeyError:
                         executor.submit(intermediate, player_id, team, index, dictionary3['temp_player'],
                                         dictionary3['row'], [])
@@ -213,6 +212,5 @@ def write_teams_and_stats(player_id, stats, ratios, team, year):
     db.close()
 
 
-# dump_logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\dump.log")
 # for year in range(1996, 2009, 1):
-#     pitching_constructor(year, dump_logger)
+# pitching_constructor(2013)

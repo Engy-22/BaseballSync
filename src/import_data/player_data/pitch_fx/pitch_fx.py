@@ -2,7 +2,7 @@ import os
 import time
 import datetime
 from utilities.logger import Logger
-from utilities.connections.baseball_data_connection import DatabaseConnection
+from utilities.database.wrappers.baseball_data_connection import DatabaseConnection
 from utilities.time_converter import time_converter
 from concurrent.futures import ThreadPoolExecutor
 from urllib.request import urlopen, urlretrieve
@@ -26,8 +26,8 @@ strikes = 0
 balls = 0
 logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\logs\\import_data\\pitch_fx.log")
 
-# done: 2008, 2009, 2010, 2011, 2012, 2015, 2016, 2017, 2018
-# don't forget about days 22-30 in april of 2011
+# done: 2008, 2009, 2010, 2011, 2012, 2013, 2015, 2016, 2017, 2018
+# be sure to download april 23-30, 2014
 
 
 def get_pitch_fx_data(year):
@@ -35,7 +35,7 @@ def get_pitch_fx_data(year):
         driver_logger.log("\tNo pitch fx data to download before 2008")
         return
     driver_logger.log("\tFetching pitch fx data")
-    print("Fetching " + str(year) + " pitch fx data")
+    print("Fetching pitch fx data")
     start_time = time.time()
     logger.log("Downloading pitch fx data for " + str(year) + " || Timestamp: " + datetime.datetime.today().
                strftime('%Y-%m-%d %H:%M:%S'))
@@ -43,21 +43,21 @@ def get_pitch_fx_data(year):
     opening_day = db.read('select opening_day from years where year = ' + str(year) + ';')[0][0]
     db.close()
     for month in range(3, 12, 1):
-        # if month == 4:
-        if month >= int(opening_day.split('-')[0]):
-            for day in range(1, 32, 1):
-                # if day > 21:
-                if month == int(opening_day.split('-')[0]) and int(day) < int(opening_day.split('-')[1]):
-                    continue
-                if len(str(day)) == 1:
-                    this_day = '0' + str(day)
-                else:
-                    this_day = str(day)
-                if len(str(month)) == 1:
-                    this_month = '0' + str(month)
-                else:
-                    this_month = str(month)
-                get_day_data(this_day, this_month, str(year))
+        if month == 6:
+            if month >= int(opening_day.split('-')[0]):
+                for day in range(1, 32, 1):
+                    if day > 14:
+                        if month == int(opening_day.split('-')[0]) and int(day) < int(opening_day.split('-')[1]):
+                            continue
+                        if len(str(day)) == 1:
+                            this_day = '0' + str(day)
+                        else:
+                            this_day = str(day)
+                        if len(str(month)) == 1:
+                            this_month = '0' + str(month)
+                        else:
+                            this_month = str(month)
+                        get_day_data(this_day, this_month, str(year))
     logger.log("Done fetching " + str(year) + " pitch fx data: time = " + time_converter(time.time() - start_time)
                + '\n\n\n\n')
     aggregate_pitch_fx_data(year)
@@ -68,7 +68,6 @@ def get_day_data(day, month, year):
     logger.log("\tDownloading data for " + month + '-' + day + '-' + year)
     day_time = time.time()
     home_page_url = 'http://gd2.mlb.com/components/game/mlb/year_' + year + '/month_' + month + '/day_' + day
-    a = 0
     home_page = str(BeautifulSoup(urlopen(home_page_url), 'html.parser')).split('<li>')
     for line in home_page:
         try:
@@ -98,14 +97,10 @@ def get_day_data(day, month, year):
                             continue
                 parse_innings(year, innings_url)
                 clear_xmls()
-        except IndexError as e:
-            a += 1
-            if a == 3:
-                raise e
+        except IndexError:
             clear_xmls()
             continue
-        except KeyError as e:
-            raise e
+        except KeyError:
             clear_xmls()
             continue
     logger.log("\tDone downloading data for " + month + '-' + day + '-' + year + ": time = "
@@ -120,9 +115,9 @@ def load_xml(inning_url, inning_num):
 def parse_innings(year, innings_url):
     dir = "C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\src\\import_data\\player_data\\pitch_fx\\xml"
     try:
-        playersdoc = minidom.parse(dir + '\\players.xml')
-        away_team = resolve_team_id(playersdoc.getElementsByTagName('team')[0].getAttribute('id'))
-        home_team = resolve_team_id(playersdoc.getElementsByTagName('team')[1].getAttribute('id'))
+        players_doc = minidom.parse(dir + '\\players.xml')
+        away_team = resolve_team_id(players_doc.getElementsByTagName('team')[0].getAttribute('id'))
+        home_team = resolve_team_id(players_doc.getElementsByTagName('team')[1].getAttribute('id'))
         if None in [away_team, home_team]:
             raise Exception('None team')
         for xml_file in os.listdir(dir):
@@ -250,5 +245,5 @@ def clear_xmls():
             executor.submit(remove, dir + '\\' + xml_file)
 
 
-for year in range(2011, 2012, 1):
+for year in range(2014, 2015, 1):
     get_pitch_fx_data(year)
