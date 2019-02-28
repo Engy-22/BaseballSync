@@ -59,7 +59,17 @@ still an issue? *here's a problem, david ross played 11 games for the padres in 
             -The data for players who fit this category will have their pitches written to their teams and not TOT.
     *add way to delete data from given years through reset_database.py
     *add a way to migrate data from sandbox databases to production databases.
-        -do this for entire databases and years only as well.
+        scenarios tested:
+            *migrate all baseballData from sandbox to production.
+            *migrate all baseballData for a single year.
+        scenarios that need to be tested:
+            *migrate all baseballData for a range of years. (not working)
+            *migrate all pitchers_pitch_fx from sandbox to production.
+            *migrate pitchers_pitch_fx from a single year.
+            *migrate pitchers_pitch_fx from a range of years.
+            *migrate all batters_pitch_fx from sandbox to production.
+            *migrate batters_pitch_fx from a single year.
+            *migrate batters_pitch_fx from a range of years.
     *write something to see the # of database records
         -overall
         -per db

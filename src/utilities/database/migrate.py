@@ -50,8 +50,8 @@ def migrate(data_type, years):
     if "All" in years:
         migrate_all(data_type)
     else:
-        for year in range(years[0], years[1]):
-            migrate_year(data_type, year)
+        for year in range(int(years[0]), int(years[1])):
+            migrate_year(data_type, year, year == int(years[1])-1)
 
 
 def migrate_all(data_type):
@@ -59,44 +59,84 @@ def migrate_all(data_type):
     if data_type == 'baseball':
         db = DatabaseConnection(sandbox_mode)
         db_name = "baseballData"
-    elif data_type == 'pitchers':
-        db = PitcherPitchFXDatabaseConnection(sandbox_mode)
-        db_name = "pitchers_pitch_fx"
+        with open("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\background\\table_definitions.txt",
+                  'rt') as file:
+            table_defs = file.readlines()
+            with ThreadPoolExecutor(os.cpu_count()) as executor:
+                for line in table_defs:
+                    table_name = line.split('create table ')[1].split(' (')[0]
+                    print('\t' + table_name)
+                    executor.submit(db.write('insert into ' + db_name + '.' + table_name + ' select * from ' + db_name
+                                             + '_sandbox.' + table_name + ';'))
     else:
-        db = BatterPitchFXDatabaseConnection(sandbox_mode)
-        db_name = "batters_pitch_fx"
-    with open("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\background\\table_definitions.txt",
-              'rt') as file:
-        table_defs = file.readlines()
-        with ThreadPoolExecutor(os.cpu_count()) as executor:
-            for line in table_defs:
-                table_name = line.split('create table ')[1].split(' (')[0]
-                print('\t' + table_name)
-                executor.submit(db.write('insert into ' + db_name + '.' + table_name + ' select * from ' + db_name
-                                         + '_sandbox.' + table_name + ';'))
+        if data_type == 'pitchers':
+            db = PitcherPitchFXDatabaseConnection(sandbox_mode)
+            db_name = "pitchers_pitch_fx"
+        else:
+            db = BatterPitchFXDatabaseConnection(sandbox_mode)
+            db_name = "batters_pitch_fx"
+        with open("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\background\\pitch_fx_tables.txt",
+                  'rt') as file:
+            table_defs = file.readlines()
+            with ThreadPoolExecutor(os.cpu_count()) as executor:
+                for line in table_defs:
+                    table_name = line.split('create table ')[1].split(' (')[0]
+                    print('\t' + table_name)
+                    executor.submit(db.write('insert into ' + db_name + '.' + table_name + ' select * from ' + db_name
+                                             + '_sandbox.' + table_name + ';'))
     db.close()
 
 
-def migrate_year(data_type, year):
+def migrate_year(data_type, year, last_year):
     print("Transferring " + str(year) + " sandbox data to production environment")
     if data_type == 'baseball':
         db = DatabaseConnection(sandbox_mode)
         db_name = "baseballData"
-    elif data_type == 'pitchers':
-        db = PitcherPitchFXDatabaseConnection(sandbox_mode)
-        db_name = "pitchers_pitch_fx"
+        with open("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\background\\table_definitions.txt",
+                  'rt') as file:
+            table_defs = file.readlines()
+            with ThreadPoolExecutor(os.cpu_count()) as executor:
+                for line in table_defs:
+                    table_name = line.split('create table ')[1].split(' (')[0]
+                    print('\t' + table_name)
+                    if table_name in ['ballpark_years', 'pitcher_pitches', 'batter_pitches', 'player_batting',
+                                      'player_pitching', 'player_fielding', 'years', 'manager_year', 'schedule']:  # appending rows based on year field
+                        executor.submit(db.write('insert into ' + db_name + '.' + table_name + ' select * from '
+                                                 + db_name + '_sandbox.' + table_name + ' where year = ' + str(year)
+                                                 + ';'))
+                    elif table_name in ['hitter_spots', 'player_positions', 'starting_pitchers', 'team_years']:  # appending rows based on another field
+                        for ty_uid in db.read('select ty_uniqueidentifier from team_years where year = ' + str(year)
+                                              + ';'):
+                            executor.submit(db.write('insert into ' + db_name + '.' + table_name + ' select * from '
+                                                     + db_name + '_sandbox.' + table_name + ' where ty_uniqueidentifier'
+                                                     ' = ' + str(ty_uid[0]) + ';'))
+                    else:  # totally replacing the prod table with snadbox table ['comparisons_batting_overall', 'comparisons_pitching_overall', 'comparisons_team_offense_overall', 'comparisons_team_defense_overall', 'ballparks', 'leagues', 'managers', 'players', 'teams', player_teams', 'manager_teams']
+                        if last_year:
+                            executor.submit(db.write('insert into ' + db_name + '.' + table_name + ' select * from '
+                                                     + db_name + '_sandbox.' + table_name + ';'))
     else:
-        db = BatterPitchFXDatabaseConnection(sandbox_mode)
-        db_name = "batters_pitch_fx"
-    with open("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\background\\table_definitions.txt",
-              'rt') as file:
-        table_defs = file.readlines()
-        with ThreadPoolExecutor(os.cpu_count()) as executor:
-            for line in table_defs:
-                table_name = line.split('create table ')[1].split(' (')[0]
-                print('\t' + table_name)
-                executor.submit(db.write('insert into ' + db_name + '.' + table_name + ' select * from ' + db_name
-                                         + '_sandbox.' + table_name + ';'))
+        if data_type == 'pitchers':
+            db = PitcherPitchFXDatabaseConnection(sandbox_mode)
+            db_name = "pitchers_pitch_fx"
+        else:
+            db = BatterPitchFXDatabaseConnection(sandbox_mode)
+            db_name = "batters_pitch_fx"
+            with open("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\background\\table_definitions.txt",
+                      'rt') as file:
+                table_defs = file.readlines()
+                with ThreadPoolExecutor(os.cpu_count()) as executor:
+                    for line in table_defs:
+                        table_name = line.split('create table ')[1].split(' (')[0]
+                        print('\t' + table_name)
+                        if table_name.split('_')[0] in ['vr', 'vl', 'hbp']:  # appending rows based on year field
+                            executor.submit(db.write('insert into ' + db_name + '.' + table_name + ' select * from '
+                                                     + db_name + '_sandbox.' + table_name + ' where year = ' + str(year)
+                                                     + ';'))
+                        else:  # totally replacing the prod table with snadbox table ['']
+                            if table_name.split(')')[0] == str(year):
+                                executor.submit(db.write('insert into ' + db_name + '.' + table_name + ' select * from '
+                                                         + db_name + '_sandbox.' + table_name + ' where year = '
+                                                         + str(year) + ';'))
     db.close()
 
 
@@ -171,8 +211,7 @@ batters_pitch_fx_all_years_checkbutton.config(state="disabled")
 tkinter.Checkbutton(frame, text="batters_pitch_fx", variable=batters_pitch_fx_bool, command=lambda:
 enable_disable_1(batters_pitch_fx_bool, batters_pitch_fx_all_years_checkbutton, batters_pitch_fx_all_years,
                  {batters_pitch_fx_entry: batters_pitch_fx_string,
-                  batters_pitch_fx_entry_end: batters_pitch_fx_string_end}
-                 ), font=font, cursor="hand2"). \
+                  batters_pitch_fx_entry_end: batters_pitch_fx_string_end}), font=font, cursor="hand2"). \
     grid(row=3, column=0, padx=5, pady=5, sticky="W")
 tkinter.Button(frame, text="Submit", command=lambda:
 submit({'baseball': {baseball_data_bool.get(): [baseball_data_string.get(), baseball_data_string_end.get()]},

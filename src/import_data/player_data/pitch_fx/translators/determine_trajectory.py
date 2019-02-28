@@ -68,10 +68,7 @@ def determine_trajectory(event, description):
             elif 'challenged' in description:
                 return determine_trajectory(event, description.split(':')[1])
             else:
-                print('\n;lkj')
-                print(event)
-                print(description)
-                print(description.split(' into ')[0].split(' ')[-1])
+                trajectory = 'gb'
         elif event == 'error':
             try:
                 error = event.split('by')[1].split(' ')[0]
