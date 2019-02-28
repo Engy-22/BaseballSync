@@ -51,7 +51,7 @@ def migrate(data_type, years):
         migrate_all(data_type)
     else:
         for year in range(int(years[0]), int(years[1])):
-            migrate_year(data_type, year, year == int(years[1])-1)
+            migrate_year(data_type, year)
 
 
 def migrate_all(data_type):
@@ -87,7 +87,7 @@ def migrate_all(data_type):
     db.close()
 
 
-def migrate_year(data_type, year, last_year):
+def migrate_year(data_type, year):
     print("Transferring " + str(year) + " sandbox data to production environment")
     if data_type == 'baseball':
         db = DatabaseConnection(sandbox_mode)
@@ -111,9 +111,8 @@ def migrate_year(data_type, year, last_year):
                                                      + db_name + '_sandbox.' + table_name + ' where ty_uniqueidentifier'
                                                      ' = ' + str(ty_uid[0]) + ';'))
                     else:  # totally replacing the prod table with snadbox table ['comparisons_batting_overall', 'comparisons_pitching_overall', 'comparisons_team_offense_overall', 'comparisons_team_defense_overall', 'ballparks', 'leagues', 'managers', 'players', 'teams', player_teams', 'manager_teams']
-                        if last_year:
-                            executor.submit(db.write('insert into ' + db_name + '.' + table_name + ' select * from '
-                                                     + db_name + '_sandbox.' + table_name + ';'))
+                        executor.submit(db.write('insert into ' + db_name + '.' + table_name + ' select * from '
+                                                 + db_name + '_sandbox.' + table_name + ';'))
     else:
         if data_type == 'pitchers':
             db = PitcherPitchFXDatabaseConnection(sandbox_mode)

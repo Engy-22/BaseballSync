@@ -26,9 +26,6 @@ strikes = 0
 balls = 0
 logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\logs\\import_data\\pitch_fx.log")
 
-# done: 2008, 2009, 2010, 2011, 2012, 2013, 2015, 2016, 2017, 2018
-# be sure to download august 31, 2014
-
 
 def get_pitch_fx_data(year):
     if year < 2008:
@@ -43,21 +40,21 @@ def get_pitch_fx_data(year):
     opening_day = db.read('select opening_day from years where year = ' + str(year) + ';')[0][0]
     db.close()
     for month in range(3, 12, 1):
-        if month > 7:
-            if month >= int(opening_day.split('-')[0]):
-                for day in range(1, 32, 1):
-                    # if day > 12:
-                    if month == int(opening_day.split('-')[0]) and int(day) < int(opening_day.split('-')[1]):
-                        continue
-                    if len(str(day)) == 1:
-                        this_day = '0' + str(day)
-                    else:
-                        this_day = str(day)
-                    if len(str(month)) == 1:
-                        this_month = '0' + str(month)
-                    else:
-                        this_month = str(month)
-                    get_day_data(this_day, this_month, str(year))
+        # if month == 7:
+        if month >= int(opening_day.split('-')[0]):
+            for day in range(1, 32, 1):
+                # if day > 30:
+                if month == int(opening_day.split('-')[0]) and int(day) < int(opening_day.split('-')[1]):
+                    continue
+                if len(str(day)) == 1:
+                    this_day = '0' + str(day)
+                else:
+                    this_day = str(day)
+                if len(str(month)) == 1:
+                    this_month = '0' + str(month)
+                else:
+                    this_month = str(month)
+                get_day_data(this_day, this_month, str(year))
     logger.log("Done fetching " + str(year) + " pitch fx data: time = " + time_converter(time.time() - start_time)
                + '\n\n\n\n')
     aggregate_pitch_fx_data(year)
@@ -245,5 +242,5 @@ def clear_xmls():
             executor.submit(remove, dir + '\\' + xml_file)
 
 
-for year in range(2014, 2015, 1):
-    get_pitch_fx_data(year)
+# for year in range(2014, 2015, 1):
+#     get_pitch_fx_data(year)

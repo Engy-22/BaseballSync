@@ -37,7 +37,7 @@ from import_data.player_data.awards.hof_finder import hof_finder
 from utilities.clean_up_deadlocked_file import clean_up_deadlocked_file
 from import_data.consolidata.driver import consolidate_data
 from import_data.player_data.pitching.determine_pitcher_roles import determine_pitcher_roles_year
-from utilities.properties import sandbox_mode, import_driver_logger as driver_logger
+from utilities.properties import import_driver_logger as driver_logger
 
 
 def driver(year):
@@ -58,32 +58,31 @@ def driver(year):
     team_pitching_rotation_constructor(year)
     primary_and_secondary_positions(year)
     determine_pitcher_roles_year(year)
-    # get_pitch_fx_data(year)
-    # hitter_tendencies(year)
-    # pitcher_tendencies(year)
-    # manager_tendencies(year)
-    # hitter_spray_chart_constructor(year)
-    # pitcher_spray_chart_constructor(year)
-    # team_certainties(year)
-    # award_winner_driver(year)
+    get_pitch_fx_data(year)
+    hitter_tendencies(year)
+    pitcher_tendencies(year)
+    manager_tendencies(year)
+    hitter_spray_chart_constructor(year)
+    pitcher_spray_chart_constructor(year)
+    team_certainties(year)
+    award_winner_driver(year)
     driver_logger.log('Time taken to download ' + str(year) + ' data: ' + time_converter(time.time() - driver_time) + '\n')
 
 
 if __name__ == '__main__':
     driver_logger.log('Begin Driver || Timestamp: ' + datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S'))
     start_time = time.time()
-    sandbox_mode = True
     most_recent_year = get_most_recent_year()
     league_table_constructor()
     manager_table_constructor()
     years = []
-    for year in range(2015, 2016, 1):
+    for year in range(1877, 1890, 1):
         years.append(year)
         driver(year)
-    # rank_driver(years[-1])
-    # comparisons_driver(years[-1])
-    # hof_finder()
-    # clean_up_deadlocked_file()
+    rank_driver(years[-1])
+    comparisons_driver(years[-1])
+    hof_finder()
+    clean_up_deadlocked_file()
     consolidate_data()
     driver_logger.log('Driver complete for year' + stringify_list(years) + ': time = '
                       + time_converter(time.time() - start_time) + '\n\n\n')

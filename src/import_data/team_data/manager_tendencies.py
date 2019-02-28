@@ -13,6 +13,7 @@ logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\lo
 pages = {}
 stats = {}
 
+
 def manager_tendencies(year):
     driver_logger.log("\tStoring manager tendencies")
     print("storing manager tendencies")
@@ -35,7 +36,8 @@ def manager_tendencies(year):
     global stats
     with ThreadPoolExecutor(os.cpu_count()) as executor2:
         for manager_team, tendencies in stats.items():
-            executor2.submit(write_to_file, year, manager_team, tendencies)
+            if len(tendencies) > 0:
+                executor2.submit(write_to_file, year, manager_team, tendencies)
     logger.log('\t\tTime = ' + time_converter(time.time() - write_time))
     total_time = time_converter(time.time() - start_time)
     driver_logger.log("\t\tTime = " + total_time)
@@ -58,18 +60,21 @@ def process_manager_tendencies(year):
         stats_to_consider = ['steal_2b_chances', 'steal_2b_attempts', 'steal_3b_chances', 'steal_3b_attempts',
                              'sac_bunt_chances', 'sac_bunts', 'ibb_chances', 'ibb', 'pinch_hitters', 'pinch_runners',
                              'pitchers_used_per_game']
-        rows = str(tendencies).split('<h2>Managerial Tendencies</h2>')[1].split('tbody>')[1].split('<tr>')
-        for row in rows:
-            try:
-                if row.split('.shtml">')[1].split('</a>')[0] == str(year):
-                    for stat in stats_to_consider:
-                        for datum in row.split('<td'):
-                            if stat in datum:
-                                stats[manager_team][stat] = row.split('data-stat="' + stat + '">')[1].split('</td>')[0]
-                                break
-                    break
-            except IndexError:
-                continue
+        try:
+            rows = str(tendencies).split('<h2>Managerial Tendencies</h2>')[1].split('tbody>')[1].split('<tr>')
+            for row in rows:
+                try:
+                    if row.split('.shtml">')[1].split('</a>')[0] == str(year):
+                        for stat in stats_to_consider:
+                            for datum in row.split('<td'):
+                                if stat in datum:
+                                    stats[manager_team][stat] = row.split('data-stat="' + stat + '">')[1].split('</td>')[0]
+                                    break
+                        break
+                except IndexError:
+                    continue
+        except IndexError:
+            continue
     logger.log('\t\tTime = ' + time_converter(time.time() - start_time))
 
 
@@ -78,7 +83,7 @@ def write_to_file(year, manager_team, tendencies):
     sets = ''
     for stat, total in tendencies.items():
         sets += stat + ' = ' + total + ', '
-    db.write('update manager_year set ' + sets[:-2] + ' where year = ' + str(year) + ' and mt_uniqueidentifier = '
+    db.write('update manager_year set' + sets[:-2] + ' where year = ' + str(year) + ' and mt_uniqueidentifier = '
              '(select mt_uniqueidentifier from manager_teams where managerid = "' + manager_team.split(';')[0]
              + '" and teamid = "' + manager_team.split(';')[1] + '");')
     db.close()

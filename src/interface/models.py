@@ -31,7 +31,8 @@ class User(db.Model, UserMixin):
         return User.query.get(user_id)
 
     def __repr__(self):
-        return f"User('{self.username}', '{self.email}', '{self.image_file}')"
+        return "User('{username}', '{email}', '{image_file}')".format(username=self.username, email=self.email,
+                                                                      image_file=self.image_file)
 
 
 class Post(db.Model):
@@ -42,6 +43,4 @@ class Post(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
     def __repr__(self):
-        return f"User('{self.title}', '{self.date_posted}')"
-
-
+        return "User('{title}', '{date_posted}')".format(title=self.title, date_posted=self.date_posted)
