@@ -16,36 +16,36 @@ logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\lo
 
 
 def team_batting_order_constructor(year):
-    if year >= 1908:
-        print("getting team batting order data")
-        driver_logger.log("\tGetting team batting order data")
-        start_time = time.time()
-        global pages
-        pages = {}
-        logger.log("Downloading " + str(year) + " team batting order data || Timestamp: " + datetime.datetime.today()
-                   .strftime('%Y-%m-%d %H:%M:%S'))
-        logger.log("\tDownloading team pages")
-        with open("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\background\\yearTeams.txt",
-                  'r') as year_file:
-            with ThreadPoolExecutor(os.cpu_count()) as executor:
-                for line in year_file:
-                    if str(year) in line:
-                        temp_line = line.split(',')[1:-1]
-                        for team in temp_line:
-                            if "TOT" not in team:
-                                executor.submit(load_url, year, team.split(';')[0], team.split(';')[1])
-                        break
-        logger.log("\t\t\tTime = " + time_converter(time.time() - start_time))
-        logger.log("\tOrganizing batting orders")
-        write_time = time.time()
-        get_hitters(year)
-        logger.log("\t\t\tTime = " + time_converter(time.time() - write_time))
-        total_time = time_converter(time.time() - start_time)
-        logger.log("Done downloading team batting order data: time = " + total_time + '\n\n')
-        driver_logger.log("\t\tTime = " + total_time)
-    else:
-        logger.log("\tNo team batting order data to download. (before 1908).")
-        driver_logger.log("\tNo team batting order data to download. (before 1908).")
+    if year < 1908:
+        logger.log("\tNo team batting order data to download before 1908.")
+        driver_logger.log("\tNo team batting order data to download before 1908).")
+        return
+    print("getting team batting order data")
+    driver_logger.log("\tGetting team batting order data")
+    start_time = time.time()
+    global pages
+    pages = {}
+    logger.log("Downloading " + str(year) + " team batting order data || Timestamp: " + datetime.datetime.today()
+               .strftime('%Y-%m-%d %H:%M:%S'))
+    logger.log("\tDownloading team pages")
+    with open("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\background\\yearTeams.txt",
+              'r') as year_file:
+        with ThreadPoolExecutor(os.cpu_count()) as executor:
+            for line in year_file:
+                if str(year) in line:
+                    temp_line = line.split(',')[1:-1]
+                    for team in temp_line:
+                        if "TOT" not in team:
+                            executor.submit(load_url, year, team.split(';')[0], team.split(';')[1])
+                    break
+    logger.log("\t\t\tTime = " + time_converter(time.time() - start_time))
+    logger.log("\tOrganizing batting orders")
+    write_time = time.time()
+    get_hitters(year)
+    logger.log("\t\t\tTime = " + time_converter(time.time() - write_time))
+    total_time = time_converter(time.time() - start_time)
+    logger.log("Done downloading team batting order data: time = " + total_time + '\n\n')
+    driver_logger.log("\t\tTime = " + total_time)
 
 
 def load_url(year, team_id, team_key):

@@ -17,8 +17,8 @@ logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\lo
 
 def team_pitching_rotation_constructor(year):
     if year < 1908:
-        logger.log("No team pitching rotation data to download. (before 1908).")
-        driver_logger.log("\tNo team pitching rotation data to download. (before 1908).")
+        logger.log("No team pitching rotation data to download before 1908.")
+        driver_logger.log("\tNo team pitching rotation data to download before 1908.")
         return
     print("getting team schedules and pitching rotations")
     driver_logger.log("\tGetting team schedules and pitching rotations")

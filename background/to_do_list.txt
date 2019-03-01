@@ -48,26 +48,46 @@ still an issue? *here's a problem, david ross played 11 games for the padres in 
             during that decade to weight by favoring those who played in more years (larger sample size = more
             confident comparisons).
         -Set a minimum number of years for players that can be comparisons (e.g. player must have played 5+ year in this decade to be a possible comp).
-    *Find out when mlbam data is updated, if in real time then I can created a real time view similar to fantasycast.
-
--Restart everything with concurrency, and make it clean in terms of folder hierarchy.
     *determine if teamRanker_ovr is correct or not.
         -Maybe decrease the amount which standard deviation affects team rankings in overall team ranker.
     *verify that player_batting, player_pitching and player_fielding numbers are accurate.
     *aggregate and consolidate pitch_fx data.
         -When aggregating, pitch_fx records should relate only to TOT if player played on multiple teams that year.
             -The data for players who fit this category will have their pitches written to their teams and not TOT.
+    *get catcher data for throwing out runners.
+
     *add way to delete data from given years through reset_database.py
+        scenarios tested:
+            *delete all baseballData in sandbox.
+        scenarios that need to be tested:
+            *delete all baseballData in production.
+            *delete all baseballData in production for a single year.
+            *delete all baseballData in production for a range of years.
+            *delete all pitchers_pitch_fx in production.
+            *delete pitchers_pitch_fx in production from a single year.
+            *delete pitchers_pitch_fx in production from a range of years.
+            *delete all batters_pitch_fx in production.
+            *delete batters_pitch_fx in production from a single year.
+            *delete batters_pitch_fx in production from a range of years.
+
+            *delete all baseballData in sandbox for a single year.
+            *delete all baseballData in sandbox for a range of years.
+            *delete all pitchers_pitch_fx in sandbox.
+            *delete pitchers_pitch_fx in sandbox from a single year.
+            *delete pitchers_pitch_fx in sandbox from a range of years.
+            *delete all batters_pitch_fx in sandbox.
+            *delete batters_pitch_fx in sandbox from a single year.
+            *delete batters_pitch_fx in sandbox from a range of years.
     *add a way to migrate data from sandbox databases to production databases.
         scenarios tested:
             *migrate all baseballData from sandbox to production.
-            *migrate all baseballData for a single year.
         scenarios that need to be tested:
-            *migrate all baseballData for a range of years. (check)
-            *migrate all pitchers_pitch_fx from sandbox to production.
+            *migrate baseballData for a single year.
+            *migrate baseballData for a range of years. (check)
+            *migrate pitchers_pitch_fx from sandbox to production.
             *migrate pitchers_pitch_fx from a single year.
             *migrate pitchers_pitch_fx from a range of years.
-            *migrate all batters_pitch_fx from sandbox to production.
+            *migrate batters_pitch_fx from sandbox to production.
             *migrate batters_pitch_fx from a single year.
             *migrate batters_pitch_fx from a range of years.
 
@@ -75,5 +95,7 @@ still an issue? *here's a problem, david ross played 11 games for the padres in 
     *look into SQL injection protection
     *test "remember me" functionality
     *check out other websites for ideas
+
+    *Find out when mlbam data is updated, if in real time then I can created a real time view similar to fantasycast.
 
 restart code on server by deleting existing code and pulling from git.

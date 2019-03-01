@@ -76,7 +76,7 @@ if __name__ == '__main__':
     league_table_constructor()
     manager_table_constructor()
     years = []
-    for year in range(1971, 1972, 1):
+    for year in range(1972, 2000, 1):
         years.append(year)
         driver(year)
     rank_driver(years[-1])
