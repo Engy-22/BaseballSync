@@ -89,4 +89,4 @@ def write_to_file(year, manager_team, tendencies):
     db.close()
 
 
-manager_tendencies(1971)
+# manager_tendencies(1971)
