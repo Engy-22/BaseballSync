@@ -89,5 +89,4 @@ def write_to_file(year, manager_team, tendencies):
     db.close()
 
 
-# manager_tendencies(2008, Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\"
-#                                 "dump.log"), False)
+manager_tendencies(1971)

@@ -27,8 +27,11 @@ def determine_pitcher_roles_year(year):
                 continue
             ty_uid = str(db.read('select ty_uniqueidentifier from team_years where teamId = "' + team_id
                                  + '" and year = ' + str(year) + ';')[0][0])
-            positions = db.read('select positions from player_positions where playerId = "' + player_id + '" and '
-                                'ty_uniqueidentifier = ' + ty_uid + ';')[0][0]
+            try:
+                positions = db.read('select positions from player_positions where playerId = "' + player_id + '" and '
+                                    'ty_uniqueidentifier = ' + ty_uid + ';')[0][0]
+            except IndexError:
+                continue
             update_positions = []
             if 'P' in positions:
                 appearances_starts = db.read('select G, GS from player_pitching where pt_uniqueidentifier = '
@@ -58,5 +61,4 @@ def determine_pitcher_roles_year(year):
     driver_logger.log("\t\tTIme = " + total_time)
 
 
-# determine_pitcher_roles_year(2012, Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\"
-#                                           "import_data\\dump.log"))
+# determine_pitcher_roles_year(1971)

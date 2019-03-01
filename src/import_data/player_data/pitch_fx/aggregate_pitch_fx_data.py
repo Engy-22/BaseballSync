@@ -265,4 +265,4 @@ def aggregate_hbp(player_id, year, matchups):
         new_db.close()
 
 
-aggregate_pitch_fx_data(2009)
+# aggregate_pitch_fx_data(2009)

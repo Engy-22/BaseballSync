@@ -76,4 +76,4 @@ still an issue? *here's a problem, david ross played 11 games for the padres in 
     *test "remember me" functionality
     *check out other websites for ideas
 
-update models.py on the server to match the string representation as in
+restart code on server by deleting existing code and pulling from git.
