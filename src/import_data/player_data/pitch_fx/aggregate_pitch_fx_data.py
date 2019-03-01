@@ -63,12 +63,12 @@ def aggregate(year, player_id, player_type):
                                       + ';')[0][0])
         except IndexError:
             pass
-    if len(temp_p_uid) > 1:
-        p_uid = db.read('select p' + player_type[0] + '_uniqueidentifier from player_' + player_type + ' where year = '
-                        + str(year) + ' and pt_uniqueidentifier = (select pt_uniqueidentifier from player_teams where '
-                        'playerid = "' + player_id + '" and teamid = "TOT")' + ';')[0][0]
-    else:
-        p_uid = temp_p_uid[0]
+    # if len(temp_p_uid) > 1:
+    #     p_uid = db.read('select p' + player_type[0] + '_uniqueidentifier from player_' + player_type + ' where year = '
+    #                     + str(year) + ' and pt_uniqueidentifier = (select pt_uniqueidentifier from player_teams where '
+    #                     'playerid = "' + player_id + '" and teamid = "TOT")' + ';')[0][0]
+    # else:
+    #     p_uid = temp_p_uid[0]
     for matchup in matchups:
         pitches_length_pitch_type[matchup] = {}
         pitches_length_swing_take_and_ball_strike[matchup] = {}
@@ -265,5 +265,4 @@ def aggregate_hbp(player_id, year, matchups):
         new_db.close()
 
 
-# aggregate_pitch_fx_data(2009, Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\"
-#                                      "dump.log"), False)
+aggregate_pitch_fx_data(2009)

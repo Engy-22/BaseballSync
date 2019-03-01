@@ -67,7 +67,7 @@ for table, records in gather_batters_pitch_fx_records().items():
     for record in records:
         batters_pitch_fx_records += 1
         total_records += 1
-tkinter.Label(frame, text="Metrics Dashboard", font=font).grid(columnspan=4, padx=10, pady=10)
+tkinter.Label(frame, text="Metrics Dashboard", font=font).grid(columnspan=5, padx=10, pady=10)
 tkinter.Label(frame, text="Tables", font=font).grid(row=2, column=0, padx=5, pady=5)
 tkinter.Label(frame, text="Records", font=font).grid(row=3, column=0, padx=5, pady=5)
 tkinter.Label(frame, text="baseballData", font=font).grid(row=1, column=1, padx=10, pady=10)
@@ -83,6 +83,6 @@ tkinter.Label(frame, text="Total", font=font).grid(row=1, column=4, padx=10, pad
 tkinter.Label(frame, text=str(num_to_string(total_tables)), font=font).grid(row=2, column=4, padx=5, pady=5)
 tkinter.Label(frame, text=str(num_to_string(total_records)), font=font).grid(row=3, column=4, padx=5, pady=5)
 tkinter.Button(frame, text="Ok", command=lambda: close(), font=font, bg="white", width=6, cursor="hand2").\
-    grid(columnspan=4, padx=10, pady=10)
+    grid(columnspan=5, padx=10, pady=10)
 root.withdraw()
 root.mainloop()
