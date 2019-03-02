@@ -16,7 +16,7 @@ still needed? *add a list of keyboard commands to the help menu.
 *make an option for the user to not allow a player to be in the lineup.
 	-If player x from team A is added to team B and the two teams play against one another, prompt the user and ask them if they want player x on team A as well as team B.
 *here's a thought: when determining which stadium to get the numbers on when the user does not select a neutral site; if it's a single team vs the league simulation, the user should have the option if they want that team to always be home, always be away, or split the games up somehow.
-*add a gui to show the user the progess of the simulation (other than the progress bar).
+*add a gui to show the user the progress of the simulation (other than the progress bar).
 *add a progress bar to the SearchInterface.
 *figure out what kind of error the "statistics.StatisticsError: no unique mode; found 2 equally common values" error is.
 *problem with baseballReference.com: they are missing a games from DET & CHW 1979 season.
@@ -83,6 +83,7 @@ still an issue? *here's a problem, david ross played 11 games for the padres in 
             *migrate all baseballData from sandbox to production.
         scenarios that need to be tested:
             *migrate baseballData for a single year.
+                looks like its transferring all years for player_teams, players.
             *migrate baseballData for a range of years. (check)
             *migrate pitchers_pitch_fx from sandbox to production.
             *migrate pitchers_pitch_fx from a single year.
@@ -99,3 +100,5 @@ still an issue? *here's a problem, david ross played 11 games for the padres in 
     *Find out when mlbam data is updated, if in real time then I can created a real time view similar to fantasycast.
 
 restart code on server by deleting existing code and pulling from git.
+
+email team that I'll be out on Monday.
