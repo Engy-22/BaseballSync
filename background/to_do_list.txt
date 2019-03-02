@@ -59,10 +59,10 @@ still an issue? *here's a problem, david ross played 11 games for the padres in 
     *add way to delete data from given years through reset_database.py
         scenarios tested:
             *delete all baseballData in sandbox.
-        scenarios that need to be tested:
             *delete all baseballData in production.
             *delete all baseballData in production for a single year.
             *delete all baseballData in production for a range of years.
+        scenarios that need to be tested:
             *delete all pitchers_pitch_fx in production.
             *delete pitchers_pitch_fx in production from a single year.
             *delete pitchers_pitch_fx in production from a range of years.
@@ -81,10 +81,9 @@ still an issue? *here's a problem, david ross played 11 games for the padres in 
     *add a way to migrate data from sandbox databases to production databases.
         scenarios tested:
             *migrate all baseballData from sandbox to production.
-        scenarios that need to be tested:
             *migrate baseballData for a single year.
-                looks like its transferring all years for player_teams, players.
-            *migrate baseballData for a range of years. (check)
+            *migrate baseballData for a range of years.
+        scenarios that need to be tested:
             *migrate pitchers_pitch_fx from sandbox to production.
             *migrate pitchers_pitch_fx from a single year.
             *migrate pitchers_pitch_fx from a range of years.

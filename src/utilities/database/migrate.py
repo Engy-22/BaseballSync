@@ -106,13 +106,13 @@ def migrate_year(data_type, year):
                                                  + db_name + '_sandbox.' + table_name + ' where year = ' + str(year)
                                                  + ';'))
                     elif table_name in ['hitter_spots', 'player_positions', 'starting_pitchers', 'team_years',
-                                      'comparisons_team_offense_overall', 'comparisons_team_defense_overall']:  # appending rows based on another field
+                                        'comparisons_team_offense_overall', 'comparisons_team_defense_overall']:  # appending rows based on another field
                         for ty_uid in db.read('select ty_uniqueidentifier from team_years where year = ' + str(year)
                                               + ';'):
                             executor.submit(db.write('insert into ' + db_name + '.' + table_name + ' select * from '
                                                      + db_name + '_sandbox.' + table_name + ' where ty_uniqueidentifier'
                                                      ' = ' + str(ty_uid[0]) + ';'))
-                    else:  # totally replacing the prod table with snadbox table ['ballparks', 'leagues', 'managers', 'players', 'teams', player_teams', 'manager_teams']
+                    else:  # totally replacing the prod table with sandbox table ['leagues', 'managers', 'teams', 'ballparks', player_teams', 'manager_teams']
                         executor.submit(db.write('insert into ' + db_name + '.' + table_name + ' select * from '
                                                  + db_name + '_sandbox.' + table_name + ';'))
     else:
