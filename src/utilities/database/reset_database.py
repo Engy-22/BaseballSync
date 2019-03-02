@@ -184,8 +184,10 @@ def pitch_fx_year(db, year):
 
 def baseball_data_year(db, sandbox_mode, year):
     if sandbox_mode:
+        extension = "_sandbox."
         print('deleting ' + str(year) + ' sandbox baseballData')
     else:
+        extension = "."
         print('deleting ' + str(year) + ' production baseballData')
     with open("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\background\\table_definitions.txt",
               'rt') as file:
@@ -196,12 +198,12 @@ def baseball_data_year(db, sandbox_mode, year):
                 if table_name in ['ballpark_years', 'pitcher_pitches', 'batter_pitches', 'player_batting',
                                   'player_pitching', 'player_fielding', 'years', 'manager_year', 'schedule',
                                   'comparisons_batting_overall', 'comparisons_pitching_overall']:  # appending rows based on year field
-                    executor2.submit(db.write('delete from baseballData.' + table_name + ' where year = ' + str(year)
-                                              + ';'))
+                    executor2.submit(db.write('delete from baseballData' + extension + table_name + ' where year = '
+                                              + str(year) + ';'))
                 elif table_name in ['hitter_spots', 'player_positions', 'starting_pitchers', 'team_years',
                                     'comparisons_team_offense_overall', 'comparisons_team_defense_overall']:  # appending rows based on another field
                     for ty_uid in db.read('select ty_uniqueidentifier from team_years where year = ' + str(year) + ';'):
-                        executor2.submit(db.write('delete from baseballData.' + table_name + ' where '
+                        executor2.submit(db.write('delete from baseballData' + extension + table_name + ' where '
                                                   'ty_uniqueidentifier = ' + str(ty_uid[0]) + ';'))
 
 

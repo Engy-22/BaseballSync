@@ -62,6 +62,8 @@ still an issue? *here's a problem, david ross played 11 games for the padres in 
             *delete all baseballData in production.
             *delete all baseballData in production for a single year.
             *delete all baseballData in production for a range of years.
+            *delete all baseballData in sandbox for a single year.
+            *delete all baseballData in sandbox for a range of years.
         scenarios that need to be tested:
             *delete all pitchers_pitch_fx in production.
             *delete pitchers_pitch_fx in production from a single year.
@@ -70,8 +72,6 @@ still an issue? *here's a problem, david ross played 11 games for the padres in 
             *delete batters_pitch_fx in production from a single year.
             *delete batters_pitch_fx in production from a range of years.
 
-            *delete all baseballData in sandbox for a single year.
-            *delete all baseballData in sandbox for a range of years.
             *delete all pitchers_pitch_fx in sandbox.
             *delete pitchers_pitch_fx in sandbox from a single year.
             *delete pitchers_pitch_fx in sandbox from a range of years.

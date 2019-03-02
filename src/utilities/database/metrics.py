@@ -68,8 +68,8 @@ for table, records in gather_batters_pitch_fx_records().items():
         batters_pitch_fx_records += 1
         total_records += 1
 tkinter.Label(frame, text="Metrics Dashboard", font=font).grid(columnspan=5, padx=10, pady=10)
-tkinter.Label(frame, text="Tables", font=font).grid(row=2, column=0, padx=5, pady=5)
-tkinter.Label(frame, text="Records", font=font).grid(row=3, column=0, padx=5, pady=5)
+tkinter.Label(frame, text="Table Count", font=font).grid(row=2, column=0, padx=5, pady=5, sticky="W")
+tkinter.Label(frame, text="Record Count", font=font).grid(row=3, column=0, padx=5, pady=5, sticky="W")
 tkinter.Label(frame, text="baseballData", font=font).grid(row=1, column=1, padx=10, pady=10)
 tkinter.Label(frame, text=str(num_to_string(baseball_data_tables)), font=font).grid(row=2, column=1, padx=5, pady=5)
 tkinter.Label(frame, text=str(num_to_string(baseball_data_records)), font=font).grid(row=3, column=1, padx=5, pady=5)
