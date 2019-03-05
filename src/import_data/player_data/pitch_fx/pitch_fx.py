@@ -9,7 +9,7 @@ from urllib.request import urlopen, urlretrieve
 from bs4 import BeautifulSoup
 from xml.dom import minidom
 from import_data.player_data.pitch_fx.write_to_file import write_to_file, write_pickoff
-from import_data.player_data.pitch_fx.translators.translate_outcome import translate_pitch_outcome
+from import_data.player_data.pitch_fx.translators.translate_outcome import translate_ab_outcome, translate_pitch_outcome
 from import_data.player_data.pitch_fx.translators.determine_swing_take import determine_swing_or_take
 from import_data.player_data.pitch_fx.translators.translate_pitch_type import translate_pitch_type
 from import_data.player_data.pitch_fx.translators.determine_trajectory import determine_trajectory
@@ -40,21 +40,21 @@ def get_pitch_fx_data(year):
     opening_day = db.read('select opening_day from years where year = ' + str(year) + ';')[0][0]
     db.close()
     for month in range(3, 12, 1):
-        # if month == 7:
-        if month >= int(opening_day.split('-')[0]):
-            for day in range(1, 32, 1):
-                # if day > 30:
-                if month == int(opening_day.split('-')[0]) and int(day) < int(opening_day.split('-')[1]):
-                    continue
-                if len(str(day)) == 1:
-                    this_day = '0' + str(day)
-                else:
-                    this_day = str(day)
-                if len(str(month)) == 1:
-                    this_month = '0' + str(month)
-                else:
-                    this_month = str(month)
-                get_day_data(this_day, this_month, str(year))
+        if month > 5:
+            if month >= int(opening_day.split('-')[0]):
+                for day in range(1, 32, 1):
+                    # if day > 30:
+                    if month == int(opening_day.split('-')[0]) and int(day) < int(opening_day.split('-')[1]):
+                        continue
+                    if len(str(day)) == 1:
+                        this_day = '0' + str(day)
+                    else:
+                        this_day = str(day)
+                    if len(str(month)) == 1:
+                        this_month = '0' + str(month)
+                    else:
+                        this_month = str(month)
+                    get_day_data(this_day, this_month, str(year))
     logger.log("Done fetching " + str(year) + " pitch fx data: time = " + time_converter(time.time() - start_time)
                + '\n\n\n\n')
     aggregate_pitch_fx_data(year)
@@ -110,16 +110,17 @@ def load_xml(inning_url, inning_num):
 
 
 def parse_innings(year, innings_url):
-    dir = "C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\src\\import_data\\player_data\\pitch_fx\\xml"
+    directory = "C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\src\\import_data\\player_data\\" \
+                "pitch_fx\\xml"
     try:
-        players_doc = minidom.parse(dir + '\\players.xml')
+        players_doc = minidom.parse(directory + '\\players.xml')
         away_team = resolve_team_id(players_doc.getElementsByTagName('team')[0].getAttribute('id'))
         home_team = resolve_team_id(players_doc.getElementsByTagName('team')[1].getAttribute('id'))
         if None in [away_team, home_team]:
             raise Exception('None team')
-        for xml_file in os.listdir(dir):
+        for xml_file in os.listdir(directory):
             if 'players' not in xml_file and 'game' not in xml_file:
-                parse_inning(year, dir + '\\' + xml_file, innings_url, away_team, home_team)
+                parse_inning(year, directory + '\\' + xml_file, innings_url, away_team, home_team)
     except FileNotFoundError:
         pass
 
@@ -175,12 +176,12 @@ def parse_pitch(innings_url, year, pitch, meta_data, last_pitch):
         if strikes < 2:
             strikes += 1
     if last_pitch:
-        outcome = translate_pitch_outcome(meta_data['temp_outcome'], meta_data['ab_description'])
+        outcome = translate_ab_outcome(meta_data['temp_outcome'], meta_data['ab_description'])
         trajectory = determine_trajectory(outcome, meta_data['ab_description'])
         field = determine_field(outcome, meta_data['ab_description'])
         direction = determine_direction(meta_data['ab_description'], meta_data['batter_orientation'][1])
     else:
-        outcome = "none"
+        outcome = translate_pitch_outcome(pitch.getAttribute('des'))
         trajectory = "none"
         field = "none"
         direction = "none"
@@ -236,11 +237,11 @@ def clear_xmls():
     def remove(xml_file):
         os.remove(xml_file)
     logger.log("\t\t\tClearing xml files")
-    dir = "C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\src\\import_data\\player_data\\pitch_fx\\xml"
+    directory = "C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\src\\import_data\\player_data\\" \
+                "pitch_fx\\xml"
     with ThreadPoolExecutor(os.cpu_count()) as executor:
-        for xml_file in os.listdir(dir):
-            executor.submit(remove, dir + '\\' + xml_file)
+        for xml_file in os.listdir(directory):
+            executor.submit(remove, directory + '\\' + xml_file)
 
 
-# for year in range(2014, 2015, 1):
-#     get_pitch_fx_data(year)
+# get_pitch_fx_data(2018)

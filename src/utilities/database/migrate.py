@@ -77,13 +77,17 @@ def migrate_all(data_type):
             db_name = "batters_pitch_fx"
         with open("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\background\\pitch_fx_tables.txt",
                   'rt') as file:
-            table_defs = file.readlines()
-            with ThreadPoolExecutor(os.cpu_count()) as executor:
-                for line in table_defs:
-                    table_name = line.split('create table ')[1].split(' (')[0]
-                    print('\t' + table_name)
-                    executor.submit(db.write('insert into ' + db_name + '.' + table_name + ' select * from ' + db_name
-                                             + '_sandbox.' + table_name + ';'))
+            table_defs = [line.split('create table ')[1].split(' (')[0] for line in file.readlines()]
+        with ThreadPoolExecutor(os.cpu_count()) as executor:
+            for table in db.read('show tables;'):
+                print('\t' + table[0])
+                if table[0] not in table_defs:
+                    fields = ''
+                    for column in db.read('describe ' + table[0] + ';'):
+                        fields += column[0] + ' ' + column[1] + ', '
+                    db.write('create table ' + db_name + '.' + table[0] + ' (' + fields[:-2] + ');')
+                executor.submit(db.write('insert into ' + db_name + '.' + table[0] + ' select * from ' + db_name
+                                         + '_sandbox.' + table[0] + ';'))
     db.close()
 
 

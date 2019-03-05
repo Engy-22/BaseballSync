@@ -66,7 +66,8 @@ def driver(year):
     pitcher_spray_chart_constructor(year)
     team_certainties(year)
     award_winner_driver(year)
-    driver_logger.log('Time taken to download ' + str(year) + ' data: ' + time_converter(time.time() - driver_time) + '\n')
+    driver_logger.log('Time taken to download ' + str(year) + ' data: ' + time_converter(time.time() - driver_time)
+                      + '\n')
 
 
 if __name__ == '__main__':
@@ -76,7 +77,7 @@ if __name__ == '__main__':
     league_table_constructor()
     manager_table_constructor()
     years = []
-    for year in range(1972, 2000, 1):
+    for year in range(2017, 2018, 1):
         years.append(year)
         driver(year)
     rank_driver(years[-1])

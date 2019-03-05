@@ -112,21 +112,21 @@ def baseball_data(sandbox_mode, year):
 def pitchers_pitch_fx(sandbox_mode, year):
     db = PitcherPitchFXDatabaseConnection(sandbox_mode)
     if year == 'ALL':
-        with open("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\background\\pitch_fx_tables", 'rt')\
-                as file:
+        with open("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\background\\pitch_fx_tables.txt",
+                  'rt') as file:
             table_defs = file.readlines()
             if sandbox_mode:
-                print("removing existing pitcher pitch fx tables - sandbox")
+                print("removing existing pitcher pitch_fx tables - sandbox")
             else:
-                print("removing existing pitcher pitch fx tables - production")
+                print("removing existing pitcher pitch_fx tables - production")
             with ThreadPoolExecutor(os.cpu_count()) as executor:
                 for line in reversed(table_defs):
                     executor.submit(db.write("drop table " + line.split('create table ')[1].split(' (')[0] + ';'))
             with ThreadPoolExecutor(os.cpu_count()) as executor2:
                 for table in db.read('show tables;'):
                     executor2.submit(db.write('drop table ' + table[0] + ';'))
-            with open("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\background\\pitch_fx_tables", 'rt')\
-                    as file:
+            with open("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\background\\pitch_fx_tables.txt",
+                      'rt') as file:
                 table_defs = file.readlines()
                 if sandbox_mode:
                     print("creating new pitcher pitch fx tables - sandbox")

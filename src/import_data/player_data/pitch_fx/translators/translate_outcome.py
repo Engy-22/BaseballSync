@@ -1,4 +1,4 @@
-def translate_pitch_outcome(outcome, description):
+def translate_ab_outcome(outcome, description):
     outcomes = {'Single': '1b', 'Double': '2b', 'Triple': '3b', 'Strikeout': 'so', 'Home Run': 'hr', 'Groundout': 'go',
                 'Ground Out': 'go', 'Flyout': 'fo', 'Lineout': 'lo', 'Pop Out': 'po', 'Walk': 'bb', 'Sac Bunt': 'sh',
                 'Hit By Pitch': 'hbp', 'Intent Walk': 'ibb', 'Forceout': 'fc', 'Line Out': 'lo', 'Field Error': 'error',
@@ -49,3 +49,8 @@ def translate_pitch_outcome(outcome, description):
             print('\nOutcomes ;lkj;lkj' + outcome)
             this_outcome = "none"
     return this_outcome
+
+
+def translate_pitch_outcome(outcome):
+    outcomes = {'Foul': 'foul'}
+    return outcomes[outcome]
