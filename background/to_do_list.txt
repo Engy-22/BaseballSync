@@ -98,5 +98,10 @@ still an issue? *here's a problem, david ross played 11 games for the padres in 
 
     *Find out when mlbam data is updated, if in real time then I can created a real time view similar to fantasycast.
 
-restart code on server by deleting existing code and pulling from git.
+
 fix translate_pitch_outcome to account for swings and misses, foul balls, etc.
+
+change table spawning into one table (see notes).
+change ball_strike, pitch_type and swing_take tables into one table (instead of 12).
+change reset_database.py in cases of deleting all data in a db.
+    -Drop database, create database, then create tables.
