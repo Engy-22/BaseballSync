@@ -19,8 +19,8 @@ def aggregate_pitch_fx_data(year):
     start_time = time.time()
     logger.log("Aggregating pitch fx data for " + str(year) + ' || Timestamp: ' + datetime.datetime.today().
                strftime('%Y-%m-%d %H:%M:%S'))
-    aggregate_and_write(year, 'pitching')
-    # aggregate_and_write(year, 'batting')
+    # aggregate_and_write(year, 'pitching')
+    aggregate_and_write(year, 'batting')
     total_time = time_converter(time.time() - start_time)
     logger.log("Done aggregating " + str(year) + " pitch fx data: Time = " + total_time + '\n\n')
     driver_logger.log("\t\tTime = " + total_time)
