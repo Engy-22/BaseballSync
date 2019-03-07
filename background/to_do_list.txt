@@ -83,11 +83,11 @@ still an issue? *here's a problem, david ross played 11 games for the padres in 
             *migrate all baseballData from sandbox to production.
             *migrate baseballData for a single year.
             *migrate baseballData for a range of years.
-        scenarios that need to be tested:
             *migrate pitchers_pitch_fx from sandbox to production.
+            *migrate batters_pitch_fx from sandbox to production.
+        scenarios that need to be tested:
             *migrate pitchers_pitch_fx from a single year.
             *migrate pitchers_pitch_fx from a range of years.
-            *migrate batters_pitch_fx from sandbox to production.
             *migrate batters_pitch_fx from a single year.
             *migrate batters_pitch_fx from a range of years.
 
@@ -97,11 +97,3 @@ still an issue? *here's a problem, david ross played 11 games for the padres in 
     *check out other websites for ideas
 
     *Find out when mlbam data is updated, if in real time then I can created a real time view similar to fantasycast.
-
-
-fix translate_pitch_outcome to account for swings and misses, foul balls, etc.
-
-change table spawning into one table (see notes).
-change ball_strike, pitch_type and swing_take tables into one table (instead of 12).
-change reset_database.py in cases of deleting all data in a db.
-    -Drop database, create database, then create tables.

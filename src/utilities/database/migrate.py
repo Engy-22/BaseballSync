@@ -65,7 +65,6 @@ def migrate_all(data_type):
             with ThreadPoolExecutor(os.cpu_count()) as executor:
                 for line in table_defs:
                     table_name = line.split('create table ')[1].split(' (')[0]
-                    print('\t' + table_name)
                     executor.submit(db.write('insert into ' + db_name + '.' + table_name + ' select * from ' + db_name
                                              + '_sandbox.' + table_name + ';'))
     else:
@@ -80,7 +79,6 @@ def migrate_all(data_type):
             table_defs = [line.split('create table ')[1].split(' (')[0] for line in file.readlines()]
         with ThreadPoolExecutor(os.cpu_count()) as executor:
             for table in db.read('show tables;'):
-                print('\t' + table[0])
                 if table[0] not in table_defs:
                     fields = ''
                     for column in db.read('describe ' + table[0] + ';'):
@@ -102,7 +100,6 @@ def migrate_year(data_type, year):
             with ThreadPoolExecutor(os.cpu_count()) as executor:
                 for line in table_defs:
                     table_name = line.split('create table ')[1].split(' (')[0]
-                    print('\t' + table_name)
                     if table_name in ['ballpark_years', 'pitcher_pitches', 'batter_pitches', 'player_batting',
                                       'player_pitching', 'player_fielding', 'years', 'manager_year', 'schedule',
                                       'comparisons_batting_overall', 'comparisons_pitching_overall']:  # appending rows based on year field
@@ -132,7 +129,6 @@ def migrate_year(data_type, year):
                 with ThreadPoolExecutor(os.cpu_count()) as executor:
                     for line in table_defs:
                         table_name = line.split('create table ')[1].split(' (')[0]
-                        print('\t' + table_name)
                         if table_name.split('_')[0] in ['vr', 'vl', 'hbp']:  # appending rows based on year field
                             executor.submit(db.write('insert into ' + db_name + '.' + table_name + ' select * from '
                                                      + db_name + '_sandbox.' + table_name + ' where year = ' + str(year)
