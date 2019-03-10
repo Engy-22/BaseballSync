@@ -1,0 +1,2 @@
+anytime a code change is made to the interface, you must do "sudo systemctl restart nginx" then do "sudo supervisorctl reload"
+
