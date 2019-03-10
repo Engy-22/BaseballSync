@@ -8,5 +8,8 @@
               <a class="list-group-item list-group-item-light" href="#">{{ simulation }}</a>
             {% endfor %}
         </div>
+        <small class="text-muted">
+            <a class="ml-2" href="{{ url_for('users.register') }}">Random</a>
+        </small>
     </div>
 {%endblock content%}
