@@ -1,2 +1,6 @@
 anytime a code change is made to the interface, you must do "sudo systemctl restart nginx" then do "sudo supervisorctl reload"
 
+to run the code for the website, do "FLASK_APP=run.py", then "flask run --host=0.0.0.0"
+
+logs are at etc/
+
