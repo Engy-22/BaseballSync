@@ -40,10 +40,10 @@ def get_pitch_fx_data(year):
     opening_day = db.read('select opening_day from years where year = ' + str(year) + ';')[0][0]
     db.close()
     for month in range(3, 12, 1):
-        if month > 4:
+        if month > 9:
             if month >= int(opening_day.split('-')[0]):
                 for day in range(1, 32, 1):
-                    # if day > 30:
+                    # if day > 2:
                     if month == int(opening_day.split('-')[0]) and int(day) < int(opening_day.split('-')[1]):
                         continue
                     if len(str(day)) == 1:
@@ -245,4 +245,4 @@ def clear_xmls():
             executor.submit(remove, directory + '\\' + xml_file)
 
 
-get_pitch_fx_data(2018)
+# get_pitch_fx_data(2018)

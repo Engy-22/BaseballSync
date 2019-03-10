@@ -18,7 +18,7 @@ logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\lo
 def team_batting_order_constructor(year):
     if year < 1908:
         logger.log("\tNo team batting order data to download before 1908.")
-        driver_logger.log("\tNo team batting order data to download before 1908).")
+        driver_logger.log("\tNo team batting order data to download before 1908.")
         return
     print("getting team batting order data")
     driver_logger.log("\tGetting team batting order data")

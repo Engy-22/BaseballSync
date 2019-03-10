@@ -19,7 +19,7 @@ def aggregate_pitch_fx_data(year):
     start_time = time.time()
     logger.log("Aggregating pitch fx data for " + str(year) + ' || Timestamp: ' + datetime.datetime.today().
                strftime('%Y-%m-%d %H:%M:%S'))
-    aggregate_and_write(year, 'pitching')
+    # aggregate_and_write(year, 'pitching')
     aggregate_and_write(year, 'batting')
     total_time = time_converter(time.time() - start_time)
     logger.log("Done aggregating " + str(year) + " pitch fx data: Time = " + total_time + '\n\n')
@@ -126,15 +126,16 @@ def aggregate(year, player_id, player_type):
                         else:
                             directions[matchup][count][pitch_type[0]][direction[0]] = 1
                 write_pitch_usage(player_id, p_uid, year, matchup, count, pitch_usage[matchup][count], player_type)
-                write_outcomes(player_id, year, matchup, count, pitch_type_outcomes[matchup][count], player_type)
-                write_swing_rate(player_id, year, matchup, count, pitch_usage[matchup][count],
+                write_outcomes(player_id, p_uid, year, matchup, count, pitch_type_outcomes[matchup][count], player_type)
+                write_swing_rate(player_id, p_uid, year, matchup, count, pitch_usage[matchup][count],
                                  pitch_type_swing_rate[matchup][count], player_type)
-                write_strike_percent(player_id, year, matchup, count, pitch_usage[matchup][count],
+                write_strike_percent(player_id, p_uid, year, matchup, count, pitch_usage[matchup][count],
                                      strike_percents[matchup][count], player_type)
-                write_trajectory_by_pitch_type(player_id, year, matchup, count, trajectories[matchup][count],
+                write_trajectory_by_pitch_type(player_id, p_uid, year, matchup, count, trajectories[matchup][count],
                                                player_type)
-                write_field_by_pitch_type(player_id, year, matchup, count, fields[matchup][count], player_type)
-                write_direction_by_pitch_type(player_id, year, matchup, count, directions[matchup][count], player_type)
+                write_field_by_pitch_type(player_id, p_uid, year, matchup, count, fields[matchup][count], player_type)
+                write_direction_by_pitch_type(player_id, p_uid, year, matchup, count, directions[matchup][count],
+                                              player_type)
         for outcome in set(db.read('select outcome from ' + table + ' where playerid = "' + player_id + '" and year = '
                                    + str(year) + ' and matchup = "' + matchup + opponent + '";')):
             trajectories_by_outcome[matchup][outcome[0]] = {}
@@ -161,9 +162,9 @@ def aggregate(year, player_id, player_type):
                     directions_by_outcome[matchup][outcome[0]][direction[0]] += 1
                 else:
                     directions_by_outcome[matchup][outcome[0]][direction[0]] = 1
-        write_trajectory_by_outcome(player_id, year, matchup, trajectories_by_outcome[matchup], player_type)
-        write_field_by_outcome(player_id, year, matchup, fields_by_outcome[matchup], player_type)
-        write_direction_by_outcome(player_id, year, matchup, directions_by_outcome[matchup], player_type)
+        write_trajectory_by_outcome(player_id, p_uid, year, matchup, trajectories_by_outcome[matchup], player_type)
+        write_field_by_outcome(player_id, p_uid, year, matchup, fields_by_outcome[matchup], player_type)
+        write_direction_by_outcome(player_id, p_uid, year, matchup, directions_by_outcome[matchup], player_type)
     db.close()
 
 
@@ -228,7 +229,7 @@ def write_pitch_usage(player_id, p_uid, year, matchup, count, pitch_type_dict, p
     db.close()
 
 
-def write_outcomes(player_id, year, matchup, count, outcomes_by_pitch_type, player_type):
+def write_outcomes(player_id, p_uid, year, matchup, count, outcomes_by_pitch_type, player_type):
     if player_type == 'pitching':
         db = PitcherPitchFXDatabaseConnection(sandbox_mode)
     else:
@@ -247,18 +248,20 @@ def write_outcomes(player_id, year, matchup, count, outcomes_by_pitch_type, play
                                + ' and matchup = "' + matchup + '" and count = "' + count + '" and outcome = "'
                                + outcome + '";')) == 0:
                     executor4.submit(db.write('insert into outcomes (uid, playerid, year, matchup, count, outcome, '
-                                              + pitch_type + ') values (default, "' + player_id + '", ' + str(year)
+                                              + pitch_type + ', p_uid) values (default, "' + player_id + '", ' + str(year)
                                               + ', "' + matchup + '", "' + count + '", "' + outcome + '", '
-                                              + str(round(total/total_pitches[pitch_type], 3)) + ');'))
+                                              + str(round(total/total_pitches[pitch_type], 3)) + ', ' + str(p_uid)
+                                              + ');'))
                 else:
                     executor4.submit(db.write('update outcomes set ' + pitch_type + ' = '
                                               + str(round(total/total_pitches[pitch_type], 3)) + ' where playerid = "'
                                               + player_id + '" and year = ' + str(year) + ' and matchup = "' + matchup
-                                              + '" and count = "' + count + '" and outcome = "' + outcome + '";'))
+                                              + '" and count = "' + count + '" and outcome = "' + outcome + '" and '
+                                              'p_uid = ' + str(p_uid) + ';'))
     db.close()
 
 
-def write_swing_rate(player_id, year, matchup, count, pitch_usage, swing_rates, player_type):
+def write_swing_rate(player_id, p_uid, year, matchup, count, pitch_usage, swing_rates, player_type):
     if player_type == 'pitching':
         db = PitcherPitchFXDatabaseConnection(sandbox_mode)
     else:
@@ -282,7 +285,7 @@ def write_swing_rate(player_id, year, matchup, count, pitch_usage, swing_rates, 
     db.close()
 
 
-def write_strike_percent(player_id, year, matchup, count, pitch_usage, strike_percents, player_type):
+def write_strike_percent(player_id, p_uid, year, matchup, count, pitch_usage, strike_percents, player_type):
     if player_type != 'pitching':
         return
     db = PitcherPitchFXDatabaseConnection(sandbox_mode)
@@ -293,8 +296,9 @@ def write_strike_percent(player_id, year, matchup, count, pitch_usage, strike_pe
         for pitch_type, strikes in strike_percents.items():
             fields += ', ' + pitch_type
             values += ', ' + str(round(strikes/pitch_usage[pitch_type], 3))
-        db.write('insert into strike_percent (uid, playerid, year, matchup, count' + fields + ') values (default, "'
-                 + player_id + '", ' + str(year) + ', "' + matchup + '", "' + count + '"' + values + ');')
+        db.write('insert into strike_percent (uid, playerid, year, matchup, count' + fields + ', p_uid) values '
+                 '(default, "' + player_id + '", ' + str(year) + ', "' + matchup + '", "' + count + '"' + values
+                 + ', p_uid = ' + str(p_uid) + ');')
     else:
         sets = ''
         for pitch_type, strikes in strike_percents.items():
@@ -305,7 +309,7 @@ def write_strike_percent(player_id, year, matchup, count, pitch_usage, strike_pe
     db.close()
 
 
-def write_trajectory_by_pitch_type(player_id, year, matchup, count, trajectories, player_type):
+def write_trajectory_by_pitch_type(player_id, p_uid, year, matchup, count, trajectories, player_type):
     if player_type == 'pitching':
         db = PitcherPitchFXDatabaseConnection(sandbox_mode)
     else:
@@ -324,9 +328,10 @@ def write_trajectory_by_pitch_type(player_id, year, matchup, count, trajectories
                                + ' and matchup = "' + matchup + '" and count = "' + count + '" and trajectory = "'
                                + trajectory + '";')) == 0:
                     executor4.submit(db.write('insert into trajectory (uid, playerid, year, matchup, count, trajectory,'
-                                              + ' ' + pitch_type + ') values (default, "' + player_id + '", '
+                                              + ' ' + pitch_type + ', p_uid) values (default, "' + player_id + '", '
                                               + str(year) + ', "' + matchup + '", "' + count + '", "' + trajectory
-                                              + '", ' + str(round(total/total_pitches[pitch_type], 3)) + ');'))
+                                              + '", ' + str(round(total/total_pitches[pitch_type], 3)) + ', '
+                                              + str(p_uid) + ');'))
                 else:
                     executor4.submit(db.write('update trajectory set ' + pitch_type + ' = '
                                               + str(round(total/total_pitches[pitch_type], 3)) + ' where playerid = "'
@@ -335,7 +340,7 @@ def write_trajectory_by_pitch_type(player_id, year, matchup, count, trajectories
     db.close()
 
 
-def write_field_by_pitch_type(player_id, year, matchup, count, field, player_type):
+def write_field_by_pitch_type(player_id, p_uid, year, matchup, count, field, player_type):
     if player_type == 'pitching':
         db = PitcherPitchFXDatabaseConnection(sandbox_mode)
     else:
@@ -354,9 +359,10 @@ def write_field_by_pitch_type(player_id, year, matchup, count, field, player_typ
                                + ' and matchup = "' + matchup + '" and count = "' + count + '" and field = "'
                                + field + '";')) == 0:
                     executor4.submit(db.write('insert into field (uid, playerid, year, matchup, count, field, '
-                                              + pitch_type + ') values (default, "' + player_id + '", ' + str(year)
-                                              + ', "' + matchup + '", "' + count + '", "' + field + '", '
-                                              + str(round(total/total_pitches[pitch_type], 3)) + ');'))
+                                              + pitch_type + ', p_uid) values (default, "' + player_id + '", '
+                                              + str(year) + ', "' + matchup + '", "' + count + '", "' + field + '", '
+                                              + str(round(total/total_pitches[pitch_type], 3)) + ', ' + str(p_uid)
+                                              + ');'))
                 else:
                     executor4.submit(db.write('update field set ' + pitch_type + ' = '
                                               + str(round(total/total_pitches[pitch_type], 3)) + ' where playerid = "'
@@ -365,7 +371,7 @@ def write_field_by_pitch_type(player_id, year, matchup, count, field, player_typ
     db.close()
 
 
-def write_direction_by_pitch_type(player_id, year, matchup, count, direction, player_type):
+def write_direction_by_pitch_type(player_id, p_uid, year, matchup, count, direction, player_type):
     if player_type == 'pitching':
         db = PitcherPitchFXDatabaseConnection(sandbox_mode)
     else:
@@ -384,9 +390,10 @@ def write_direction_by_pitch_type(player_id, year, matchup, count, direction, pl
                                + ' and matchup = "' + matchup + '" and count = "' + count + '" and direction = "'
                                + direction + '";')) == 0:
                     executor4.submit(db.write('insert into direction (uid, playerid, year, matchup, count, direction, '
-                                              + pitch_type + ') values (default, "' + player_id + '", ' + str(year)
-                                              + ', "' + matchup + '", "' + count + '", "' + direction + '", '
-                                              + str(round(total/total_pitches[pitch_type], 3)) + ');'))
+                                              + pitch_type + ', p_uid) values (default, "' + player_id + '", '
+                                              + str(year) + ', "' + matchup + '", "' + count + '", "' + direction
+                                              + '", ' + str(round(total/total_pitches[pitch_type], 3)) + ', '
+                                              + str(p_uid) + ');'))
                 else:
                     executor4.submit(db.write('update direction set ' + pitch_type + ' = '
                                               + str(round(total/total_pitches[pitch_type], 3)) + ' where playerid = "'
@@ -395,7 +402,7 @@ def write_direction_by_pitch_type(player_id, year, matchup, count, direction, pl
     db.close()
 
 
-def write_trajectory_by_outcome(player_id, year, matchup, trajectory_by_outcome, player_type):
+def write_trajectory_by_outcome(player_id, p_uid, year, matchup, trajectory_by_outcome, player_type):
     if player_type == 'pitching':
         db = PitcherPitchFXDatabaseConnection(sandbox_mode)
     else:
@@ -413,9 +420,9 @@ def write_trajectory_by_outcome(player_id, year, matchup, trajectory_by_outcome,
                                + '" and year = ' + str(year) + ' and matchup = "' + matchup + '" and outcome = "'
                                + outcome + '";')) == 0:
                     executor.submit(db.write('insert into trajectory_by_outcome (uid, playerid, year, matchup, '
-                                             'outcome, ' + trajectory + ') values (default, "' + player_id + '", '
-                                             + str(year) + ', "' + matchup + '", "' + outcome + '", '
-                                             + str(round(total/outcome_totals[outcome], 3)) + ');'))
+                                             'outcome, ' + trajectory + ', p_uid) values (default, "' + player_id
+                                             + '", ' + str(year) + ', "' + matchup + '", "' + outcome + '", '
+                                             + str(round(total/outcome_totals[outcome], 3)) + ', ' + str(p_uid) + ');'))
                 else:
                     executor.submit(db.write('update trajectory_by_outcome set ' + trajectory + ' = '
                                              + str(round(total/outcome_totals[outcome], 3)) + ' where playerid = "'
@@ -424,13 +431,12 @@ def write_trajectory_by_outcome(player_id, year, matchup, trajectory_by_outcome,
     db.close()
 
 
-def write_field_by_outcome(player_id, year, matchup, field_by_outcome, player_type):
+def write_field_by_outcome(player_id, p_uid, year, matchup, field_by_outcome, player_type):
     if player_type == 'pitching':
         db = PitcherPitchFXDatabaseConnection(sandbox_mode)
     else:
         db = BatterPitchFXDatabaseConnection(sandbox_mode)
     outcome_totals = {}
-    fields = {'if': 'infield', 'of': 'outfield', 'none': 'none'}
     for outcome, dictionary in field_by_outcome.items():
         for field, total in dictionary.items():
             if outcome in outcome_totals:
@@ -439,22 +445,21 @@ def write_field_by_outcome(player_id, year, matchup, field_by_outcome, player_ty
                 outcome_totals[outcome] = total
         with ThreadPoolExecutor(os.cpu_count()) as executor:
             for field, total in dictionary.items():
-                if len(db.read('select * from field_by_outcome where playerid = "' + player_id
-                               + '" and year = ' + str(year) + ' and matchup = "' + matchup + '" and outcome = "'
-                               + outcome + '";')) == 0:
+                if len(db.read('select * from field_by_outcome where playerid = "' + player_id + '" and year = '
+                               + str(year) + ' and matchup = "' + matchup + '" and outcome = "' + outcome + '";')) == 0:
                     executor.submit(db.write('insert into field_by_outcome (uid, playerid, year, matchup, '
-                                             'outcome, ' + fields[field] + ') values (default, "' + player_id + '", '
+                                             'outcome, ' + field + ', p_uid) values (default, "' + player_id + '", '
                                              + str(year) + ', "' + matchup + '", "' + outcome + '", '
-                                             + str(round(total/outcome_totals[outcome], 3)) + ');'))
+                                             + str(round(total/outcome_totals[outcome], 3)) + ', ' + str(p_uid) + ');'))
                 else:
-                    executor.submit(db.write('update field_by_outcome set ' + fields[field] + ' = '
+                    executor.submit(db.write('update field_by_outcome set ' + field + ' = '
                                              + str(round(total/outcome_totals[outcome], 3)) + ' where playerid = "'
                                              + player_id + '" and year = ' + str(year) + ' and matchup = "' + matchup
                                              + '" and outcome = "' + outcome + '";'))
     db.close()
 
 
-def write_direction_by_outcome(player_id, year, matchup, direction_by_outcome, player_type):
+def write_direction_by_outcome(player_id, p_uid, year, matchup, direction_by_outcome, player_type):
     if player_type == 'pitching':
         db = PitcherPitchFXDatabaseConnection(sandbox_mode)
     else:
@@ -472,9 +477,9 @@ def write_direction_by_outcome(player_id, year, matchup, direction_by_outcome, p
                                + '" and year = ' + str(year) + ' and matchup = "' + matchup + '" and outcome = "'
                                + outcome + '";')) == 0:
                     executor.submit(db.write('insert into direction_by_outcome (uid, playerid, year, matchup, '
-                                             'outcome, ' + direction + ') values (default, "' + player_id + '", '
+                                             'outcome, ' + direction + ', p_uid) values (default, "' + player_id + '", '
                                              + str(year) + ', "' + matchup + '", "' + outcome + '", '
-                                             + str(round(total/outcome_totals[outcome], 3)) + ');'))
+                                             + str(round(total/outcome_totals[outcome], 3)) + ', ' + str(p_uid) + ');'))
                 else:
                     executor.submit(db.write('update direction_by_outcome set ' + direction + ' = '
                                              + str(round(total/outcome_totals[outcome], 3)) + ' where playerid = "'
@@ -483,5 +488,5 @@ def write_direction_by_outcome(player_id, year, matchup, direction_by_outcome, p
     db.close()
 
 
-aggregate_pitch_fx_data(2018)
+# aggregate_pitch_fx_data(2018)
 # aggregate(2018, 'morriak01', 'pitching')

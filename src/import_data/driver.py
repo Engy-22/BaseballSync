@@ -58,15 +58,15 @@ def driver(year):
     team_pitching_rotation_constructor(year)
     primary_and_secondary_positions(year)
     determine_pitcher_roles_year(year)
-    get_pitch_fx_data(year)
-    hitter_tendencies(year)
-    pitcher_tendencies(year)
-    manager_tendencies(year)
-    hitter_spray_chart_constructor(year)
-    pitcher_spray_chart_constructor(year)
-    team_certainties(year)
-    award_winner_driver(year)
-    driver_logger.log('Time taken to download ' + str(year) + ' data: ' + time_converter(time.time() - driver_time)
+    # get_pitch_fx_data(year)
+    # hitter_tendencies(year)
+    # pitcher_tendencies(year)
+    # manager_tendencies(year)
+    # hitter_spray_chart_constructor(year)
+    # pitcher_spray_chart_constructor(year)
+    # team_certainties(year)
+    # award_winner_driver(year)
+    driver_logger.log('Time taken to download ' + str(year) + ' data: ' + time_converter(time.time()-driver_time)
                       + '\n')
 
 
@@ -77,7 +77,7 @@ if __name__ == '__main__':
     league_table_constructor()
     manager_table_constructor()
     years = []
-    for year in range(2018, 2019, 1):
+    for year in range(1876, 1881, 1):
         years.append(year)
         driver(year)
     rank_driver(years[-1])
