@@ -15,4 +15,4 @@ def simulate_page():
 def randomize():
     recent_simulations = ['2/20/2019 CLE vs. DET (50 games)', '2/19/2019 TEX vs. HOU (162 games)']
     return render_template('simulate/simulate.html', title="Simulate", recent_simulations=recent_simulations,
-                           rand_num=random.random())
+                           rand_num='asdf' + str(random.random()))
