@@ -5,11 +5,10 @@
         <div class="content-section simulations-section">
             <h3>Your Recent Simulations</h3>
             {% for simulation in recent_simulations %}
-              <a class="list-group-item list-group-item-light" href="#">{{ simulation }}</a>
+                <a class="list-group-item list-group-item-light" href="#">
+                    {{ simulation }}
+                </a>
             {% endfor %}
         </div>
-        <small class="text-muted">
-            {{ rand_num }}<a class="ml-2" href="{{ url_for('simulate.randomize') }}">Randomize</a>
-        </small>
     </div>
 {%endblock content%}
