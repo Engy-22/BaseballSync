@@ -40,7 +40,7 @@ def get_pitch_fx_data(year):
     opening_day = db.read('select opening_day from years where year = ' + str(year) + ';')[0][0]
     db.close()
     for month in range(3, 12, 1):
-        if month > 5:
+        if month > 4:
             if month >= int(opening_day.split('-')[0]):
                 for day in range(1, 32, 1):
                     # if day > 30:
@@ -69,7 +69,8 @@ def get_day_data(day, month, year):
     for line in home_page:
         try:
             if str(line.split('"day_' + str(day) + '/')[1])[:3] == 'gid':
-                if not regular_season_game(home_page_url[:-6] + line.split('<a href="')[1].split('">')[0] + 'game.xml'):
+                if not get_data_from_this_game(home_page_url[:-6] + line.split('<a href="')[1].split('">')[0]
+                                               + 'game.xml'):
                     continue
                 global innings
                 innings = {}
@@ -105,8 +106,8 @@ def get_day_data(day, month, year):
 
 
 def load_xml(inning_url, inning_num):
-    urlretrieve(inning_url, "C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\src\\import_data\\player_data"
-                            "\\pitch_fx\\xml\\" + str(inning_num) + ".xml")
+    urlretrieve(inning_url, "C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\src\\import_data\\"
+                            "player_data\\pitch_fx\\xml\\" + str(inning_num) + ".xml")
 
 
 def parse_innings(year, innings_url):
@@ -218,7 +219,7 @@ def parse_pickoff_success(year, team, top_bottom, xml):
                 write_pickoff(pitcher, team, year, base, 'successes')
 
 
-def regular_season_game(game_url):
+def get_data_from_this_game(game_url):
     try:
         urlretrieve(game_url, 'C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\src\\import_data\\'
                               'player_data\\pitch_fx\\xml\\game.xml')
@@ -244,4 +245,4 @@ def clear_xmls():
             executor.submit(remove, directory + '\\' + xml_file)
 
 
-# get_pitch_fx_data(2018)
+get_pitch_fx_data(2018)

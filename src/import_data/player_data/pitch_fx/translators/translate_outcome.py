@@ -31,9 +31,9 @@ def translate_ab_outcome(outcome, description):
             if 'grounds out' in description:
                 this_outcome = 'go'
             elif 'strikes out' in description:
-                this_outcome = 'so'
+                this_outcome = 'so (swinging)'
             elif 'called out on strikes' in description:
-                this_outcome = 'so'
+                this_outcome = 'so (looking)'
             elif 'flies out' in description:
                 this_outcome = 'fo'
             elif 'lines out' in description:
@@ -52,5 +52,15 @@ def translate_ab_outcome(outcome, description):
 
 
 def translate_pitch_outcome(outcome):
-    outcomes = {'Foul': 'foul'}
-    return outcomes[outcome]
+    outcomes = {'Foul': 'foul', 'Foul Tip': 'foul', 'Called Strike': 'strike looking', 'Ball': 'ball',
+                'Ball In Dirt': 'ball (in dirt)', 'Swinging Strike': 'strike swinging',
+                'Automatic Ball': 'ball (intentional)', 'Swinging Strike (Blocked)': 'strike swinging (in dirt)',
+                'Foul (Runner Going)': 'foul', 'Foul Bunt': 'foul (bunt)', 'Missed Bunt': 'strike swinging (bunt)',
+                'Pitchout': 'pitchout'}  # make this more specific (i.e. foul/missed bunt, ball in dirt, etc.)
+                                         # can then further resolve for pitcher (e.g. missed bunt is important
+                                         # for hitter info, but it's just a swinging strike for pitchers.
+    try:
+        return outcomes[outcome]
+    except KeyError:
+        print(outcome)
+        return 'none'

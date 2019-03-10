@@ -20,7 +20,7 @@ def aggregate_pitch_fx_data(year):
     logger.log("Aggregating pitch fx data for " + str(year) + ' || Timestamp: ' + datetime.datetime.today().
                strftime('%Y-%m-%d %H:%M:%S'))
     aggregate_and_write(year, 'pitching')
-    # aggregate_and_write(year, 'batting')
+    aggregate_and_write(year, 'batting')
     total_time = time_converter(time.time() - start_time)
     logger.log("Done aggregating " + str(year) + " pitch fx data: Time = " + total_time + '\n\n')
     driver_logger.log("\t\tTime = " + total_time)
@@ -34,7 +34,7 @@ def aggregate_and_write(year, player_type):
     db.close()
     for player_id in players:
         aggregate(year, player_id[0], player_type)
-        break
+        # break
     logger.log("\tDone aggregating and writing " + player_type + " data: Time = "
                + time_converter(time.time() - pitcher_time))
 
@@ -50,6 +50,10 @@ def aggregate(year, player_id, player_type):
     strike_percents = {}
     trajectories = {}
     fields = {}
+    directions = {}
+    trajectories_by_outcome = {}
+    fields_by_outcome = {}
+    directions_by_outcome = {}
     db = DatabaseConnection(sandbox_mode)
     temp_p_uid = []
     for pt_uid in db.read('select pt_uniqueidentifier from player_teams where playerid = "' + player_id + '";'):
@@ -73,6 +77,10 @@ def aggregate(year, player_id, player_type):
         strike_percents[matchup] = {}
         trajectories[matchup] = {}
         fields[matchup] = {}
+        directions[matchup] = {}
+        trajectories_by_outcome[matchup] = {}
+        fields_by_outcome[matchup] = {}
+        directions_by_outcome[matchup] = {}
         for ball in range(4):
             for strike in range(3):
                 count = str(ball) + '-' + str(strike)
@@ -82,6 +90,7 @@ def aggregate(year, player_id, player_type):
                 strike_percents[matchup][count] = {}
                 trajectories[matchup][count] = {}
                 fields[matchup][count] = {}
+                directions[matchup][count] = {}
                 bulk_query = 'from ' + table + ' where playerid = "' + player_id + '" and year = ' + str(year) + ' and'\
                              ' matchup = "' + matchup + opponent + '" and count = "' + count + '"'
                 for pitch_type in set(db.read('select pitch_type ' + bulk_query + 'and swing_take = "swing";')):
@@ -95,6 +104,7 @@ def aggregate(year, player_id, player_type):
                                                                              + ' and ball_strike = "strike";')[0][0]
                     trajectories[matchup][count][pitch_type[0]] = {}
                     fields[matchup][count][pitch_type[0]] = {}
+                    directions[matchup][count][pitch_type[0]] = {}
                     for outcome in db.read('select outcome ' + temp_bulk_query + ' and swing_take = "swing";'):
                         if outcome[0] in pitch_type_outcomes[matchup][count][pitch_type[0]]:
                             pitch_type_outcomes[matchup][count][pitch_type[0]][outcome[0]] += 1
@@ -110,6 +120,11 @@ def aggregate(year, player_id, player_type):
                             fields[matchup][count][pitch_type[0]][field[0]] += 1
                         else:
                             fields[matchup][count][pitch_type[0]][field[0]] = 1
+                    for direction in db.read('select direction ' + temp_bulk_query + ';'):
+                        if direction[0] in directions[matchup][count][pitch_type[0]]:
+                            directions[matchup][count][pitch_type[0]][direction[0]] += 1
+                        else:
+                            directions[matchup][count][pitch_type[0]][direction[0]] = 1
                 write_pitch_usage(player_id, p_uid, year, matchup, count, pitch_usage[matchup][count], player_type)
                 write_outcomes(player_id, year, matchup, count, pitch_type_outcomes[matchup][count], player_type)
                 write_swing_rate(player_id, year, matchup, count, pitch_usage[matchup][count],
@@ -119,12 +134,36 @@ def aggregate(year, player_id, player_type):
                 write_trajectory_by_pitch_type(player_id, year, matchup, count, trajectories[matchup][count],
                                                player_type)
                 write_field_by_pitch_type(player_id, year, matchup, count, fields[matchup][count], player_type)
-                # do directions just like trajectories and fields above
-                # write_direction_by_pitch_type(player_id, year, matchup, count, trajectories[matchup][count],
-                #                               player_type)
-                # write_trajectory_by_outcome()
-                # write_field_by_outcome()
-                # write_direction_by_outcome()
+                write_direction_by_pitch_type(player_id, year, matchup, count, directions[matchup][count], player_type)
+        for outcome in set(db.read('select outcome from ' + table + ' where playerid = "' + player_id + '" and year = '
+                                   + str(year) + ' and matchup = "' + matchup + opponent + '";')):
+            trajectories_by_outcome[matchup][outcome[0]] = {}
+            for trajectory in db.read('select trajectory from ' + table + ' where playerid = "' + player_id
+                                      + '" and year = ' + str(year) + ' and matchup = "' + matchup + opponent
+                                      + '" and outcome = "' + outcome[0] + '";'):
+                if trajectory[0] in trajectories_by_outcome[matchup][outcome[0]]:
+                    trajectories_by_outcome[matchup][outcome[0]][trajectory[0]] += 1
+                else:
+                    trajectories_by_outcome[matchup][outcome[0]][trajectory[0]] = 1
+            fields_by_outcome[matchup][outcome[0]] = {}
+            for field in db.read('select field from ' + table + ' where playerid = "' + player_id + '" and year = '
+                                 + str(year) + ' and matchup = "' + matchup + opponent + '" and outcome = "'
+                                 + outcome[0] + '";'):
+                if field[0] in fields_by_outcome[matchup][outcome[0]]:
+                    fields_by_outcome[matchup][outcome[0]][field[0]] += 1
+                else:
+                    fields_by_outcome[matchup][outcome[0]][field[0]] = 1
+            directions_by_outcome[matchup][outcome[0]] = {}
+            for direction in db.read('select direction from ' + table + ' where playerid = "' + player_id
+                                     + '" and year = ' + str(year) + ' and matchup = "' + matchup + opponent
+                                     + '" and outcome = "' + outcome[0] + '";'):
+                if direction[0] in directions_by_outcome[matchup][outcome[0]]:
+                    directions_by_outcome[matchup][outcome[0]][direction[0]] += 1
+                else:
+                    directions_by_outcome[matchup][outcome[0]][direction[0]] = 1
+        write_trajectory_by_outcome(player_id, year, matchup, trajectories_by_outcome[matchup], player_type)
+        write_field_by_outcome(player_id, year, matchup, fields_by_outcome[matchup], player_type)
+        write_direction_by_outcome(player_id, year, matchup, directions_by_outcome[matchup], player_type)
     db.close()
 
 
@@ -323,6 +362,124 @@ def write_field_by_pitch_type(player_id, year, matchup, count, field, player_typ
                                               + str(round(total/total_pitches[pitch_type], 3)) + ' where playerid = "'
                                               + player_id + '" and year = ' + str(year) + ' and matchup = "' + matchup
                                               + '" and count = "' + count + '" and field = "' + field + '";'))
+    db.close()
+
+
+def write_direction_by_pitch_type(player_id, year, matchup, count, direction, player_type):
+    if player_type == 'pitching':
+        db = PitcherPitchFXDatabaseConnection(sandbox_mode)
+    else:
+        db = BatterPitchFXDatabaseConnection(sandbox_mode)
+    fields = ''
+    total_pitches = {}
+    for pitch_type, dictionary in direction.items():
+        fields += ', ' + pitch_type + ' float'
+        total_pitches[pitch_type] = 0
+        for _, total in dictionary.items():
+            total_pitches[pitch_type] += total
+    with ThreadPoolExecutor(os.cpu_count()) as executor4:
+        for pitch_type, dictionary in direction.items():
+            for direction, total in dictionary.items():
+                if len(db.read('select * from direction where playerid = "' + player_id + '" and year = ' + str(year)
+                               + ' and matchup = "' + matchup + '" and count = "' + count + '" and direction = "'
+                               + direction + '";')) == 0:
+                    executor4.submit(db.write('insert into direction (uid, playerid, year, matchup, count, direction, '
+                                              + pitch_type + ') values (default, "' + player_id + '", ' + str(year)
+                                              + ', "' + matchup + '", "' + count + '", "' + direction + '", '
+                                              + str(round(total/total_pitches[pitch_type], 3)) + ');'))
+                else:
+                    executor4.submit(db.write('update direction set ' + pitch_type + ' = '
+                                              + str(round(total/total_pitches[pitch_type], 3)) + ' where playerid = "'
+                                              + player_id + '" and year = ' + str(year) + ' and matchup = "' + matchup
+                                              + '" and count = "' + count + '" and direction = "' + direction + '";'))
+    db.close()
+
+
+def write_trajectory_by_outcome(player_id, year, matchup, trajectory_by_outcome, player_type):
+    if player_type == 'pitching':
+        db = PitcherPitchFXDatabaseConnection(sandbox_mode)
+    else:
+        db = BatterPitchFXDatabaseConnection(sandbox_mode)
+    outcome_totals = {}
+    for outcome, dictionary in trajectory_by_outcome.items():
+        for trajectory, total in dictionary.items():
+            if outcome in outcome_totals:
+                outcome_totals[outcome] += total
+            else:
+                outcome_totals[outcome] = total
+        with ThreadPoolExecutor(os.cpu_count()) as executor:
+            for trajectory, total in dictionary.items():
+                if len(db.read('select * from trajectory_by_outcome where playerid = "' + player_id
+                               + '" and year = ' + str(year) + ' and matchup = "' + matchup + '" and outcome = "'
+                               + outcome + '";')) == 0:
+                    executor.submit(db.write('insert into trajectory_by_outcome (uid, playerid, year, matchup, '
+                                             'outcome, ' + trajectory + ') values (default, "' + player_id + '", '
+                                             + str(year) + ', "' + matchup + '", "' + outcome + '", '
+                                             + str(round(total/outcome_totals[outcome], 3)) + ');'))
+                else:
+                    executor.submit(db.write('update trajectory_by_outcome set ' + trajectory + ' = '
+                                             + str(round(total/outcome_totals[outcome], 3)) + ' where playerid = "'
+                                             + player_id + '" and year = ' + str(year) + ' and matchup = "' + matchup
+                                             + '" and outcome = "' + outcome + '";'))
+    db.close()
+
+
+def write_field_by_outcome(player_id, year, matchup, field_by_outcome, player_type):
+    if player_type == 'pitching':
+        db = PitcherPitchFXDatabaseConnection(sandbox_mode)
+    else:
+        db = BatterPitchFXDatabaseConnection(sandbox_mode)
+    outcome_totals = {}
+    fields = {'if': 'infield', 'of': 'outfield', 'none': 'none'}
+    for outcome, dictionary in field_by_outcome.items():
+        for field, total in dictionary.items():
+            if outcome in outcome_totals:
+                outcome_totals[outcome] += total
+            else:
+                outcome_totals[outcome] = total
+        with ThreadPoolExecutor(os.cpu_count()) as executor:
+            for field, total in dictionary.items():
+                if len(db.read('select * from field_by_outcome where playerid = "' + player_id
+                               + '" and year = ' + str(year) + ' and matchup = "' + matchup + '" and outcome = "'
+                               + outcome + '";')) == 0:
+                    executor.submit(db.write('insert into field_by_outcome (uid, playerid, year, matchup, '
+                                             'outcome, ' + fields[field] + ') values (default, "' + player_id + '", '
+                                             + str(year) + ', "' + matchup + '", "' + outcome + '", '
+                                             + str(round(total/outcome_totals[outcome], 3)) + ');'))
+                else:
+                    executor.submit(db.write('update field_by_outcome set ' + fields[field] + ' = '
+                                             + str(round(total/outcome_totals[outcome], 3)) + ' where playerid = "'
+                                             + player_id + '" and year = ' + str(year) + ' and matchup = "' + matchup
+                                             + '" and outcome = "' + outcome + '";'))
+    db.close()
+
+
+def write_direction_by_outcome(player_id, year, matchup, direction_by_outcome, player_type):
+    if player_type == 'pitching':
+        db = PitcherPitchFXDatabaseConnection(sandbox_mode)
+    else:
+        db = BatterPitchFXDatabaseConnection(sandbox_mode)
+    outcome_totals = {}
+    for outcome, dictionary in direction_by_outcome.items():
+        for direction, total in dictionary.items():
+            if outcome in outcome_totals:
+                outcome_totals[outcome] += total
+            else:
+                outcome_totals[outcome] = total
+        with ThreadPoolExecutor(os.cpu_count()) as executor:
+            for direction, total in dictionary.items():
+                if len(db.read('select * from direction_by_outcome where playerid = "' + player_id
+                               + '" and year = ' + str(year) + ' and matchup = "' + matchup + '" and outcome = "'
+                               + outcome + '";')) == 0:
+                    executor.submit(db.write('insert into direction_by_outcome (uid, playerid, year, matchup, '
+                                             'outcome, ' + direction + ') values (default, "' + player_id + '", '
+                                             + str(year) + ', "' + matchup + '", "' + outcome + '", '
+                                             + str(round(total/outcome_totals[outcome], 3)) + ');'))
+                else:
+                    executor.submit(db.write('update direction_by_outcome set ' + direction + ' = '
+                                             + str(round(total/outcome_totals[outcome], 3)) + ' where playerid = "'
+                                             + player_id + '" and year = ' + str(year) + ' and matchup = "' + matchup
+                                             + '" and outcome = "' + outcome + '";'))
     db.close()
 
 

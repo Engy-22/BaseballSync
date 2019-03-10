@@ -84,8 +84,8 @@ def baseball_data(sandbox_mode, year):
             db.write('create database baseballData_sandbox')
         else:
             print("removing existing tables - production")
-            db.write('create database baseballData')
             db.write('drop database baseballData')
+            db.write('create database baseballData')
         db = DatabaseConnection(sandbox_mode)
         with open("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\background\\table_definitions.txt",
                   'rt') as file:
@@ -137,12 +137,12 @@ def batters_pitch_fx(sandbox_mode, year):
     if year == 'ALL':
         if sandbox_mode:
             print("removing existing batter pitch fx tables - sandbox")
-            db.write('drop database batters_pitch_fx_sandbox')
-            db.write('create database batters_pitch_fx_sandbox')
+            db.write('drop database batters_pitch_fx_sandbox;')
+            db.write('create database batters_pitch_fx_sandbox;')
         else:
             print("removing existing batter pitch fx tables - production")
-            db.write('drop database batters_pitch_fx')
-            db.write('create database batters_pitch_fx')
+            db.write('drop database batters_pitch_fx;')
+            db.write('create database batters_pitch_fx;')
         db = BatterPitchFXDatabaseConnection(sandbox_mode)
         with open("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\background\\pitch_fx_tables.txt", 'rt')\
                 as file:

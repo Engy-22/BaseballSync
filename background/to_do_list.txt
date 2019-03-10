@@ -97,3 +97,5 @@ still an issue? *here's a problem, david ross played 11 games for the padres in 
     *check out other websites for ideas
 
     *Find out when mlbam data is updated, if in real time then I can created a real time view similar to fantasycast.
+
+    *balks should be (balks/# of pitches thrown) * 2 <-- 2 comes from half stretch, half windup roughly
