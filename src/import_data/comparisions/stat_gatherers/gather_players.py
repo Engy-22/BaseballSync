@@ -2,11 +2,11 @@ from utilities.database.wrappers.baseball_data_connection import DatabaseConnect
 from utilities.properties import sandbox_mode
 
 
-def gather_players(year, player_type, all, logger):
+def gather_players(year, player_type, gather_all, logger):
     db = DatabaseConnection(sandbox_mode)
     query = "select playerId from player_teams, player_" + player_type + " where player_" + player_type + ".PT_unique"\
             "identifier = player_teams.PT_uniqueidentifier and player_" + player_type + ".year = " + str(year)
-    if all:
+    if gather_all:
         logger.log('\t\t\tGathering all players')
         player_list = list(db.read(query + ";"))
     else:

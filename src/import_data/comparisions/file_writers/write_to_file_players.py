@@ -1,9 +1,10 @@
 import os
 from utilities.database.wrappers.baseball_data_connection import DatabaseConnection
 from concurrent.futures import ThreadPoolExecutor
+from utilities.properties import sandbox_mode
 
 
-def write_to_file(year, comps, comp_type, sandbox_mode):
+def write_to_file(year, comps, comp_type):
     db = DatabaseConnection(sandbox_mode)
     with ThreadPoolExecutor(os.cpu_count()) as executor:
         for player, comp in comps.items():
@@ -24,19 +25,18 @@ def write_to_file(year, comps, comp_type, sandbox_mode):
                                               'year, comp, comp_year, comp_pull, comp_stat_id) values (default, "'
                                               + player + '", ' + str(year) + ', "' + comp.split(';')[0] + '", '
                                               + comp.split(';')[1] + ', ' + str(comp_pull) + ', ' + str(comp_stat_id)
-                                              + ');', sandbox_mode)
+                                              + ');')
                 else:
                     comp_id = int(db.read('select comp_id from comparisons_' + comp_type + '_overall where playerid = "'
                                           + player + '" and year = ' + str(year) + ';')[0][0])
                     executor.submit(transact, 'update comparisons_' + comp_type + '_overall set comp = "'
                                               + comp.split(';')[0] + '", comp_year = ' + comp.split(';')[1]
                                               + ', comp_pull = ' + str(comp_pull) + ', comp_stat_id = '
-                                              + str(comp_stat_id) + ' where ' + 'comp_id = ' + str(comp_id) + ';',
-                                              sandbox_mode)
+                                              + str(comp_stat_id) + ' where ' + 'comp_id = ' + str(comp_id) + ';')
     db.close()
 
 
-def transact(statement, sandbox_mode):
+def transact(statement):
     db = DatabaseConnection(sandbox_mode)
     db.write(statement)
     db.close()

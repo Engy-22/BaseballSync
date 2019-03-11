@@ -99,3 +99,7 @@ still an issue? *here's a problem, david ross played 11 games for the padres in 
     *balks should be (balks/# of pitches thrown) * 2 <-- 2 comes from half stretch, half windup (roughly)
 
     *see about making ssh passphrase longer.
+
+    *finish migrate and reset testing.
+    *tinker with team_ranker_ovr.
+    *check on/fix up comparisons.
