@@ -4,5 +4,5 @@ to run the code for the website, do "FLASK_APP=run.py", then "flask run --host=0
 
 to pull updated code onto raspberry pi, be in the baseball-sync folder, then do "git pull"
 
-logs are at etc/
+logs are at /var/log/baseballsync/baseballsync.err.log and /var/log/baseballsync/baseballsync.out.log
 

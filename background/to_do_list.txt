@@ -48,22 +48,21 @@ still an issue? *here's a problem, david ross played 11 games for the padres in 
             during that decade to weight by favoring those who played in more years (larger sample size = more
             confident comparisons).
         -Set a minimum number of years for players that can be comparisons (e.g. player must have played 5+ year in this decade to be a possible comp).
-    *determine if teamRanker_ovr is correct or not.
-        -Maybe decrease the amount which standard deviation affects team rankings in overall team ranker.
     *verify that player_batting, player_pitching and player_fielding numbers are accurate.
     *aggregate and consolidate pitch_fx data.
         -When aggregating, pitch_fx records should relate only to TOT if player played on multiple teams that year.
             -The data for players who fit this category will have their pitches written to their teams and not TOT.
     *get catcher data for throwing out runners.
+    *coordinate programmatic indexing for tables where it would be beneficial.
 
     *add way to delete data from given years through reset_database.py
         scenarios tested:
             *delete all baseballData in sandbox.
             *delete all baseballData in production.
-            *delete all baseballData in production for a single year.
-            *delete all baseballData in production for a range of years.
             *delete all baseballData in sandbox for a single year.
             *delete all baseballData in sandbox for a range of years.
+            *delete all baseballData in production for a single year.
+            *delete all baseballData in production for a range of years.
             *delete all pitchers_pitch_fx in production.
         scenarios that need to be tested:
             *delete pitchers_pitch_fx in production from a single year.
@@ -101,5 +100,4 @@ still an issue? *here's a problem, david ross played 11 games for the padres in 
     *see about making ssh passphrase longer.
 
     *finish migrate and reset testing.
-    *tinker with team_ranker_ovr.
     *check on/fix up comparisons.

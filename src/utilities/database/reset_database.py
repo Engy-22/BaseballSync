@@ -168,10 +168,10 @@ def pitch_fx_year(db, year):
 def baseball_data_year(db, sandbox_mode, year):
     if sandbox_mode:
         extension = "_sandbox."
-        print('deleting ' + str(year) + ' sandbox baseballData')
+        print('deleting ' + str(year) + ' baseballData - sandbox')
     else:
         extension = "."
-        print('deleting ' + str(year) + ' production baseballData')
+        print('deleting ' + str(year) + ' baseballData - production')
     with open("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\background\\table_definitions.txt",
               'rt') as file:
         table_defs = file.readlines()
