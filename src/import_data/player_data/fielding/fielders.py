@@ -10,6 +10,7 @@ from utilities.time_converter import time_converter
 from utilities.logger import Logger
 from utilities.anomaly_team import anomaly_team
 from utilities.properties import sandbox_mode, import_driver_logger as driver_logger
+from import_data.player_data.fielding.cathchers_defense import catcher_defense
 
 data = {}
 
@@ -22,6 +23,7 @@ def fielding_constructor(year):
     start_time = time.time()
     global data
     data = {}
+    catcher_info = catcher_defense(year, logger)
     logger.log("Downloading fielder " + str(year) + " data || Timestamp: " + datetime.datetime.today()
                .strftime('%Y-%m-%d %H:%M:%S'))
     logger.log("\tAssembling list of players")
@@ -54,9 +56,13 @@ def fielding_constructor(year):
     logger.log("\tParsing player pages, downloading images, and extracting player attributes")
     with ThreadPoolExecutor(os.cpu_count()) as executor:
         for player_id, dictionary in data.items():
+            try:
+                catcher_stats = catcher_info[player_id]
+            except KeyError:
+                catcher_stats = {}
             for team, dictionary2 in dictionary.items():
                 for index, dictionary3 in dictionary2.items():
-                    executor.submit(intermediate, player_id, team, index, dictionary3['temp_player'],
+                    executor.submit(intermediate, player_id, team, index, dictionary3['temp_player'], catcher_stats,
                                     dictionary3['row'])
     for player_id, dictionary in data.items():
         for team, dictionary2 in dictionary.items():
@@ -78,14 +84,14 @@ def extract_player_attributes(player_id, page, reversed_name):
                     'throwsWith': str_ent.split('Throws: </strong>')[1][0]}
 
 
-def intermediate(player_id, team, index, temp_player, row):
+def intermediate(player_id, team, index, temp_player, catcher_stats, row):
     page = load_url(player_id)
     if page is not None:
         if "-0" in temp_player:
             reversed_name = temp_player.split("-0")[0].replace("'", "\'")
         else:
             reversed_name = temp_player.split("0")[0].replace("'", "\'")
-        write_to_db(player_id, extract_player_attributes(player_id, page, reversed_name))
+        write_to_db(player_id, extract_player_attributes(player_id, page, reversed_name), catcher_stats)
     get_stats(player_id, team, index, row)
 
 
@@ -113,10 +119,13 @@ def load_url(player_id):
     return page
 
 
-def write_to_db(player_id, player_attributes):
+def write_to_db(player_id, player_attributes, catcher_stats):
     fields = ''
     values = ''
     for field, value in player_attributes.items():
+        fields += ', ' + field
+        values += '", "' + value
+    for field, value in catcher_stats.items():
         fields += ', ' + field
         values += '", "' + value
     db = DatabaseConnection(sandbox_mode)

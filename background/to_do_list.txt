@@ -52,7 +52,6 @@ still an issue? *here's a problem, david ross played 11 games for the padres in 
     *aggregate and consolidate pitch_fx data.
         -When aggregating, pitch_fx records should relate only to TOT if player played on multiple teams that year.
             -The data for players who fit this category will have their pitches written to their teams and not TOT.
-    *get catcher data for throwing out runners.
     *coordinate programmatic indexing for tables where it would be beneficial.
 
     *add way to delete data from given years through reset_database.py
@@ -95,7 +94,15 @@ still an issue? *here's a problem, david ross played 11 games for the padres in 
     *test "remember me" functionality
     *check out other websites for ideas
 
-    *balks should be (balks/# of pitches thrown) * 2 <-- 2 comes from half stretch, half windup (roughly)
+ -> These are on the pitcher
+    *balks should be a percentage and checked on each pitch when runners are on base
+        -balks/(# of pitches thrown) * 2 <-- 2 comes from half stretch, half windup (roughly)
+    *wild pitches should be a percentage and checked on each pitch when runners are on base (with no runners are on, it's just a ball)
+        -wp/(# of pitches thrown) * 2 <-- 2 comes from half stretch, half windup (roughly)
+
+ -> This is on the catcher
+    *passed balls should be a percentage and checked on each pitch when runners are on base (with no runners are on, it's just a ball)
+        -pb/(# of pitches caught) * 2 <-- 2 comes from half stretch, half windup (roughly)
 
     *see about making ssh passphrase longer.
 

@@ -71,4 +71,4 @@ def get_all_time_rpg():
     return int(runs) / int(games) / 2
 
 
-rank_driver(2018)
+# rank_driver(2018)
