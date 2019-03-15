@@ -65,7 +65,8 @@ def translate_pitch_outcome(outcome):
                 'Ball In Dirt': 'ball (in dirt)', 'Swinging Strike': 'strike swinging',
                 'Automatic Ball': 'ball (intentional)', 'Swinging Strike (Blocked)': 'strike swinging (in dirt)',
                 'Foul (Runner Going)': 'foul', 'Foul Bunt': 'foul (bunt)', 'Missed Bunt': 'strike swinging (bunt)',
-                'Pitchout': 'pitchout'}
+                'Pitchout': 'pitchout', 'Swinging Pitchout': 'strike swinging (pitchout)',
+                'Intent Ball': 'ball (intentional)'}
     try:
         return outcomes[outcome]
     except KeyError:

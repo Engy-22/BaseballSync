@@ -104,7 +104,8 @@ def pitching_constructor(year):
 def extract_player_attributes(player_id, page, reversed_name):
     img_location = str(page.find_all('img')[1]).split('src=')[1].split('/>')[0].split('"')[1]
     if 'gracenote' not in img_location:
-        urlretrieve(img_location, "C:\\Users\\Anthony Raimondo\\images\\players\\" + player_id + ".jpg")
+        urlretrieve(img_location, "C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\src\\interface\\static"
+                                  "\\images\\model\\players\\" + player_id + ".jpg")
     for ent in page.find_all('div'):
         str_ent = str(ent)
         if 'Throws: </strong>' in str_ent:
