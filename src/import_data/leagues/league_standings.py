@@ -105,15 +105,15 @@ def league_standings(year):
         for matchup, times in series.items():
             for instance in range(times):
                 try:
-                    playoff_picture[abbreviation[matchup]+'_champ' + str(instance)] = translate_team_id(playoffs.
+                    playoff_picture[abbreviation[matchup]+'_champ' + str(instance+1)] = translate_team_id(playoffs.
                         split('>' + matchup + '<')[1]. split('a href="/teams/')[1].split('/')[0], year)
                 except IndexError:
-                    playoff_picture[abbreviation[matchup]+'_champ' + str(instance)] = None
+                    playoff_picture[abbreviation[matchup]+'_champ' + str(instance+1)] = None
                 try:
-                    playoff_picture[abbreviation[matchup]+'_runnerup' + str(instance)] = translate_team_id(playoffs.
+                    playoff_picture[abbreviation[matchup]+'_runnerup' + str(instance+1)] = translate_team_id(playoffs.
                         split('>' + matchup + '<')[1].split('a href="/teams/')[2].split('/')[0], year)
                 except IndexError:
-                    playoff_picture[abbreviation[matchup]+'_runnerup' + str(instance)] = None
+                    playoff_picture[abbreviation[matchup]+'_runnerup' + str(instance+1)] = None
         write_playoff_data(year, playoff_picture)
     else:
         write_league_champs_non_ws(champs, year)
@@ -127,7 +127,10 @@ def write_league_champs_non_ws(champs, year):
     query_string = 'update years set '
     team_count = 0
     for league, team in champs.items():
-        query_string += league + '_champ = "' + team + '", '
+        if league in ['AL', 'NL']:
+            query_string += league + 'cs_champ = "' + team + '", '
+        else:
+            query_string += league + '_champ = "' + team + '", '
         team_count += 1
     query_string = query_string[:-2] + ' where year = ' + str(year) + ';'
     db.write(query_string)

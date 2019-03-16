@@ -6,7 +6,7 @@ from utilities.logger import Logger
 from utilities.properties import sandbox_mode
 
 
-def team_ranker_ovr(data, greater_than, field, all_time_rpg, standard_deviation, average_deviation, ws_winners=None):
+def team_ranker_ovr(data, greater_than, field, all_time_rpg, standard_deviation, average_deviation, playoff_data=None):
     logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\"
                     "team_ranker_ovr.log")
     logger.log("Calculating overall team ranks: " + field)
@@ -29,8 +29,10 @@ def team_ranker_ovr(data, greater_than, field, all_time_rpg, standard_deviation,
                 for team_value in data[year]:
                     if team_value[0] == ent[0]:
                         playoff_bump = 1.0
-                        if ent[0] == ws_winners[year]:
-                            playoff_bump += 0.1
+                        for accomplishment, team_id in playoff_data.items():
+                            if accomplishment == 'ws_champ':
+                                playoff_bump += 0.05
+                            playoff_bump += 0.05
                         final_data[year].append([ent[0], (ent[1]/(standard_deviation[str(year)]/average_deviation)) *
                                                  playoff_bump])
     write_to_file(final_data, greater_than, field)
