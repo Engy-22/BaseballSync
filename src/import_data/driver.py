@@ -5,7 +5,7 @@
 
 import time
 import datetime
-from utilities.stringify_list import stringify_list
+from src.utilities.stringify_list import stringify_list
 from utilities.time_converter import time_converter
 from utilities.get_most_recent_year import get_most_recent_year
 from import_data.leagues.league_table_constructor import league_table_constructor
@@ -77,7 +77,7 @@ if __name__ == '__main__':
     league_table_constructor()
     manager_table_constructor()
     years = []
-    for year in range(1950, 1980, 1):
+    for year in range(1969, 1980, 1):
         years.append(year)
         driver(year)
     rank_driver(years[-1])
