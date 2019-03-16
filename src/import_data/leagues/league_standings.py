@@ -98,18 +98,23 @@ def league_standings(year):
             continue
         write_to_db(this_string, team_id, year)
     if year == 1903 or year > 1904:  # the first world series (1903); didn't play a WS in 1904
+        series = {'World Series': 1, 'ALCS': 1, 'NLCS': 1, 'AL Division Series': 2, 'NL Division Series': 2}
+        abbreviation = {'World Series': 'ws', 'ALCS': 'alcs', 'NLCS': 'nlcs', 'AL Division Series': 'alds',
+                        'NL Division Series': 'alds'}
         playoff_picture = {}
-        try:
-            playoff_picture['ws_champ'] = translate_team_id(playoffs.split('>World Series<')[1].
-                                                            split('a href="/teams/')[1].split('/')[0], year)
-        except IndexError:
-            playoff_picture['ws_champ'] = None
-        try:
-            playoff_picture['ws_runnerup'] = translate_team_id(playoffs.split('>World Series<')[1].
-                                                               split('a href="/teams/')[2].split('/')[0], year)
-        except IndexError:
-            playoff_picture['ws_runnerup'] = None
-        write_ws_data(year, playoff_picture)
+        for matchup, times in series.items():
+            for instance in range(times):
+                try:
+                    playoff_picture[abbreviation[matchup]+'_champ' + str(instance)] = translate_team_id(playoffs.
+                        split('>' + matchup + '<')[1]. split('a href="/teams/')[1].split('/')[0], year)
+                except IndexError:
+                    playoff_picture[abbreviation[matchup]+'_champ' + str(instance)] = None
+                try:
+                    playoff_picture[abbreviation[matchup]+'_runnerup' + str(instance)] = translate_team_id(playoffs.
+                        split('>' + matchup + '<')[1].split('a href="/teams/')[2].split('/')[0], year)
+                except IndexError:
+                    playoff_picture[abbreviation[matchup]+'_runnerup' + str(instance)] = None
+        write_playoff_data(year, playoff_picture)
     else:
         write_league_champs_non_ws(champs, year)
     total_time = time_converter(time.time() - start_time)
@@ -129,17 +134,17 @@ def write_league_champs_non_ws(champs, year):
     db.close()
 
 
-def write_ws_data(year, ws_data):
-    if ws_data['ws_champ'] is not None:
-        db = DatabaseConnection(sandbox_mode)
-        champ_league = str(db.read('select league from team_years where teamId = "' + ws_data['ws_champ']
-                                   + '" and year = ' + str(year) + ';')[0][0])
-        runnerup_league = str(db.read('select league from team_years where teamId = "' + ws_data['ws_runnerup']
-                                      + '" and year = ' + str(year) + ';')[0][0])
-        db.write('update years set ws_champ = "' + ws_data['ws_champ'] + '", ' + champ_league + '_champ = "'
-                 + ws_data['ws_champ'] + '", ' + runnerup_league + '_champ = "' + ws_data['ws_runnerup']
-                 + '" where year = ' + str(year) + ';')
-        db.close()
+def write_playoff_data(year, playoff_data):
+    db = DatabaseConnection(sandbox_mode)
+    sets = ''
+    for accomplishment, team_id in playoff_data.items():
+        if team_id is not None:
+            if 'lds' not in accomplishment:
+                sets += accomplishment[:-1] + ' = "' + team_id + '", '
+            else:
+                sets += accomplishment + ' = "' + team_id + '", '
+    db.write('update years set ' + sets[:-2] + ' where year = ' + str(year) + ';')
+    db.close()
 
 
 def get_league_division(divisions, team_key, year):
@@ -200,8 +205,4 @@ def write_to_db(this_string, team_id, year):
     db.close()
 
 
-# dump_logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\dump.log")
-# for i in range(2018, 1875, -1):
-#     print(str(i))
-#     league_standings(i, dump_logger)
-# league_standings(2018, dump_logger)
+# league_standings(2018)
