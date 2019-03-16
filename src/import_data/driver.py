@@ -5,7 +5,7 @@
 
 import time
 import datetime
-from src.utilities.stringify_list import stringify_list
+from utilities.stringify_list import stringify_list
 from utilities.time_converter import time_converter
 from utilities.get_most_recent_year import get_most_recent_year
 from import_data.leagues.league_table_constructor import league_table_constructor
