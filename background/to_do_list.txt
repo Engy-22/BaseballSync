@@ -52,7 +52,6 @@ still an issue? *here's a problem, david ross played 11 games for the padres in 
     *aggregate and consolidate pitch_fx data.
         -When aggregating, pitch_fx records should relate only to TOT if player played on multiple teams that year.
             -The data for players who fit this category will have their pitches written to their teams and not TOT.
-    *coordinate programmatic indexing for tables where it would be beneficial.
 
     *add way to delete data from given years through reset_database.py
         scenarios tested:
@@ -104,10 +103,6 @@ still an issue? *here's a problem, david ross played 11 games for the padres in 
     *passed balls should be a percentage and checked on each pitch when runners are on base (with no runners are on, it's just a ball)
         -pb/(# of pitches caught) * 2 <-- 2 comes from half stretch, half windup (roughly)
 
-    *see about making ssh passphrase longer.
-
     *finish migrate and reset testing.
     *check on/fix up comparisons.
-    *get all playoff data.
-        - Check
-    *change all file paths to use os.path.join so it formets correctly from any os
+    *convert everything from this list into github project.

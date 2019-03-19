@@ -8,7 +8,7 @@ from utilities.properties import sandbox_mode
 
 
 def team_ranker_ovr(data, greater_than, field, all_time_rpg, standard_deviation, average_deviation, playoff_data=None):
-    logger = Logger(os.path.join("..", "..", "..", "logs", "import_data", "team_ranker_ovr.log"))
+    logger = Logger(os.path.join("..", "..", "logs", "import_data", "team_ranker_ovr.log"))
     logger.log("Calculating overall team ranks: " + field)
     start_time = time.time()
     final_data = {}

@@ -75,8 +75,7 @@ def fielding_constructor(year):
 
 def extract_player_attributes(player_id, page, reversed_name):
     urlretrieve(str(page.find_all('img')[1]).split('src=')[1].split('/>')[0].split('"')[1],
-                "C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\src\\interface\\static\\images\\model\\"
-                "players\\" + player_id + ".jpg")
+                os.path.join("..", "..","interface", "static", "images", "model", "players", player_id, ".jpg"))
     for ent in page.find_all('div'):
         str_ent = str(ent)
         if 'Throws: </strong>' in str_ent:
