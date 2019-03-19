@@ -30,9 +30,10 @@ def team_ranker_ovr(data, greater_than, field, all_time_rpg, standard_deviation,
                     if team_value[0] == ent[0]:
                         playoff_bump = 1.0
                         for accomplishment, team_id in playoff_data.items():
-                            if accomplishment == 'ws_champ':
-                                playoff_bump += 0.05
-                            playoff_bump += 0.05
+                            if team_id == ent[0]:
+                                if accomplishment == 'ws_champ':
+                                    playoff_bump += 0.005
+                                playoff_bump += 0.005
                         final_data[year].append([ent[0], (ent[1]/(standard_deviation[str(year)]/average_deviation)) *
                                                  playoff_bump])
     write_to_file(final_data, greater_than, field)

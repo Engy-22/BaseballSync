@@ -245,4 +245,4 @@ def clear_xmls():
             executor.submit(remove, directory + '\\' + xml_file)
 
 
-# get_pitch_fx_data(2016)
+# get_pitch_fx_data(2017)

@@ -3,6 +3,9 @@
     This populates all tables in the baseballData database.
 """
 
+import os
+import sys
+sys.path.append(os.path.join(sys.path[0], '..'))
 import time
 import datetime
 from utilities.stringify_list import stringify_list
@@ -77,7 +80,7 @@ if __name__ == '__main__':
     league_table_constructor()
     manager_table_constructor()
     years = []
-    for year in range(1969, 1980, 1):
+    for year in range(2000, 2019, 1):
         years.append(year)
         driver(year)
     rank_driver(years[-1])

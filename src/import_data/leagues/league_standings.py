@@ -124,16 +124,17 @@ def league_standings(year):
 
 def write_league_champs_non_ws(champs, year):
     db = DatabaseConnection(sandbox_mode)
-    query_string = 'update years set '
+    sets = ''
     team_count = 0
     for league, team in champs.items():
         if league in ['AL', 'NL']:
-            query_string += league + 'cs_champ = "' + team + '", '
+            sets += league + 'cs_champ = "' + team + '", '
         else:
-            query_string += league + '_champ = "' + team + '", '
+            sets += league + '_champ = "' + team + '", '
         team_count += 1
-    query_string = query_string[:-2] + ' where year = ' + str(year) + ';'
-    db.write(query_string)
+    if len(sets) > 0:
+        sets = 'update years set ' + sets[:-2] + ' where year = ' + str(year) + ';'
+    db.write(sets)
     db.close()
 
 
@@ -146,7 +147,8 @@ def write_playoff_data(year, playoff_data):
                 sets += accomplishment[:-1] + ' = "' + team_id + '", '
             else:
                 sets += accomplishment + ' = "' + team_id + '", '
-    db.write('update years set ' + sets[:-2] + ' where year = ' + str(year) + ';')
+    if len(sets) > 0:
+        db.write('update years set ' + sets[:-2] + ' where year = ' + str(year) + ';')
     db.close()
 
 

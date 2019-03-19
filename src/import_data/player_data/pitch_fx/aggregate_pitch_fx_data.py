@@ -19,7 +19,7 @@ def aggregate_pitch_fx_data(year):
     start_time = time.time()
     logger.log("Aggregating pitch fx data for " + str(year) + ' || Timestamp: ' + datetime.datetime.today().
                strftime('%Y-%m-%d %H:%M:%S'))
-    # aggregate_and_write(year, 'pitching')
+    aggregate_and_write(year, 'pitching')
     aggregate_and_write(year, 'batting')
     total_time = time_converter(time.time() - start_time)
     logger.log("Done aggregating " + str(year) + " pitch fx data: Time = " + total_time + '\n\n')
@@ -490,3 +490,5 @@ def write_direction_by_outcome(player_id, p_uid, year, matchup, direction_by_out
 
 # aggregate_pitch_fx_data(2018)
 # aggregate(2018, 'morriak01', 'pitching')
+for year in range(2014, 2018):
+    aggregate_pitch_fx_data(year)

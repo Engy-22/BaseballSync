@@ -1,12 +1,15 @@
 import os
-from utilities.database.wrappers.baseball_data_connection import DatabaseConnection
-from utilities.database.wrappers.pitchers_pitch_fx_connection import PitcherPitchFXDatabaseConnection
-from utilities.database.wrappers.batters_pitch_fx_connection import BatterPitchFXDatabaseConnection
+import sys
+from wrappers.baseball_data_connection import DatabaseConnection
+from wrappers.pitchers_pitch_fx_connection import PitcherPitchFXDatabaseConnection
+from wrappers.batters_pitch_fx_connection import BatterPitchFXDatabaseConnection
 from concurrent.futures import ThreadPoolExecutor
 import tkinter
 import time
 from utilities.time_converter import time_converter
 from utilities.clear_logs import clear_logs
+
+sys.path.insert(0, os.path.dirname(os.getcwd()))
 
 
 def select_years(vars, previous_frame):
