@@ -7,8 +7,7 @@ import time
 import datetime
 from concurrent.futures import ThreadPoolExecutor
 
-logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\"
-                "determine_pitcher_roles.log")
+logger = Logger(os.path.join("..", "..", "logs", "import_data", "determine_pitcher_roles.log"))
 
 
 def determine_pitcher_roles_year(year):

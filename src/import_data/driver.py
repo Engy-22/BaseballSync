@@ -5,9 +5,10 @@
 
 import os
 import sys
-sys.path.append(os.path.join(sys.path[0], '..'))
 import time
 import datetime
+
+sys.path.append(os.path.join(sys.path[0], '..'))
 from utilities.stringify_list import stringify_list
 from utilities.time_converter import time_converter
 from utilities.get_most_recent_year import get_most_recent_year
@@ -53,22 +54,22 @@ def driver(year):
     league_standings(year)
     team_offensive_statistics(year)
     team_defensive_statistics(year)
-    # batting_constructor(year)
-    # pitching_constructor(year)
-    # fielding_constructor(year)
-    # team_fielding_file_constructor(year)
-    # team_batting_order_constructor(year)
-    # team_pitching_rotation_constructor(year)
-    # primary_and_secondary_positions(year)
-    # determine_pitcher_roles_year(year)
-    # get_pitch_fx_data(year)
-    # hitter_tendencies(year)
-    # pitcher_tendencies(year)
-    # manager_tendencies(year)
-    # hitter_spray_chart_constructor(year)
-    # pitcher_spray_chart_constructor(year)
-    # team_certainties(year)
-    # award_winner_driver(year)
+    batting_constructor(year)
+    pitching_constructor(year)
+    fielding_constructor(year)
+    team_fielding_file_constructor(year)
+    team_batting_order_constructor(year)
+    team_pitching_rotation_constructor(year)
+    primary_and_secondary_positions(year)
+    determine_pitcher_roles_year(year)
+    get_pitch_fx_data(year)
+    hitter_tendencies(year)
+    pitcher_tendencies(year)
+    manager_tendencies(year)
+    hitter_spray_chart_constructor(year)
+    pitcher_spray_chart_constructor(year)
+    team_certainties(year)
+    award_winner_driver(year)
     driver_logger.log('Time taken to download ' + str(year) + ' data: ' + time_converter(time.time()-driver_time)
                       + '\n')
 
@@ -80,7 +81,7 @@ if __name__ == '__main__':
     league_table_constructor()
     manager_table_constructor()
     years = []
-    for year in range(2000, 2019, 1):
+    for year in range(1876, 1877, 1):
         years.append(year)
         driver(year)
     rank_driver(years[-1])

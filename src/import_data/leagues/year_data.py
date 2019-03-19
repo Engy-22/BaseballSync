@@ -4,6 +4,7 @@ from urllib.request import urlopen
 from bs4 import BeautifulSoup
 import time
 import datetime
+import os
 from utilities.database.wrappers.baseball_data_connection import DatabaseConnection
 from utilities.logger import Logger
 from utilities.time_converter import time_converter
@@ -11,7 +12,7 @@ from utilities.properties import sandbox_mode, import_driver_logger as driver_lo
 
 pages = {}
 strings = {}
-logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\year_data.log")
+logger = Logger(os.path.join("..", "..", "logs", "import_data", "year_data.log"))
 
 
 def get_year_data(year):

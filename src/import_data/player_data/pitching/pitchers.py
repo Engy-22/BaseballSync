@@ -13,7 +13,7 @@ from utilities.anomaly_team import anomaly_team
 from utilities.properties import sandbox_mode, import_driver_logger as driver_logger
 
 data = {}
-logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\pitchers.log")
+logger = Logger(os.path.join("..", "..", "logs", "import_data", "pitchers.log"))
 
 
 def pitching_constructor(year):

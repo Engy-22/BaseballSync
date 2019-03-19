@@ -4,10 +4,10 @@ from utilities.logger import Logger
 from utilities.time_converter import time_converter
 import datetime
 import time
+import os
 from utilities.properties import sandbox_mode, import_driver_logger as driver_logger
 
-logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\populate_teams_table."
-                "log")
+logger = Logger(os.path.join("..", "..", "logs", "import_data", "populate_teams_table.log"))
 
 
 def populate_teams_table(year):

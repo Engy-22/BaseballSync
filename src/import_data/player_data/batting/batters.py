@@ -14,7 +14,7 @@ from utilities.properties import sandbox_mode, import_driver_logger as driver_lo
 
 data = {}
 
-logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\batters.log")
+logger = Logger(os.path.join("..", "..", "logs", "import_data", "batters.log"))
 
 
 def batting_constructor(year):

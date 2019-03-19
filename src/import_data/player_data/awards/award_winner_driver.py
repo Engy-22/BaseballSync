@@ -1,3 +1,4 @@
+import os
 import time
 import datetime
 from utilities.time_converter import time_converter
@@ -12,8 +13,7 @@ from import_data.player_data.awards.triple_crown_winners import triple_crown_win
 from import_data.player_data.awards.all_star_finder import all_star_finder
 from utilities.properties import sandbox_mode, import_driver_logger as driver_logger
 
-logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\"
-                "award_winner_driver.log")
+logger = Logger(os.path.join("..", "..", "logs", "import_data", "award_winner_driver.log"))
 
 
 def award_winner_driver(year):

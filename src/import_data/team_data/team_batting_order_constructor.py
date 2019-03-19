@@ -11,8 +11,7 @@ from utilities.properties import sandbox_mode, import_driver_logger as driver_lo
 from utilities.num_to_word import num_to_word
 
 pages = {}
-logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\"
-                "team_batting_order_constructor.log")
+logger = Logger(os.path.join("..", "..", "logs", "import_data", "team_batting_order_constructor.log"))
 
 
 def team_batting_order_constructor(year):

@@ -1,3 +1,4 @@
+import os
 from utilities.database.wrappers.baseball_data_connection import DatabaseConnection
 from import_data.consolidata.team_roster_info import consolidate_hitter_spots, consolidate_player_positions, write_roster_info
 from utilities.logger import Logger
@@ -6,7 +7,7 @@ from utilities.time_converter import time_converter
 import datetime
 import time
 
-logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\consolidata.log")
+logger = Logger(os.path.join("..", "..", "logs", "import_data", "consolidata.log"))
 
 
 def consolidate_data():

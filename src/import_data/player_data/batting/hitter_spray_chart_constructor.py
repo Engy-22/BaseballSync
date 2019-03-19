@@ -10,8 +10,7 @@ from concurrent.futures import ThreadPoolExecutor
 from utilities.properties import sandbox_mode, import_driver_logger as driver_logger
 
 bad_gateway_data = []
-logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\"
-                "hitter_spray_chart_constructor.log")
+logger = Logger(os.path.join("..", "..", "logs", "import_data", "hitter_spray_chart_constructor.log"))
 
 
 def hitter_spray_chart_constructor(year):

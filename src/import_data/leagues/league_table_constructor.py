@@ -1,10 +1,10 @@
 from utilities.database.wrappers.baseball_data_connection import DatabaseConnection
 from utilities.logger import Logger
 import datetime
+import os
 from utilities.properties import sandbox_mode, import_driver_logger as driver_logger
 
-logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\"
-                "league_table_constructor.log")
+logger = Logger(os.path.join("..", "..", "logs", "import_data", "league_table_constructor.log"))
 
 
 def league_table_constructor():

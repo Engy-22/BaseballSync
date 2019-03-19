@@ -1,3 +1,4 @@
+import os
 import time
 import datetime
 from utilities.time_converter import time_converter
@@ -7,7 +8,7 @@ from urllib.request import urlopen
 from bs4 import BeautifulSoup
 from utilities.properties import sandbox_mode, import_driver_logger as driver_logger
 
-logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\hof_finder.log")
+logger = Logger(os.path.join("..", "..", "logs", "import_data", "hof_finder.log"))
 
 
 def hof_finder():

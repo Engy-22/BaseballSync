@@ -9,7 +9,7 @@ from utilities.time_converter import time_converter
 from concurrent.futures import ThreadPoolExecutor
 from utilities.properties import sandbox_mode, import_driver_logger as driver_logger
 
-logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\manager_tendecies.log")
+logger = Logger(os.path.join("..", "..", "logs", "import_data", "manager_tendecies.log"))
 pages = {}
 stats = {}
 

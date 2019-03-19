@@ -10,8 +10,7 @@ from bs4 import BeautifulSoup
 from utilities.properties import sandbox_mode, import_driver_logger as driver_logger
 
 pages = {}
-logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\"
-                "ballpark_and_manager_data.log")
+logger = Logger(os.path.join("..", "..", "logs", "import_data", "ballpark_and_manager_data.log"))
 
 
 def ballpark_and_manager_data(year):

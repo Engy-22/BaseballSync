@@ -1,3 +1,4 @@
+import os
 import time
 import datetime
 from utilities.logger import Logger
@@ -9,8 +10,7 @@ from utilities.time_converter import time_converter
 from utilities.anomaly_team import anomaly_team
 from utilities.properties import sandbox_mode, import_driver_logger as driver_logger
 
-logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\"
-                "team_defensive_statistics.log")
+logger = Logger(os.path.join("..", "..", "logs", "import_data", "team_defensive_statistics.log"))
 
 
 def team_defensive_statistics(year):

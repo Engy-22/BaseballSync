@@ -1,3 +1,4 @@
+import os
 import time
 from utilities.database.wrappers.baseball_data_connection import DatabaseConnection
 from utilities.translate_team_id import translate_team_id
@@ -7,8 +8,7 @@ from utilities.properties import sandbox_mode
 
 
 def team_ranker_ovr(data, greater_than, field, all_time_rpg, standard_deviation, average_deviation, playoff_data=None):
-    logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\"
-                    "team_ranker_ovr.log")
+    logger = Logger(os.path.join("..", "..", "..", "logs", "import_data", "team_ranker_ovr.log"))
     logger.log("Calculating overall team ranks: " + field)
     start_time = time.time()
     final_data = {}

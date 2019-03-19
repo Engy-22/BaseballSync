@@ -9,8 +9,7 @@ import datetime
 import time
 from utilities.properties import sandbox_mode, import_driver_logger as driver_logger
 
-logger = Logger('C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\'
-                'manager_table_constructor.log')
+logger = Logger(os.path.join("..", "..", "logs", "import_data", "manager_table_constructor.log"))
 
 
 def manager_table_constructor():
@@ -46,5 +45,4 @@ def write_to_file(data):
     db.close()
 
 
-# manager_table_constructor(Logger('C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\'
-#                                  'dump.log'))
+# manager_table_constructor()

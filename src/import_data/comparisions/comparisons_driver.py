@@ -1,3 +1,4 @@
+import os
 import time
 import datetime
 from utilities.logger import Logger
@@ -14,8 +15,7 @@ from import_data.comparisions.getters.defensive_team_getters import get_defensiv
 from utilities.time_converter import time_converter
 from utilities.properties import import_driver_logger as driver_logger
 
-logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\"
-                "comparisons_driver.log")
+logger = Logger(os.path.join("..", "..", "logs", "import_data", "comparisons_driver.log"))
 
 
 def comparisons_driver(most_recent_year):
