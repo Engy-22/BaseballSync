@@ -1,3 +1,4 @@
+import os
 import time
 import datetime
 from utilities.time_converter import time_converter
@@ -7,7 +8,7 @@ from urllib.request import urlopen
 from bs4 import BeautifulSoup
 from utilities.properties import sandbox_mode
 
-logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\all_star_finder.log")
+logger = Logger(os.path.join("..", "..", "logs", "import_data", "all_star_finder.log"))
 
 
 def all_star_finder(year, normal, driver_logger):

@@ -9,8 +9,7 @@ from concurrent.futures import ThreadPoolExecutor
 from utilities.time_converter import time_converter
 from utilities.properties import sandbox_mode, import_driver_logger as driver_logger
 
-logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\logs\\import_data\\"
-                "aggregate_pitch_fx_data.log")
+logger = Logger(os.path.join("..", "..", "logs", "import_data", "aggregate_pitch_fx_data.log"))
 
 
 def aggregate_pitch_fx_data(year):

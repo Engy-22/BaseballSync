@@ -1,3 +1,4 @@
+import os
 import time
 import datetime
 from utilities.time_converter import time_converter
@@ -5,7 +6,7 @@ from utilities.logger import Logger
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
 
-logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\roy_gatherer.log")
+logger = Logger(os.path.join("..", "..", "logs", "import_data", "roy_gatherer.log"))
 
 
 def roy_gatherer(year, driver_logger):
