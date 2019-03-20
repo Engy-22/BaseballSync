@@ -1,5 +1,7 @@
 import os
 import sys
+sys.path.append(os.path.join(sys.path[0], '..', '..'))
+
 from wrappers.baseball_data_connection import DatabaseConnection
 from wrappers.pitchers_pitch_fx_connection import PitcherPitchFXDatabaseConnection
 from wrappers.batters_pitch_fx_connection import BatterPitchFXDatabaseConnection
@@ -7,8 +9,6 @@ from concurrent.futures import ThreadPoolExecutor
 import time
 from utilities.time_converter import time_converter
 from utilities.clear_logs import clear_logs
-
-sys.path.insert(0, os.path.dirname(os.getcwd()))
 
 
 def driver(variables, all_years, begin_year=None, end_year=None):
@@ -168,7 +168,7 @@ if __name__ == '__main__':
             else:
                 variables['Production'].append(database)
                 variables['Sandbox'].append(database)
-    all_years = input("Reset database(s) for all year? (y|n): ")
+    all_years = input("Reset database(s) for all years? (y|n): ")
     if all_years.lower == 'n':
         begin_year = input("Begin (year): ")
         end_year = input("End (year): ")
