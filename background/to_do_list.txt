@@ -1,97 +1,13 @@
-*allow the user to save the ouput of any given simulation if desired.
-*make advanced stats.
-*make pitching changes.
-	-keep track of pitch counts.
-	-calculate the number of pitchers per outing for each pitcher.
-*determine which fielder makes each play.
-*allow users an option to simulate a season for two teams against each other.
-	-or one team against the league like an actual season.
-	                                or against the league average team.
-	-Idea: two teams against each other: switch home and away after 81 games.
-*All output should be interactive (sort, filter, etc.)
-*allow for the user to change a pitcher's numbers or a fielder's numbers in the adjust player attributes window.
 still needed? *Implement the franchise class.
                   -In the Franchise class, put the history of team logos in chronological order.
-still needed? *add a list of keyboard commands to the help menu.
-*make an option for the user to not allow a player to be in the lineup.
-	-If player x from team A is added to team B and the two teams play against one another, prompt the user and ask them if they want player x on team A as well as team B.
 *here's a thought: when determining which stadium to get the numbers on when the user does not select a neutral site; if it's a single team vs the league simulation, the user should have the option if they want that team to always be home, always be away, or split the games up somehow.
-*add a gui to show the user the progress of the simulation (other than the progress bar).
-*add a progress bar to the SearchInterface.
-*figure out what kind of error the "statistics.StatisticsError: no unique mode; found 2 equally common values" error is.
 *problem with baseballReference.com: they are missing a games from DET & CHW 1979 season.
 	-Found here: https://www.baseball-reference.com/teams/DET/1979-lineups.shtml
 	-Found here: https://www.baseball-reference.com/teams/CHW/1979-lineups.shtml
-*add fielding stats to careerProfile.
-*create batting orders and pitching rotations for all teams from 1907-1876.
-	-Do this using some kind of comparison algorithm using data that's already present.
-*change player positions that say "OF" to be more specific.
-*add a way for a team from before 1973 to include a DH in their lineup if they're playing in an American League park after 1972.
 still an issue? *here's a problem, david ross played 11 games for the padres in 2005, but that doesn't show up on his career profile.
-*here's a problem, pitchers who were kept in the game at some other position to face a hitter later have that position listed as a position they play.
-	-See 2016 cubs full roster.
-*if the user selects the "switch home and away", make sure it switches everything else that needs switched (e.g. additionalPlayers, etc.).
-*make a part of player and career profile show graphs about things like gb/fb (pie), at bat outcomes (pie), production over time (line), etc.
 *make a way to rank franchise years to see best years for each franchise based on finish, stats, year weights, etc.
-*make a way to compare players to other players in different eras based on stats, position, skillset, tendencies, etc.
-	-e.g. who is Mike Trout's comp from the 1920's?
 *when simulating, determine if a ball is in play or not, if so gb, fb or line drive; then determine outcome from that.
 *when simulating, if the two teams are the same, just get their team_info once from the database. this db call is 0.60 seconds on average (creating a team's lineup for a game takes seconds on average).
-
-**convert everything over to GSDB:
-    *adjust home park numbers for the team's pitching staff that year.
-        -Think this is done, check!
-    *Create a way to get the comps for players from any specified decade.
-        -Only get players from these years to use as possible_comps.
-        -Create an aggregate number for each player in the decade for how close they are to the given player, then
-            subtract from the max in that list and multiply by the number of years that the possible_comp played
-            during that decade to weight by favoring those who played in more years (larger sample size = more
-            confident comparisons).
-        -Set a minimum number of years for players that can be comparisons (e.g. player must have played 5+ year in this decade to be a possible comp).
-    *verify that player_batting, player_pitching and player_fielding numbers are accurate.
-    *aggregate and consolidate pitch_fx data.
-        -When aggregating, pitch_fx records should relate only to TOT if player played on multiple teams that year.
-            -The data for players who fit this category will have their pitches written to their teams and not TOT.
-
-    *add way to delete data from given years through reset_database.py
-        scenarios tested:
-            *delete all baseballData in sandbox.
-            *delete all baseballData in production.
-            *delete all baseballData in sandbox for a single year.
-            *delete all baseballData in sandbox for a range of years.
-            *delete all baseballData in production for a single year.
-            *delete all baseballData in production for a range of years.
-            *delete all pitchers_pitch_fx in production.
-        scenarios that need to be tested:
-            *delete pitchers_pitch_fx in production from a single year.
-            *delete pitchers_pitch_fx in production from a range of years.
-            *delete all batters_pitch_fx in production.
-            *delete batters_pitch_fx in production from a single year.
-            *delete batters_pitch_fx in production from a range of years.
-
-            *delete all pitchers_pitch_fx in sandbox.
-            *delete pitchers_pitch_fx in sandbox from a single year.
-            *delete pitchers_pitch_fx in sandbox from a range of years.
-            *delete all batters_pitch_fx in sandbox.
-            *delete batters_pitch_fx in sandbox from a single year.
-            *delete batters_pitch_fx in sandbox from a range of years.
-    *add a way to migrate data from sandbox databases to production databases.
-        scenarios tested:
-            *migrate all baseballData from sandbox to production.
-            *migrate baseballData for a single year.
-            *migrate baseballData for a range of years.
-            *migrate pitchers_pitch_fx from sandbox to production.
-            *migrate batters_pitch_fx from sandbox to production.
-        scenarios that need to be tested:
-            *migrate pitchers_pitch_fx from a single year.
-            *migrate pitchers_pitch_fx from a range of years.
-            *migrate batters_pitch_fx from a single year.
-            *migrate batters_pitch_fx from a range of years.
-
--WebApp
-    *look into SQL injection protection
-    *test "remember me" functionality
-    *check out other websites for ideas
 
  -> These are on the pitcher
     *balks should be a percentage and checked on each pitch when runners are on base
@@ -102,7 +18,3 @@ still an issue? *here's a problem, david ross played 11 games for the padres in 
  -> This is on the catcher
     *passed balls should be a percentage and checked on each pitch when runners are on base (with no runners are on, it's just a ball)
         -pb/(# of pitches caught) * 2 <-- 2 comes from half stretch, half windup (roughly)
-
-    *finish migrate and reset testing.
-    *check on/fix up comparisons.
-    *convert everything from this list into github project.

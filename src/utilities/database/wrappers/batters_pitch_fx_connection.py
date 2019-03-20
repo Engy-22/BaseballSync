@@ -1,12 +1,15 @@
+import os
 import pymysql
+from import_data.config import Config as config
 
 
 class BatterPitchFXDatabaseConnection:
     def __init__(self, sandbox_mode):
         if sandbox_mode:
-            self.db = pymysql.connect("localhost", "root", "Invader1401asdf", "batters_pitch_fx_sandbox")
+            self.db = pymysql.connect(config.MYSQL_HOST, config.MYSQL_USER, config.MYSQL_PASS,
+                                      config.BRANCH_DB_B + "_sandbox")
         else:
-            self.db = pymysql.connect("localhost", "root", "Invader1401asdf", "batters_pitch_fx")
+            self.db = pymysql.connect(config.MYSQL_HOST, config.MYSQL_USER, config.MYSQL_PASS, config.BRANCH_DB_B)
         self.cursor = self.db.cursor()
 
     def write(self, action):
@@ -17,8 +20,7 @@ class BatterPitchFXDatabaseConnection:
             if not any(special_error in str(e) for special_error in ['Duplicate entry','check that column/key exists']):
                 print('\t\t' + str(e) + ' --> ' + action)
             elif 'deadlock' in str(e):
-                with open('C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\src\\utilities\\deadlocked.txt',
-                          'a') as deadlocked_file:
+                with open(os.path.join("..", "..", "deadlocked.txt"), 'a') as deadlocked_file:
                     deadlocked_file.write(action)
             self.db.rollback()
 
