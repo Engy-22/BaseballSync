@@ -8,10 +8,8 @@ class DatabaseConnection:
         if sandbox_mode:
             self.db = pymysql.connect(config.MYSQL_HOST, config.MYSQL_USER, config.MYSQL_PASS,
                                       config.MAIN_DB + "_sandbox")
-            # self.db = pymysql.connect("localhost", "root", "Invader1401asdf", "baseballData_sandbox")
         else:
             self.db = pymysql.connect(config.MYSQL_HOST, config.MYSQL_USER, config.MYSQL_PASS, config.MAIN_DB)
-            # self.db = pymysql.connect("localhost", "root", "Invader1401asdf", "baseballData")
         self.cursor = self.db.cursor()
 
     def write(self, action):

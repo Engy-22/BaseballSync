@@ -4,7 +4,6 @@ from wrappers.baseball_data_connection import DatabaseConnection
 from wrappers.pitchers_pitch_fx_connection import PitcherPitchFXDatabaseConnection
 from wrappers.batters_pitch_fx_connection import BatterPitchFXDatabaseConnection
 from concurrent.futures import ThreadPoolExecutor
-import tkinter
 import time
 from utilities.time_converter import time_converter
 from utilities.clear_logs import clear_logs
@@ -12,70 +11,36 @@ from utilities.clear_logs import clear_logs
 sys.path.insert(0, os.path.dirname(os.getcwd()))
 
 
-def select_years(vars, previous_frame):
-    previous_frame.withdraw()
-    new_frame = tkinter.Toplevel(root)
-    sub_frame = tkinter.Frame(new_frame)
-    tkinter.Label(new_frame, text="Select a range of years to reset.", font=font).grid(padx=10, pady=10)
-    tkinter.Label(sub_frame, text="Begin:", font=font).grid(row=1, column=0)
-    tkinter.Label(sub_frame, text="End:", font=font).grid(row=1, column=2)
-    begin_year = tkinter.IntVar()
-    end_year = tkinter.IntVar()
-    begin_entry = tkinter.Entry(sub_frame, text="Begin", textvariable=begin_year, width=7)
-    begin_entry.grid(row=1, column=1, padx=(5, 10), pady=5)
-    end_entry = tkinter.Entry(sub_frame, text="End", textvariable=end_year, width=7)
-    end_entry.grid(row=1, column=3, padx=(5, 10), pady=5)
-    all_years = tkinter.BooleanVar()
-    tkinter.Checkbutton(sub_frame, text="All Years", command=lambda: grey_boxes(all_years, begin_entry, end_entry),
-                        font=font, variable=all_years, cursor="hand2").grid(row=0, columnspan=4, padx=5, pady=5)
-    sub_frame.grid(row=1, column=0)
-    tkinter.Button(new_frame, text="Submit", command=lambda: driver(new_frame, vars, all_years.get(),
-                                                                    begin_year.get(), end_year.get()),
-                   bg="white", cursor='hand2', font=font).grid(column=0, padx=5, pady=5)
-
-
-def grey_boxes(all_years, begin, end):
-    if all_years.get():
-        begin.config(state="disabled")
-        end.config(state="disabled")
-    else:
-        begin.config(state="normal")
-        end.config(state="normal")
-
-
-def driver(previous_frame, vars, all_years, begin_year, end_year):
+def driver(variables, all_years, begin_year=None, end_year=None):
     start_time = time.time()
-    previous_frame.withdraw()
     if all_years:
-        do_reset(vars, 'ALL')
+        do_reset(variables, 'ALL')
     else:
         years = range(begin_year, end_year)
         for year in years:
-            do_reset(vars, year)
+            do_reset(variables, year)
     print(time_converter(time.time() - start_time))
     exit()
 
 
-def do_reset(vars, year):
-    frame.withdraw()
+def do_reset(variables, year):
     clear_logs(os.path.join("..", "..", "..", "logs"))
-    for env, dbs in vars.items():
-        for db, bool in dbs.items():
-            if bool.get():
-                if env == 'Production':
-                    if db == 'baseballData':
-                        baseball_data(False, year)
-                    elif db == 'pitchers_pitch_fx':
-                        pitchers_pitch_fx(False, year)
-                    else:
-                        batters_pitch_fx(False, year)
+    for env, dbs in variables.items():
+        for db in dbs:
+            if env == 'Production':
+                if db == 'baseballData':
+                    baseball_data(False, year)
+                elif db == 'pitchers_pitch_fx':
+                    pitchers_pitch_fx(False, year)
                 else:
-                    if db == 'baseballData':
-                        baseball_data(True, year)
-                    elif db == 'pitchers_pitch_fx':
-                        pitchers_pitch_fx(True, year)
-                    else:
-                        batters_pitch_fx(True, year)
+                    batters_pitch_fx(False, year)
+            else:
+                if db == 'baseballData':
+                    baseball_data(True, year)
+                elif db == 'pitchers_pitch_fx':
+                    pitchers_pitch_fx(True, year)
+                else:
+                    batters_pitch_fx(True, year)
 
 
 def baseball_data(sandbox_mode, year):
@@ -90,8 +55,7 @@ def baseball_data(sandbox_mode, year):
             db.write('drop database baseballData')
             db.write('create database baseballData')
         db = DatabaseConnection(sandbox_mode)
-        with open("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\background\\table_definitions.txt",
-                  'rt') as file:
+        with open(os.path.join("..", "..", "..", "background", "table_definitions.txt"), 'rt') as file:
             table_defs = file.readlines()
             if sandbox_mode:
                 print("creating new tables - sandbox")
@@ -120,8 +84,7 @@ def pitchers_pitch_fx(sandbox_mode, year):
             db.write('drop database pitchers_pitch_fx')
             db.write('create database pitchers_pitch_fx')
         db = PitcherPitchFXDatabaseConnection(sandbox_mode)
-        with open("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\background\\pitch_fx_tables.txt",
-                  'rt') as file:
+        with open(os.path.join("..", "..", "..", "background", "table_definitions.txt"), 'rt') as file:
             table_defs = file.readlines()
             if sandbox_mode:
                 print("creating new pitcher pitch fx tables - sandbox")
@@ -147,8 +110,7 @@ def batters_pitch_fx(sandbox_mode, year):
             db.write('drop database batters_pitch_fx;')
             db.write('create database batters_pitch_fx;')
         db = BatterPitchFXDatabaseConnection(sandbox_mode)
-        with open("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\background\\pitch_fx_tables.txt", 'rt')\
-                as file:
+        with open(os.path.join("..", "..", "..", "background", "pitch_fx_tables.txt"), 'rt') as file:
             table_defs = file.readlines()
             if sandbox_mode:
                 print("creating new batter pitch fx tables - sandbox")
@@ -175,8 +137,7 @@ def baseball_data_year(db, sandbox_mode, year):
     else:
         extension = "."
         print('deleting ' + str(year) + ' baseballData - production')
-    with open("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\background\\table_definitions.txt",
-              'rt') as file:
+    with open(os.path.join("..", "..", "..", "background", "table_definitions.txt"), 'rt') as file:
         table_defs = file.readlines()
         with ThreadPoolExecutor(os.cpu_count()) as executor2:
             for line in reversed(table_defs):
@@ -193,23 +154,24 @@ def baseball_data_year(db, sandbox_mode, year):
                                                   'ty_uniqueidentifier = ' + str(ty_uid[0]) + ';'))
 
 
-root = tkinter.Tk()
-root.title('DB Manager')
-root.withdraw()
-frame = tkinter.Toplevel(root)
-font = ('Times', 12)
-variables = {}
-label = tkinter.Label(frame, text="Reset Database", font=('Times', 14, 'bold'))
-label.grid(row=0, column=0, padx=10, pady=10, columnspan=4)
-for num, env in {1: 'Production', 2: 'Sandbox'}.items():
-    variables[env] = {}
-    tkinter.Label(frame, text=env, font=('Times', 12, 'underline')).\
-        grid(row=1, column=(num-1)*2, columnspan=2, padx=5, pady=5)
-    for num2, db in {1: 'baseballData', 2: 'pitchers_pitch_fx', 3: 'batters_pitch_fx'}.items():
-        variables[env][db] = tkinter.BooleanVar()
-        variables[env][db].set(False)
-        tkinter.Checkbutton(frame, text=db, font=font, variable=variables[env][db], cursor="hand2").\
-            grid(row=num2+1, column=num, padx=10, pady=5, sticky='w')
-tkinter.Button(frame, text="Next", command=lambda: select_years(variables, frame), font=font, bg='white', cursor='hand2')\
-    .grid(columnspan=4, padx=5, pady=5)
-root.mainloop()
+if __name__ == '__main__':
+    databases = ['baseballData', 'pitchers_pitch_fx', 'batters_pitch_fx']
+    variables = {'Production': [], 'Sandbox': []}
+    for database in databases:
+        db = input('Reset ' + database + ' DB? (y|n): ')
+        if db.lower() == 'y':
+            prod_sandbox = input("Reset Production, Sandbox or both? (p|s|b): ")
+            if prod_sandbox.lower() == 'p':
+                variables['Production'].append(database)
+            elif prod_sandbox.lower() == 's':
+                variables['Sandbox'].append(database)
+            else:
+                variables['Production'].append(database)
+                variables['Sandbox'].append(database)
+    all_years = input("Reset database(s) for all year? (y|n): ")
+    if all_years.lower == 'n':
+        begin_year = input("Begin (year): ")
+        end_year = input("End (year): ")
+        driver(variables, False, int(begin_year), int(end_year))
+    else:
+        driver(variables, True)
