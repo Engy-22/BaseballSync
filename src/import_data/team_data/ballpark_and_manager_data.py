@@ -118,16 +118,18 @@ def gather_team_home_numbers(team_id, team_key, year, team_count):
             table = str(BeautifulSoup(urlopen('https://www.baseball-reference.com/teams/' + team_key + '/' + str(year)
                                               + '.shtml'), 'html.parser'))
             manager_data = table.split('<strong>Manager')[1].split('<p>')[0].split('<a href="/managers/')[1:]
-            location = {'AB_centerfield': -1, 'AB_leftfield': -1, 'AB_rightfield': -1,
-                        'H_centerfield': -1, 'H_leftfield': -1, 'H_rightfield': -1,
-                        'double_centerfield': -1, 'double_leftfield': -1, 'double_rightfield': -1,
-                        'triple_centerfield': -1, 'triple_leftfield': -1, 'triple_rightfield': -1,
-                        'homerun_centerfield': -1, 'homerun_leftfield': -1, 'homerun_rightfield': -1}
-            trajectory = {"Ground_Balls_PA": -1, "Ground_Balls_AB": -1, "Ground_Balls_H": -1, "Ground_Balls_2B": -1,
-                          "Ground_Balls_3B": -1, "Ground_Balls_HR": -1, "Fly_Balls_PA": -1, "Fly_Balls_AB": -1,
-                          "Fly_Balls_H": -1, "Fly_Balls_2B": -1, "Fly_Balls_3B": -1, "Fly_Balls_HR": -1,
-                          "Line_Drives_PA": -1, "Line_Drives_AB": -1, "Line_Drives_H": -1, "Line_Drives_2B": -1,
-                          "Line_Drives_3B": -1, "Line_Drives_HR": -1}
+            # location = {'AB_centerfield': -1, 'AB_leftfield': -1, 'AB_rightfield': -1,
+            #             'H_centerfield': -1, 'H_leftfield': -1, 'H_rightfield': -1,
+            #             'double_centerfield': -1, 'double_leftfield': -1, 'double_rightfield': -1,
+            #             'triple_centerfield': -1, 'triple_leftfield': -1, 'triple_rightfield': -1,
+            #             'homerun_centerfield': -1, 'homerun_leftfield': -1, 'homerun_rightfield': -1}
+            # trajectory = {"Ground_Balls_PA": -1, "Ground_Balls_AB": -1, "Ground_Balls_H": -1, "Ground_Balls_2B": -1,
+            #               "Ground_Balls_3B": -1, "Ground_Balls_HR": -1, "Fly_Balls_PA": -1, "Fly_Balls_AB": -1,
+            #               "Fly_Balls_H": -1, "Fly_Balls_2B": -1, "Fly_Balls_3B": -1, "Fly_Balls_HR": -1,
+            #               "Line_Drives_PA": -1, "Line_Drives_AB": -1, "Line_Drives_H": -1, "Line_Drives_2B": -1,
+            #               "Line_Drives_3B": -1, "Line_Drives_HR": -1}
+            location = {}
+            trajectory = {}
         manager_page = str(BeautifulSoup(urlopen('https://www.baseball-reference.com/managers/' + manager_data[0]
                                                  .split('.shtml')[0] + '.shtml'), 'html.parser'))
         try:
@@ -176,6 +178,15 @@ def write_to_db(team_id, stats, trajectory, manager_ids, year, park_name):
         db.write('insert into ballpark_years (BY_uniqueidentifier, teamId, year, ' + field_list + 'parkId) values '
                  '(default, "' + team_id + '", ' + str(year) + ', ' + value_list + '(select parkId from ballparks '
                  'where parkName = "' + park_name + '"));')
+    else:
+        sets = ''
+        for key, value in stats.items():
+            sets += key + '= ' + str(value) + ', '
+        for key, value in trajectory.items():
+            sets += key + '= ' + str(value) + ', '
+        if len(sets) > 0:
+            db.write('update ballpark_years set ' + sets[:-2] + ' where year = ' + str(year) + ' and parkid = (select'
+                     ' parkId from ballparks where parkName = "' + park_name + '");')
     for manager, record in manager_ids.items():
         if len(db.read('select MT_uniqueidentifier from manager_teams where managerId = "' + manager + '" and teamId '
                        '= "' + team_id + '";')) == 0:
