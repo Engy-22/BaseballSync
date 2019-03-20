@@ -1,3 +1,4 @@
+import os
 from utilities.logger import Logger
 from model.game import Game
 from model.teams.team import Team
@@ -7,7 +8,7 @@ import time
 from utilities.time_converter import time_converter
 from utilities.properties import controller_driver_logger as driver_logger
 
-logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\controller\\game.log")
+logger = Logger(os.path.join("..", "..", "logs", "controller", "game.log"))
 
 
 def simulate_game(game_num, away_team_id, away_year, home_team_id, home_year):

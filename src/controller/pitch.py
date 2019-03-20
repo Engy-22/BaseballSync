@@ -1,7 +1,8 @@
 import random
+import os
 from utilities.logger import Logger
 
-logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\controller\\pitch.log")
+logger = Logger("..", "..", "logs", "controller", "pitch.log")
 
 
 def simulate_pitch(balls, strikes, driver_logger):

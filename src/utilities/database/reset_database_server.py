@@ -12,6 +12,7 @@ from utilities.clear_logs import clear_logs
 
 
 def driver(variables, all_years, begin_year=None, end_year=None):
+    print('\n')
     start_time = time.time()
     if all_years:
         do_reset(variables, 'ALL')
@@ -47,11 +48,11 @@ def baseball_data(sandbox_mode, year):
     db = DatabaseConnection(sandbox_mode)
     if year == 'ALL':
         if sandbox_mode:
-            print("removing existing tables - sandbox")
+            print("removing existing baseballData tables - sandbox")
             db.write('drop database baseballData_sandbox')
             db.write('create database baseballData_sandbox')
         else:
-            print("removing existing tables - production")
+            print("removing existing baseballData tables - production")
             db.write('drop database baseballData')
             db.write('create database baseballData')
         db = DatabaseConnection(sandbox_mode)

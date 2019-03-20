@@ -16,7 +16,7 @@ def populate_teams_table(year):
     start_time = time.time()
     logger.log('Begin populating teams table for ' + str(year) + ' || Timestamp: ' + datetime.datetime.today()\
                .strftime('%Y-%m-%d %H:%M:%S'))
-    with open('C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\background\\yearTeams.txt', 'rt') as file:
+    with open(os.path.join("..", "..", "background", "yearTeams.txt"), 'rt') as file:
         db = DatabaseConnection(sandbox_mode)
         for line in file:
             if str(year) in line:

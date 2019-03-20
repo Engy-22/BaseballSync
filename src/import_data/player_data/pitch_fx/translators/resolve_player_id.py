@@ -1,3 +1,4 @@
+import os
 from utilities.database.wrappers.baseball_data_connection import DatabaseConnection
 from xml.dom import minidom
 from import_data.player_data.pitch_fx.translators.name_alterator import name_alterator
@@ -5,8 +6,7 @@ from utilities.properties import sandbox_mode
 
 
 def resolve_player_id(player_num, year, team, player_type):
-    players_file = minidom.parse('C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\src\\import_data\\'
-                                 'player_data\\pitch_fx\\xml\\players.xml')
+    players_file = minidom.parse(os.path.join("..", "xml", "players.xml"))
     for ent in players_file.getElementsByTagName('player'):
         if ent.getAttribute('id') == str(player_num):
             last_name = ent.getAttribute('last')

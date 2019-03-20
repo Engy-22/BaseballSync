@@ -1,10 +1,11 @@
+import os
 from model.plate_appearance import PlateAppearance
 from controller.pitch import simulate_pitch
 import time
 from utilities.logger import Logger
 from utilities.time_converter import time_converter
 
-logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\controller\\plate_appearance.log")
+logger = Logger(os.path.join("..", "..", "logs", "controller", "plate_appearance.log"))
 
 
 def simulate_plate_appearance(batter_id, pitcher_id, driver_logger):

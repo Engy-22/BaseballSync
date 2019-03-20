@@ -1,6 +1,9 @@
+import os
+
+
 def translate_team_name(abv):
-    file = open("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\background\\team_finder.txt", 'rt')
+    file = open(os.path.join("..", "..", "background", "team_finder.txt"), 'rt')
     for line in file:
-        tempLine = line.split(",")
-        if abv == tempLine[0]:
-            return tempLine[1]
+        temp_line = line.split(",")
+        if abv == temp_line[0]:
+            return temp_line[1]
