@@ -72,9 +72,9 @@ def write_opening_day(year):
     possible_opening_dates = mlb_schedule.split('<h3>')
     months = {'March': '03', 'April': '04', 'May': '05'}
     for possible_opening_date in possible_opening_dates:
-        if str(year) in possible_opening_date:
-            opening_day = months[possible_opening_date.split(', ')[1].split(' ')[0]] + '-' + possible_opening_date.\
-                split(', ')[1].split(' ')[1].split(',')[0]
+        if ', ' + str(year) in possible_opening_date:
+            opening_day = months[possible_opening_date.split('</h3>')[0].split(', ')[1].split(' ')[0]] + '-'\
+                          + possible_opening_date.split('</h3>')[0].split(', ')[1].split(' ')[1].split(',')[0]
             break
     db.write('update years set opening_day = "' + opening_day + '" where year = ' + str(year) + ';')
     db.close()
