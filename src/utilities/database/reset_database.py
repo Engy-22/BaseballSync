@@ -1,4 +1,5 @@
 import os
+import sys
 from utilities.database.wrappers.baseball_data_connection import DatabaseConnection
 from utilities.database.wrappers.pitchers_pitch_fx_connection import PitcherPitchFXDatabaseConnection
 from utilities.database.wrappers.batters_pitch_fx_connection import BatterPitchFXDatabaseConnection
@@ -26,7 +27,7 @@ def select_years(vars, previous_frame):
     tkinter.Checkbutton(sub_frame, text="All Years", command=lambda: grey_boxes(all_years, begin_entry, end_entry),
                         font=font, variable=all_years, cursor="hand2").grid(row=0, columnspan=4, padx=5, pady=5)
     sub_frame.grid(row=1, column=0)
-    tkinter.Button(new_frame, text="Submit", command=lambda: driver(new_frame, vars, all_years.get(),
+    tkinter.Button(new_frame, text="Submit", command=lambda: driver(False, new_frame, vars, all_years.get(),
                                                                     begin_year.get(), end_year.get()),
                    bg="white", cursor='hand2', font=font).grid(column=0, padx=5, pady=5)
 
@@ -40,21 +41,23 @@ def grey_boxes(all_years, begin, end):
         end.config(state="normal")
 
 
-def driver(previous_frame, vars, all_years, begin_year, end_year):
+def driver(from_server, previous_frame, vars, all_years, begin_year=None, end_year=None):
     start_time = time.time()
-    previous_frame.withdraw()
+    if not from_server:
+        previous_frame.withdraw()
     if all_years:
-        do_reset(vars, 'ALL')
+        do_reset(from_server, vars, 'ALL')
     else:
         years = range(begin_year, end_year)
         for year in years:
-            do_reset(vars, year)
+            do_reset(from_server, vars, year)
     print(time_converter(time.time() - start_time))
     exit()
 
 
-def do_reset(vars, year):
-    frame.withdraw()
+def do_reset(from_server, vars, year):
+    if not from_server:
+        frame.withdraw()
     clear_logs(os.path.join("..", "..", "..", "logs"))
     for env, dbs in vars.items():
         for db, bool in dbs.items():
@@ -190,23 +193,49 @@ def baseball_data_year(db, sandbox_mode, year):
                                                   'ty_uniqueidentifier = ' + str(ty_uid[0]) + ';'))
 
 
-root = tkinter.Tk()
-root.title('DB Manager')
-root.withdraw()
-frame = tkinter.Toplevel(root)
-font = ('Times', 12)
-variables = {}
-label = tkinter.Label(frame, text="Reset Database", font=('Times', 14, 'bold'))
-label.grid(row=0, column=0, padx=10, pady=10, columnspan=4)
-for num, env in {1: 'Production', 2: 'Sandbox'}.items():
-    variables[env] = {}
-    tkinter.Label(frame, text=env, font=('Times', 12, 'underline')).\
-        grid(row=1, column=(num-1)*2, columnspan=2, padx=5, pady=5)
-    for num2, db in {1: 'baseballData', 2: 'pitchers_pitch_fx', 3: 'batters_pitch_fx'}.items():
-        variables[env][db] = tkinter.BooleanVar()
-        variables[env][db].set(False)
-        tkinter.Checkbutton(frame, text=db, font=font, variable=variables[env][db], cursor="hand2").\
-            grid(row=num2+1, column=num, padx=10, pady=5, sticky='w')
-tkinter.Button(frame, text="Next", command=lambda: select_years(variables, frame), font=font, bg='white', cursor='hand2')\
-    .grid(columnspan=4, padx=5, pady=5)
-root.mainloop()
+if __name__ == '__main__':
+    if 'win' in sys.platform:
+        root = tkinter.Tk()
+        root.title('DB Manager')
+        root.withdraw()
+        frame = tkinter.Toplevel(root)
+        font = ('Times', 12)
+        variables = {}
+        label = tkinter.Label(frame, text="Reset Database", font=('Times', 14, 'bold'))
+        label.grid(row=0, column=0, padx=10, pady=10, columnspan=4)
+        for num, env in {1: 'Production', 2: 'Sandbox'}.items():
+            variables[env] = {}
+            tkinter.Label(frame, text=env, font=('Times', 12, 'underline')). \
+                grid(row=1, column=(num - 1) * 2, columnspan=2, padx=5, pady=5)
+            for num2, db in {1: 'baseballData', 2: 'pitchers_pitch_fx', 3: 'batters_pitch_fx'}.items():
+                variables[env][db] = tkinter.BooleanVar()
+                variables[env][db].set(False)
+                tkinter.Checkbutton(frame, text=db, font=font, variable=variables[env][db], cursor="hand2"). \
+                    grid(row=num2 + 1, column=num, padx=10, pady=5, sticky='w')
+        tkinter.Button(frame, text="Next", command=lambda: select_years(variables, frame), font=font, bg='white',
+                       cursor='hand2') \
+            .grid(columnspan=4, padx=5, pady=5)
+        root.mainloop()
+    elif 'linux' in sys.platform:
+        databases = ['baseballData', 'pitchers_pitch_fx', 'batters_pitch_fx']
+        variables = {'Production': [], 'Sandbox': []}
+        for database in databases:
+            db = input('Reset ' + database + ' DB? (y|n): ')
+            if db.lower() == 'y':
+                prod_sandbox = input("Reset Production, Sandbox or both? (p|s|b): ")
+                if prod_sandbox.lower() == 'p':
+                    variables['Production'].append(database)
+                elif prod_sandbox.lower() == 's':
+                    variables['Sandbox'].append(database)
+                else:
+                    variables['Production'].append(database)
+                    variables['Sandbox'].append(database)
+        all_years = input("Reset database(s) for all years? (y|n): ")
+        if all_years.lower == 'n':
+            begin_year = input("Begin (year): ")
+            end_year = input("End (year): ")
+            driver(True, None, variables, False, int(begin_year), int(end_year))
+        else:
+            driver(True, None, variables, True)
+    else:
+        print('Unknown operating system. Must use Windows or Linux')

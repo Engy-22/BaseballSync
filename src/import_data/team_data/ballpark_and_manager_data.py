@@ -167,9 +167,8 @@ def write_to_db(team_id, stats, trajectory, manager_ids, year, park_name):
             field_list += key + ', '
             value_list += str(value) + ', '
         db.write('insert into ballpark_years (BY_uniqueidentifier, teamId, year, ' + field_list + 'parkId) values '
-                                                                                                  '(default, "' + team_id + '", ' + str(
-            year) + ', ' + value_list + '(select parkId from ballparks '
-                                        'where parkName = "' + park_name + '"));')
+                 '(default, "' + team_id + '", ' + str(year) + ', ' + value_list + '(select parkId from ballparks '
+                 'where parkName = "' + park_name + '"));')
     else:
         sets = ''
         for key, value in stats.items():
@@ -178,14 +177,14 @@ def write_to_db(team_id, stats, trajectory, manager_ids, year, park_name):
             sets += key + '= ' + str(value) + ', '
         if len(sets) > 0:
             db.write('update ballpark_years set ' + sets[:-2] + ' where year = ' + str(year) + ' and parkid = (select'
-                                                                                               ' parkId from ballparks where parkName = "' + park_name + '");')
+                     ' parkId from ballparks where parkName = "' + park_name + '");')
     for manager, record in manager_ids.items():
         if len(db.read('select MT_uniqueidentifier from manager_teams where managerId = "' + manager + '" and teamId '
-                                                                                                       '= "' + team_id + '";')) == 0:
+                       '= "' + team_id + '";')) == 0:
             db.write('insert into manager_teams (MT_uniqueidentifier, managerId, teamId) values (default, "' + manager
                      + '", "' + team_id + '");')
         if len(db.read('select MY_uniqueidentifier from manager_year where year = ' + str(year) + ' and '
-                                                                                                  'MT_uniqueidentifier = (select MT_uniqueidentifier from manager_teams where managerId = "'
+                       'MT_uniqueidentifier = (select MT_uniqueidentifier from manager_teams where managerId = "'
                        + manager + '" and teamId = "' + team_id + '")' + ';')) == 0:
             db.write('insert into manager_year (MY_uniqueidentifier, year, MT_uniqueidentifier, wins, loses) values '
                      '(default, ' + str(year) + ', (select MT_uniqueidentifier from manager_teams where managerId = "'

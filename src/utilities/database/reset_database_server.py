@@ -153,26 +153,3 @@ def baseball_data_year(db, sandbox_mode, year):
                     for ty_uid in db.read('select ty_uniqueidentifier from team_years where year = ' + str(year) + ';'):
                         executor2.submit(db.write('delete from baseballData' + extension + table_name + ' where '
                                                   'ty_uniqueidentifier = ' + str(ty_uid[0]) + ';'))
-
-
-if __name__ == '__main__':
-    databases = ['baseballData', 'pitchers_pitch_fx', 'batters_pitch_fx']
-    variables = {'Production': [], 'Sandbox': []}
-    for database in databases:
-        db = input('Reset ' + database + ' DB? (y|n): ')
-        if db.lower() == 'y':
-            prod_sandbox = input("Reset Production, Sandbox or both? (p|s|b): ")
-            if prod_sandbox.lower() == 'p':
-                variables['Production'].append(database)
-            elif prod_sandbox.lower() == 's':
-                variables['Sandbox'].append(database)
-            else:
-                variables['Production'].append(database)
-                variables['Sandbox'].append(database)
-    all_years = input("Reset database(s) for all years? (y|n): ")
-    if all_years.lower == 'n':
-        begin_year = input("Begin (year): ")
-        end_year = input("End (year): ")
-        driver(variables, False, int(begin_year), int(end_year))
-    else:
-        driver(variables, True)
