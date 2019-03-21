@@ -7,6 +7,7 @@ import os
 import sys
 import time
 import datetime
+import tkinter
 
 sys.path.append(os.path.join(sys.path[0], '..'))
 from utilities.stringify_list import stringify_list
@@ -44,6 +45,25 @@ from import_data.player_data.pitching.determine_pitcher_roles import determine_p
 from utilities.properties import import_driver_logger as driver_logger
 
 
+def main(from_server, begin_year, end_year, frame=None):
+    if not from_server:
+        frame.withdraw()
+    league_table_constructor()
+    manager_table_constructor()
+    years = []
+    for year in range(begin_year, end_year, 1):
+        years.append(year)
+        driver(year)
+    rank_driver(years[-1])
+    comparisons_driver(years[-1])
+    hof_finder()
+    clean_up_deadlocked_file()
+    consolidate_data()
+    driver_logger.log('Driver complete for year' + stringify_list(years) + ': time = '
+                      + time_converter(time.time() - start_time) + '\n\n\n')
+    exit()
+
+
 def driver(year):
     driver_logger.log(str(year))
     driver_time = time.time()
@@ -78,16 +98,24 @@ if __name__ == '__main__':
     driver_logger.log('Begin Driver || Timestamp: ' + datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S'))
     start_time = time.time()
     most_recent_year = get_most_recent_year()
-    league_table_constructor()
-    manager_table_constructor()
-    years = []
-    for year in range(1876, 1877, 1):
-        years.append(year)
-        driver(year)
-    rank_driver(years[-1])
-    comparisons_driver(years[-1])
-    hof_finder()
-    clean_up_deadlocked_file()
-    consolidate_data()
-    driver_logger.log('Driver complete for year' + stringify_list(years) + ': time = '
-                      + time_converter(time.time() - start_time) + '\n\n\n')
+    if 'win' in sys.platform:
+        root = tkinter.Tk()
+        root.title('Driver')
+        root.withdraw()
+        frame = tkinter.Toplevel(root)
+        font = ('Times', 12)
+        begin_year = tkinter.IntVar()
+        end_year = tkinter.IntVar()
+        tkinter.Label(frame, text="Begin Year", font=font).grid(row=0, column=0, padx=(20, 10), pady=10)
+        tkinter.Label(frame, text="End Year", font=font).grid(row=1, column=0, padx=(20, 10), pady=10)
+        tkinter.Entry(frame, textvariable=begin_year, width=7).grid(row=0, column=1, padx=(10, 20), pady=10)
+        tkinter.Entry(frame, textvariable=end_year, width=7).grid(row=1, column=1, padx=(10, 20), pady=10)
+        tkinter.Button(frame, text="Submit", command=lambda: main(False, begin_year.get(), end_year.get(), frame),
+                       font=font, cursor="hand2", bg="white").grid(columnspan=2, padx=10, pady=10)
+        root.mainloop()
+    elif 'linux' in sys.platform:
+        begin_year = int(input('Begin year: '))
+        end_year = int(input('End year: '))
+        main(True, begin_year, end_year)
+    else:
+        print('Unknown operating system. Must use Windows or Linux')

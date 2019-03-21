@@ -44,6 +44,7 @@ def grey_boxes(all_years, begin, end):
 
 
 def driver(from_server, previous_frame, vars, all_years, begin_year=None, end_year=None):
+    print('\n')
     start_time = time.time()
     if not from_server:
         previous_frame.withdraw()
