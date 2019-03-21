@@ -60,7 +60,7 @@ def gather_team_home_numbers(team_id, team_key, year, team_count):
         manager_ids = {}
         try:
             manager_data = table.split('<strong>Manager')[1].split('<p>')[0].split('<a href="/managers/')[1:]
-            home_row = table.split('<h2>Home or Away</h2>')[1].split('<tbody>')[1].split('</tbody>')[0]\
+            home_row = table.split('<h2>Home or Away</h2>')[1].split('<tbody>')[1].split('</tbody>')[0] \
                 .split('<tr >')[1]
             ballpark_platoon_splits = table.split('<h2>Hit Location</h2>')[1].split('<tbody>')[1].split('</tbody>')[0]\
                 .split('<tr >')
@@ -118,16 +118,6 @@ def gather_team_home_numbers(team_id, team_key, year, team_count):
             table = str(BeautifulSoup(urlopen('https://www.baseball-reference.com/teams/' + team_key + '/' + str(year)
                                               + '.shtml'), 'html.parser'))
             manager_data = table.split('<strong>Manager')[1].split('<p>')[0].split('<a href="/managers/')[1:]
-            # location = {'AB_centerfield': -1, 'AB_leftfield': -1, 'AB_rightfield': -1,
-            #             'H_centerfield': -1, 'H_leftfield': -1, 'H_rightfield': -1,
-            #             'double_centerfield': -1, 'double_leftfield': -1, 'double_rightfield': -1,
-            #             'triple_centerfield': -1, 'triple_leftfield': -1, 'triple_rightfield': -1,
-            #             'homerun_centerfield': -1, 'homerun_leftfield': -1, 'homerun_rightfield': -1}
-            # trajectory = {"Ground_Balls_PA": -1, "Ground_Balls_AB": -1, "Ground_Balls_H": -1, "Ground_Balls_2B": -1,
-            #               "Ground_Balls_3B": -1, "Ground_Balls_HR": -1, "Fly_Balls_PA": -1, "Fly_Balls_AB": -1,
-            #               "Fly_Balls_H": -1, "Fly_Balls_2B": -1, "Fly_Balls_3B": -1, "Fly_Balls_HR": -1,
-            #               "Line_Drives_PA": -1, "Line_Drives_AB": -1, "Line_Drives_H": -1, "Line_Drives_2B": -1,
-            #               "Line_Drives_3B": -1, "Line_Drives_HR": -1}
             location = {}
             trajectory = {}
         manager_page = str(BeautifulSoup(urlopen('https://www.baseball-reference.com/managers/' + manager_data[0]
@@ -136,9 +126,10 @@ def gather_team_home_numbers(team_id, team_key, year, team_count):
             manager_pic_url = manager_page.split('<img class="" src="')[1].split('"')[0]
             urlretrieve(manager_pic_url, os.path.join("..", "..", "interface", "static", "images", "model", "managers",
                                                       manager_data[0].split('.shtml')[0], ".jpg"))
-        except IndexError as e:
+        except Exception as e:
             logger.log('\t\t' + str(e))
-        team_pic_url = table.split('<div class="media-item logo loader">')[1].split('<')[1].split('src="')[1].split('"')[0]
+        team_pic_url = table.split('<div class="media-item logo loader">')[1].split('<')[1].split('src="')[1].\
+            split('"')[0]
         try:
             urlretrieve(team_pic_url, os.path.join("..", "..", "interface", "static", "images", "model", "teams",
                                                    team_id + str(year), ".jpg"))
@@ -176,8 +167,9 @@ def write_to_db(team_id, stats, trajectory, manager_ids, year, park_name):
             field_list += key + ', '
             value_list += str(value) + ', '
         db.write('insert into ballpark_years (BY_uniqueidentifier, teamId, year, ' + field_list + 'parkId) values '
-                 '(default, "' + team_id + '", ' + str(year) + ', ' + value_list + '(select parkId from ballparks '
-                 'where parkName = "' + park_name + '"));')
+                                                                                                  '(default, "' + team_id + '", ' + str(
+            year) + ', ' + value_list + '(select parkId from ballparks '
+                                        'where parkName = "' + park_name + '"));')
     else:
         sets = ''
         for key, value in stats.items():
@@ -186,14 +178,14 @@ def write_to_db(team_id, stats, trajectory, manager_ids, year, park_name):
             sets += key + '= ' + str(value) + ', '
         if len(sets) > 0:
             db.write('update ballpark_years set ' + sets[:-2] + ' where year = ' + str(year) + ' and parkid = (select'
-                     ' parkId from ballparks where parkName = "' + park_name + '");')
+                                                                                               ' parkId from ballparks where parkName = "' + park_name + '");')
     for manager, record in manager_ids.items():
         if len(db.read('select MT_uniqueidentifier from manager_teams where managerId = "' + manager + '" and teamId '
-                       '= "' + team_id + '";')) == 0:
+                                                                                                       '= "' + team_id + '";')) == 0:
             db.write('insert into manager_teams (MT_uniqueidentifier, managerId, teamId) values (default, "' + manager
                      + '", "' + team_id + '");')
         if len(db.read('select MY_uniqueidentifier from manager_year where year = ' + str(year) + ' and '
-                       'MT_uniqueidentifier = (select MT_uniqueidentifier from manager_teams where managerId = "'
+                                                                                                  'MT_uniqueidentifier = (select MT_uniqueidentifier from manager_teams where managerId = "'
                        + manager + '" and teamId = "' + team_id + '")' + ';')) == 0:
             db.write('insert into manager_year (MY_uniqueidentifier, year, MT_uniqueidentifier, wins, loses) values '
                      '(default, ' + str(year) + ', (select MT_uniqueidentifier from manager_teams where managerId = "'
@@ -201,7 +193,4 @@ def write_to_db(team_id, stats, trajectory, manager_ids, year, park_name):
                      + record.split('-')[1] + ');')
     db.close()
 
-
-# dump_logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\dump.log")
-# for year in range(1996, 1997, 1):
-#     ballpark_and_manager_data(year, dump_logger)
+# ballpark_and_manager_data(year)
