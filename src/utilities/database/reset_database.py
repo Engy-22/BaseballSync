@@ -1,8 +1,10 @@
 import os
 import sys
-from utilities.database.wrappers.baseball_data_connection import DatabaseConnection
-from utilities.database.wrappers.pitchers_pitch_fx_connection import PitcherPitchFXDatabaseConnection
-from utilities.database.wrappers.batters_pitch_fx_connection import BatterPitchFXDatabaseConnection
+sys.path.append(os.path.join(sys.path[0], '..', '..'))
+
+from wrappers.baseball_data_connection import DatabaseConnection
+from wrappers.pitchers_pitch_fx_connection import PitcherPitchFXDatabaseConnection
+from wrappers.batters_pitch_fx_connection import BatterPitchFXDatabaseConnection
 from concurrent.futures import ThreadPoolExecutor
 import tkinter
 import time
