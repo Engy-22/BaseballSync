@@ -46,22 +46,29 @@ from utilities.properties import import_driver_logger as driver_logger
 
 
 def main(from_server, begin_year, end_year, frame=None):
-    if not from_server:
-        frame.withdraw()
-    league_table_constructor()
-    manager_table_constructor()
-    years = []
-    for year in range(begin_year, end_year, 1):
-        years.append(year)
-        driver(year)
-    rank_driver(years[-1])
-    comparisons_driver(years[-1])
-    hof_finder()
-    clean_up_deadlocked_file()
-    consolidate_data()
-    driver_logger.log('Driver complete for year' + stringify_list(years) + ': time = '
-                      + time_converter(time.time() - start_time) + '\n\n\n')
-    exit()
+    try:
+        if end_year > begin_year >= 1876:
+            if not from_server:
+                frame.withdraw()
+            league_table_constructor()
+            manager_table_constructor()
+            years = []
+            for year in range(begin_year, end_year, 1):
+                years.append(year)
+                driver(year)
+            rank_driver(years[-1])
+            comparisons_driver(years[-1])
+            hof_finder()
+            clean_up_deadlocked_file()
+            consolidate_data()
+            driver_logger.log('Driver complete for year' + stringify_list(years) + ': time = '
+                              + time_converter(time.time() - start_time) + '\n\n\n')
+        else:
+            print('Begin year must be lower than End year, but cannot be lower than 1876.')
+    except Exception as e:
+        print(e)
+    finally:
+        exit()
 
 
 def driver(year):
@@ -106,10 +113,12 @@ if __name__ == '__main__':
         font = ('Times', 12)
         begin_year = tkinter.IntVar()
         end_year = tkinter.IntVar()
-        tkinter.Label(frame, text="Begin Year", font=font).grid(row=0, column=0, padx=(20, 10), pady=10)
-        tkinter.Label(frame, text="End Year", font=font).grid(row=1, column=0, padx=(20, 10), pady=10)
-        tkinter.Entry(frame, textvariable=begin_year, width=7).grid(row=0, column=1, padx=(10, 20), pady=10)
-        tkinter.Entry(frame, textvariable=end_year, width=7).grid(row=1, column=1, padx=(10, 20), pady=10)
+        tkinter.Label(frame, text="Please enter the dates you would \nlike to download data for:", font=font).\
+            grid(columnspan=2, padx=10, pady=10)
+        tkinter.Label(frame, text="Begin Year", font=font).grid(row=1, column=0, padx=(20, 10), pady=10, sticky="E")
+        tkinter.Label(frame, text="End Year", font=font).grid(row=2, column=0, padx=(20, 10), pady=10, sticky="E")
+        tkinter.Entry(frame, textvariable=begin_year, width=7).grid(row=1, column=1, padx=(10, 20), pady=10)
+        tkinter.Entry(frame, textvariable=end_year, width=7).grid(row=2, column=1, padx=(10, 20), pady=10)
         tkinter.Button(frame, text="Submit", command=lambda: main(False, begin_year.get(), end_year.get(), frame),
                        font=font, cursor="hand2", bg="white").grid(columnspan=2, padx=10, pady=10)
         root.mainloop()

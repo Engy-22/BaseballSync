@@ -69,10 +69,13 @@ def write_opening_day(year):
     logger.log('Getting date of opening day')
     mlb_schedule = str(BeautifulSoup(urlopen('https://www.baseball-reference.com/leagues/MLB/' + str(year)
                                              + '-schedule.shtml'), 'html.parser'))
-    opening_date = mlb_schedule.split('<h3>')[1].split('</h3>')[0]
+    possible_opening_dates = mlb_schedule.split('<h3>')
     months = {'March': '03', 'April': '04', 'May': '05'}
-    opening_day = months[opening_date.split(', ')[1].split(' ')[0]] + '-' + opening_date.split(', ')[1].split(' ')[1]\
-        .split(',')[0]
+    for possible_opening_date in possible_opening_dates:
+        if str(year) in possible_opening_date:
+            opening_day = months[possible_opening_date.split(', ')[1].split(' ')[0]] + '-' + possible_opening_date.\
+                split(', ')[1].split(' ')[1].split(',')[0]
+            break
     db.write('update years set opening_day = "' + opening_day + '" where year = ' + str(year) + ';')
     db.close()
     logger.log('\tComplete (opening day): time = ' + time_converter(time.time() - start_time))
