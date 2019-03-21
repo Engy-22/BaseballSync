@@ -116,6 +116,7 @@ if __name__ == '__main__':
         tkinter.Entry(frame, textvariable=end_year, width=7).grid(row=2, column=1, padx=(10, 20), pady=10)
         tkinter.Button(frame, text="Submit", command=lambda: main(False, begin_year.get(), end_year.get(), frame),
                        font=font, cursor="hand2", bg="white").grid(columnspan=2, padx=10, pady=10)
+        frame.bind("<Return>", lambda event=None: main(False, begin_year.get(), end_year.get(), frame))
         root.mainloop()
     elif 'linux' in sys.platform:
         begin_year = int(input('Begin year: '))

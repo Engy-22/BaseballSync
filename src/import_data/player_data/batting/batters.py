@@ -13,6 +13,8 @@ from utilities.anomaly_team import anomaly_team
 from utilities.properties import sandbox_mode, import_driver_logger as driver_logger
 
 data = {}
+pages = {}
+temp_pages = {}
 logger = Logger(os.path.join("..", "..", "logs", "import_data", "batters.log"))
 
 
@@ -53,14 +55,22 @@ def batting_constructor(year):
     bulk_time = time.time()
     ratios = league_batting_ratios_constructor(year, logger)
     logger.log("\tParsing player pages, downloading images, and extracting player attributes")
+    global temp_pages
     with ThreadPoolExecutor(os.cpu_count()) as executor:
         for player_id, dictionary in data.items():
-            for team, dictionary2 in dictionary.items():
-                for index, dictionary3 in dictionary2.items():
-                    executor.submit(intermediate, team, index, player_id, dictionary3['temp_player'],
-                                    dictionary3['row'])
+            if len(temp_pages) == os.cpu_count():
+                condense_pages()
+            print(player_id)
+            executor.submit(load_url(player_id))
     for player_id, dictionary in data.items():
         for team, dictionary2 in dictionary.items():
+            for index, dictionary3 in dictionary2.items():
+                # executor.submit(intermediate, team, index, player_id, dictionary3['temp_player'],
+                #                 dictionary3['row'])
+                intermediate(team, index, player_id)#, dictionary3['temp_player'], dictionary3['row'])
+    for player_id, dictionary in data.items():
+        for team, dictionary2 in dictionary.items():
+            print(dictionary2)
             try:
                 write_teams_and_stats(player_id, dictionary2, ratios[player_id], team, year)
             except KeyError:
@@ -74,7 +84,8 @@ def batting_constructor(year):
 def extract_player_attributes(player_id, page, reversed_name):
     img_location = str(page.find_all('img')[1]).split('src=')[1].split('/>')[0].split('"')[1]
     if 'gracenote' not in img_location:
-        urlretrieve(img_location, os.path.join("..", "..", "interface", "static", "images", "model", "players",
+        print(os.getcwd())
+        urlretrieve(img_location, os.path.join("..", "interface", "static", "images", "model", "players",
                                                player_id, ".jpg"))
     for ent in page.find_all('div'):
         str_ent = str(ent)
@@ -84,23 +95,22 @@ def extract_player_attributes(player_id, page, reversed_name):
                     'throwsWith': str_ent.split('Throws: </strong>')[1][0]}
 
 
-def intermediate(team, index, player_id, temp_player, row):
-    page = load_url(player_id)
-    if page is not None:
+def intermediate(team, index, player_id):
+    print('intermediate')
+    global data
+    global pages
+    if pages[player_id] is not None:
+        temp_player = data[player_id][team][index]['temp_player']
         if "-0" in temp_player:
             reversed_name = temp_player.split("-0")[0].replace("'", "\'")
         else:
             reversed_name = temp_player.split("0")[0].replace("'", "\'")
         write_to_db(player_id, extract_player_attributes(player_id, page, reversed_name))
-    get_stats(player_id, team, row, index)
-
-
-def get_stats(player_id, team, row, index):
     stats = {"PA": "PA", "AB": "AB", "R": "R", "H": "H", "2B": "2B", "3B": "3B", "HR": "HR", "RBI": "RBI", "SB": "SB",
              "CS": "CS", "BB": "BB", "SO": "SO", "GDP": "GDP", "HBP": "HBP", "SH": "SH", "SF": "SF", "IBB": "IBB",
              "G": "G", "BA": "batting_avg", "OBP": "onbase_perc", "SLG": "slugging_perc", "OPS": "onbase_plus_slugging"}
     stat_dictionary = {}
-    for ent in row:
+    for ent in data[player_id][team][index]['row']:
         for stat, name in stats.items():
             if '="' + name + '" >' in ent:
                 try:
@@ -115,16 +125,32 @@ def get_stats(player_id, team, row, index):
 
 
 def load_url(player_id):
-    page = None
+    global temp_pages
     db = DatabaseConnection(sandbox_mode)
     if len(db.read('select * from players where playerid = "' + player_id + '";')) == 0:
-        page = BeautifulSoup(urlopen("https://www.baseball-reference.com/players/" + player_id[0] + "/" + player_id
-                                     + ".shtml"), 'html.parser')
+        temp_pages[player_id] = BeautifulSoup(urlopen("https://www.baseball-reference.com/players/" + player_id[0]
+                                                      + "/" + player_id + ".shtml"), 'html.parser')
+    else:
+        temp_pages[player_id] = None
     db.close()
-    return page
+
+
+def condense_pages():
+    print('condesnsing')
+    global data
+    global temp_pages
+    global pages
+    for player_id, player_page in temp_pages.items():
+        for _, dictionary in data[player_id].items():
+            for _, info in dictionary.items():
+                pages[player_id] = extract_player_attributes(player_id, temp_pages[player_id], info['temp_player'])
+                break
+            break
+    temp_pages = {}
 
 
 def write_to_db(player_id, player_attributes):
+    print(player_id)
     fields = ''
     values = ''
     for field, value in player_attributes.items():
