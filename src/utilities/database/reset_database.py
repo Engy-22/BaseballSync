@@ -57,13 +57,30 @@ def driver(from_server, previous_frame, vars, all_years, begin_year=None, end_ye
     exit()
 
 
-def do_reset(from_server, vars, year):
+def do_reset(from_server, variables, year):
+    clear_logs(os.path.join("..", "..", "..", "logs"))
     if not from_server:
         frame.withdraw()
-    clear_logs(os.path.join("..", "..", "..", "logs"))
-    for env, dbs in vars.items():
-        for db, bool in dbs.items():
-            if bool.get():
+        for env, dbs in variables.items():
+            for db, boolean in dbs.items():
+                if boolean.get():
+                    if env == 'Production':
+                        if db == 'baseballData':
+                            baseball_data(False, year)
+                        elif db == 'pitchers_pitch_fx':
+                            pitchers_pitch_fx(False, year)
+                        else:
+                            batters_pitch_fx(False, year)
+                    else:
+                        if db == 'baseballData':
+                            baseball_data(True, year)
+                        elif db == 'pitchers_pitch_fx':
+                            pitchers_pitch_fx(True, year)
+                        else:
+                            batters_pitch_fx(True, year)
+    else:
+        for env, dbs in variables.items():
+            for db in dbs:
                 if env == 'Production':
                     if db == 'baseballData':
                         baseball_data(False, year)
@@ -92,8 +109,7 @@ def baseball_data(sandbox_mode, year):
             db.write('drop database baseballData')
             db.write('create database baseballData')
         db = DatabaseConnection(sandbox_mode)
-        with open("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\background\\table_definitions.txt",
-                  'rt') as file:
+        with open(os.path.join("..", "..", "..", "background", "table_definitions.txt"), 'rt') as file:
             table_defs = file.readlines()
             if sandbox_mode:
                 print("creating new tables - sandbox")
@@ -122,8 +138,7 @@ def pitchers_pitch_fx(sandbox_mode, year):
             db.write('drop database pitchers_pitch_fx')
             db.write('create database pitchers_pitch_fx')
         db = PitcherPitchFXDatabaseConnection(sandbox_mode)
-        with open("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\background\\pitch_fx_tables.txt",
-                  'rt') as file:
+        with open(os.path.join("..", "..", "..", "background", "pitch_fx_tables.txt"), 'rt') as file:
             table_defs = file.readlines()
             if sandbox_mode:
                 print("creating new pitcher pitch fx tables - sandbox")
@@ -149,8 +164,7 @@ def batters_pitch_fx(sandbox_mode, year):
             db.write('drop database batters_pitch_fx;')
             db.write('create database batters_pitch_fx;')
         db = BatterPitchFXDatabaseConnection(sandbox_mode)
-        with open("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\background\\pitch_fx_tables.txt", 'rt')\
-                as file:
+        with open(os.path.join("..", "..", "..", "background", "pitch_fx_tables.txt"), 'rt') as file:
             table_defs = file.readlines()
             if sandbox_mode:
                 print("creating new batter pitch fx tables - sandbox")
@@ -172,27 +186,26 @@ def pitch_fx_year(db, year):
 
 def baseball_data_year(db, sandbox_mode, year):
     if sandbox_mode:
-        extension = "_sandbox."
         print('deleting ' + str(year) + ' baseballData - sandbox')
     else:
         extension = "."
         print('deleting ' + str(year) + ' baseballData - production')
-    with open("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\background\\table_definitions.txt",
-              'rt') as file:
-        table_defs = file.readlines()
-        with ThreadPoolExecutor(os.cpu_count()) as executor2:
-            for line in reversed(table_defs):
-                table_name = line.split('create table ')[1].split(' (')[0]
-                if table_name in ['ballpark_years', 'pitcher_pitches', 'batter_pitches', 'player_batting',
-                                  'player_pitching', 'player_fielding', 'years', 'manager_year', 'schedule',
-                                  'comparisons_batting_overall', 'comparisons_pitching_overall']:  # appending rows based on year field
-                    executor2.submit(db.write('delete from baseballData' + extension + table_name + ' where year = '
-                                              + str(year) + ';'))
-                elif table_name in ['hitter_spots', 'player_positions', 'starting_pitchers', 'team_years',
-                                    'comparisons_team_offense_overall', 'comparisons_team_defense_overall']:  # appending rows based on another field
-                    for ty_uid in db.read('select ty_uniqueidentifier from team_years where year = ' + str(year) + ';'):
-                        executor2.submit(db.write('delete from baseballData' + extension + table_name + ' where '
-                                                  'ty_uniqueidentifier = ' + str(ty_uid[0]) + ';'))
+        with open(os.path.join("..", "..", "..", "background", "table_definitions.txt"), 'rt') as file:
+            table_defs = file.readlines()
+            with ThreadPoolExecutor(os.cpu_count()) as executor2:
+                for line in reversed(table_defs):
+                    table_name = line.split('create table ')[1].split(' (')[0]
+                    if table_name in ['ballpark_years', 'pitcher_pitches', 'batter_pitches', 'player_batting',
+                                      'player_pitching', 'player_fielding', 'years', 'manager_year', 'schedule',
+                                      'comparisons_batting_overall', 'comparisons_pitching_overall']:  # appending rows based on year field
+                        executor2.submit(db.write('delete from baseballData' + extension + table_name + ' where year = '
+                                                  + str(year) + ';'))
+                    elif table_name in ['hitter_spots', 'player_positions', 'starting_pitchers', 'team_years',
+                                        'comparisons_team_offense_overall', 'comparisons_team_defense_overall']:  # appending rows based on another field
+                        for ty_uid in db.read('select ty_uniqueidentifier from team_years where year = ' + str(year)
+                                              + ';'):
+                            executor2.submit(db.write('delete from baseballData' + extension + table_name + ' where '
+                                                      'ty_uniqueidentifier = ' + str(ty_uid[0]) + ';'))
 
 
 if __name__ == '__main__':

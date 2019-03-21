@@ -85,7 +85,7 @@ def pitchers_pitch_fx(sandbox_mode, year):
             db.write('drop database pitchers_pitch_fx')
             db.write('create database pitchers_pitch_fx')
         db = PitcherPitchFXDatabaseConnection(sandbox_mode)
-        with open(os.path.join("..", "..", "..", "background", "table_definitions.txt"), 'rt') as file:
+        with open(os.path.join("..", "..", "..", "background", "pitch_fx_tables.txt"), 'rt') as file:
             table_defs = file.readlines()
             if sandbox_mode:
                 print("creating new pitcher pitch fx tables - sandbox")
