@@ -16,7 +16,5 @@ def gather_players(year, player_type, gather_all, logger):
     return [player[0] for player in player_list]
 
 
-# from utilities.logger import Logger
 # for year in range(1996, 2009, 1):
-#     print(str(year) + ': ' + str(len(gather_players(year, 'batting', False, Logger("C:\\Users\\Anthony Raimondo\\"
-#                                                     "PycharmProjects\\baseball-sync\\logs\\import_data\\dump.log")))))
+#     print(str(year) + ': ' + str(len(gather_players(year, 'batting', False))))

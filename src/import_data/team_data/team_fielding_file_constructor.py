@@ -22,8 +22,7 @@ def team_fielding_file_constructor(year):
     logger.log("Downloading " + str(year) + " team fielding positions || Timestamp: " + datetime.datetime.today()
                .strftime('%Y-%m-%d %H:%M:%S'))
     logger.log("\tDownloading team pages")
-    with open("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\background\\yearTeams.txt",
-              'r') as year_file:
+    with open(os.path.join("..", "..", "baseball-sync", "background", "yearTeams.txt"), 'r') as year_file:
         with ThreadPoolExecutor(os.cpu_count()) as executor:
             for line in year_file:
                 if str(year) in line:
@@ -83,5 +82,4 @@ def write_to_file(year):
         db.close()
 
 
-# dump_logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\dump.log")
-# team_fielding_file_constructor(2012, dump_logger)
+# team_fielding_file_constructor(2012)

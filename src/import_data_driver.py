@@ -33,8 +33,10 @@ if __name__ == '__main__':
         frame.bind("<Return>", lambda event=None: main(False, begin_year.get(), end_year.get(), frame))
         root.mainloop()
     elif 'linux' in sys.platform:
+        print('\n')
         begin_year = int(input('Begin year: '))
         end_year = int(input('End year: '))
+        print('\n')
         main(True, begin_year, end_year)
     else:
         print('Unknown operating system. Must use Windows or Linux')
