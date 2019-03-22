@@ -7,7 +7,7 @@ from utilities.time_converter import time_converter
 from utilities.logger import Logger
 from utilities.properties import sandbox_mode
 
-logger = Logger(os.path.join("..", "..", "logs", "import_data", "team_ranker_year.log"))
+logger = Logger(os.path.join("..", "..", "baseball-sync", "logs", "import_data", "team_ranker_year.log"))
 
 
 def team_ranker_year(year):

@@ -8,7 +8,7 @@ from urllib.request import urlopen
 from bs4 import BeautifulSoup
 from utilities.properties import sandbox_mode
 
-logger = Logger(os.path.join("..", "..", "logs", "import_data", "all_star_finder.log"))
+logger = Logger(os.path.join("..", "..", "baseball-sync", "logs", "import_data", "all_star_finder.log"))
 
 
 def all_star_finder(year, normal, driver_logger):

@@ -7,11 +7,10 @@ from utilities.time_converter import time_converter
 import datetime
 import time
 
-logger = Logger(os.path.join("..", "..", "logs", "import_data", "consolidata.log"))
+logger = Logger(os.path.join("..", "..", "baseball-sync", "logs", "import_data", "consolidata.log"))
 
 
 def consolidate_data():
-    # year = [2016]
     driver_logger.log("\tConsolidating data")
     print("Consolidating data")
     start_time = time.time()

@@ -8,7 +8,7 @@ from urllib.request import urlopen
 from bs4 import BeautifulSoup
 from utilities.properties import sandbox_mode, import_driver_logger as driver_logger
 
-logger = Logger(os.path.join("..", "..", "logs", "import_data", "hof_finder.log"))
+logger = Logger(os.path.join("..", "..", "baseball-sync", "logs", "import_data", "hof_finder.log"))
 
 
 def hof_finder():

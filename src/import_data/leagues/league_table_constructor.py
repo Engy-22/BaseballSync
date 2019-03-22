@@ -4,7 +4,7 @@ import datetime
 import os
 from utilities.properties import sandbox_mode, import_driver_logger as driver_logger
 
-logger = Logger(os.path.join("..", "..", "logs", "import_data", "league_table_constructor.log"))
+logger = Logger(os.path.join("..", "..", "baseball-sync", "logs", "import_data", "league_table_constructor.log"))
 
 
 def league_table_constructor():

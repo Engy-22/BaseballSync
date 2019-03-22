@@ -6,7 +6,7 @@ from utilities.logger import Logger
 from utilities.time_converter import time_converter
 from utilities.properties import sandbox_mode, import_driver_logger as driver_logger
 
-logger = Logger(os.path.join("..", "..", "logs", "import_data", "primary_and_secondary_positions.log"))
+logger = Logger(os.path.join("..", "..", "baseball-sync", "logs", "import_data", "primary_and_secondary_positions.log"))
 
 
 def primary_and_secondary_positions(year):

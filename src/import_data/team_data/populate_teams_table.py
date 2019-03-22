@@ -7,7 +7,7 @@ import time
 import os
 from utilities.properties import sandbox_mode, import_driver_logger as driver_logger
 
-logger = Logger(os.path.join("..", "..", "logs", "import_data", "populate_teams_table.log"))
+logger = Logger(os.path.join("..", "..", "baseball-sync", "logs", "import_data", "populate_teams_table.log"))
 
 
 def populate_teams_table(year):
@@ -16,7 +16,7 @@ def populate_teams_table(year):
     start_time = time.time()
     logger.log('Begin populating teams table for ' + str(year) + ' || Timestamp: ' + datetime.datetime.today()\
                .strftime('%Y-%m-%d %H:%M:%S'))
-    with open(os.path.join("..", "..", "background", "yearTeams.txt"), 'rt') as file:
+    with open(os.path.join("..", "background", "yearTeams.txt"), 'rt') as file:
         db = DatabaseConnection(sandbox_mode)
         for line in file:
             if str(year) in line:

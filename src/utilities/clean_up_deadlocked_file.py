@@ -5,9 +5,9 @@ from utilities.properties import sandbox_mode, import_driver_logger as driver_lo
 
 def clean_up_deadlocked_file():
     driver_logger.log("\tCleaning up deadlocked records")
-    with open(os.path.join("..", "utilities", "deadlocked.txt"), 'r') as f:
+    with open(os.path.join("utilities", "deadlocked.txt"), 'r') as f:
         db = DatabaseConnection(sandbox_mode)
         for line in f:
             db.write(line)
         db.close()
-    file = open(os.path.join("..", "utilities", "deadlocked.txt"), "w").close()
+    file = open(os.path.join("utilities", "deadlocked.txt"), "w").close()

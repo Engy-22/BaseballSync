@@ -2,7 +2,7 @@ import os
 
 
 def translate_team_id(team, year):
-    with open(os.path.join("..", "..", "background", "yearTeams.txt"), 'rt') as file:
+    with open(os.path.join("..", "background", "yearTeams.txt"), 'rt') as file:
         for line in file:
             if str(year) in line:
                 temp_line = line.split(',')

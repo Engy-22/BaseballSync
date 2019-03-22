@@ -10,7 +10,7 @@ from utilities.time_converter import time_converter
 from utilities.anomaly_team import anomaly_team
 from utilities.properties import sandbox_mode, import_driver_logger as driver_logger
 
-logger = Logger(os.path.join("..", "..", "logs", "import_data", "team_offensive_statistics.log"))
+logger = Logger(os.path.join("..", "..", "baseball-sync", "logs", "import_data", "team_offensive_statistics.log"))
 
 
 def team_offensive_statistics(year):

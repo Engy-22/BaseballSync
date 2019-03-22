@@ -6,7 +6,7 @@ from utilities.logger import Logger
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
 
-logger = Logger(os.path.join("..", "..", "logs", "import_data", "triple_crown_winners.log"))
+logger = Logger(os.path.join("..", "..", "baseball-sync", "logs", "import_data", "triple_crown_winners.log"))
 
 
 def triple_crown_winners(year, driver_logger):

@@ -12,7 +12,7 @@ from utilities.properties import sandbox_mode, import_driver_logger as driver_lo
 
 pages = {}
 strings = {}
-logger = Logger(os.path.join("..", "..", "logs", "import_data", "year_data.log"))
+logger = Logger(os.path.join("..", "..", "baseball-sync", "logs", "import_data", "year_data.log"))
 
 
 def get_year_data(year):

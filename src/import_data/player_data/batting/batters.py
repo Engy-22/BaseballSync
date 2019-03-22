@@ -15,7 +15,7 @@ from utilities.properties import sandbox_mode, import_driver_logger as driver_lo
 data = {}
 pages = {}
 temp_pages = {}
-logger = Logger(os.path.join("..", "..", "logs", "import_data", "batters.log"))
+logger = Logger(os.path.join("..", "..", "baseball-sync", "logs", "import_data", "batters.log"))
 
 
 def batting_constructor(year):
@@ -60,8 +60,10 @@ def batting_constructor(year):
         for player_id, dictionary in data.items():
             if len(temp_pages) == os.cpu_count():
                 condense_pages()
-            print(player_id)
             executor.submit(load_url(player_id))
+    condense_pages()
+    global pages
+    write_player_attributes_to_db()
     for player_id, dictionary in data.items():
         for team, dictionary2 in dictionary.items():
             for index, dictionary3 in dictionary2.items():
@@ -70,7 +72,6 @@ def batting_constructor(year):
                 intermediate(team, index, player_id)#, dictionary3['temp_player'], dictionary3['row'])
     for player_id, dictionary in data.items():
         for team, dictionary2 in dictionary.items():
-            print(dictionary2)
             try:
                 write_teams_and_stats(player_id, dictionary2, ratios[player_id], team, year)
             except KeyError:
@@ -82,30 +83,27 @@ def batting_constructor(year):
 
 
 def extract_player_attributes(player_id, page, reversed_name):
+    if page is None:
+        return
     img_location = str(page.find_all('img')[1]).split('src=')[1].split('/>')[0].split('"')[1]
     if 'gracenote' not in img_location:
-        print(os.getcwd())
-        urlretrieve(img_location, os.path.join("..", "interface", "static", "images", "model", "players",
-                                               player_id, ".jpg"))
+        urlretrieve(img_location, os.path.join("interface", "static", "images", "model", "players", player_id + ".jpg"))
     for ent in page.find_all('div'):
         str_ent = str(ent)
         if 'Throws: </strong>' in str_ent:
-            return {'lastName': reversed_name.split(',')[0], 'firstName': reversed_name.split(',')[1],
+            temp_first_name = reversed_name.split(',')[1]
+            if "-0" in temp_first_name:
+                first_name = temp_first_name.split("-0")[0].replace("'", "\'")
+            else:
+                first_name = temp_first_name.split("0")[0].replace("'", "\'")
+            return {'lastName': reversed_name.split(',')[0].replace("'", "\'"), 'firstName': first_name,
                     'batsWith': str_ent.split('Bats: </strong>')[1][0], 'primaryPosition': 'N',
                     'throwsWith': str_ent.split('Throws: </strong>')[1][0]}
 
 
 def intermediate(team, index, player_id):
-    print('intermediate')
     global data
     global pages
-    if pages[player_id] is not None:
-        temp_player = data[player_id][team][index]['temp_player']
-        if "-0" in temp_player:
-            reversed_name = temp_player.split("-0")[0].replace("'", "\'")
-        else:
-            reversed_name = temp_player.split("0")[0].replace("'", "\'")
-        write_to_db(player_id, extract_player_attributes(player_id, page, reversed_name))
     stats = {"PA": "PA", "AB": "AB", "R": "R", "H": "H", "2B": "2B", "3B": "3B", "HR": "HR", "RBI": "RBI", "SB": "SB",
              "CS": "CS", "BB": "BB", "SO": "SO", "GDP": "GDP", "HBP": "HBP", "SH": "SH", "SF": "SF", "IBB": "IBB",
              "G": "G", "BA": "batting_avg", "OBP": "onbase_perc", "SLG": "slugging_perc", "OPS": "onbase_plus_slugging"}
@@ -136,7 +134,6 @@ def load_url(player_id):
 
 
 def condense_pages():
-    print('condesnsing')
     global data
     global temp_pages
     global pages
@@ -149,8 +146,14 @@ def condense_pages():
     temp_pages = {}
 
 
+def write_player_attributes_to_db():
+    global pages
+    with ThreadPoolExecutor(os.cpu_count()) as executor2:
+        for player_id, attributes in pages.items():
+            executor2.submit(write_to_db, player_id, attributes)
+
+
 def write_to_db(player_id, player_attributes):
-    print(player_id)
     fields = ''
     values = ''
     for field, value in player_attributes.items():

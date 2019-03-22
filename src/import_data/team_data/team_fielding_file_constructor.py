@@ -10,7 +10,7 @@ from concurrent.futures import ThreadPoolExecutor
 from utilities.properties import sandbox_mode, import_driver_logger as driver_logger
 
 pages = {}
-logger = Logger(os.path.join("..", "..", "logs", "import_data", "team_fielding_file_constructor.log"))
+logger = Logger(os.path.join("..", "..", "baseball-sync", "logs", "import_data", "team_fielding_file_constructor.log"))
 
 
 def team_fielding_file_constructor(year):

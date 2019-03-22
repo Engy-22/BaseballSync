@@ -14,7 +14,7 @@ from import_data.player_data.fielding.cathchers_defense import catcher_defense
 
 data = {}
 
-logger = Logger(os.path.join("..", "..", "logs", "import_data", "fielders.log"))
+logger = Logger(os.path.join("..", "..", "baseball-sync", "logs", "import_data", "fielders.log"))
 
 
 def fielding_constructor(year):

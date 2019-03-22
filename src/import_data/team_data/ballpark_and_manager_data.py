@@ -10,7 +10,7 @@ from bs4 import BeautifulSoup
 from utilities.properties import sandbox_mode, import_driver_logger as driver_logger
 
 pages = {}
-logger = Logger(os.path.join("..", "..", "logs", "import_data", "ballpark_and_manager_data.log"))
+logger = Logger(os.path.join("..", "..", "baseball-sync", "logs", "import_data", "ballpark_and_manager_data.log"))
 
 
 def ballpark_and_manager_data(year):
@@ -22,7 +22,7 @@ def ballpark_and_manager_data(year):
     logger.log('Beginning ballpark and manager data download for ' + str(year) + ' || Timestamp: '
                + datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S'))
     teams = {}
-    with open(os.path.join("..", "..", "background", "yearTeams.txt"), 'rt') as file:
+    with open(os.path.join("..", "background", "yearTeams.txt"), 'rt') as file:
         for line in file:
             if str(year) in line:
                 temp_line = line.split(',')[1:-1]

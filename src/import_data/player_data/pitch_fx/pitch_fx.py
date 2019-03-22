@@ -24,7 +24,7 @@ from utilities.properties import sandbox_mode, import_driver_logger as driver_lo
 innings = {}
 strikes = 0
 balls = 0
-logger = Logger(os.path.join("..", "..", "logs", "import_data", "pitch_fx.log"))
+logger = Logger(os.path.join("..", "..", "baseball-sync", "logs", "import_data", "pitch_fx.log"))
 
 
 def get_pitch_fx_data(year):
