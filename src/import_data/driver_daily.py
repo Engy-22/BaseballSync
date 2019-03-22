@@ -4,6 +4,7 @@
 """
 
 import time
+import datetime
 from utilities.stringify_list import stringify_list
 from utilities.time_converter import time_converter
 from import_data.leagues.league_table_constructor import league_table_constructor
@@ -38,26 +39,28 @@ from import_data.player_data.pitching.determine_pitcher_roles import determine_p
 from utilities.properties import import_driver_logger as driver_logger
 
 
-def main(from_server, begin_year, end_year, frame=None):
-    if end_year > begin_year >= 1876:
-        start_time = time.time()
-        if not from_server:
-            frame.withdraw()
-        league_table_constructor()
-        manager_table_constructor()
-        years = []
-        for year in range(begin_year, end_year, 1):
-            years.append(year)
-            driver(year)
-        rank_driver(years[-1])
-        comparisons_driver(years[-1])
-        hof_finder()
-        clean_up_deadlocked_file()
-        consolidate_data()
-        driver_logger.log('Driver complete for year' + stringify_list(years) + ': time = '
-                          + time_converter(time.time() - start_time) + '\n\n\n')
+def main(from_server, day, month, year, frame=None):
+    if 0 < day <= 31 and 0 < month <= 12 and year >= 1876:
+        pass
+        # driver_logger.log('Begin Daily Driver || Timestamp: ' + datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S'))
+        # start_time = time.time()
+        # if not from_server:
+        #     frame.withdraw()
+        # league_table_constructor()
+        # manager_table_constructor()
+        # years = []
+        # for year in range(begin_year, end_year, 1):
+        #     years.append(year)
+        #     driver(year)
+        # rank_driver(years[-1])
+        # comparisons_driver(years[-1])
+        # hof_finder()
+        # clean_up_deadlocked_file()
+        # consolidate_data()
+        # driver_logger.log('Driver complete for year' + stringify_list(years) + ': time = '
+        #                   + time_converter(time.time() - start_time) + '\n\n\n')
     else:
-        print('Begin year must be lower than End year, but cannot be lower than 1876.')
+        print('Must enter a valid date.')
     exit()
 
 

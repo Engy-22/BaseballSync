@@ -82,7 +82,8 @@ def write_to_file(year, manager_team, tendencies):
     db = DatabaseConnection(sandbox_mode)
     sets = ''
     for stat, total in tendencies.items():
-        sets += stat + ' = ' + total + ', '
+        if len(total) > 0:
+            sets += stat + ' = ' + total + ', '
     db.write('update manager_year set ' + sets[:-2] + ' where year = ' + str(year) + ' and mt_uniqueidentifier = '
              '(select mt_uniqueidentifier from manager_teams where managerid = "' + manager_team.split(';')[0]
              + '" and teamid = "' + manager_team.split(';')[1] + '");')

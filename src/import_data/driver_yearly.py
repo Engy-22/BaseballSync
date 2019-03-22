@@ -4,6 +4,7 @@
 """
 
 import time
+import datetime
 from utilities.stringify_list import stringify_list
 from utilities.time_converter import time_converter
 from import_data.leagues.league_table_constructor import league_table_constructor
@@ -40,6 +41,7 @@ from utilities.properties import import_driver_logger as driver_logger
 
 def main(from_server, begin_year, end_year, frame=None):
     if end_year > begin_year >= 1876:
+        driver_logger.log('Begin Yearly Driver || Timestamp: ' + datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S'))
         start_time = time.time()
         if not from_server:
             frame.withdraw()

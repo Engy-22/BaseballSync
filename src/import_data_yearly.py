@@ -11,9 +11,7 @@ sys.path.append(os.path.join(sys.path[0], '..'))
 
 
 if __name__ == '__main__':
-    driver_logger.log('Begin Driver || Timestamp: ' + datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S'))
-    start_time = time.time()
-    most_recent_year = get_most_recent_year()
+    # most_recent_year = get_most_recent_year()
     if 'win' in sys.platform:
         root = tkinter.Tk()
         root.title('Driver')
