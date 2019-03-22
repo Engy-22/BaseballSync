@@ -28,7 +28,7 @@ def team_pitching_rotation_constructor(year):
     logger.log("Downloading " + str(year) + " team batting order data || Timestamp: " + datetime.datetime.today()
                .strftime('%Y-%m-%d %H:%M:%S'))
     logger.log("\tdownloading team pages")
-    with open("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\background\\yearTeams.txt", 'r') as year_file:
+    with open(os.path.join("..", "..", "baseball-sync", "background", "yearTeams.txt"), 'r') as year_file:
         with ThreadPoolExecutor(os.cpu_count()) as executor:
             for line in year_file:
                 if str(year) in line:
@@ -106,6 +106,5 @@ def write_to_file_schedule(team_id, year, schedule):
     db.close()
 
 
-# dump_logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\dump.log")
 # for year in range(1996, 1998, 1):
-# team_pitching_rotation_constructor(2012, dump_logger)
+# team_pitching_rotation_constructor(2012)

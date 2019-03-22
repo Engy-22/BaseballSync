@@ -27,8 +27,7 @@ def team_batting_order_constructor(year):
     logger.log("Downloading " + str(year) + " team batting order data || Timestamp: " + datetime.datetime.today()
                .strftime('%Y-%m-%d %H:%M:%S'))
     logger.log("\tDownloading team pages")
-    with open("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\background\\yearTeams.txt",
-              'r') as year_file:
+    with open(os.path.join("..", "..", "baseball-sync", "background", "yearTeams.txt"), 'r') as year_file:
         with ThreadPoolExecutor(os.cpu_count()) as executor:
             for line in year_file:
                 if str(year) in line:

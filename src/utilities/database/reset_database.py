@@ -117,9 +117,9 @@ def baseball_data(sandbox_mode, year):
         with open(os.path.join("..", "..", "..", "background", "table_definitions.txt"), 'rt') as file:
             table_defs = file.readlines()
             if sandbox_mode:
-                print("creating new tables - sandbox")
+                print("creating new baseballData tables - sandbox")
             else:
-                print("creating new tables - production")
+                print("creating new baseballData tables - production")
             with ThreadPoolExecutor(os.cpu_count()) as executor2:
                 for line in table_defs:
                     executor2.submit(db.write(line))

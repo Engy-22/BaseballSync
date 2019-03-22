@@ -36,7 +36,7 @@ if __name__ == '__main__':
         print('\n')
         begin_year = int(input('Begin year: '))
         end_year = int(input('End year: '))
-        print('\n')
+        print('\n\n\n')
         main(True, begin_year, end_year)
     else:
         print('Unknown operating system. Must use Windows or Linux')
