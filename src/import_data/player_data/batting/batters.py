@@ -19,11 +19,11 @@ logger = Logger(os.path.join("..", "..", "baseball-sync", "logs", "import_data",
 
 
 def batting_constructor(year):
-    global data
-    data = {}
     print('Downloading batter images and attributes')
     driver_logger.log("\tDownloading batter images and attributes")
     start_time = time.time()
+    global data
+    data = {}
     logger.log("Downloading batter " + str(year) + " data || Timestamp: " + datetime.datetime.today()
                .strftime('%Y-%m-%d %H:%M:%S'))
     logger.log("\tAssembling list of players")
@@ -62,14 +62,12 @@ def batting_constructor(year):
                 condense_pages()
             executor.submit(load_url(player_id))
     condense_pages()
-    global pages
     write_player_attributes_to_db()
-    for player_id, dictionary in data.items():
-        for team, dictionary2 in dictionary.items():
-            for index, dictionary3 in dictionary2.items():
-                # executor.submit(intermediate, team, index, player_id, dictionary3['temp_player'],
-                #                 dictionary3['row'])
-                intermediate(team, index, player_id)#, dictionary3['temp_player'], dictionary3['row'])
+    with ThreadPoolExecutor(os.cpu_count()) as executor3:
+        for player_id, dictionary in data.items():
+            for team, dictionary2 in dictionary.items():
+                for index, dictionary3 in dictionary2.items():
+                    executor3.submit(intermediate, team, index, player_id)
     for player_id, dictionary in data.items():
         for team, dictionary2 in dictionary.items():
             try:

@@ -18,18 +18,22 @@ def aggregate_pitch_fx_data(year, month=None, day=None):
     start_time = time.time()
     logger.log("Aggregating pitch fx data for " + str(year) + ' || Timestamp: ' + datetime.datetime.today().
                strftime('%Y-%m-%d %H:%M:%S'))
-    aggregate_and_write(year, 'pitching')
-    aggregate_and_write(year, 'batting')
+    aggregate_and_write(year, month, day, 'pitching')
+    aggregate_and_write(year, month, day, 'batting')
     total_time = time_converter(time.time() - start_time)
     logger.log("Done aggregating " + str(year) + " pitch fx data: Time = " + total_time + '\n\n')
     driver_logger.log("\t\tTime = " + total_time)
 
 
-def aggregate_and_write(year, player_type):
+def aggregate_and_write(year, month, day, player_type):
     pitcher_time = time.time()
     logger.log("\tAggregating " + player_type + " data and writing to database")
     db = DatabaseConnection(sandbox_mode)
-    players = set(db.read('select playerid from ' + player_type[:-3] + 'er_pitches;'))
+    extended_query = ''
+    if month is not None and day is not None:
+        extended_query += ' and month = ' + str(month) + ' and day = ' + str(day)
+    players = set(db.read('select playerid from ' + player_type[:-3] + 'er_pitches where year = ' + str(year)
+                          + extended_query + ';'))
     db.close()
     for player_id in players:
         aggregate(year, player_id[0], player_type)

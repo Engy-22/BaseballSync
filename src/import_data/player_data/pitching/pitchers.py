@@ -13,6 +13,8 @@ from utilities.anomaly_team import anomaly_team
 from utilities.properties import sandbox_mode, import_driver_logger as driver_logger
 
 data = {}
+pages = {}
+temp_pages = {}
 logger = Logger(os.path.join("..", "..", "baseball-sync", "logs", "import_data", "pitchers.log"))
 
 
@@ -22,7 +24,7 @@ def pitching_constructor(year):
     print('Downloading pitcher images and attributes')
     driver_logger.log("\tDownloading pitcher images and attributes")
     start_time = time.time()
-    logger.log("Downloading pitcher " + str(year) + " data || Timestamp: " + datetime.datetime.today()\
+    logger.log("Downloading pitcher " + str(year) + " data || Timestamp: " + datetime.datetime.today()
                .strftime('%Y-%m-%d %H:%M:%S'))
     logger.log("\tAssembling list of players")
     table = str(BeautifulSoup(urlopen("https://www.baseball-reference.com/leagues/MLB/" + str(year)
@@ -74,21 +76,29 @@ def pitching_constructor(year):
                 else:
                     continue
             batting_against_rows[player_id][team][this_index] = {'row': row.split('data-stat'), 'temp_player': row.
-                split('ata-stat="player" csk="')[1].split('" >')[0]}
+                                                                 split('ata-stat="player" csk="')[1].split('" >')[0]}
     logger.log("\t\tDone assembling list of players")
     bulk_time = time.time()
     ratios = league_pitching_ratios_constructor(year, logger)
     logger.log("\tParsing player pages, downloading images, and extracting player attributes")
+    global temp_pages
     with ThreadPoolExecutor(os.cpu_count()) as executor:
+        for player_id, dictionary in data.items():
+            if len(temp_pages) == os.cpu_count():
+                condense_pages()
+            executor.submit(load_url(player_id))
+    condense_pages()
+    global pages
+    write_player_attributes_to_db()
+    with ThreadPoolExecutor(os.cpu_count()) as executor3:
         for player_id, dictionary in data.items():
             for team, dictionary2 in dictionary.items():
                 for index, dictionary3 in dictionary2.items():
                     try:
-                        executor.submit(intermediate, player_id, team, index, dictionary3['temp_player'],
-                                        dictionary3['row'], batting_against_rows[player_id][team][index]['row'])
+                        executor3.submit(intermediate, team, index, player_id,
+                                         batting_against_rows[player_id][team][index]['row'])
                     except KeyError:
-                        executor.submit(intermediate, player_id, team, index, dictionary3['temp_player'],
-                                        dictionary3['row'], [])
+                        executor3.submit(intermediate, team, index, player_id, [])
     for player_id, dictionary in data.items():
         for team, dictionary2 in dictionary.items():
             try:
@@ -102,35 +112,32 @@ def pitching_constructor(year):
 
 
 def extract_player_attributes(player_id, page, reversed_name):
+    if page is None:
+        return
     img_location = str(page.find_all('img')[1]).split('src=')[1].split('/>')[0].split('"')[1]
     if 'gracenote' not in img_location:
-        urlretrieve(img_location, os.path.join("..", "..", "interface", "static", "images", "model", "players",
-                                               player_id, ".jpg"))
+        urlretrieve(img_location, os.path.join("interface", "static", "images", "model", "players", player_id + ".jpg"))
     for ent in page.find_all('div'):
         str_ent = str(ent)
         if 'Throws: </strong>' in str_ent:
-            return {'lastName': reversed_name.split(',')[0], 'firstName': reversed_name.split(',')[1],
+            temp_first_name = reversed_name.split(',')[1]
+            if "-0" in temp_first_name:
+                first_name = temp_first_name.split("-0")[0].replace("'", "\'")
+            else:
+                first_name = temp_first_name.split("0")[0].replace("'", "\'")
+            return {'lastName': reversed_name.split(',')[0].replace("'", "\'"), 'firstName': first_name,
                     'batsWith': str_ent.split('Bats: </strong>')[1][0], 'primaryPosition': 'N',
                     'throwsWith': str_ent.split('Throws: </strong>')[1][0]}
 
 
-def intermediate(player_id, team, index, temp_player, row, row2):
-    page = load_url(player_id)
-    if page is not None:
-        if "-0" in temp_player:
-            reversed_name = temp_player.split("-0")[0].replace("'", "\'")
-        else:
-            reversed_name = temp_player.split("0")[0].replace("'", "\'")
-        write_to_db(player_id, extract_player_attributes(player_id, page, reversed_name))
-    get_stats(player_id, team, index, row, row2)
-
-
-def get_stats(player_id, team, index, row, row2):
+def intermediate(team, index, player_id, batting_against_row):
+    global data
+    global pages
     stats = ["earned_run_average", "W", "L", "G", "GS", "SV", "IP", "H", "R", "ER", "HR", "BB", "IBB", "SO", "HBP",
              "BK", "WP", "whip", "batters_faced"]
     stats2 = ["AB", "2B", "3B", "SB", "CS", "batting_avg_bip", "GIDP", "SH", "SF"]
     stat_dictionary = {}
-    for ent in row:
+    for ent in data[player_id][team][index]['row']:
         for stat in stats:
             if '="' + stat + '" >' in ent:
                 try:
@@ -147,7 +154,7 @@ def get_stats(player_id, team, index, row, row2):
                 except ValueError:
                     pass
                 break
-    for ent in row2:
+    for ent in batting_against_row:
         for stat in stats2:
             if '="' + stat + '" >' in ent:
                 try:
@@ -162,13 +169,34 @@ def get_stats(player_id, team, index, row, row2):
 
 
 def load_url(player_id):
-    page = None
+    global temp_pages
     db = DatabaseConnection(sandbox_mode)
     if len(db.read('select * from players where playerid = "' + player_id + '";')) == 0:
-        page = BeautifulSoup(urlopen("https://www.baseball-reference.com/players/" + player_id[0] + "/" + player_id
-                                     + ".shtml"), 'html.parser')
+        temp_pages[player_id] = BeautifulSoup(urlopen("https://www.baseball-reference.com/players/" + player_id[0]
+                                                      + "/" + player_id + ".shtml"), 'html.parser')
+    else:
+        temp_pages[player_id] = None
     db.close()
-    return page
+
+
+def condense_pages():
+    global data
+    global temp_pages
+    global pages
+    for player_id, player_page in temp_pages.items():
+        for _, dictionary in data[player_id].items():
+            for _, info in dictionary.items():
+                pages[player_id] = extract_player_attributes(player_id, temp_pages[player_id], info['temp_player'])
+                break
+            break
+    temp_pages = {}
+
+
+def write_player_attributes_to_db():
+    global pages
+    with ThreadPoolExecutor(os.cpu_count()) as executor2:
+        for player_id, attributes in pages.items():
+            executor2.submit(write_to_db, player_id, attributes)
 
 
 def write_to_db(player_id, player_attributes):
