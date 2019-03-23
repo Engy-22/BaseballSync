@@ -65,7 +65,7 @@ def get_pitch_fx_data(year, month=None, day=None):
         logger.log("Downloading pitch fx data for " + str(month) + "-" + str(day) + "-" + str(year) + " || Timestamp: "
                    + datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S'))
         get_day_data(str(day), str(month), str(year))
-        # aggregate_pitch_fx_data(year, month, day)
+        aggregate_pitch_fx_data(year, month, day)
     driver_logger.log("\t\tTime = " + time_converter(time.time()-start_time))
 
 

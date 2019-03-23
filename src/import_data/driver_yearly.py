@@ -40,6 +40,7 @@ from utilities.properties import import_driver_logger as driver_logger
 
 
 def main(from_server, begin_year, end_year, frame=None):
+    print('\n')
     if end_year > begin_year >= 1876:
         driver_logger.log('Begin Yearly Driver || Timestamp: ' + datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S'))
         start_time = time.time()
