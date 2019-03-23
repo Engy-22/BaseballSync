@@ -58,6 +58,7 @@ def get_pitch_fx_data(year, month=None, day=None):
                     get_day_data(this_day, this_month, str(year))
         logger.log("Done fetching " + str(year) + " pitch fx data: time = " + time_converter(time.time() - start_time)
                    + '\n\n\n\n')
+        driver_logger.log("\t\tTime = " + time_converter(time.time()-start_time))
         aggregate_pitch_fx_data(year)
     else:
         driver_logger.log("\tFetching " + str(month) + "-" + str(day) + "-" + str(year) + " pitch fx data")
@@ -65,8 +66,8 @@ def get_pitch_fx_data(year, month=None, day=None):
         logger.log("Downloading pitch fx data for " + str(month) + "-" + str(day) + "-" + str(year) + " || Timestamp: "
                    + datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S'))
         get_day_data(str(day), str(month), str(year))
+        driver_logger.log("\t\tTime = " + time_converter(time.time()-start_time))
         aggregate_pitch_fx_data(year, month, day)
-    driver_logger.log("\t\tTime = " + time_converter(time.time()-start_time))
 
 
 def get_day_data(day, month, year):

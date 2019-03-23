@@ -2,9 +2,12 @@ import os
 import datetime
 import smtplib
 from import_data.config import Config as config
+from utilities.properties import import_driver_logger as driver_logger
 
 
 def send_results():
+    print('emailing results')
+    driver_logger.log('\temailing results')
     sender = config.MAIL_USERNAME
     recipient = config.MAIL_RECIPIENT
     pwd = config.MAIL_PASSWORD
@@ -21,7 +24,7 @@ def send_results():
 def get_results():
     body = ''
     info_is_now_relevant = False
-    with open(os.path.join("..", "..", "logs", "import_data", "driver.log"), 'rt') as log_file:
+    with open(os.path.join("..", "logs", "import_data", "driver.log"), 'rt') as log_file:
         for line in log_file.readlines():
             if info_is_now_relevant or datetime.datetime.today().strftime('%Y-%m-%d') in line:
                 info_is_now_relevant = True
@@ -29,6 +32,3 @@ def get_results():
                 continue
             body += line
     return body
-
-
-send_results()

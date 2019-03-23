@@ -26,7 +26,8 @@ def aggregate_pitch_fx_data(year, month=None, day=None):
 
 
 def aggregate_and_write(year, month, day, player_type):
-    pitcher_time = time.time()
+    start_time = time.time()
+    driver_logger.log("\t\tAggregating " + player_type + " data")
     logger.log("\tAggregating " + player_type + " data and writing to database")
     db = DatabaseConnection(sandbox_mode)
     extended_query = ''
@@ -38,8 +39,9 @@ def aggregate_and_write(year, month, day, player_type):
     for player_id in players:
         aggregate(year, month, day, player_id[0], player_type)
         # break
-    logger.log("\tDone aggregating and writing " + player_type + " data: Time = "
-               + time_converter(time.time() - pitcher_time))
+    total_time = time_converter(time.time()-start_time)
+    logger.log("\tDone aggregating and writing " + player_type + " data: Time = " + total_time)
+    driver_logger.log("\t\t\tTime = " + total_time)
 
 
 def aggregate(year, month, day, player_id, player_type):

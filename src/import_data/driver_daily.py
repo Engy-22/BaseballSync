@@ -36,28 +36,35 @@ from utilities.clean_up_deadlocked_file import clean_up_deadlocked_file
 from import_data.consolidata.driver import consolidate_data
 from import_data.player_data.pitching.determine_pitcher_roles import determine_pitcher_roles_year
 from utilities.properties import import_driver_logger as driver_logger
+from import_data.email_results import send_results
 
 
 def main(from_server, day, month, year, frame=None):
     print('\n')
     if 0 < day <= 31 and 0 < month <= 12 and year >= 1876:
-        pass
-        driver_logger.log('Begin Daily Driver || Timestamp: ' + datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S'))
-        start_time = time.time()
-        if not from_server:
-            frame.withdraw()
-        league_table_constructor()
-        manager_table_constructor()
-        driver(day, month, year)
-        rank_driver(year)
-        comparisons_driver(year)
-        hof_finder()
-        clean_up_deadlocked_file()
-        consolidate_data()
-        driver_logger.log('Driver complete for year ' + str(year) + ': time = '
-                          + time_converter(time.time()-start_time) + '\n\n\n')
+        try:
+            driver_logger.log('Begin Daily Driver || Timestamp: ' + datetime.datetime.today().
+                              strftime('%Y-%m-%d %H:%M:%S'))
+            start_time = time.time()
+            if not from_server:
+                frame.withdraw()
+            league_table_constructor()
+            manager_table_constructor()
+            driver(day, month, year)
+            rank_driver(year)
+            comparisons_driver(year)
+            hof_finder()
+            clean_up_deadlocked_file()
+            consolidate_data()
+            driver_logger.log('Driver complete for year ' + str(year) + ': time = '
+                              + time_converter(time.time()-start_time) + '\n\n\n')
+        except Exception as e:
+            driver_logger.log("ERROR:\t" + str(e))
+            send_results()
+            raise e
     else:
         print('Must enter a valid date.')
+    send_results()
     exit()
 
 
