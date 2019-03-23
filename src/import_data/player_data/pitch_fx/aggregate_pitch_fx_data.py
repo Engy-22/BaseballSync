@@ -12,7 +12,7 @@ from utilities.properties import sandbox_mode, import_driver_logger as driver_lo
 logger = Logger(os.path.join("..", "..", "baseball-sync", "logs", "import_data", "aggregate_pitch_fx_data.log"))
 
 
-def aggregate_pitch_fx_data(year):
+def aggregate_pitch_fx_data(year, month=None, day=None):
     print('Aggregating pitch fx data')
     driver_logger.log("\tAggregating pitch fx data")
     start_time = time.time()

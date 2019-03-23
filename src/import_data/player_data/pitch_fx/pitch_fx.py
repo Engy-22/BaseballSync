@@ -27,41 +27,53 @@ balls = 0
 logger = Logger(os.path.join("..", "..", "baseball-sync", "logs", "import_data", "pitch_fx.log"))
 
 
-def get_pitch_fx_data(year):
+def get_pitch_fx_data(year, month=None, day=None):
     if year < 2008:
         driver_logger.log("\tNo pitch fx data to download before 2008")
         return
-    driver_logger.log("\tFetching pitch fx data")
-    print("Fetching pitch fx data")
     start_time = time.time()
-    logger.log("Downloading pitch fx data for " + str(year) + " || Timestamp: " + datetime.datetime.today().
-               strftime('%Y-%m-%d %H:%M:%S'))
-    db = DatabaseConnection(sandbox_mode)
-    opening_day = db.read('select opening_day from years where year = ' + str(year) + ';')[0][0]
-    db.close()
-    for month in range(3, 12, 1):
-        # if month > 5:
-        if month >= int(opening_day.split('-')[0]):
-            for day in range(1, 32, 1):
-                # if day > 2:
-                if month == int(opening_day.split('-')[0]) and int(day) < int(opening_day.split('-')[1]):
-                    continue
-                if len(str(day)) == 1:
-                    this_day = '0' + str(day)
-                else:
-                    this_day = str(day)
-                if len(str(month)) == 1:
-                    this_month = '0' + str(month)
-                else:
-                    this_month = str(month)
-                get_day_data(this_day, this_month, str(year))
-    logger.log("Done fetching " + str(year) + " pitch fx data: time = " + time_converter(time.time() - start_time)
-               + '\n\n\n\n')
-    aggregate_pitch_fx_data(year)
-    driver_logger.log("\t\tTime = " + time_converter(time.time() - start_time))
+    if month is None and day is None:
+        driver_logger.log("\tFetching " + str(year) + " pitch fx data")
+        print("Fetching " + str(year) + " pitch fx data")
+        logger.log("Downloading pitch fx data for " + str(year) + " || Timestamp: " + datetime.datetime.today().
+                   strftime('%Y-%m-%d %H:%M:%S'))
+        db = DatabaseConnection(sandbox_mode)
+        opening_day = db.read('select opening_day from years where year = ' + str(year) + ';')[0][0]
+        db.close()
+        for month in range(3, 12, 1):
+            # if month > 5:
+            if month >= int(opening_day.split('-')[0]):
+                for day in range(1, 32, 1):
+                    # if day > 2:
+                    if month == int(opening_day.split('-')[0]) and int(day) < int(opening_day.split('-')[1]):
+                        continue
+                    if len(str(day)) == 1:
+                        this_day = '0' + str(day)
+                    else:
+                        this_day = str(day)
+                    if len(str(month)) == 1:
+                        this_month = '0' + str(month)
+                    else:
+                        this_month = str(month)
+                    get_day_data(this_day, this_month, str(year))
+        logger.log("Done fetching " + str(year) + " pitch fx data: time = " + time_converter(time.time() - start_time)
+                   + '\n\n\n\n')
+        aggregate_pitch_fx_data(year)
+    else:
+        driver_logger.log("\tFetching " + str(month) + "-" + str(day) + "-" + str(year) + " pitch fx data")
+        print("Fetching " + str(month) + "-" + str(day) + "-" + str(year) + " pitch fx data")
+        logger.log("Downloading pitch fx data for " + str(month) + "-" + str(day) + "-" + str(year) + " || Timestamp: "
+                   + datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S'))
+        get_day_data(str(day), str(month), str(year))
+        # aggregate_pitch_fx_data(year, month, day)
+    driver_logger.log("\t\tTime = " + time_converter(time.time()-start_time))
 
 
 def get_day_data(day, month, year):
+    if len(day) == 1:
+        day = '0' + day
+    if len(month) == 1:
+        month = '0' + month
     logger.log("\tDownloading data for " + month + '-' + day + '-' + year)
     day_time = time.time()
     home_page_url = 'http://gd2.mlb.com/components/game/mlb/year_' + year + '/month_' + month + '/day_' + day
@@ -80,8 +92,8 @@ def get_day_data(day, month, year):
                            + line.split('gid_')[1].split('_')[4] + ' - ' + innings_url)
                 try:
                     innings_page = str(BeautifulSoup(urlopen(innings_url), 'html.parser')).split('<li>')
-                    urlretrieve(players_url, 'C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\src\\'
-                                             'import_data\\player_data\\pitch_fx\\xml\\players.xml')
+                    urlretrieve(players_url, os.path.join("..", "..", "baseball-sync", "src", "import_data",
+                                                          "player_data", "pitch_fx", "xml", "players.xml"))
                 except Exception:
                     innings_page = []
                 with ThreadPoolExecutor(os.cpu_count()) as executor:
@@ -93,7 +105,7 @@ def get_day_data(day, month, year):
                                                 individual_inning_url.split('_')[1].split('.xml')[0])
                         except IndexError:
                             continue
-                parse_innings(year, innings_url)
+                parse_innings(year, month, day, innings_url)
                 clear_xmls()
         except IndexError:
             clear_xmls()
@@ -102,47 +114,46 @@ def get_day_data(day, month, year):
             clear_xmls()
             continue
     logger.log("\tDone downloading data for " + month + '-' + day + '-' + year + ": time = "
-               + time_converter(time.time() - day_time) + '\n\n')
+               + time_converter(time.time()-day_time) + '\n\n')
 
 
 def load_xml(inning_url, inning_num):
-    urlretrieve(inning_url, "C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\src\\import_data\\"
-                            "player_data\\pitch_fx\\xml\\" + str(inning_num) + ".xml")
+    urlretrieve(inning_url, os.path.join("..", "..", "baseball-sync", "src", "import_data", "player_data", "pitch_fx",
+                                         "xml", str(inning_num) + ".xml"))
 
 
-def parse_innings(year, innings_url):
-    directory = "C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\src\\import_data\\player_data\\" \
-                "pitch_fx\\xml"
+def parse_innings(year, month, day, innings_url):
+    directory = os.path.join("..", "..", "baseball-sync", "src", "import_data", "player_data", "pitch_fx", "xml")
     try:
-        players_doc = minidom.parse(directory + '\\players.xml')
+        players_doc = minidom.parse(os.path.join(directory, "players.xml"))
         away_team = resolve_team_id(players_doc.getElementsByTagName('team')[0].getAttribute('id'))
         home_team = resolve_team_id(players_doc.getElementsByTagName('team')[1].getAttribute('id'))
         if None in [away_team, home_team]:
             raise Exception('None team')
         for xml_file in os.listdir(directory):
             if 'players' not in xml_file and 'game' not in xml_file:
-                parse_inning(year, directory + '\\' + xml_file, innings_url, away_team, home_team)
+                parse_inning(year, month, day, os.path.join(directory, xml_file), innings_url, away_team, home_team)
     except FileNotFoundError:
         pass
 
 
-def parse_inning(year, xml_file, innings_url, away_team, home_team):
+def parse_inning(year, month, day, xml_file, innings_url, away_team, home_team):
     doc = minidom.parse(xml_file)
     away_at_bats = doc.getElementsByTagName('inning')[0].getElementsByTagName('top')[0].getElementsByTagName('atbat')
     for at_bat in away_at_bats:
-        parse_at_bat(innings_url, year, at_bat, home_team, away_team)
+        parse_at_bat(innings_url, year, month, day, at_bat, home_team, away_team)
     parse_pickoff_success(year, home_team, 'top', xml_file)
     try:
         home_at_bats = doc.getElementsByTagName('inning')[0].getElementsByTagName('bottom')[0]\
             .getElementsByTagName('atbat')
         for at_bat in home_at_bats:
-            parse_at_bat(innings_url, year, at_bat, away_team, home_team)
+            parse_at_bat(innings_url, year, month, day, at_bat, away_team, home_team)
         parse_pickoff_success(year, away_team, 'bottom', xml_file)
     except IndexError:
         pass
 
 
-def parse_at_bat(innings_url, year, at_bat, pitcher_team, hitter_team):
+def parse_at_bat(innings_url, year, month, day, at_bat, pitcher_team, hitter_team):
     meta_data = {'original_pitcher_id': at_bat.getAttribute('pitcher'),
                  'original_batter_id': at_bat.getAttribute('batter'),
                  'pitcher_id': resolve_player_id(at_bat.getAttribute('pitcher'), year, pitcher_team, 'pitching'),
@@ -159,13 +170,13 @@ def parse_at_bat(innings_url, year, at_bat, pitcher_team, hitter_team):
     global balls
     balls = 0
     for pitch in pitches:
-        parse_pitch(innings_url, year, pitch, meta_data, pitches.index(pitch) + 1 == len(pitches))
+        parse_pitch(innings_url, year, month, day, pitch, meta_data, pitches.index(pitch) + 1 == len(pitches))
     pickoff_attempts = at_bat.getElementsByTagName('po')
     for pickoff_attempt in pickoff_attempts:
         parse_pickoff_attempt(pickoff_attempt, meta_data['pitcher_id'], pitcher_team, year)
 
 
-def parse_pitch(innings_url, year, pitch, meta_data, last_pitch):
+def parse_pitch(innings_url, year, month, day, pitch, meta_data, last_pitch):
     global strikes
     global balls
     count = str(balls) + '-' + str(strikes)
@@ -191,11 +202,11 @@ def parse_pitch(innings_url, year, pitch, meta_data, last_pitch):
         swing_take = determine_swing_or_take(pitch.getAttribute('des'))
         with ThreadPoolExecutor(os.cpu_count()) as executor2:
             executor2.submit(write_to_file, innings_url, 'pitcher', meta_data['pitcher_id'], meta_data['pitcher_team'],
-                             year, meta_data['batter_orientation'], count, pitch_type, ball_strike, swing_take,
-                             outcome, trajectory, field, direction, meta_data['original_pitcher_id'])
+                             year, month, day, meta_data['batter_orientation'], count, pitch_type, ball_strike,
+                             swing_take, outcome, trajectory, field, direction, meta_data['original_pitcher_id'])
             executor2.submit(write_to_file, innings_url, 'batter', meta_data['batter_id'], meta_data['batter_team'],
-                             year, meta_data['pitcher_orientation'], count, pitch_type, ball_strike, swing_take,
-                             outcome, trajectory, field, direction, meta_data['original_batter_id'])
+                             year, month, day, meta_data['pitcher_orientation'], count, pitch_type, ball_strike,
+                             swing_take, outcome, trajectory, field, direction, meta_data['original_batter_id'])
     except KeyError:
         pass
 
@@ -221,10 +232,10 @@ def parse_pickoff_success(year, team, top_bottom, xml):
 
 def get_data_from_this_game(game_url):
     try:
-        urlretrieve(game_url, 'C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\src\\import_data\\'
-                              'player_data\\pitch_fx\\xml\\game.xml')
-        doc = minidom.parse('C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\src\\import_data\\'
-                            'player_data\\pitch_fx\\xml\\game.xml')
+        urlretrieve(game_url, os.path.join("..", "..", "baseball-sync", "src", "import_data", "player_data", "pitch_fx",
+                                           "xml", "game.xml"))
+        doc = minidom.parse(os.path.join("..", "..", "baseball-sync", "src", "import_data", "player_data", "pitch_fx",
+                                         "xml", "game.xml"))
         temp = doc.getElementsByTagName('game')[0]
         if temp.getAttribute('type') in ['R', 'D', 'L', 'W']:
             return True
@@ -238,11 +249,10 @@ def clear_xmls():
     def remove(xml_file):
         os.remove(xml_file)
     logger.log("\t\t\tClearing xml files")
-    directory = "C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\src\\import_data\\player_data\\" \
-                "pitch_fx\\xml"
+    directory = os.path.join("..", "..", "baseball-sync", "src", "import_data", "player_data", "pitch_fx", "xml")
     with ThreadPoolExecutor(os.cpu_count()) as executor:
         for xml_file in os.listdir(directory):
-            executor.submit(remove, directory + '\\' + xml_file)
+            executor.submit(remove, os.path.join(directory, xml_file))
 
 
 # get_pitch_fx_data(2017)

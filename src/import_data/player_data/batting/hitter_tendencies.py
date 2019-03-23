@@ -99,8 +99,10 @@ def write_to_file(year, player_id, stat_list):
                         query_string += value[0] + ' = ' + str(pa[0] / (pa[0] + int(value[1]))) + ', '
                     except ZeroDivisionError:
                         query_string += value[0] + ' = ' + '1.0' + ', '
-            db.write('update player_batting set ' + query_string[:-2] + ' where PT_uniqueidentifier = ' + str(pt[0])
-                     + ' and year = ' + str(year) + ';')
+            if len(db.read('select pp_pa from player_batting where PT_uniqueidentifier = ' + str(pt[0])
+                           + ' and year = ' + str(year) + ';')):
+                db.write('update player_batting set ' + query_string[:-2] + ' where PT_uniqueidentifier = ' + str(pt[0])
+                         + ' and year = ' + str(year) + ';')
     db.close()
 
 

@@ -17,11 +17,12 @@ class DatabaseConnection:
             self.cursor.execute(action)
             self.db.commit()
         except Exception as e:
-            if not any(special_error in str(e) for special_error in ['Duplicate entry',
+            if not any(special_error in str(e) for special_error in ['Duplicate entry', 'eadlock',
                                                                      'check that column/key exists']):
                 print('\t\t' + str(e) + ' --> ' + action)
-            elif 'deadlock' in str(e):
-                with open(os.path.join("..", "..", "deadlocked.txt"), "a") as deadlocked_file:
+            elif 'eadlock' in str(e):
+                with open(os.path.join("..", "..", "baseball-sync", "src", "utilities", "deadlocked.txt"),
+                          "a") as deadlocked_file:
                     deadlocked_file.write(action)
             self.db.rollback()
 

@@ -57,7 +57,7 @@ def determine_pitcher_roles_year(year):
     db.close()
     total_time = time_converter(time.time() - start_time)
     logger.log("Done: Time = " + total_time + '\n\n')
-    driver_logger.log("\t\tTIme = " + total_time)
+    driver_logger.log("\t\tTime = " + total_time)
 
 
 # determine_pitcher_roles_year(1971)

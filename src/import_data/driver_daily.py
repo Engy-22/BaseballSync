@@ -5,7 +5,6 @@
 
 import time
 import datetime
-from utilities.stringify_list import stringify_list
 from utilities.time_converter import time_converter
 from import_data.leagues.league_table_constructor import league_table_constructor
 from import_data.team_data.manager_table_constructor import manager_table_constructor
@@ -42,52 +41,49 @@ from utilities.properties import import_driver_logger as driver_logger
 def main(from_server, day, month, year, frame=None):
     if 0 < day <= 31 and 0 < month <= 12 and year >= 1876:
         pass
-        # driver_logger.log('Begin Daily Driver || Timestamp: ' + datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S'))
-        # start_time = time.time()
-        # if not from_server:
-        #     frame.withdraw()
-        # league_table_constructor()
-        # manager_table_constructor()
-        # years = []
-        # for year in range(begin_year, end_year, 1):
-        #     years.append(year)
-        #     driver(year)
-        # rank_driver(years[-1])
-        # comparisons_driver(years[-1])
-        # hof_finder()
-        # clean_up_deadlocked_file()
-        # consolidate_data()
-        # driver_logger.log('Driver complete for year' + stringify_list(years) + ': time = '
-        #                   + time_converter(time.time() - start_time) + '\n\n\n')
+        driver_logger.log('Begin Daily Driver || Timestamp: ' + datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S'))
+        start_time = time.time()
+        if not from_server:
+            frame.withdraw()
+        league_table_constructor()
+        manager_table_constructor()
+        driver(day, month, year)
+        rank_driver(year)
+        comparisons_driver(year)
+        hof_finder()
+        clean_up_deadlocked_file()
+        consolidate_data()
+        driver_logger.log('Driver complete for year ' + str(year) + ': time = '
+                          + time_converter(time.time()-start_time) + '\n\n\n')
     else:
         print('Must enter a valid date.')
     exit()
 
 
-def driver(year):
+def driver(day, month, year):
     driver_logger.log(str(year))
     driver_time = time.time()
     print('\n\n' + str(year))
-    populate_teams_table(year)
-    get_year_data(year)
-    ballpark_and_manager_data(year)
-    league_standings(year)
-    team_offensive_statistics(year)
-    team_defensive_statistics(year)
-    batting_constructor(year)
-    pitching_constructor(year)
-    fielding_constructor(year)
-    team_fielding_file_constructor(year)
-    team_batting_order_constructor(year)
-    team_pitching_rotation_constructor(year)
-    primary_and_secondary_positions(year)
-    determine_pitcher_roles_year(year)
-    get_pitch_fx_data(year)
-    hitter_tendencies(year)
-    pitcher_tendencies(year)
-    manager_tendencies(year)
-    hitter_spray_chart_constructor(year)
-    pitcher_spray_chart_constructor(year)
+    # populate_teams_table(year)
+    # get_year_data(year)
+    # ballpark_and_manager_data(year)
+    # league_standings(year)
+    # team_offensive_statistics(year)
+    # team_defensive_statistics(year)
+    # batting_constructor(year)
+    # pitching_constructor(year)
+    # fielding_constructor(year)
+    # team_fielding_file_constructor(year)
+    # team_batting_order_constructor(year)
+    # team_pitching_rotation_constructor(year)
+    # primary_and_secondary_positions(year)
+    # determine_pitcher_roles_year(year)
+    # # get_pitch_fx_data(year, month, day)
+    # hitter_tendencies(year)
+    # pitcher_tendencies(year)
+    # manager_tendencies(year)
+    # hitter_spray_chart_constructor(year)
+    # pitcher_spray_chart_constructor(year)
     team_certainties(year)
     award_winner_driver(year)
     driver_logger.log('Time taken to download ' + str(year) + ' data: ' + time_converter(time.time()-driver_time)

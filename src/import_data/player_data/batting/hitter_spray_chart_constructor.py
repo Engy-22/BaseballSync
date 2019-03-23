@@ -23,7 +23,8 @@ def hitter_spray_chart_constructor(year):
     if year >= 1988:
         driver_logger.log("\tCreating hitter spray charts")
         db = DatabaseConnection(sandbox_mode)
-        pt_uid_players = set(db.read('select PT_uniqueidentifier from player_batting where year = ' + str(year) + ';'))
+        pt_uid_players = set(db.read('select PT_uniqueidentifier from player_batting where year = ' + str(year)
+                                     + ' and pa_infield is NULL;'))
         db.close()
         with ThreadPoolExecutor(os.cpu_count()) as executor:
             for ent in pt_uid_players:
