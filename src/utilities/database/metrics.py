@@ -1,8 +1,11 @@
+import os
 import sys
+if 'linux' in sys.platform:
+    sys.path.append(os.path.join('/home', 'araimond', 'baseball-sync', 'src'))
 import tkinter
-from utilities.database.wrappers.baseball_data_connection import DatabaseConnection
-from utilities.database.wrappers.pitchers_pitch_fx_connection import PitcherPitchFXDatabaseConnection
-from utilities.database.wrappers.batters_pitch_fx_connection import BatterPitchFXDatabaseConnection
+from wrappers.baseball_data_connection import DatabaseConnection
+from wrappers.pitchers_pitch_fx_connection import PitcherPitchFXDatabaseConnection
+from wrappers.batters_pitch_fx_connection import BatterPitchFXDatabaseConnection
 from utilities.num_to_string import num_to_string
 
 font = ('Times', 12)
