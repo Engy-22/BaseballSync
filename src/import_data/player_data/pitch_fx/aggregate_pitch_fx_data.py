@@ -37,14 +37,14 @@ def aggregate_and_write(year, month, day, player_type):
                           + extended_query + ';'))
     db.close()
     for player_id in players:
-        aggregate(year, month, day, player_id[0], player_type)
+        aggregate(year, player_id[0], player_type)
         # break
     total_time = time_converter(time.time()-start_time)
     logger.log("\tDone aggregating and writing " + player_type + " data: Time = " + total_time)
     driver_logger.log("\t\t\tTime = " + total_time)
 
 
-def aggregate(year, month, day, player_id, player_type):
+def aggregate(year, player_id, player_type):
     # print(player_id)
     table = player_type[:-3] + 'er_pitches'
     matchups = ['vr', 'vl']
@@ -74,10 +74,10 @@ def aggregate(year, month, day, player_id, player_type):
                         'playerid = "' + player_id + '" and teamid = "TOT")' + ';')[0][0]
     else:
         p_uid = temp_p_uid[0]
-    if month is None and day is None:
-        date_extension = ''
-    else:
-        date_extension = ' month = ' + str(month) + ' and day = ' + str(day) + ' and'
+    # if month is None and day is None:
+    #     date_extension = ''
+    # else:
+    #     date_extension = ' month = ' + str(month) + ' and day = ' + str(day) + ' and'
     for matchup in matchups:
         aggregate_hbp(player_id, year, matchup, p_uid, player_type)
         pitch_usage[matchup] = {}
@@ -100,8 +100,10 @@ def aggregate(year, month, day, player_id, player_type):
                 trajectories[matchup][count] = {}
                 fields[matchup][count] = {}
                 directions[matchup][count] = {}
-                bulk_query = 'from ' + table + ' where playerid = "' + player_id + '" and year = ' + str(year) + ' and'\
-                             + date_extension + ' matchup = "' + matchup + opponent + '" and count = "' + count + '"'
+                # bulk_query = 'from ' + table + ' where playerid = "' + player_id + '" and year = ' + str(year) + ' and'\
+                #              + date_extension + ' matchup = "' + matchup + opponent + '" and count = "' + count + '"'
+                bulk_query = 'from ' + table + ' where playerid = "' + player_id + '" and year = ' + str(year)\
+                             + ' and matchup = "' + matchup + opponent + '" and count = "' + count + '"'
                 for pitch_type in set(db.read('select pitch_type ' + bulk_query + 'and swing_take = "swing";')):
                     temp_bulk_query = bulk_query + ' and pitch_type = "' + pitch_type[0] + '"'
                     pitch_usage[matchup][count][pitch_type[0]] = int(db.read('select count(*) ' + temp_bulk_query
@@ -257,8 +259,8 @@ def write_outcomes(player_id, p_uid, year, matchup, count, outcomes_by_pitch_typ
                                + ' and matchup = "' + matchup + '" and count = "' + count + '" and outcome = "'
                                + outcome + '";')) == 0:
                     executor4.submit(db.write('insert into outcomes (uid, playerid, year, matchup, count, outcome, '
-                                              + pitch_type + ', p_uid) values (default, "' + player_id + '", ' + str(year)
-                                              + ', "' + matchup + '", "' + count + '", "' + outcome + '", '
+                                              + pitch_type + ', p_uid) values (default, "' + player_id + '", '
+                                              + str(year) + ', "' + matchup + '", "' + count + '", "' + outcome + '", '
                                               + str(round(total/total_pitches[pitch_type], 3)) + ', ' + str(p_uid)
                                               + ');'))
                 else:
@@ -283,7 +285,8 @@ def write_swing_rate(player_id, p_uid, year, matchup, count, pitch_usage, swing_
             fields += ', ' + pitch_type
             values += ', ' + str(round(swings/pitch_usage[pitch_type], 3))
         db.write('insert into swing_rate (uid, playerid, year, matchup, count' + fields + ') values (default, "'
-                 + player_id + '", ' + str(year) + ', "' + matchup + '", "' + count + '"' + values + ');')
+                 + player_id + '", ' + str(year) + ', "' + matchup + '", "' + count + '"' + values + ', p_uid = '
+                 + str(p_uid) + ');')
     else:
         sets = ''
         for pitch_type, swings in swing_rates.items():

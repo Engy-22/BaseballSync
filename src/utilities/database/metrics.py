@@ -64,13 +64,13 @@ def create_table_for_linux():
     length = ''
     for _ in range(len(bdh)+len(ppfxh)+len(bpfxh)+32):
         length += '-'
-    print(beginning_spaces + length + '\n' + beginning_spaces + '|  ' + bdh + '  |  ' + ppfxh + '  |  ' + bpfxh
+    print('\n' + beginning_spaces + length + '\n' + beginning_spaces + '|  ' + bdh + '  |  ' + ppfxh + '  |  ' + bpfxh
           + '  |     ' + th + '     |\n' + beginning_spaces + length + '\nTables   |  ' + bdt
           + calculate_spaces(len(bdt), len(bdh)) + '  |  ' + ppfxt + calculate_spaces(len(ppfxt), len(ppfxh)) + '  |  '
           + bpfxt + calculate_spaces(len(bpfxt), len(bpfxh)) + '  |  ' + tt + calculate_spaces(len(tt), 11) + '  |\n'
           + beginning_spaces + length + '\nRecords  |  ' + bdr + calculate_spaces(len(bdr), len(bdh)) + '  |  ' + ppfxr
           + calculate_spaces(len(ppfxr), len(ppfxh)) + '  |  ' + bpfxr + calculate_spaces(len(bpfxr), len(bpfxh))
-          + '  |  ' + tr + calculate_spaces(len(tr), 11) + '  |  \n' + beginning_spaces + length)
+          + '  |  ' + tr + calculate_spaces(len(tr), 11) + '  |  \n' + beginning_spaces + length + '\n')
 
 
 if __name__ == '__main__':
