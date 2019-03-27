@@ -10,6 +10,7 @@ from wrappers.batters_pitch_fx_connection import BatterPitchFXDatabaseConnection
 from concurrent.futures import ThreadPoolExecutor
 from utilities.time_converter import time_converter
 from utilities.clear_logs import clear_logs
+from utilities.properties import log_prefix
 
 
 def select_years(vars, previous_frame):
@@ -63,7 +64,7 @@ def driver(from_server, previous_frame, vars, all_years, begin_year=None, end_ye
 
 
 def do_reset(from_server, variables, year):
-    clear_logs(os.path.join("..", "..", "..", "logs"))
+    clear_logs()
     if not from_server:
         frame.withdraw()
         for env, dbs in variables.items():

@@ -43,6 +43,7 @@ def ballpark_and_manager_data(year):
     with ThreadPoolExecutor(os.cpu_count()) as executor2:
         for team_key, team_id in teams.items():
             executor2.submit(gather_team_home_numbers, team_id, team_key, year, team_count)
+            # break
     logger.log("\tDone calculating and writing ballpark numbers and downloading manager data: time = "
                + time_converter(time.time() - calc_and_download_time))
     total_time = time_converter(time.time() - start_time)
@@ -124,15 +125,21 @@ def gather_team_home_numbers(team_id, team_key, year, team_count):
                                                  .split('.shtml')[0] + '.shtml'), 'html.parser'))
         try:
             manager_pic_url = manager_page.split('<img class="" src="')[1].split('"')[0]
-            urlretrieve(manager_pic_url, os.path.join("..", "..", "interface", "static", "images", "model", "managers",
-                                                      manager_data[0].split('.shtml')[0], ".jpg"))
+            urlretrieve(manager_pic_url, os.path.join("interface", "static", "images", "model", "managers",
+                                                      manager_data[0].split('.shtml')[0] + ".jpg"))
         except Exception as e:
             logger.log('\t\t' + str(e))
-        team_pic_url = table.split('<div class="media-item logo loader">')[1].split('<')[1].split('src="')[1].\
-            split('"')[0]
         try:
-            urlretrieve(team_pic_url, os.path.join("..", "..", "interface", "static", "images", "model", "teams",
-                                                   team_id + str(year), ".jpg"))
+            team_pic_url = table.split('<div class="media-item logo loader">')[1].split('<')[1].split('src="')[1].\
+                split('"')[0]
+        except IndexError:
+            table = str(BeautifulSoup(urlopen('https://www.baseball-reference.com/teams/' + team_key + '/' + str(year)
+                                              + '.shtml'), 'html.parser'))
+            team_pic_url = table.split('<div class="media-item logo loader">')[1].split('<')[1].split('src="')[1].\
+                split('"')[0]
+        try:
+            urlretrieve(team_pic_url, os.path.join("interface", "static", "images", "model", "teams", team_id
+                                                   + str(year) + ".jpg"))
         except Exception as e:
             logger.log('\t\t' + str(e))
         for i in manager_data:
