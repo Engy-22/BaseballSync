@@ -52,11 +52,11 @@ def main(from_server, begin_year, end_year, frame=None):
         for year in range(begin_year, end_year, 1):
             years.append(year)
             driver(year)
-        # rank_driver(years[-1])
-        # comparisons_driver(years[-1])
-        # hof_finder()
-        # clean_up_deadlocked_file()
-        # consolidate_data()
+        rank_driver(years[-1])
+        comparisons_driver(years[-1])
+        hof_finder()
+        clean_up_deadlocked_file()
+        consolidate_data()
         driver_logger.log('Driver complete for year' + stringify_list(years) + ': time = '
                           + time_converter(time.time() - start_time) + '\n\n\n')
     else:
