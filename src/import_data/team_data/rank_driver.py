@@ -11,9 +11,9 @@ from utilities.time_converter import time_converter
 from utilities.logger import Logger
 from utilities.properties import import_driver_logger as driver_logger
 from utilities.database.wrappers.baseball_data_connection import DatabaseConnection
-from utilities.properties import sandbox_mode
+from utilities.properties import sandbox_mode, log_prefix
 
-logger = Logger(os.path.join("..", "..", "baseball-sync", "logs", "import_data", "rank_driver.log"))
+logger = Logger(os.path.join(log_prefix, "import_data", "rank_driver.log"))
 
 
 def rank_driver(year):

@@ -7,10 +7,10 @@ from utilities.database.wrappers.baseball_data_connection import DatabaseConnect
 from utilities.time_converter import time_converter
 from utilities.logger import Logger
 from concurrent.futures import ThreadPoolExecutor
-from utilities.properties import sandbox_mode, import_driver_logger as driver_logger
+from utilities.properties import sandbox_mode, log_prefix, import_driver_logger as driver_logger
 
 bad_gateway_data = []
-logger = Logger(os.path.join("..", "..", "baseball-sync", "logs", "import_data", "hitter_spray_chart_constructor.log"))
+logger = Logger(os.path.join(log_prefix, "import_data", "hitter_spray_chart_constructor.log"))
 
 
 def hitter_spray_chart_constructor(year):

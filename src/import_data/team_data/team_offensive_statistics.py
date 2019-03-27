@@ -8,9 +8,9 @@ from utilities.database.wrappers.baseball_data_connection import DatabaseConnect
 from utilities.translate_team_id import translate_team_id
 from utilities.time_converter import time_converter
 from utilities.anomaly_team import anomaly_team
-from utilities.properties import sandbox_mode, import_driver_logger as driver_logger
+from utilities.properties import sandbox_mode, log_prefix, import_driver_logger as driver_logger
 
-logger = Logger(os.path.join("..", "..", "baseball-sync", "logs", "import_data", "team_offensive_statistics.log"))
+logger = Logger(os.path.join(log_prefix, "import_data", "team_offensive_statistics.log"))
 
 
 def team_offensive_statistics(year):

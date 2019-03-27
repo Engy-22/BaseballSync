@@ -7,9 +7,9 @@ from utilities.database.wrappers.baseball_data_connection import DatabaseConnect
 from utilities.logger import Logger
 import datetime
 import time
-from utilities.properties import sandbox_mode, import_driver_logger as driver_logger
+from utilities.properties import sandbox_mode, log_prefix, import_driver_logger as driver_logger
 
-logger = Logger(os.path.join("..", "..", "baseball-sync", "logs", "import_data", "manager_table_constructor.log"))
+logger = Logger(os.path.join(log_prefix, "import_data", "manager_table_constructor.log"))
 
 
 def manager_table_constructor():

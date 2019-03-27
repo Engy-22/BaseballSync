@@ -19,12 +19,12 @@ from import_data.player_data.pitch_fx.translators.resolve_player_id import resol
 from import_data.player_data.pitch_fx.translators.resolve_team_id import resolve_team_id
 from import_data.player_data.pitch_fx.translators.find_pickoff_successes import find_pickoff_successes
 from import_data.player_data.pitch_fx.aggregate_pitch_fx_data import aggregate_pitch_fx_data
-from utilities.properties import sandbox_mode, import_driver_logger as driver_logger
+from utilities.properties import sandbox_mode, log_prefix, import_driver_logger as driver_logger
 
 innings = {}
 strikes = 0
 balls = 0
-logger = Logger(os.path.join("..", "..", "baseball-sync", "logs", "import_data", "pitch_fx.log"))
+logger = Logger(os.path.join(log_prefix, "import_data", "pitch_fx.log"))
 
 
 def get_pitch_fx_data(year, month=None, day=None):

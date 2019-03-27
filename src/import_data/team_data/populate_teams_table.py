@@ -5,9 +5,9 @@ from utilities.time_converter import time_converter
 import datetime
 import time
 import os
-from utilities.properties import sandbox_mode, import_driver_logger as driver_logger
+from utilities.properties import sandbox_mode, log_prefix, import_driver_logger as driver_logger
 
-logger = Logger(os.path.join("..", "..", "baseball-sync", "logs", "import_data", "populate_teams_table.log"))
+logger = Logger(os.path.join(log_prefix, "import_data", "populate_teams_table.log"))
 
 
 def populate_teams_table(year):

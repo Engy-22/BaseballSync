@@ -2,12 +2,12 @@ import os
 import sys
 sys.path.append(os.path.join(sys.path[0], '..', '..'))
 
+import tkinter
+import time
 from wrappers.baseball_data_connection import DatabaseConnection
 from wrappers.pitchers_pitch_fx_connection import PitcherPitchFXDatabaseConnection
 from wrappers.batters_pitch_fx_connection import BatterPitchFXDatabaseConnection
 from concurrent.futures import ThreadPoolExecutor
-import tkinter
-import time
 from utilities.time_converter import time_converter
 from utilities.clear_logs import clear_logs
 

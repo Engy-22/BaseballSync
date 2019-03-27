@@ -2,12 +2,12 @@ import os
 from utilities.database.wrappers.baseball_data_connection import DatabaseConnection
 from import_data.consolidata.team_roster_info import consolidate_hitter_spots, consolidate_player_positions, write_roster_info
 from utilities.logger import Logger
-from utilities.properties import sandbox_mode, import_driver_logger as driver_logger
+from utilities.properties import sandbox_mode, log_prefix, import_driver_logger as driver_logger
 from utilities.time_converter import time_converter
 import datetime
 import time
 
-logger = Logger(os.path.join("..", "..", "baseball-sync", "logs", "import_data", "consolidata.log"))
+logger = Logger(os.path.join(log_prefix, "import_data", "consolidata.log"))
 
 
 def consolidate_data():

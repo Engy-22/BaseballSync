@@ -9,13 +9,13 @@ from utilities.translate_team_id import translate_team_id
 from utilities.time_converter import time_converter
 from utilities.logger import Logger
 from utilities.anomaly_team import anomaly_team
-from utilities.properties import sandbox_mode, import_driver_logger as driver_logger
+from utilities.properties import sandbox_mode, log_prefix, import_driver_logger as driver_logger
 from import_data.player_data.fielding.cathchers_defense import catcher_defense
 
 data = {}
 pages = {}
 temp_pages = {}
-logger = Logger(os.path.join("..", "..", "baseball-sync", "logs", "import_data", "fielders.log"))
+logger = Logger(os.path.join(log_prefix, "import_data", "fielders.log"))
 
 
 def fielding_constructor(year):

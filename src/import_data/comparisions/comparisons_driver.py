@@ -13,9 +13,9 @@ from import_data.comparisions.stat_gatherers.pitching_comparison_engine import m
 from import_data.comparisions.stat_gatherers.defensive_comparison_engine import make_defensive_comparisons, defensive_dr_calc
 from import_data.comparisions.getters.defensive_team_getters import get_defensive_stats, get_year_totals as defensive_year_totals
 from utilities.time_converter import time_converter
-from utilities.properties import import_driver_logger as driver_logger
+from utilities.properties import log_prefix, import_driver_logger as driver_logger
 
-logger = Logger(os.path.join("..", "..", "baseball-sync", "logs", "import_data", "comparisons_driver.log"))
+logger = Logger(os.path.join(log_prefix, "import_data", "comparisons_driver.log"))
 
 
 def comparisons_driver(most_recent_year):

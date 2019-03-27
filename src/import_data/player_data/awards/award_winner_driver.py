@@ -11,9 +11,9 @@ from import_data.player_data.awards.gold_glove_winners import gold_glove_winners
 from import_data.player_data.awards.silver_slugger_winners import silver_slugger_winners
 from import_data.player_data.awards.triple_crown_winners import triple_crown_winners
 from import_data.player_data.awards.all_star_finder import all_star_finder
-from utilities.properties import sandbox_mode, import_driver_logger as driver_logger
+from utilities.properties import sandbox_mode, log_prefix, import_driver_logger as driver_logger
 
-logger = Logger(os.path.join("..", "..", "baseball-sync", "logs", "import_data", "award_winner_driver.log"))
+logger = Logger(os.path.join(log_prefix, "import_data", "award_winner_driver.log"))
 
 
 def award_winner_driver(year):

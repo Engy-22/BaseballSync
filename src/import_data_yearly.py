@@ -1,9 +1,9 @@
 import os
 import sys
 import tkinter
-from import_data.driver_yearly import main
 
 sys.path.append(os.path.join(sys.path[0], '..'))
+from import_data.driver_yearly import main
 
 
 if __name__ == '__main__':

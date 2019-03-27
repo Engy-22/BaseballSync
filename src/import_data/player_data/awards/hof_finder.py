@@ -6,9 +6,9 @@ from utilities.logger import Logger
 from utilities.database.wrappers.baseball_data_connection import DatabaseConnection
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
-from utilities.properties import sandbox_mode, import_driver_logger as driver_logger
+from utilities.properties import sandbox_mode, log_prefix, import_driver_logger as driver_logger
 
-logger = Logger(os.path.join("..", "..", "baseball-sync", "logs", "import_data", "hof_finder.log"))
+logger = Logger(os.path.join(log_prefix, "import_data", "hof_finder.log"))
 
 
 def hof_finder():

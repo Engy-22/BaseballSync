@@ -5,9 +5,9 @@ from utilities.database.wrappers.baseball_data_connection import DatabaseConnect
 from utilities.translate_team_id import translate_team_id
 from utilities.time_converter import time_converter
 from utilities.logger import Logger
-from utilities.properties import sandbox_mode
+from utilities.properties import sandbox_mode, log_prefix
 
-logger = Logger(os.path.join("..", "..", "baseball-sync", "logs", "import_data", "team_ranker_year.log"))
+logger = Logger(os.path.join(log_prefix, "import_data", "team_ranker_year.log"))
 
 
 def team_ranker_year(year):

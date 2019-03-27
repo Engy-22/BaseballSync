@@ -8,11 +8,10 @@ from utilities.translate_team_id import translate_team_id
 from utilities.logger import Logger
 from utilities.time_converter import time_converter
 from concurrent.futures import ThreadPoolExecutor
-from utilities.properties import sandbox_mode, import_driver_logger as driver_logger
+from utilities.properties import sandbox_mode, log_prefix, import_driver_logger as driver_logger
 
 pages = {}
-logger = Logger(os.path.join("..", "..", "baseball-sync", "logs", "import_data",
-                             "team_pitching_rotation_constructor.log"))
+logger = Logger(os.path.join(log_prefix, "import_data", "team_pitching_rotation_constructor.log"))
 
 
 def team_pitching_rotation_constructor(year):

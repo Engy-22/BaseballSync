@@ -6,9 +6,9 @@ from utilities.logger import Logger
 from utilities.database.wrappers.baseball_data_connection import DatabaseConnection
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
-from utilities.properties import sandbox_mode
+from utilities.properties import sandbox_mode, log_prefix
 
-logger = Logger(os.path.join("..", "..", "baseball-sync", "logs", "import_data", "all_star_finder.log"))
+logger = Logger(os.path.join(log_prefix, "import_data", "all_star_finder.log"))
 
 
 def all_star_finder(year, normal, driver_logger):
