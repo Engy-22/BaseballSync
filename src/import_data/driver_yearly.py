@@ -36,13 +36,15 @@ from import_data.player_data.awards.hof_finder import hof_finder
 from utilities.clean_up_deadlocked_file import clean_up_deadlocked_file
 from import_data.consolidata.driver import consolidate_data
 from import_data.player_data.pitching.determine_pitcher_roles import determine_pitcher_roles_year
+from utilities.database.automated_migration import auto_migrate
 from utilities.properties import import_driver_logger as driver_logger
 
 
 def main(from_server, begin_year, end_year, frame=None):
     print('\n')
     if end_year > begin_year >= 1876:
-        driver_logger.log('Begin Yearly Driver || Timestamp: ' + datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S'))
+        driver_logger.log('Begin Yearly Driver || Timestamp: ' + datetime.datetime.today().
+                          strftime('%Y-%m-%d %H:%M:%S'))
         start_time = time.time()
         if not from_server:
             frame.withdraw()
@@ -52,11 +54,11 @@ def main(from_server, begin_year, end_year, frame=None):
         for year in range(begin_year, end_year, 1):
             years.append(year)
             driver(year)
-        consolidate_data()
         rank_driver(years[-1])
         comparisons_driver(years[-1])
         hof_finder()
         clean_up_deadlocked_file()
+        auto_migrate()
         driver_logger.log('Driver complete for year' + stringify_list(years) + ': time = '
                           + time_converter(time.time() - start_time) + '\n\n\n')
     else:
@@ -89,6 +91,7 @@ def driver(year):
     hitter_spray_chart_constructor(year)
     pitcher_spray_chart_constructor(year)
     team_certainties(year)
+    consolidate_data(year)
     award_winner_driver(year)
     driver_logger.log('Time taken to download ' + str(year) + ' data: ' + time_converter(time.time()-driver_time)
                       + '\n')

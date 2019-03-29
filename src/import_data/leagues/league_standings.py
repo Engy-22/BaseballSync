@@ -209,6 +209,3 @@ def write_to_db(this_string, team_id, year):
                  'BY_uniqueidentifier) values (default,' + this_string + ', (select BY_uniqueidentifier from '
                  'ballpark_years where teamId = "' + team_id + '" and year = ' + str(year) + '));')
     db.close()
-
-
-# league_standings(2018)

@@ -28,14 +28,11 @@ from import_data.team_data.manager_tendencies import manager_tendencies
 from import_data.player_data.batting.hitter_spray_chart_constructor import hitter_spray_chart_constructor
 from import_data.player_data.pitching.pitching_spray_chart_constructor import pitcher_spray_chart_constructor
 from import_data.team_data.team_certainties import team_certainties
-from import_data.team_data.rank_driver import rank_driver
-from import_data.player_data.awards.award_winner_driver import award_winner_driver
-from import_data.comparisions.comparisons_driver import comparisons_driver
-from import_data.player_data.awards.hof_finder import hof_finder
 from utilities.clean_up_deadlocked_file import clean_up_deadlocked_file
 from import_data.consolidata.driver import consolidate_data
 from import_data.player_data.pitching.determine_pitcher_roles import determine_pitcher_roles_year
 from utilities.properties import import_driver_logger as driver_logger
+from utilities.database.automated_migration import auto_migrate
 from import_data.email_results import send_results
 
 
@@ -51,13 +48,10 @@ def main(from_server, day, month, year, frame=None):
             league_table_constructor()
             manager_table_constructor()
             driver(day, month, year)
-            rank_driver(year)
-            comparisons_driver(year)
-            hof_finder()
             clean_up_deadlocked_file()
-            consolidate_data()
+            auto_migrate()
             driver_logger.log('Driver complete for year ' + str(year) + ': time = '
-                              + time_converter(time.time()-start_time) + '\n\n\n')
+                              + time_converter(time.time()-start_time) + '\n')
         except Exception as e:
             driver_logger.log("ERROR:\t" + str(e))
             send_results()
@@ -93,6 +87,6 @@ def driver(day, month, year):
     hitter_spray_chart_constructor(year)
     pitcher_spray_chart_constructor(year)
     team_certainties(year)
-    award_winner_driver(year)
+    consolidate_data(year)
     driver_logger.log('Time taken to download ' + str(year) + ' data: ' + time_converter(time.time()-driver_time)
                       + '\n')

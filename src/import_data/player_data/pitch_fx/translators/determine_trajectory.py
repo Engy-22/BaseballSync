@@ -80,7 +80,7 @@ def determine_trajectory(event, description):
                 trajectory = 'unknown'
         else:
             if event != 'cs':
-                # print(event, description)
+                print(event, description)
                 raise Exception
             else:
                 trajectory = 'none'

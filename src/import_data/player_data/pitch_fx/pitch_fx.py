@@ -56,7 +56,7 @@ def get_pitch_fx_data(year, month=None, day=None):
                     else:
                         this_month = str(month)
                     get_day_data(this_day, this_month, str(year))
-        logger.log("Done fetching " + str(year) + " pitch fx data: time = " + time_converter(time.time() - start_time)
+        logger.log("Done fetching " + str(year) + " pitch fx data: time = " + time_converter(time.time()-start_time)
                    + '\n\n\n\n')
         driver_logger.log("\t\tTime = " + time_converter(time.time()-start_time))
         aggregate_pitch_fx_data(year)
@@ -108,10 +108,7 @@ def get_day_data(day, month, year):
                             continue
                 parse_innings(year, month, day, innings_url)
                 clear_xmls()
-        except IndexError:
-            clear_xmls()
-            continue
-        except KeyError:
+        except (IndexError, KeyError):
             clear_xmls()
             continue
     logger.log("\tDone downloading data for " + month + '-' + day + '-' + year + ": time = "
@@ -188,6 +185,8 @@ def parse_pitch(innings_url, year, month, day, pitch, meta_data, last_pitch):
         ball_strike = "strike"
         if strikes < 2:
             strikes += 1
+    if 'Pickoff' in meta_data['temp_outcome']:
+        last_pitch = False
     if last_pitch:
         outcome = translate_ab_outcome(meta_data['temp_outcome'], meta_data['ab_description'])
         trajectory = determine_trajectory(outcome, meta_data['ab_description'])

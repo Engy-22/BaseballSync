@@ -252,7 +252,7 @@ if __name__ == '__main__':
                     variables['Production'].append(database)
                     variables['Sandbox'].append(database)
         all_years = input("Reset database(s) for all years? (y|n): ")
-        if all_years.lower == 'n':
+        if all_years.lower() == 'n':
             begin_year = input("Begin (year): ")
             end_year = input("End (year): ")
             driver(True, None, variables, False, int(begin_year), int(end_year))

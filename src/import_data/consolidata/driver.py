@@ -11,16 +11,16 @@ import time
 logger = Logger(os.path.join(log_prefix, "import_data", "consolidata.log"))
 
 
-def consolidate_data():
-    driver_logger.log("\tConsolidating data")
+def consolidate_data(year):
+    driver_logger.log("\n\tConsolidating data")
     print("Consolidating data")
     start_time = time.time()
     logger.log("Consolidating team data || Timestamp: " + datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S'))
     db = DatabaseConnection(sandbox_mode)
-    for year in db.read('select year from years;'):
-        for ty_uid in db.read('select ty_uniqueidentifier from team_years where year = ' + str(year[0]) + ';'):
-            write_roster_info(ty_uid[0], {'hitter_spots': consolidate_hitter_spots(ty_uid[0]),
-                                          'player_positions': consolidate_player_positions(ty_uid[0])})
+    # for year in db.read('select year from years;'):
+    for ty_uid in db.read('select ty_uniqueidentifier from team_years where year = ' + str(year) + ';'):
+        write_roster_info(ty_uid[0], {'hitter_spots': consolidate_hitter_spots(ty_uid[0]),
+                                      'player_positions': consolidate_player_positions(ty_uid[0])})
     db.close()
     total_time = time_converter(time.time() - start_time)
     logger.log("Done consolidating team data: Time = " + total_time)

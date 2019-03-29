@@ -31,7 +31,7 @@ if __name__ == '__main__':
         frame.bind("<Return>", lambda event=None: main(False, day.get(), month.get(), year.get(), frame))
         root.mainloop()
     elif 'linux' in sys.platform:
-        date = datetime.datetime.today()
+        date = datetime.datetime.now() - datetime.timedelta(1)
         main(True, date.day, date.month, date.year)
     else:
         print('Unknown operating system. Must use Windows or Linux')

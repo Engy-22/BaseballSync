@@ -18,7 +18,7 @@ logger = Logger(os.path.join(log_prefix, "import_data", "rank_driver.log"))
 
 def rank_driver(year):
     print("\n\ncalculating team ranks (year)")
-    driver_logger.log("\n\tBeginning rank driver")
+    driver_logger.log("\tBeginning rank driver")
     start_time = time.time()
     logger.log("Beginning rank driver || Timestamp: " + datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S'))
     logger.log("\tCalculating team ranks (year)")

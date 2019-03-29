@@ -48,9 +48,7 @@ def get_winners(year, table, league):
                 for ent2 in ent.split('<span>')[1:]:
                     winner += ent2.split('<a href="/players/')[1].split('/')[1].split('.shtml')[0] + ' & '
                 winners[league + '_gold_glove_' + position_dict[str(count)]] = winner[:-3]
-            except KeyError:
-                continue
-            except IndexError:
+            except (KeyError, IndexError):
                 continue
     return winners
 

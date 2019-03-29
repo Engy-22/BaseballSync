@@ -1,3 +1,4 @@
+import os
 from model.teams.lineup_creator.get_starting_pitcher import get_starting_pitcher
 from model.teams.lineup_creator.reorganize_data import reorganize_batting_spots
 from model.teams.lineup_creator.check_existing_lineup import player_available, position_available, sp_can_bat_here
@@ -6,7 +7,7 @@ from utilities.logger import Logger
 from utilities.time_converter import time_converter
 import time
 
-logger = Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\controller\\create_lineup.log")
+logger = Logger(os.path.join("..", "..", "baseball-sync", "logs", "controller", "create_lineup.log"))
 
 
 def create_lineup(team_id, year, roster, game_num, use_dh):
@@ -15,7 +16,6 @@ def create_lineup(team_id, year, roster, game_num, use_dh):
     starting_pitcher = get_starting_pitcher(team_id, year, game_num)
     batting_order = []
     position_list = []
-    # print('\n')
     place = 1
     while place <= 9:
         logger.log('\tPlace ' + str(place))
@@ -39,8 +39,6 @@ def create_lineup(team_id, year, roster, game_num, use_dh):
                 batting_order.append(batter)
             position_list.append(position)
         place += 1
-    # for i in range(9):
-    #     print(batting_order[i].get_player_id() + '\t' + str(position_list[i]))
     logger.log('Time = ' + time_converter(time.time() - start_time) + '\n\n')
 
 

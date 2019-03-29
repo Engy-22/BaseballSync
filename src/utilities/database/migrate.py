@@ -2,13 +2,16 @@ import os
 import sys
 sys.path.append(os.path.join(sys.path[0], '..', '..'))
 
-import time
 import tkinter
-from wrappers.baseball_data_connection import DatabaseConnection
-from wrappers.pitchers_pitch_fx_connection import PitcherPitchFXDatabaseConnection
-from wrappers.batters_pitch_fx_connection import BatterPitchFXDatabaseConnection
+try:
+    from wrappers.baseball_data_connection import DatabaseConnection
+    from wrappers.pitchers_pitch_fx_connection import PitcherPitchFXDatabaseConnection
+    from wrappers.batters_pitch_fx_connection import BatterPitchFXDatabaseConnection
+except ModuleNotFoundError:
+    from utilities.database.wrappers.baseball_data_connection import DatabaseConnection
+    from utilities.database.wrappers.pitchers_pitch_fx_connection import PitcherPitchFXDatabaseConnection
+    from utilities.database.wrappers.batters_pitch_fx_connection import BatterPitchFXDatabaseConnection
 from utilities.properties import sandbox_mode
-from utilities.time_converter import time_converter
 from concurrent.futures import ThreadPoolExecutor
 
 font = ('Times', 12)
@@ -38,15 +41,15 @@ def enable_disable_2(boolean, input_boxes):
             ent2.set("")
 
 
-def submit(data):
-    start_time = time.time()
-    frame.withdraw()
+def submit(data, from_server, auto):
+    if not from_server:
+        frame.withdraw()
     for data_type, entities in data.items():
         for boolean, years in entities.items():
             if boolean:
                 migrate(data_type, years)
-    print(time_converter(time.time() - start_time))
-    exit()
+    if not auto:
+        exit()
 
 
 def migrate(data_type, years):
@@ -58,7 +61,7 @@ def migrate(data_type, years):
 
 
 def migrate_all(db_name):
-    print("Transferring all sandbox data to production environment")
+    print("Transferring all " + db_name + " sandbox data to production environment")
     if db_name == 'baseballData':
         db = DatabaseConnection(sandbox_mode)
         with open(os.path.join("..", "..", "baseball-sync", "background", "table_definitions.txt"), 'rt') as file:
@@ -73,8 +76,7 @@ def migrate_all(db_name):
             db = PitcherPitchFXDatabaseConnection(sandbox_mode)
         else:
             db = BatterPitchFXDatabaseConnection(sandbox_mode)
-        with open("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\background\\pitch_fx_tables.txt",
-                  'rt') as file:
+        with open(os.path.join("..", "..", "baseball-sync", "background", "pitch_fx_tables.txt"), 'rt') as file:
             table_defs = [line.split('create table ')[1].split(' (')[0] for line in file.readlines()]
         with ThreadPoolExecutor(os.cpu_count()) as executor:
             for table in db.read('show tables;'):
@@ -216,7 +218,8 @@ if __name__ == '__main__':
                     'pitchers_pitch_fx': {pitchers_pitch_fx_bool.get(): [pitchers_pitch_fx_string.get(),
                                                                          pitchers_pitch_fx_string_end.get()]},
                     'batters_pitch_fx': {batters_pitch_fx_bool.get(): [batters_pitch_fx_string.get(),
-                                                                       batters_pitch_fx_string_end.get()]}}),
+                                                                       batters_pitch_fx_string_end.get()]}},
+                   False, False),
                        font=font, bg="white", cursor="hand2").grid(columnspan=6, padx=5, pady=5)
         root.withdraw()
         root.mainloop()
@@ -236,6 +239,6 @@ if __name__ == '__main__':
                     final_dict[database][True].append(int(input('End year: ')))
             else:
                 final_dict[database][False] = []
-        submit(final_dict)
+        submit(final_dict, True, False)
     else:
         print('Unknown operating system. Must use Windows or Linux')

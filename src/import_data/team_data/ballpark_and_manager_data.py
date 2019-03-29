@@ -115,7 +115,7 @@ def gather_team_home_numbers(team_id, team_key, year, team_count):
                         if stat != 'PA':
                             trajectory[key] = int(row.split('data-stat="' + key.split('_')[2] + '" >')[1].
                                                   split('<')[0]) * home_percent[stat]
-        except IndexError:
+        except (IndexError, ZeroDivisionError):
             table = str(BeautifulSoup(urlopen('https://www.baseball-reference.com/teams/' + team_key + '/' + str(year)
                                               + '.shtml'), 'html.parser'))
             manager_data = table.split('<strong>Manager')[1].split('<p>')[0].split('<a href="/managers/')[1:]

@@ -2,10 +2,10 @@ def translate_ab_outcome(outcome, description):
     outcomes = {'Single': '1b', 'Double': '2b', 'Triple': '3b', 'Home Run': 'hr', 'Groundout': 'go', 'Ground Out': 'go',
                 'Flyout': 'fo', 'Lineout': 'lo', 'Pop Out': 'po', 'Walk': 'bb', 'Sac Bunt': 'sh', 'Hit By Pitch': 'hbp',
                 'Intent Walk': 'ibb', 'Forceout': 'fc', 'Line Out': 'lo', 'Field Error': 'error',  'Runner Out': 'cs',
-                'Grounded Into DP': 'gdp', 'Double Play': 'dp', 'Triple Play': '3p', 'Sac Fly': 'sf', 'Fly Out': 'fo',
-                'Bunt Groundout': 'go', 'Fielders Choice': 'fc', 'Fielders Choice Out': 'fc', 'Sac Fly DP': 'dp',
-                'Bunt Pop Out': 'po', 'Bunt Lineout': 'po', 'Bunt Ground Out': 'go', 'Catcher Interference': 'error',
-                'Sacrifice Bunt DP': 'dp', 'Force Out': 'fc'}
+                'Caught Stealing 2B': 'cs', 'Caught Stealing 3B': 'cs', 'Grounded Into DP': 'gdp', 'Double Play': 'dp',
+                'Triple Play': '3p', 'Sac Fly': 'sf', 'Fly Out': 'fo', 'Bunt Groundout': 'go', 'Fielders Choice': 'fc',
+                'Fielders Choice Out': 'fc', 'Sac Fly DP': 'dp', 'Bunt Pop Out': 'po', 'Bunt Lineout': 'po',
+                'Bunt Ground Out': 'go', 'Catcher Interference': 'error', 'Sacrifice Bunt DP': 'dp', 'Force Out': 'fc'}
     try:
         this_outcome = outcomes[outcome]
     except KeyError:
@@ -55,7 +55,7 @@ def translate_ab_outcome(outcome, description):
                 print('\nOutcomes asdfasdf' + outcome)
                 this_outcome = "none"
         else:
-            print('\nOutcomes ;lkj;lkj' + outcome)
+            print('\nOutcomes ;lkj;lkj' + outcome + ' ' + description)
             this_outcome = "none"
     return this_outcome
 

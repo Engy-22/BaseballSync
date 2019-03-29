@@ -284,7 +284,7 @@ def write_swing_rate(player_id, p_uid, year, matchup, count, pitch_usage, swing_
         for pitch_type, swings in swing_rates.items():
             fields += ', ' + pitch_type
             values += ', ' + str(round(swings/pitch_usage[pitch_type], 3))
-        db.write('insert into swing_rate (uid, playerid, year, matchup, count' + fields + ') values (default, "'
+        db.write('insert into swing_rate (uid, playerid, year, matchup, count' + fields + ', p_uid) values (default, "'
                  + player_id + '", ' + str(year) + ', "' + matchup + '", "' + count + '"' + values + ', p_uid = '
                  + str(p_uid) + ');')
     else:

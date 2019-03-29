@@ -22,9 +22,7 @@ def pitcher_dr_calc(pa, stats, year_pa, year_stats):
             dr_stat = (value / pa) / (year_stats[key] / year_pa)
             if dr_stat > 0.0:
                 pitcher_drs[key] = dr_stat
-        except KeyError:
-            continue
-        except ZeroDivisionError:
+        except (KeyError, ZeroDivisionError):
             continue
     return pitcher_drs
 
