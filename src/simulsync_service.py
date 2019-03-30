@@ -9,7 +9,7 @@ def driver():
     for url in fetch_home_pages():
         if 'gid' in url:
             try:
-                print(fetch_game(url.split('<a href="')[0]+url.split('<a href="')[1].split('">')[0]))
+                print('\n' + fetch_game(url.split('<a href="')[0]+url.split('<a href="')[1].split('">')[0]))
             except IndexError:
                 continue
 

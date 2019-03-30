@@ -80,7 +80,7 @@ def driver(day, month, year):
     team_pitching_rotation_constructor(year)
     primary_and_secondary_positions(year)
     determine_pitcher_roles_year(year)
-    get_pitch_fx_data(year, month, day)
+    # get_pitch_fx_data(year, month, day)
     hitter_tendencies(year)
     pitcher_tendencies(year)
     manager_tendencies(year)

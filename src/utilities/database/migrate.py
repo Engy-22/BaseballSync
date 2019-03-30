@@ -7,7 +7,7 @@ try:
     from wrappers.baseball_data_connection import DatabaseConnection
     from wrappers.pitchers_pitch_fx_connection import PitcherPitchFXDatabaseConnection
     from wrappers.batters_pitch_fx_connection import BatterPitchFXDatabaseConnection
-except ModuleNotFoundError:
+except ImportError:
     from utilities.database.wrappers.baseball_data_connection import DatabaseConnection
     from utilities.database.wrappers.pitchers_pitch_fx_connection import PitcherPitchFXDatabaseConnection
     from utilities.database.wrappers.batters_pitch_fx_connection import BatterPitchFXDatabaseConnection
@@ -64,7 +64,11 @@ def migrate_all(db_name):
     print("Transferring all " + db_name + " sandbox data to production environment")
     if db_name == 'baseballData':
         db = DatabaseConnection(sandbox_mode)
-        with open(os.path.join("..", "..", "baseball-sync", "background", "table_definitions.txt"), 'rt') as file:
+        try:
+            file_path = os.path.join("..", "..", "..", "background", "table_definitions.txt")
+        except FileNotFoundError:
+            file_path = os.path.join("..", "..", "baseball-sync", "background", "table_definitions.txt")
+        with open(os.path.join(file_path), 'rt') as file:
             table_defs = file.readlines()
             with ThreadPoolExecutor(os.cpu_count()) as executor:
                 for line in table_defs:
@@ -76,7 +80,11 @@ def migrate_all(db_name):
             db = PitcherPitchFXDatabaseConnection(sandbox_mode)
         else:
             db = BatterPitchFXDatabaseConnection(sandbox_mode)
-        with open(os.path.join("..", "..", "baseball-sync", "background", "pitch_fx_tables.txt"), 'rt') as file:
+        try:
+            file_path = os.path.join("..", "..", "baseball-sync", "background", "pitch_fx_tables.txt")
+        except FileNotFoundError:
+            file_path = os.path.join("..", "..", "..", "background", "pitch_fx_tables.txt")
+        with open(file_path, 'rt') as file:
             table_defs = [line.split('create table ')[1].split(' (')[0] for line in file.readlines()]
         with ThreadPoolExecutor(os.cpu_count()) as executor:
             for table in db.read('show tables;'):
@@ -94,7 +102,11 @@ def migrate_year(db_name, year):
     print("Transferring " + str(year) + " sandbox data to production environment")
     if db_name == 'baseballData':
         db = DatabaseConnection(sandbox_mode)
-        with open(os.path.join("..", "..", "baseball-sync", "background", "table_definitions.txt"), 'rt') as file:
+        try:
+            file_path = os.path.join("..", "..", "baseball-sync", "background", "table_definitions.txt")
+        except FileNotFoundError:
+            file_path = os.path.join("..", "..", "..", "background", "table_definitions.txt")
+        with open(file_path, 'rt') as file:
             table_defs = file.readlines()
             with ThreadPoolExecutor(os.cpu_count()) as executor:
                 for line in table_defs:
@@ -120,7 +132,11 @@ def migrate_year(db_name, year):
             db = PitcherPitchFXDatabaseConnection(sandbox_mode)
         else:
             db = BatterPitchFXDatabaseConnection(sandbox_mode)
-            with open(os.path.join("..", "..", "baseball-sync", "background", "table_definitions.txt"), 'rt') as file:
+            try:
+                file_path = os.path.join("..", "..", "baseball-sync", "background", "table_definitions.txt")
+            except FileNotFoundError:
+                file_path = os.path.join("..", "..", "..", "background", "table_definitions.txt")
+            with open(file_path, 'rt') as file:
                 table_defs = file.readlines()
                 with ThreadPoolExecutor(os.cpu_count()) as executor:
                     for line in table_defs:

@@ -12,7 +12,7 @@ logger = Logger(os.path.join(log_prefix, "import_data", "consolidata.log"))
 
 
 def consolidate_data(year):
-    driver_logger.log("\n\tConsolidating data")
+    driver_logger.log("\tConsolidating data")
     print("Consolidating data")
     start_time = time.time()
     logger.log("Consolidating team data || Timestamp: " + datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S'))
