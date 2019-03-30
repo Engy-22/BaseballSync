@@ -9,7 +9,7 @@ from import_data.driver_daily import main
 
 
 if __name__ == '__main__':
-    if 'linux' in sys.platform:
+    if 'win' in sys.platform:
         root = tkinter.Tk()
         root.title('Driver')
         root.withdraw()
@@ -30,7 +30,7 @@ if __name__ == '__main__':
                        font=font, cursor="hand2", bg="white").grid(columnspan=2, padx=10, pady=10)
         frame.bind("<Return>", lambda event=None: main(False, day.get(), month.get(), year.get(), frame))
         root.mainloop()
-    elif 'win' in sys.platform:
+    elif 'linux' in sys.platform:
         date = datetime.datetime.now() - datetime.timedelta(2)
         main(True, date.day, date.month, date.year)
     else:

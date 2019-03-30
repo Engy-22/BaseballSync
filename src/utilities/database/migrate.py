@@ -249,7 +249,7 @@ if __name__ == '__main__':
                 final_dict[database][True] = []
                 all_years = input('All years? (y|n): ')
                 if all_years.lower() == 'y':
-                    final_dict[database] = ["All"]
+                    final_dict[database][True] = ["All"]
                 else:
                     final_dict[database][True].append(int(input('Begin year: ')))
                     final_dict[database][True].append(int(input('End year: ')))
