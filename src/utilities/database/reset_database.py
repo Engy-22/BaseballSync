@@ -5,8 +5,7 @@ sys.path.append(os.path.join(sys.path[0], '..', '..'))
 import tkinter
 import time
 from wrappers.baseball_data_connection import DatabaseConnection
-from wrappers.pitchers_pitch_fx_connection import PitcherPitchFXDatabaseConnection
-from wrappers.batters_pitch_fx_connection import BatterPitchFXDatabaseConnection
+from wrappers.pitch_fx_connection import PitchFXDatabaseConnection
 from concurrent.futures import ThreadPoolExecutor
 from utilities.time_converter import time_converter
 from utilities.clear_logs import clear_logs
@@ -72,34 +71,26 @@ def do_reset(from_server, variables, year):
                     if env == 'Production':
                         if db == 'baseballData':
                             baseball_data(False, year)
-                        elif db == 'pitchers_pitch_fx':
-                            pitchers_pitch_fx(False, year)
                         else:
-                            batters_pitch_fx(False, year)
+                            pitch_fx(False, year)
                     else:
                         if db == 'baseballData':
                             baseball_data(True, year)
-                        elif db == 'pitchers_pitch_fx':
-                            pitchers_pitch_fx(True, year)
                         else:
-                            batters_pitch_fx(True, year)
+                            pitch_fx(True, year)
     else:
         for env, dbs in variables.items():
             for db in dbs:
                 if env == 'Production':
                     if db == 'baseballData':
                         baseball_data(False, year)
-                    elif db == 'pitchers_pitch_fx':
-                        pitchers_pitch_fx(False, year)
                     else:
-                        batters_pitch_fx(False, year)
+                        pitch_fx(False, year)
                 else:
                     if db == 'baseballData':
                         baseball_data(True, year)
-                    elif db == 'pitchers_pitch_fx':
-                        pitchers_pitch_fx(True, year)
                     else:
-                        batters_pitch_fx(True, year)
+                        pitch_fx(True, year)
 
 
 def baseball_data(sandbox_mode, year):
@@ -131,50 +122,24 @@ def baseball_data(sandbox_mode, year):
     db.close()
 
 
-def pitchers_pitch_fx(sandbox_mode, year):
-    db = PitcherPitchFXDatabaseConnection(sandbox_mode)
+def pitch_fx(sandbox_mode, year):
+    db = PitchFXDatabaseConnection(sandbox_mode)
     if year == 'ALL':
         if sandbox_mode:
-            print("removing existing pitcher pitch_fx tables - sandbox")
-            db.write('drop database pitchers_pitch_fx_sandbox')
-            db.write('create database pitchers_pitch_fx_sandbox')
+            print("removing existing pitch_fx tables - sandbox")
+            db.write('drop database pitch_fx_sandbox')
+            db.write('create database pitch_fx_sandbox')
         else:
-            print("removing existing pitcher pitch_fx tables - production")
-            db.write('drop database pitchers_pitch_fx')
-            db.write('create database pitchers_pitch_fx')
-        db = PitcherPitchFXDatabaseConnection(sandbox_mode)
+            print("removing existing pitch_fx tables - production")
+            db.write('drop database pitch_fx')
+            db.write('create database pitch_fx')
+        db = PitchFXDatabaseConnection(sandbox_mode)
         with open(os.path.join("..", "..", "..", "background", "pitch_fx_tables.txt"), 'rt') as file:
             table_defs = file.readlines()
             if sandbox_mode:
-                print("creating new pitcher pitch fx tables - sandbox")
+                print("creating new pitch_fx tables - sandbox")
             else:
-                print("creating new pitcher pitch fx tables - production")
-            with ThreadPoolExecutor(os.cpu_count()) as executor3:
-                for line in table_defs:
-                    executor3.submit(db.write(line))
-    else:
-        pitch_fx_year(db, year)
-    db.close()
-
-
-def batters_pitch_fx(sandbox_mode, year):
-    db = BatterPitchFXDatabaseConnection(sandbox_mode)
-    if year == 'ALL':
-        if sandbox_mode:
-            print("removing existing batter pitch fx tables - sandbox")
-            db.write('drop database batters_pitch_fx_sandbox;')
-            db.write('create database batters_pitch_fx_sandbox;')
-        else:
-            print("removing existing batter pitch fx tables - production")
-            db.write('drop database batters_pitch_fx;')
-            db.write('create database batters_pitch_fx;')
-        db = BatterPitchFXDatabaseConnection(sandbox_mode)
-        with open(os.path.join("..", "..", "..", "background", "pitch_fx_tables.txt"), 'rt') as file:
-            table_defs = file.readlines()
-            if sandbox_mode:
-                print("creating new batter pitch fx tables - sandbox")
-            else:
-                print("creating new batter pitch fx tables - production")
+                print("creating new pitch_fx tables - production")
             with ThreadPoolExecutor(os.cpu_count()) as executor3:
                 for line in table_defs:
                     executor3.submit(db.write(line))
@@ -225,19 +190,18 @@ if __name__ == '__main__':
         label.grid(row=0, column=0, padx=10, pady=10, columnspan=4)
         for num, env in {1: 'Production', 2: 'Sandbox'}.items():
             variables[env] = {}
-            tkinter.Label(frame, text=env, font=('Times', 12, 'underline')). \
-                grid(row=1, column=(num - 1) * 2, columnspan=2, padx=5, pady=5)
-            for num2, db in {1: 'baseballData', 2: 'pitchers_pitch_fx', 3: 'batters_pitch_fx'}.items():
+            tkinter.Label(frame, text=env, font=('Times', 12, 'underline')).grid(row=1, column=(num - 1) * 2,
+                                                                                 columnspan=2, padx=5, pady=5)
+            for num2, db in {1: 'baseballData', 2: 'pitch_fx'}.items():
                 variables[env][db] = tkinter.BooleanVar()
                 variables[env][db].set(False)
                 tkinter.Checkbutton(frame, text=db, font=font, variable=variables[env][db], cursor="hand2"). \
                     grid(row=num2 + 1, column=num, padx=10, pady=5, sticky='w')
         tkinter.Button(frame, text="Next", command=lambda: select_years(variables, frame), font=font, bg='white',
-                       cursor='hand2') \
-            .grid(columnspan=4, padx=5, pady=5)
+                       cursor='hand2').grid(columnspan=4, padx=5, pady=5)
         root.mainloop()
     elif 'linux' in sys.platform:
-        databases = ['baseballData', 'pitchers_pitch_fx', 'batters_pitch_fx']
+        databases = ['baseballData', 'pitch_fx']
         variables = {'Production': [], 'Sandbox': []}
         for database in databases:
             db = input('Reset ' + database + ' DB? (y|n): ')

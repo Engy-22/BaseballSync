@@ -1,7 +1,6 @@
 import os
 from utilities.database.wrappers.baseball_data_connection import DatabaseConnection
-from utilities.database.wrappers.pitchers_pitch_fx_connection import PitcherPitchFXDatabaseConnection
-from utilities.database.wrappers.batters_pitch_fx_connection import BatterPitchFXDatabaseConnection
+from utilities.database.wrappers.pitch_fx_connection import PitchFXDatabaseConnection
 from utilities.logger import Logger
 import time
 import datetime
@@ -191,7 +190,7 @@ def aggregate_hbp(player_id, year, matchup, p_uid, player_type):
                               'playerid = "' + player_id + '" and matchup="' + matchup + 'hb" group by pitch_type;'):
         pitches[pitch_type[0]] = pitch_type[1]
     db.close()
-    new_db = PitcherPitchFXDatabaseConnection(sandbox_mode)
+    new_db = PitchFXDatabaseConnection(sandbox_mode)
     if len(new_db.read('select hbp_id from hbp where playerid = "' + player_id + '" and year = ' + str(year)
                        + ' and matchup = "' + matchup + '";')) == 0:
         fields = ''
@@ -214,7 +213,7 @@ def aggregate_hbp(player_id, year, matchup, p_uid, player_type):
 def write_pitch_usage(player_id, p_uid, year, matchup, count, pitch_type_dict, player_type):
     if player_type != 'pitching':
         return
-    db = PitcherPitchFXDatabaseConnection(sandbox_mode)
+    db = PitchFXDatabaseConnection(sandbox_mode)
     total_pitches = 0
     fields = ''
     values = ''
@@ -242,7 +241,7 @@ def write_pitch_usage(player_id, p_uid, year, matchup, count, pitch_type_dict, p
 
 def write_outcomes(player_id, p_uid, year, matchup, count, outcomes_by_pitch_type, player_type):
     if player_type == 'pitching':
-        db = PitcherPitchFXDatabaseConnection(sandbox_mode)
+        db = PitchFXDatabaseConnection(sandbox_mode)
     else:
         db = BatterPitchFXDatabaseConnection(sandbox_mode)
     fields = ''
@@ -274,7 +273,7 @@ def write_outcomes(player_id, p_uid, year, matchup, count, outcomes_by_pitch_typ
 
 def write_swing_rate(player_id, p_uid, year, matchup, count, pitch_usage, swing_rates, player_type):
     if player_type == 'pitching':
-        db = PitcherPitchFXDatabaseConnection(sandbox_mode)
+        db = PitchFXDatabaseConnection(sandbox_mode)
     else:
         db = BatterPitchFXDatabaseConnection(sandbox_mode)
     if len(db.read('select uid from swing_rate where playerid = "' + player_id + '" and year = ' + str(year)
@@ -300,7 +299,7 @@ def write_swing_rate(player_id, p_uid, year, matchup, count, pitch_usage, swing_
 def write_strike_percent(player_id, p_uid, year, matchup, count, pitch_usage, strike_percents, player_type):
     if player_type != 'pitching':
         return
-    db = PitcherPitchFXDatabaseConnection(sandbox_mode)
+    db = PitchFXDatabaseConnection(sandbox_mode)
     if len(db.read('select uid from strike_percent where playerid = "' + player_id + '" and year = ' + str(year)
                    + ' and matchup = "' + matchup + '" and count = "' + count + '"')) == 0:
         fields = ''
@@ -323,7 +322,7 @@ def write_strike_percent(player_id, p_uid, year, matchup, count, pitch_usage, st
 
 def write_trajectory_by_pitch_type(player_id, p_uid, year, matchup, count, trajectories, player_type):
     if player_type == 'pitching':
-        db = PitcherPitchFXDatabaseConnection(sandbox_mode)
+        db = PitchFXDatabaseConnection(sandbox_mode)
     else:
         db = BatterPitchFXDatabaseConnection(sandbox_mode)
     fields = ''
@@ -354,7 +353,7 @@ def write_trajectory_by_pitch_type(player_id, p_uid, year, matchup, count, traje
 
 def write_field_by_pitch_type(player_id, p_uid, year, matchup, count, field, player_type):
     if player_type == 'pitching':
-        db = PitcherPitchFXDatabaseConnection(sandbox_mode)
+        db = PitchFXDatabaseConnection(sandbox_mode)
     else:
         db = BatterPitchFXDatabaseConnection(sandbox_mode)
     fields = ''
@@ -385,7 +384,7 @@ def write_field_by_pitch_type(player_id, p_uid, year, matchup, count, field, pla
 
 def write_direction_by_pitch_type(player_id, p_uid, year, matchup, count, direction, player_type):
     if player_type == 'pitching':
-        db = PitcherPitchFXDatabaseConnection(sandbox_mode)
+        db = PitchFXDatabaseConnection(sandbox_mode)
     else:
         db = BatterPitchFXDatabaseConnection(sandbox_mode)
     fields = ''
@@ -416,7 +415,7 @@ def write_direction_by_pitch_type(player_id, p_uid, year, matchup, count, direct
 
 def write_trajectory_by_outcome(player_id, p_uid, year, matchup, trajectory_by_outcome, player_type):
     if player_type == 'pitching':
-        db = PitcherPitchFXDatabaseConnection(sandbox_mode)
+        db = PitchFXDatabaseConnection(sandbox_mode)
     else:
         db = BatterPitchFXDatabaseConnection(sandbox_mode)
     outcome_totals = {}
@@ -445,7 +444,7 @@ def write_trajectory_by_outcome(player_id, p_uid, year, matchup, trajectory_by_o
 
 def write_field_by_outcome(player_id, p_uid, year, matchup, field_by_outcome, player_type):
     if player_type == 'pitching':
-        db = PitcherPitchFXDatabaseConnection(sandbox_mode)
+        db = PitchFXDatabaseConnection(sandbox_mode)
     else:
         db = BatterPitchFXDatabaseConnection(sandbox_mode)
     outcome_totals = {}
@@ -473,7 +472,7 @@ def write_field_by_outcome(player_id, p_uid, year, matchup, field_by_outcome, pl
 
 def write_direction_by_outcome(player_id, p_uid, year, matchup, direction_by_outcome, player_type):
     if player_type == 'pitching':
-        db = PitcherPitchFXDatabaseConnection(sandbox_mode)
+        db = PitchFXDatabaseConnection(sandbox_mode)
     else:
         db = BatterPitchFXDatabaseConnection(sandbox_mode)
     outcome_totals = {}

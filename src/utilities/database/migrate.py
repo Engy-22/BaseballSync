@@ -6,11 +6,9 @@ import tkinter
 try:
     from wrappers.baseball_data_connection import DatabaseConnection
     from wrappers.pitchers_pitch_fx_connection import PitcherPitchFXDatabaseConnection
-    from wrappers.batters_pitch_fx_connection import BatterPitchFXDatabaseConnection
 except ImportError:
     from utilities.database.wrappers.baseball_data_connection import DatabaseConnection
-    from utilities.database.wrappers.pitchers_pitch_fx_connection import PitcherPitchFXDatabaseConnection
-    from utilities.database.wrappers.batters_pitch_fx_connection import BatterPitchFXDatabaseConnection
+    from utilities.database.wrappers.pitch_fx_connection import PitchFXDatabaseConnection
 from utilities.properties import sandbox_mode
 from concurrent.futures import ThreadPoolExecutor
 
@@ -77,7 +75,7 @@ def migrate_all(db_name):
                                          + '_sandbox.' + table_name + ';'))
     else:
         if db_name == 'pitchers_pitch_fx':
-            db = PitcherPitchFXDatabaseConnection(sandbox_mode)
+            db = PitchFXDatabaseConnection(sandbox_mode)
         else:
             db = BatterPitchFXDatabaseConnection(sandbox_mode)
         try:
@@ -127,7 +125,7 @@ def migrate_year(db_name, year):
                                              + '_sandbox.' + table_name + ';'))
     else:
         if db_name == 'pitchers_pitch_fx':
-            db = PitcherPitchFXDatabaseConnection(sandbox_mode)
+            db = PitchFXDatabaseConnection(sandbox_mode)
         else:
             db = BatterPitchFXDatabaseConnection(sandbox_mode)
             try:
