@@ -33,6 +33,7 @@ def pitcher_spray_chart_constructor(year):
     else:
         driver_logger.log("\tNo pitcher spray chart data before 1988")
         logger.log("\tNo spray pitcher chart data before 1988")
+        return
     if len(bad_gateway_data) > 0:
         revisit_bad_gateways(year, bad_gateway_data)
     logger.log("Done downloading pitcher spray charts: time = " + time_converter(time.time() - start_time) + '\n\n')

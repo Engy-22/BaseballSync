@@ -1,7 +1,6 @@
 import os
 import datetime
 import smtplib
-import csv
 from import_data.config import Config as config
 from utilities.properties import log_prefix, import_driver_logger as driver_logger
 

@@ -65,27 +65,27 @@ def migrate_all(db_name):
     if db_name == 'baseballData':
         db = DatabaseConnection(sandbox_mode)
         try:
-            file_path = os.path.join("..", "..", "..", "background", "table_definitions.txt")
+            file = open(os.path.join("..", "..", "..", "background", "table_definitions.txt"), 'rt')
         except FileNotFoundError:
-            file_path = os.path.join("..", "..", "baseball-sync", "background", "table_definitions.txt")
-        with open(os.path.join(file_path), 'rt') as file:
-            table_defs = file.readlines()
-            with ThreadPoolExecutor(os.cpu_count()) as executor:
-                for line in table_defs:
-                    table_name = line.split('create table ')[1].split(' (')[0]
-                    executor.submit(db.write('insert into ' + db_name + '.' + table_name + ' select * from ' + db_name
-                                             + '_sandbox.' + table_name + ';'))
+            file = open(os.path.join("..", "..", "baseball-sync", "background", "table_definitions.txt"), 'rt')
+        table_defs = file.readlines()
+        file.close()
+        with ThreadPoolExecutor(os.cpu_count()) as executor:
+            for line in table_defs:
+                table_name = line.split('create table ')[1].split(' (')[0]
+                executor.submit(db.write('insert into ' + db_name + '.' + table_name + ' select * from ' + db_name
+                                         + '_sandbox.' + table_name + ';'))
     else:
         if db_name == 'pitchers_pitch_fx':
             db = PitcherPitchFXDatabaseConnection(sandbox_mode)
         else:
             db = BatterPitchFXDatabaseConnection(sandbox_mode)
         try:
-            file_path = os.path.join("..", "..", "baseball-sync", "background", "pitch_fx_tables.txt")
+            file = open(os.path.join("..", "..", "..", "background", "pitch_fx_tables.txt"), 'rt')
         except FileNotFoundError:
-            file_path = os.path.join("..", "..", "..", "background", "pitch_fx_tables.txt")
-        with open(file_path, 'rt') as file:
-            table_defs = [line.split('create table ')[1].split(' (')[0] for line in file.readlines()]
+            file = open(os.path.join("..", "..", "baseball-sync", "background", "pitch_fx_tables.txt"), 'rt')
+        table_defs = [line.split('create table ')[1].split(' (')[0] for line in file.readlines()]
+        file.close()
         with ThreadPoolExecutor(os.cpu_count()) as executor:
             for table in db.read('show tables;'):
                 if table[0] not in table_defs:
@@ -103,53 +103,51 @@ def migrate_year(db_name, year):
     if db_name == 'baseballData':
         db = DatabaseConnection(sandbox_mode)
         try:
-            file_path = os.path.join("..", "..", "baseball-sync", "background", "table_definitions.txt")
+            file = open(os.path.join("..", "..", "..", "background", "table_definitions.txt"), 'rt')
         except FileNotFoundError:
-            file_path = os.path.join("..", "..", "..", "background", "table_definitions.txt")
-        with open(file_path, 'rt') as file:
-            table_defs = file.readlines()
-            with ThreadPoolExecutor(os.cpu_count()) as executor:
-                for line in table_defs:
-                    table_name = line.split('create table ')[1].split(' (')[0]
-                    if table_name in ['ballpark_years', 'pitcher_pitches', 'batter_pitches', 'player_batting',
-                                      'player_pitching', 'player_fielding', 'years', 'manager_year', 'schedule',
-                                      'comparisons_batting_overall', 'comparisons_pitching_overall']:  # appending rows based on year field
+            file = open(os.path.join("..", "..", "baseball-sync", "background", "table_definitions.txt"), 'rt')
+        table_defs = file.readlines()
+        file.close()
+        with ThreadPoolExecutor(os.cpu_count()) as executor:
+            for line in table_defs:
+                table_name = line.split('create table ')[1].split(' (')[0]
+                if table_name in ['ballpark_years', 'pitcher_pitches', 'batter_pitches', 'player_batting',
+                                  'player_pitching', 'player_fielding', 'years', 'manager_year', 'schedule',
+                                  'comparisons_batting_overall', 'comparisons_pitching_overall']:  # appending rows based on year field
+                    executor.submit(db.write('insert into ' + db_name + '.' + table_name + ' select * from ' + db_name
+                                             + '_sandbox.' + table_name + ' where year = ' + str(year) + ';'))
+                elif table_name in ['hitter_spots', 'player_positions', 'starting_pitchers', 'team_years',
+                                    'comparisons_team_offense_overall', 'comparisons_team_defense_overall']:  # appending rows based on another field
+                    for ty_uid in db.read('select ty_uniqueidentifier from team_years where year = ' + str(year) + ';'):
                         executor.submit(db.write('insert into ' + db_name + '.' + table_name + ' select * from '
-                                                 + db_name + '_sandbox.' + table_name + ' where year = ' + str(year)
-                                                 + ';'))
-                    elif table_name in ['hitter_spots', 'player_positions', 'starting_pitchers', 'team_years',
-                                        'comparisons_team_offense_overall', 'comparisons_team_defense_overall']:  # appending rows based on another field
-                        for ty_uid in db.read('select ty_uniqueidentifier from team_years where year = ' + str(year)
-                                              + ';'):
-                            executor.submit(db.write('insert into ' + db_name + '.' + table_name + ' select * from '
-                                                     + db_name + '_sandbox.' + table_name + ' where ty_uniqueidentifier'
-                                                     ' = ' + str(ty_uid[0]) + ';'))
-                    else:  # totally replacing the prod table with sandbox table ['leagues', 'managers', 'teams', 'ballparks', player_teams', 'manager_teams']
-                        executor.submit(db.write('insert into ' + db_name + '.' + table_name + ' select * from '
-                                                 + db_name + '_sandbox.' + table_name + ';'))
+                                                 + db_name + '_sandbox.' + table_name + ' where ty_uniqueidentifier = '
+                                                 + str(ty_uid[0]) + ';'))
+                else:  # totally replacing the prod table with sandbox table ['leagues', 'managers', 'teams', 'ballparks', player_teams', 'manager_teams']
+                    executor.submit(db.write('insert into ' + db_name + '.' + table_name + ' select * from ' + db_name
+                                             + '_sandbox.' + table_name + ';'))
     else:
         if db_name == 'pitchers_pitch_fx':
             db = PitcherPitchFXDatabaseConnection(sandbox_mode)
         else:
             db = BatterPitchFXDatabaseConnection(sandbox_mode)
             try:
-                file_path = os.path.join("..", "..", "baseball-sync", "background", "table_definitions.txt")
+                file = open(os.path.join("..", "..", "..", "background", "table_definitions.txt"), 'rt')
             except FileNotFoundError:
-                file_path = os.path.join("..", "..", "..", "background", "table_definitions.txt")
-            with open(file_path, 'rt') as file:
-                table_defs = file.readlines()
-                with ThreadPoolExecutor(os.cpu_count()) as executor:
-                    for line in table_defs:
-                        table_name = line.split('create table ')[1].split(' (')[0]
-                        if table_name.split('_')[0] in ['vr', 'vl', 'hbp']:  # appending rows based on year field
+                file = open(os.path.join("..", "..", "baseball-sync", "background", "table_definitions.txt"), 'rt')
+            table_defs = file.readlines()
+            file.close()
+            with ThreadPoolExecutor(os.cpu_count()) as executor:
+                for line in table_defs:
+                    table_name = line.split('create table ')[1].split(' (')[0]
+                    if table_name.split('_')[0] in ['vr', 'vl', 'hbp']:  # appending rows based on year field
+                        executor.submit(db.write('insert into ' + db_name + '.' + table_name + ' select * from '
+                                                 + db_name + '_sandbox.' + table_name + ' where year = ' + str(year)
+                                                 + ';'))
+                    else:  # totally replacing the prod table with snadbox table ['']
+                        if table_name.split(')')[0] == str(year):
                             executor.submit(db.write('insert into ' + db_name + '.' + table_name + ' select * from '
-                                                     + db_name + '_sandbox.' + table_name + ' where year = ' + str(year)
-                                                     + ';'))
-                        else:  # totally replacing the prod table with snadbox table ['']
-                            if table_name.split(')')[0] == str(year):
-                                executor.submit(db.write('insert into ' + db_name + '.' + table_name + ' select * from '
-                                                         + db_name + '_sandbox.' + table_name + ' where year = '
-                                                         + str(year) + ';'))
+                                                     + db_name + '_sandbox.' + table_name + ' where year = '
+                                                     + str(year) + ';'))
     db.close()
 
 

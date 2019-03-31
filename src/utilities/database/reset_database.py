@@ -10,7 +10,6 @@ from wrappers.batters_pitch_fx_connection import BatterPitchFXDatabaseConnection
 from concurrent.futures import ThreadPoolExecutor
 from utilities.time_converter import time_converter
 from utilities.clear_logs import clear_logs
-from utilities.properties import log_prefix
 
 
 def select_years(vars, previous_frame):
