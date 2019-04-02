@@ -42,20 +42,20 @@ def enable_disable_2(boolean, input_boxes):
 def submit(data, from_server, auto):
     if not from_server:
         frame.withdraw()
-    for data_type, entities in data.items():
+    for db_name, entities in data.items():
         for boolean, years in entities.items():
             if boolean:
-                migrate(data_type, years)
+                migrate(db_name, years)
     if not auto:
         exit()
 
 
-def migrate(data_type, years):
+def migrate(db_name, years):
     if "All" in years:
-        migrate_all(data_type)
+        migrate_all(db_name)
     else:
         for year in range(int(years[0]), int(years[1])):
-            migrate_year(data_type, year)
+            migrate_year(db_name, year)
 
 
 def migrate_all(db_name):
@@ -74,10 +74,7 @@ def migrate_all(db_name):
                 executor.submit(db.write('insert into ' + db_name + '.' + table_name + ' select * from ' + db_name
                                          + '_sandbox.' + table_name + ';'))
     else:
-        if db_name == 'pitchers_pitch_fx':
-            db = PitchFXDatabaseConnection(sandbox_mode)
-        else:
-            db = BatterPitchFXDatabaseConnection(sandbox_mode)
+        db = PitchFXDatabaseConnection(sandbox_mode)
         try:
             file = open(os.path.join("..", "..", "..", "background", "pitch_fx_tables.txt"), 'rt')
         except FileNotFoundError:
@@ -178,66 +175,39 @@ if __name__ == '__main__':
                          {baseball_data_entry: baseball_data_string,
                           baseball_data_entry_end: baseball_data_string_end}), font=font, cursor="hand2"). \
             grid(row=1, column=0, padx=5, pady=5, sticky="W")
-        pitchers_pitch_fx_bool = tkinter.BooleanVar()
-        pitchers_pitch_fx_string = tkinter.StringVar()
+        pitch_fx_bool = tkinter.BooleanVar()
+        pitch_fx_string = tkinter.StringVar()
         tkinter.Label(frame, text="Begin Year", font=font).grid(row=2, column=2, padx=(10, 5), pady=5, sticky="W")
-        pitchers_pitch_fx_entry = tkinter.Entry(frame, textvariable=pitchers_pitch_fx_string, width=6)
-        pitchers_pitch_fx_entry.grid(row=2, column=3, padx=5, pady=5, sticky="W")
-        pitchers_pitch_fx_entry.config(state="disabled")
-        pitchers_pitch_fx_string_end = tkinter.StringVar()
+        pitch_fx_entry = tkinter.Entry(frame, textvariable=pitch_fx_string, width=6)
+        pitch_fx_entry.grid(row=2, column=3, padx=5, pady=5, sticky="W")
+        pitch_fx_entry.config(state="disabled")
+        pitch_fx_string_end = tkinter.StringVar()
         tkinter.Label(frame, text="End Year", font=font).grid(row=2, column=4, padx=(10, 5), pady=5, sticky="W")
-        pitchers_pitch_fx_entry_end = tkinter.Entry(frame, textvariable=pitchers_pitch_fx_string_end, width=6)
-        pitchers_pitch_fx_entry_end.grid(row=2, column=5, padx=5, pady=5, sticky="W")
-        pitchers_pitch_fx_entry_end.config(state="disabled")
-        pitchers_pitch_fx_all_years = tkinter.BooleanVar()
-        pitchers_pitch_all_years_checkbutton = tkinter.Checkbutton(frame, text="All Years", font=font, command=lambda:
-        enable_disable_2(pitchers_pitch_fx_all_years, {pitchers_pitch_fx_entry: pitchers_pitch_fx_string,
-                                                       pitchers_pitch_fx_entry_end: pitchers_pitch_fx_string_end}),
-                                                                   variable=pitchers_pitch_fx_all_years)
-        pitchers_pitch_all_years_checkbutton.grid(row=2, column=1, sticky="W", padx=(10, 5), pady=5)
-        pitchers_pitch_all_years_checkbutton.config(state="disabled")
-        tkinter.Checkbutton(frame, text="pitchers_pitch_fx", variable=pitchers_pitch_fx_bool, command=lambda:
-        enable_disable_1(pitchers_pitch_fx_bool, pitchers_pitch_all_years_checkbutton, pitchers_pitch_fx_all_years,
-                         {pitchers_pitch_fx_entry: pitchers_pitch_fx_string,
-                          pitchers_pitch_fx_entry_end: pitchers_pitch_fx_string_end}), font=font, cursor="hand2"). \
+        pitch_fx_entry_end = tkinter.Entry(frame, textvariable=pitch_fx_string_end, width=6)
+        pitch_fx_entry_end.grid(row=2, column=5, padx=5, pady=5, sticky="W")
+        pitch_fx_entry_end.config(state="disabled")
+        pitch_fx_all_years = tkinter.BooleanVar()
+        pitch_fx_all_years_checkbutton = tkinter.Checkbutton(frame, text="All Years", font=font, command=lambda:
+        enable_disable_2(pitch_fx_all_years, {pitch_fx_entry: pitch_fx_string,
+                                              pitch_fx_entry_end: pitch_fx_string_end}), variable=pitch_fx_all_years)
+        pitch_fx_all_years_checkbutton.grid(row=2, column=1, sticky="W", padx=(10, 5), pady=5)
+        pitch_fx_all_years_checkbutton.config(state="disabled")
+        tkinter.Checkbutton(frame, text="pitch_fx", variable=pitch_fx_bool, command=lambda:
+        enable_disable_1(pitch_fx_bool, pitch_fx_all_years_checkbutton, pitch_fx_all_years,
+                         {pitch_fx_entry: pitch_fx_string,
+                          pitch_fx_entry_end: pitch_fx_string_end}), font=font, cursor="hand2"). \
             grid(row=2, column=0, padx=5, pady=5, sticky="W")
-        batters_pitch_fx_bool = tkinter.BooleanVar()
-        batters_pitch_fx_string = tkinter.StringVar()
-        tkinter.Label(frame, text="Begin Year", font=font).grid(row=3, column=2, padx=(10, 5), pady=5, sticky="W")
-        batters_pitch_fx_entry = tkinter.Entry(frame, textvariable=batters_pitch_fx_string, width=6)
-        batters_pitch_fx_entry.grid(row=3, column=3, padx=5, pady=5, sticky="W")
-        batters_pitch_fx_entry.config(state="disabled")
-        batters_pitch_fx_string_end = tkinter.StringVar()
-        tkinter.Label(frame, text="End Year", font=font).grid(row=3, column=4, padx=(10, 5), pady=5, sticky="W")
-        batters_pitch_fx_entry_end = tkinter.Entry(frame, textvariable=batters_pitch_fx_string_end, width=6)
-        batters_pitch_fx_entry_end.grid(row=3, column=5, padx=5, pady=5, sticky="W")
-        batters_pitch_fx_entry_end.config(state="disabled")
-        batters_pitch_fx_all_years = tkinter.BooleanVar()
-        batters_pitch_fx_all_years_checkbutton = tkinter.Checkbutton(frame, text="All Years", font=font, command=lambda:
-            enable_disable_2(batters_pitch_fx_all_years, {batters_pitch_fx_entry: batters_pitch_fx_string,
-                                                          batters_pitch_fx_entry_end: batters_pitch_fx_string_end}),
-                                                                     variable=batters_pitch_fx_all_years)
-        batters_pitch_fx_all_years_checkbutton.grid(row=3, column=1, sticky="W", padx=(10, 5), pady=5)
-        batters_pitch_fx_all_years_checkbutton.config(state="disabled")
-        tkinter.Checkbutton(frame, text="batters_pitch_fx", variable=batters_pitch_fx_bool, command=lambda:
-            enable_disable_1(batters_pitch_fx_bool, batters_pitch_fx_all_years_checkbutton, batters_pitch_fx_all_years,
-                         {batters_pitch_fx_entry: batters_pitch_fx_string,
-                          batters_pitch_fx_entry_end: batters_pitch_fx_string_end}), font=font, cursor="hand2"). \
-            grid(row=3, column=0, padx=5, pady=5, sticky="W")
         tkinter.Button(frame, text="Submit", command=lambda:
             submit({'baseballData': {baseball_data_bool.get(): [baseball_data_string.get(),
                                                                 baseball_data_string_end.get()]},
-                    'pitchers_pitch_fx': {pitchers_pitch_fx_bool.get(): [pitchers_pitch_fx_string.get(),
-                                                                         pitchers_pitch_fx_string_end.get()]},
-                    'batters_pitch_fx': {batters_pitch_fx_bool.get(): [batters_pitch_fx_string.get(),
-                                                                       batters_pitch_fx_string_end.get()]}},
-                   False, False),
+                    'pitch_fx': {pitch_fx_bool.get(): [pitch_fx_string.get(),
+                                                       pitch_fx_string_end.get()]}}, False, False),
                        font=font, bg="white", cursor="hand2").grid(columnspan=6, padx=5, pady=5)
         root.withdraw()
         root.mainloop()
     elif 'linux' in sys.platform:
         final_dict = {}
-        databases = ['baseballData', 'pitchers_pitch_fx', 'batters_pitch_fx']
+        databases = ['baseballData', 'pitch_fx']
         for database in databases:
             final_dict[database] = {}
             db = input('Migrate ' + database + ' DB? (y|n): ')

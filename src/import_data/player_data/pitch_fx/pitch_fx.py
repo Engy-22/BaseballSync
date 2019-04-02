@@ -187,7 +187,7 @@ def parse_pitch(innings_url, year, month, day, pitch, meta_data, last_pitch):
             strikes += 1
     if 'Pickoff' in meta_data['temp_outcome']:
         last_pitch = False
-    if last_pitch:
+    if last_pitch and not(balls < 4 and meta_data['temp_outcome'] == 'Wild Pitch'):
         outcome = translate_ab_outcome(meta_data['temp_outcome'], meta_data['ab_description'])
         trajectory = determine_trajectory(outcome, meta_data['ab_description'])
         field = determine_field(outcome, meta_data['ab_description'])

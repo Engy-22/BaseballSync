@@ -4,8 +4,7 @@ if 'linux' in sys.platform:
     sys.path.append(os.path.join('/home', 'araimond', 'baseball-sync', 'src'))
 import tkinter
 from wrappers.baseball_data_connection import DatabaseConnection
-from wrappers.pitchers_pitch_fx_connection import PitcherPitchFXDatabaseConnection
-from wrappers.batters_pitch_fx_connection import BatterPitchFXDatabaseConnection
+from wrappers.pitch_fx_connection import PitchFXDatabaseConnection
 from utilities.num_to_string import num_to_string
 
 font = ('Times', 12)
@@ -24,18 +23,9 @@ def gather_baseball_data_records():
     return tables_records
 
 
-def gather_pitchers_pitch_fx_records():
+def gather_pitch_fx_records():
     tables_records = {}
-    db = PitcherPitchFXDatabaseConnection(sandbox_mode=False)
-    for table in db.read('show tables;'):
-        tables_records[table[0]] = db.read('select * from ' + table[0] + ';')
-    db.close()
-    return tables_records
-
-
-def gather_batters_pitch_fx_records():
-    tables_records = {}
-    db = BatterPitchFXDatabaseConnection(sandbox_mode=False)
+    db = PitchFXDatabaseConnection(sandbox_mode=False)
     for table in db.read('show tables;'):
         tables_records[table[0]] = db.read('select * from ' + table[0] + ';')
     db.close()
@@ -86,7 +76,7 @@ if __name__ == '__main__':
             total_records += 1
     pitchers_pitch_fx_tables = 0
     pitchers_pitch_fx_records = 0
-    for table, records in gather_pitchers_pitch_fx_records().items():
+    for table, records in gather_pitch_fx_records().items():
         pitchers_pitch_fx_tables += 1
         total_tables += 1
         for record in records:
@@ -94,12 +84,6 @@ if __name__ == '__main__':
             total_records += 1
     batters_pitch_fx_tables = 0
     batters_pitch_fx_records = 0
-    for table, records in gather_batters_pitch_fx_records().items():
-        batters_pitch_fx_tables += 1
-        total_tables += 1
-        for record in records:
-            batters_pitch_fx_records += 1
-            total_records += 1
     if 'win' in sys.platform:
         root = tkinter.Tk()
         frame = tkinter.Toplevel(root)
