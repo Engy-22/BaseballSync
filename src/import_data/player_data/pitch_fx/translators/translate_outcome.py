@@ -5,7 +5,8 @@ def translate_ab_outcome(outcome, description):
                 'Caught Stealing 2B': 'cs', 'Caught Stealing 3B': 'cs', 'Grounded Into DP': 'gdp', 'Double Play': 'dp',
                 'Triple Play': '3p', 'Sac Fly': 'sf', 'Fly Out': 'fo', 'Bunt Groundout': 'go', 'Fielders Choice': 'fc',
                 'Fielders Choice Out': 'fc', 'Sac Fly DP': 'dp', 'Bunt Pop Out': 'po', 'Bunt Lineout': 'po',
-                'Bunt Ground Out': 'go', 'Catcher Interference': 'error', 'Sacrifice Bunt DP': 'dp', 'Force Out': 'fc'}
+                'Bunt Ground Out': 'go', 'Catcher Interference': 'error', 'Sacrifice Bunt DP': 'dp', 'Force Out': 'fc',
+                'Sac Bunt Double Play': 'dp'}
     try:
         this_outcome = outcomes[outcome]
     except KeyError:
@@ -52,10 +53,10 @@ def translate_ab_outcome(outcome, description):
             elif 'double play' in description:
                 this_outcome = 'dp'
             else:
-                print('\nOutcomes asdfasdf' + outcome)
+                print('\nOutcomes asdfasdf\t' + outcome)
                 this_outcome = "none"
         else:
-            print('\nOutcomes ;lkj;lkj' + outcome + ' ' + description)
+            print('\nOutcomes ;lkj;lkj\t' + outcome + ' ' + description)
             this_outcome = "none"
     return this_outcome
 
