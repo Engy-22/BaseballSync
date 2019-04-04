@@ -1,0 +1,21 @@
+anytime a code change is made to the interface, you must do "sudo systemctl restart nginx" then do "sudo supervisorctl reload"
+
+to run the code for the website, do "FLASK_APP=run.py", then "flask run --host=0.0.0.0"
+
+to pull updated code onto raspberry pi, be in the baseball-sync folder, then do "git pull"
+
+logs are at /var/log/baseballsync/baseballsync.err.log and /var/log/baseballsync/baseballsync.out.log
+
+if the virtual environment gets removed for whatever reason, you'll have to recreate it. Follow steps below:
+    to create a virtualenv do "python3 -m venv [venv_name]" from baseball-sync/src
+    then do sudo pip install -r requirements.txt
+    try to run web service by doing sudo systemctl restart nginx (to start web server), then gunicorn -w 9 run:app.
+        Note: all this must be done from (venv) /home/baseball-sync/src.
+        If this all works, the web server is running.
+        If it's not able to run and it's due to an import error, try to manually import packages with pip install.
+            Note: one time several of the flask modules would not import (flask_bcrypt, flask_login, etc.) so I has to
+                  do sudo apt-get install libffi-dev, and then install all of these packages manually.
+            follow this link for help with nginx and gunicorn --> https://youtu.be/goToXTC96Co?t=2956
+
+nginx = web server (handles static files, not python code)
+gunicorn handles python code

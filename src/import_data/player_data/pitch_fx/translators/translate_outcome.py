@@ -20,7 +20,7 @@ def translate_ab_outcome(outcome, description):
             else:
                 print(outcome, description)
                 print('alternative outcome on a strikeout')
-        elif outcome == 'Fan interference':
+        elif outcome.lower() == 'fan interference':
             if 'single' in description:
                 this_outcome = '1b'
             elif 'double' in description:
@@ -37,7 +37,7 @@ def translate_ab_outcome(outcome, description):
                 this_outcome = 'po'
             else:
                 this_outcome = 'hr'
-        elif outcome == 'Batter Interference':
+        elif outcome.lower() == 'batter interference':
             if 'grounds out' in description:
                 this_outcome = 'go'
             elif 'strikes out' in description:
