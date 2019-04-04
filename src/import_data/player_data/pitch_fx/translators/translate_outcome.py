@@ -2,11 +2,11 @@ def translate_ab_outcome(outcome, description):
     outcomes = {'Single': '1b', 'Double': '2b', 'Triple': '3b', 'Home Run': 'hr', 'Groundout': 'go', 'Ground Out': 'go',
                 'Flyout': 'fo', 'Lineout': 'lo', 'Pop Out': 'po', 'Walk': 'bb', 'Sac Bunt': 'sh', 'Hit By Pitch': 'hbp',
                 'Intent Walk': 'ibb', 'Forceout': 'fc', 'Line Out': 'lo', 'Field Error': 'error',  'Runner Out': 'cs',
-                'Caught Stealing 2B': 'cs', 'Caught Stealing 3B': 'cs', 'Grounded Into DP': 'gdp', 'Double Play': 'dp',
-                'Triple Play': '3p', 'Sac Fly': 'sf', 'Fly Out': 'fo', 'Bunt Groundout': 'go', 'Fielders Choice': 'fc',
-                'Fielders Choice Out': 'fc', 'Sac Fly DP': 'dp', 'Bunt Pop Out': 'po', 'Bunt Lineout': 'po',
-                'Bunt Ground Out': 'go', 'Catcher Interference': 'error', 'Sacrifice Bunt DP': 'dp', 'Force Out': 'fc',
-                'Sac Bunt Double Play': 'dp'}
+                'Caught Stealing 2B': 'cs', 'Caught Stealing 3B': 'cs', 'Caught Stealing Home': 'cs',
+                'Grounded Into DP': 'gdp', 'Double Play': 'dp', 'Triple Play': '3p', 'Sac Fly': 'sf', 'Fly Out': 'fo',
+                'Bunt Groundout': 'go', 'Fielders Choice': 'fc', 'Fielders Choice Out': 'fc', 'Sac Fly DP': 'dp',
+                'Bunt Pop Out': 'po', 'Bunt Lineout': 'po', 'Bunt Ground Out': 'go', 'Catcher Interference': 'error',
+                'Sacrifice Bunt DP': 'dp', 'Force Out': 'fc', 'Sac Bunt Double Play': 'dp'}
     try:
         this_outcome = outcomes[outcome]
     except KeyError:
@@ -67,7 +67,7 @@ def translate_pitch_outcome(outcome):
                 'Automatic Ball': 'ball (intentional)', 'Swinging Strike (Blocked)': 'strike swinging (in dirt)',
                 'Foul (Runner Going)': 'foul', 'Foul Bunt': 'foul (bunt)', 'Missed Bunt': 'strike swinging (bunt)',
                 'Pitchout': 'pitchout', 'Swinging Pitchout': 'strike swinging (pitchout)',
-                'Intent Ball': 'ball (intentional)'}
+                'Intent Ball': 'ball (intentional)', 'Caught Stealing Home': 'cs'}
     try:
         return outcomes[outcome]
     except KeyError:
