@@ -12,11 +12,11 @@ def fantasy_page():
 
 @fantasy.route("/fantasy/daily")
 def fantasy_daily():
-    recent_simulations = [str(random.randint(1, 5)), str(random.randint(2, 10))]
-    return render_template('fantasy/daily.html', title="Daily Fantasy Home", recent_simulations=recent_simulations)
+    fantasy_teams = [str(random.randint(1, 5)), str(random.randint(2, 10))]
+    return render_template('fantasy/daily.html', title="Daily Fantasy Home", fantasy_teams=fantasy_teams)
 
 
 @fantasy.route("/fantasy/season")
 def fantasy_season():
-    recent_simulations = [str(random.randint(1, 5)), str(random.randint(2, 10))]
-    return render_template('fantasy/season.html', title="Season-Long Fantasy", recent_simulations=recent_simulations)
+    fantasy_teams = [str(random.randint(1, 5)), str(random.randint(2, 10))]
+    return render_template('fantasy/season.html', title="Season-Long Fantasy", fantasy_teams=fantasy_teams)

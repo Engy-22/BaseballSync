@@ -77,8 +77,8 @@ def account():
 def user_posts(username):
     page = request.args.get('page', 1, type=int)
     user = User.query.filter_by(username=username).first_or_404()
-    return render_template('users/user_posts.html', posts=Post.query.filter_by(author=user).order_by(Post.date_posted.desc())
-                           .paginate(per_page=5, page=page), user=user)
+    return render_template('users/user_posts.html', posts=Post.query.filter_by(author=user).
+                           order_by(Post.date_posted.desc()).paginate(per_page=5, page=page), user=user)
 
 
 @users.route("/reset_password", methods=['GET', 'POST'])

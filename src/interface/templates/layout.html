@@ -34,7 +34,13 @@
             <div class="navbar-nav mr-auto">
               <a class="nav-item nav-link" href="{{ url_for('main.home') }}">Home</a>
               <a class="nav-item nav-link" href="{{ url_for('main.about') }}">About</a>
-              <a class="nav-item nav-link" href="{{ url_for('simulate.simulate_page') }}">Simulate</a>
+              <div class="dropdown">
+                <a class="nav-item nav-link" href="{{ url_for('simulate.simulate_page') }}">Simulate</a>
+                  <div class="dropdown-content">
+                    <a href="{{ url_for('simulate.simulate_page') }}">Simulate Home</a>
+                    <a href="{{ url_for('simulate.quick_sim') }}">Quick Sim</a>
+                  </div>
+              </div>
               <div class="dropdown">
                 <a class="nav-item nav-link" href="{{ url_for('fantasy.fantasy_page') }}">Fantasy</a>
                   <div class="dropdown-content">
