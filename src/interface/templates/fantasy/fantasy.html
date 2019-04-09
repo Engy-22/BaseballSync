@@ -2,21 +2,21 @@
 
 {%block content%}
     <h1>Fantasy Home</h1>
-    <div class="col-md-4">
-        <div class="content-section">
-            <a class="content-section" href="#">Join a league</a>
-            <a class="content-section" href="#">Create a league</a>
-            <a class="content-section" href="#">Mock Draft</a>
-        </div>
-        <div class="content-section fantasy-teams-section">
-            <h3>Your Fantasy Teams</h3>
-            {% for team in fantasy_teams %}
-              <div class="list-group-item">
-                <img class="small-team-icon rounded-circle" src="{{ url_for('static', filename='images/emblem.png') }}"
-                     alt="Temporary image">
-                <a class="list-group-item-light" href="#">{{ team }}</a>
-              </div>
-            {% endfor %}
-        </div>
+    <div>
+      <div>
+        <a class="content-section" href="#">Join a league</a>
+        <a class="content-section" href="#">Create a league</a>
+        <a class="content-section" href="#">Mock Draft</a>
+      </div>
+      <div class="content-section fantasy-teams-section">
+        <h3>Your Fantasy Teams</h3>
+        {% for team in fantasy_teams %}
+          <div class="list-group-item">
+            <img class="small-team-icon rounded-circle" src="{{ url_for('static', filename='images/emblem.png') }}"
+                 alt="Temporary image">
+            <a class="list-group-item-light" href="#">{{ team }}</a>
+          </div>
+        {% endfor %}
+      </div>
     </div>
 {%endblock content%}

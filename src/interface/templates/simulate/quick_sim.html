@@ -1,18 +1,55 @@
 {%extends "layout.html"%}
 
 {%block content%}
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/simulate.css') }}">
   <form method="POST" action="">
     {{ form.hidden_tag() }}
     <fieldset class="form-group">
-      <div class="content-section col-md-4">
-        {{ form.team1.label(class="form-control-label") }}
-        {{ form.team1 }}
-          <br/>
-        {{ form.team2.label(class="form-control-label") }}
-        {{ form.team2 }}
-          <br/>
-        {{ form.games.label(class="form-control-label") }}
-        {{ form.games }}
+      <div class="content-section">
+        <table>
+          <thead>
+            <tr>
+              {% for league, divisions in league_structure[current_year].items() %}
+                <th class="league" colspan="3">
+                  <img src="{{ url_for('static', filename='images/model/leagues/' + league + '.png') }}"/>
+                </th>
+              {% endfor %}
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+            {% for league, division in league_structure[current_year].items() %}
+              {% for division_name, _ in division.items() %}
+                <th class="division">{{ division_name }}</th>
+              {% endfor %}
+            {% endfor %}
+            </tr>
+            <tr>
+              {% for league, division in league_structure[current_year].items() %}
+                {% for division_name, teams in division.items() %}
+                  <td>
+                    <table class="subtable">
+                      {% for team_id, team_name in teams.items() %}
+                        <tr>
+                          <td>
+                            <a href="#">
+                              <img class="team_pic" src="{{ url_for('static', filename='images/model/teams/' + team_id
+                                                                                        + current_year + '.jpg') }}"/>
+                            </a>
+                          </td>
+                        </tr>
+                      {% endfor %}
+                    </table>
+                  </td>
+                {% endfor %}
+              {% endfor %}
+            </tr>
+          </tbody>
+        </table>
+        <tfoot>
+          {{ form.games.label(class="form-control-label") }}
+          {{ form.games }}
+        </tfoot>
       </div>
     </fieldset>
       <div class="form-group">

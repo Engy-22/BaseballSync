@@ -1,0 +1,19 @@
+.league {
+  padding: 0rem 0rem 0rem 6.2rem;
+}
+
+.division {
+  padding: 2.5rem 2.5rem 2.5rem 2.5rem;
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+.team_pic {
+  width: 50%;
+  margin: 1rem 1rem 1rem 1rem;
+}
+
+.subtable {
+  width: 7rem;
+  margin: auto;
+}
