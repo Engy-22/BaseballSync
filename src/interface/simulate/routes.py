@@ -17,11 +17,12 @@ def simulate_page():
 @simulate.route("/simulate/quick_sim", methods=['GET', 'POST'])
 @login_required
 def quick_sim():
-    quick_sim_form = QuickSimForm()
-    recent_simulations = ['2/20/2019 CLE vs. DET (' + str(random.randint(1, 162)) + ' games)', '2/19/2019 TEX vs. HOU ('
-                          + str(random.randint(1, 162)) + ' games)']
-    return render_template('simulate/quick_sim.html', title="Quick Sim", recent_simulations=recent_simulations,
-                           form=quick_sim_form, league_structure=get_league_structure(), current_year='2019')
+    form = QuickSimForm()
+    if form.validate_on_submit():
+        print('asdf')
+        print(form.games.data)
+    return render_template('simulate/quick_sim.html', title="Quick Sim", form=form, current_year='2019',
+                           league_structure=get_league_structure())
 
 
 def get_league_structure():

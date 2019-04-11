@@ -1,16 +1,16 @@
-{%extends "layout.html"%}
+{% extends "layout.html" %}
 
-{%block content%}
+{% block content %}
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/simulate.css') }}">
   <form method="POST" action="">
     {{ form.hidden_tag() }}
     <fieldset class="form-group">
-      <div class="content-section">
+      <div class="simulate-content-section">
         <table>
           <thead>
             <tr>
-              {% for league, divisions in league_structure[current_year].items() %}
-                <th class="league" colspan="3">
+              {% for league, _ in league_structure[current_year].items() %}
+                <th class="league_pic" colspan="3">
                   <img src="{{ url_for('static', filename='images/model/leagues/' + league + '.png') }}"/>
                 </th>
               {% endfor %}
@@ -18,27 +18,34 @@
           </thead>
           <tbody>
             <tr>
-            {% for league, division in league_structure[current_year].items() %}
-              {% for division_name, _ in division.items() %}
-                <th class="division">{{ division_name }}</th>
+              {% for league, division in league_structure[current_year].items() %}
+                {% for division_name, _ in division.items() %}
+                  <th class="division"><a class="division_link" href="#">{{ division_name }}</a></th>
+                {% endfor %}
               {% endfor %}
-            {% endfor %}
             </tr>
             <tr>
               {% for league, division in league_structure[current_year].items() %}
                 {% for division_name, teams in division.items() %}
-                  <td>
-                    <table class="subtable">
-                      {% for team_id, team_name in teams.items() %}
-                        <tr>
-                          <td>
-                            <a href="#">
-                              <img class="team_pic" src="{{ url_for('static', filename='images/model/teams/' + team_id
-                                                                                        + current_year + '.jpg') }}"/>
-                            </a>
-                          </td>
-                        </tr>
-                      {% endfor %}
+                  <td class="division_column">
+                    <table class="sub_table">
+                      <tbody>
+                        {% for team_id, team_name in teams.items() %}
+                          <tr>
+                            <td>
+                              <a href="#">
+                                <figure>
+                                  <img class="team_pic" alt="{{ team_name }}" src="{{ url_for('static',
+                                  filename='images/model/teams/' + team_id + current_year + '.jpg') }}"/>
+                                  <figcaption class="team_label">
+                                    {{ team_name }}
+                                  </figcaption>
+                                </figure>
+                              </a>
+                            </td>
+                          </tr>
+                        {% endfor %}
+                      </tbody>
                     </table>
                   </td>
                 {% endfor %}
@@ -46,14 +53,22 @@
             </tr>
           </tbody>
         </table>
-        <tfoot>
+        <div class="form-group">
           {{ form.games.label(class="form-control-label") }}
-          {{ form.games }}
-        </tfoot>
+          {% if form.games.errors %}
+            {{ form.games(class="form-control form-control-lg is-invalid") }}
+            <div class="invalid-feedback">
+              <span>{{ error }}</span>
+            </div>
+          {% else %}
+            {{ form.games(class="form-control form-control-lg") }}
+          {% endif %}
+        </div>
       </div>
     </fieldset>
       <div class="form-group">
         {{ form.submit(class="btn btn-outline-info") }}
       </div>
   </form>
-{%endblock content%}
+  <script src="{{ url_for('static', filename='js/init.js') }}" ></script>
+{% endblock content %}

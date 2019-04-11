@@ -1,19 +1,67 @@
-.league {
-  padding: 0rem 0rem 0rem 6.2rem;
+.league_pic {
+  padding: 2rem 0rem 2rem 0rem;
+  text-align: center;
 }
 
 .division {
-  padding: 2.5rem 2.5rem 2.5rem 2.5rem;
+  text-align: center;
   font-weight: bold;
   text-decoration: underline;
 }
 
-.team_pic {
-  width: 50%;
-  margin: 1rem 1rem 1rem 1rem;
+.division_link {
+  color: black;
 }
 
-.subtable {
-  width: 7rem;
+.team_pic {
+  width: 50%;
+  display: block;
   margin: auto;
+}
+
+.team_label {
+  text-align: center;
+}
+
+.division_column {
+  vertical-align: top;
+}
+
+.sub_table {
+  width: 9rem;
+  height: 45rem;
+}
+
+.selected_team {
+  width: 50%;
+  display: block;
+  margin: auto;
+  box-shadow: 0px 12px 22px 10px #2ced7c;
+}
+
+figcaption {
+  font-size: smaller;
+  color: black;
+  text-align: center;
+}
+
+.simulate-content-section {
+  background: #ffffff;
+  padding: 10px 20px;
+  border: 1px solid #dddddd;
+  border-radius: 3px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  width: 57rem;
+}
+
+#image {
+  border-width: 1px;
+  border-color: black;
+}
+
+
+.image2 {
+  border-width: 10px;
+  border-color: black;
 }
