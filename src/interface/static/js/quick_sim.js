@@ -1,9 +1,12 @@
-function handle_team_pics() {
-    alert('asdf');
-    teams = document.getElementsByClassName("team_pic")
-    for (var i = 0; i < teams.length; i++) {
-        teams[i].addEventListener("click", function () {
-            teams[i].className = "selected_team";
-        });
-    }
+function init() {
+    $('.team_pic').bind('click', function() {
+        $( this ).toggleClass('team_pic selected_team'); //change selected team to pop out or sink in
+        return false;
+    });
+//    $('.team_label').bind('click', function() {
+//        $( '.team_pic' ).toggleClass('selected_team team_pic'); //change selected team to pop out
+//        return false;
+//    });
 }
+
+window.addEventListener("load", init);

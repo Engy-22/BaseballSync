@@ -54,14 +54,3 @@ figcaption {
   margin-bottom: 20px;
   width: 57rem;
 }
-
-#image {
-  border-width: 1px;
-  border-color: black;
-}
-
-
-.image2 {
-  border-width: 10px;
-  border-color: black;
-}
