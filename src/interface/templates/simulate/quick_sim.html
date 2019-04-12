@@ -2,77 +2,88 @@
 
 {% block content %}
   <h1>Quick Sim - {{ current_year }}</h1>
-  <div>
-    <img src="{{ url_for('static', filename='images/model/leagues/al.png') }}">
-  </div>
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/simulate.css') }}">
-  <form class="simulate-content-section" method="POST" action="">
+  <div class="row hidden" id="matchup">
+    <figure class="column">
+      <img id="away_matchup" src="">
+      <figcaption id="away_caption">
+        away team
+      </figcaption>
+    </figure>
+    <figure class="column">
+      <img id="home_matchup" src="">
+      <figcaption id="home_caption">
+        home team
+      </figcaption>
+    </figure>
+  </div>
+  <div class="simulate-content-section">
+    <table class="outer-table">
+      <thead>
+        <tr>
+          {% for league, _ in league_structure[current_year].items() %}
+            <th class="league_pic" colspan="3">
+              <img src="{{ url_for('static', filename='images/model/leagues/' + league + '.png') }}"/>
+            </th>
+          {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          {% for league, division in league_structure[current_year].items() %}
+            {% for division_name, _ in division.items() %}
+              <th class="division"><a class="division_link" href="#">{{ division_name }}</a></th>
+            {% endfor %}
+          {% endfor %}
+        </tr>
+        <tr>
+          {% for league, division in league_structure[current_year].items() %}
+            {% for division_name, teams in division.items() %}
+              <td class="division_column">
+                <table class="sub_table">
+                  <tbody>
+                    {% for team_id, team_name in teams.items() %}
+                      <tr>
+                        <td>
+                          <a href="#">
+                            <figure class="team-entity">
+                              <img class="unselected_team" alt="{{ team_name }}" src="{{ url_for('static',
+                              filename='images/model/teams/' + team_id + current_year + '.jpg') }}"/>
+                              <figcaption class="team_label">
+                                {{ team_name }}
+                              </figcaption>
+                            </figure>
+                          </a>
+                        </td>
+                      </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </td>
+            {% endfor %}
+          {% endfor %}
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <form class="simulate-content-section hidden" method="POST" action="">
     {{ form.hidden_tag() }}
     <fieldset class="form-group">
-      <div>
-        <table>
-          <thead>
-            <tr>
-              {% for league, _ in league_structure[current_year].items() %}
-                <th class="league_pic" colspan="3">
-                  <img src="{{ url_for('static', filename='images/model/leagues/' + league + '.png') }}"/>
-                </th>
-              {% endfor %}
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              {% for league, division in league_structure[current_year].items() %}
-                {% for division_name, _ in division.items() %}
-                  <th class="division"><a class="division_link" href="#">{{ division_name }}</a></th>
-                {% endfor %}
-              {% endfor %}
-            </tr>
-            <tr>
-              {% for league, division in league_structure[current_year].items() %}
-                {% for division_name, teams in division.items() %}
-                  <td class="division_column">
-                    <table class="sub_table">
-                      <tbody>
-                        {% for team_id, team_name in teams.items() %}
-                          <tr>
-                            <td>
-                              <a href="#">
-                                <figure>
-                                  <img class="team_pic" alt="{{ team_name }}" src="{{ url_for('static',
-                                  filename='images/model/teams/' + team_id + current_year + '.jpg') }}"/>
-                                  <figcaption class="team_label">
-                                    {{ team_name }}
-                                  </figcaption>
-                                </figure>
-                              </a>
-                            </td>
-                          </tr>
-                        {% endfor %}
-                      </tbody>
-                    </table>
-                  </td>
-                {% endfor %}
-              {% endfor %}
-            </tr>
-          </tbody>
-        </table>
-        <div class="form-group">
-          {{ form.games.label(class="form-control-label") }}
-          {% if form.games.errors %}
-            {{ form.games(class="form-control form-control-lg is-invalid") }}
-            <div class="invalid-feedback">
-              <span>{{ error }}</span>
-            </div>
-          {% else %}
-            {{ form.games(class="form-control form-control-lg") }}
-          {% endif %}
-        </div>
+      <div class="form-group">
+        {{ form.games.label(class="form-control-label") }}
+        {% if form.games.errors %}
+          {{ form.games(class="form-control form-control-lg is-invalid") }}
+          <div class="invalid-feedback">
+            <span>{{ error }}</span>
+          </div>
+        {% else %}
+          {{ form.games(class="form-control form-control-lg") }}
+        {% endif %}
       </div>
     </fieldset>
-      <div class="form-group">
-        {{ form.submit(class="btn btn-outline-info") }}
-      </div>
+    <div class="form-group">
+      {{ form.submit(class="btn btn-outline-info") }}
+    </div>
   </form>
   <script src="{{ url_for('static', filename='js/quick_sim.js') }}" ></script>
 {% endblock content %}

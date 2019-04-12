@@ -34,6 +34,8 @@ def aggregate_and_write(year, month, day, player_type):
         extended_query += ' and month = ' + str(month) + ' and day = ' + str(day)
     players = set(db.read('select playerid from ' + player_type[:-3] + 'er_pitches where year = ' + str(year)
                           + extended_query + ';'))
+    logger.log(len(players))
+    logger.log(players)
     db.close()
     for player_id in players:
         aggregate(year, player_id[0], player_type)
@@ -44,6 +46,8 @@ def aggregate_and_write(year, month, day, player_type):
 
 
 def aggregate(year, player_id, player_type):
+    logger.log('\t' + player_id)
+    start_time = time.time()
     table = player_type[:-3] + 'er_pitches'
     matchups = ['vr', 'vl']
     opponent = 'hb' if player_type == 'pitching' else 'hp'
@@ -175,6 +179,7 @@ def aggregate(year, player_id, player_type):
         write_direction_by_outcome(player_id, p_uid, year, matchup, directions_by_outcome[matchup], player_type)
     pitch_fx_db.close()
     db.close()
+    logger.log('\t\tTime = ' + time_converter(time.time()-start_time))
 
 
 def aggregate_hbp(player_id, year, matchup, p_uid, player_type):

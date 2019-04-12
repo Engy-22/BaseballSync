@@ -119,8 +119,11 @@ def load_url(player_id):
     global temp_pages
     db = DatabaseConnection(sandbox_mode)
     if len(db.read('select * from players where playerid = "' + player_id + '";')) == 0:
-        temp_pages[player_id] = BeautifulSoup(urlopen("https://www.baseball-reference.com/players/" + player_id[0]
-                                                      + "/" + player_id + ".shtml"), 'html.parser')
+        try:
+            temp_pages[player_id] = BeautifulSoup(urlopen("https://www.baseball-reference.com/players/" + player_id[0]
+                                                          + "/" + player_id + ".shtml"), 'html.parser')
+        except:
+            temp_pages[player_id] = None
     else:
         temp_pages[player_id] = None
     db.close()
