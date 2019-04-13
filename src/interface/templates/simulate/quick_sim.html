@@ -1,21 +1,46 @@
 {% extends "layout.html" %}
 
 {% block content %}
-  <h1>Quick Sim - {{ current_year }}</h1>
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/simulate.css') }}">
   <div class="row hidden" id="matchup">
-    <figure class="column">
-      <img id="away_matchup" src="">
-      <figcaption id="away_caption">
-        away team
-      </figcaption>
-    </figure>
-    <figure class="column">
-      <img id="home_matchup" src="">
-      <figcaption id="home_caption">
-        home team
-      </figcaption>
-    </figure>
+    <button class="swap-button btn btn-primary btn-sm" type="button">Switch Home and Away</button>
+    <div>
+      <figure class="column">
+        <div class="simulate-dropdown">
+          <h3>Away</h3>
+          <img id="away_matchup" src="">
+          <div class="simulate-dropdown">
+            <div class="simulate-dropdown-content">
+              <a href="#">Team Info</a>
+              <a href="#">Set Lineup</a>
+              <a href="#">Adjust Player Attributes</a>
+              <a class="remove_team" href="#">Remove Team</a>
+            </div>
+          </div>
+        </div>
+        <figcaption id="away_caption">
+        </figcaption>
+      </figure>
+      <figure class="column">
+      <h1 id="at-symbol">@</h1>
+      </figure>
+      <figure class="column">
+        <div class="simulate-dropdown">
+          <h3>Home</h3>
+          <img id="home_matchup" src="">
+          <div class="simulate-dropdown">
+            <div class="simulate-dropdown-content">
+              <a href="#">Team Info</a>
+              <a href="#">Set Lineup</a>
+              <a href="#">Adjust Player Attributes</a>
+              <a class="remove_team" href="#">Remove Team</a>
+            </div>
+          </div>
+        </div>
+        <figcaption id="home_caption">
+        </figcaption>
+      </figure>
+    </div>
   </div>
   <div class="simulate-content-section">
     <table class="outer-table">
