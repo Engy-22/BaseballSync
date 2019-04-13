@@ -1,6 +1,6 @@
 import os
 import pymysql
-from import_data.config import Config as config
+from config import Config as config
 
 
 class DatabaseConnection:
