@@ -13,13 +13,20 @@ $(document).ready(function() {
         $('#away_team').attr('id', 'temp_team');
         $('#home_team').attr('id', 'away_team');
         $('#temp_team').attr('id', 'home_team');
+        $('#away_caption').fadeOut();
+        $('#home_caption').fadeOut();
         $('#away_matchup').fadeOut();
         $('#home_matchup').fadeOut(function() {
             var temp_src = $('#away_matchup').attr('src');
             $('#away_matchup').attr('src', $('#home_matchup').attr('src'));
             $('#home_matchup').attr('src', temp_src);
+            var temp_caption = $('#home_caption').text();
+            $('#home_caption').text($('#away_caption').text());
+            $('#away_caption').text(temp_caption);
             $('#away_matchup').fadeIn();
             $('#home_matchup').fadeIn();
+            $('#home_caption').fadeIn();
+            $('#away_caption').fadeIn();
             $('.swap-button').blur();
         }); //end anonymous function
     }); //end swap-button click function

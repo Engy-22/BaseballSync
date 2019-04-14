@@ -19,7 +19,8 @@ def quick_sim():
     form = QuickSimForm()
     if form.validate_on_submit():
         games = form.games.data
-        return redirect(url_for('simulate.sim_results'))
+        return render_template('simulate/sim_results.html', title='Sim Results')
+        # return redirect(url_for('simulate.sim_results'))
     return render_template('simulate/quick_sim.html', title="Quick Sim", form=form, current_year='2019',
                            league_structure=get_league_structure())
 

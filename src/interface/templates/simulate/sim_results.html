@@ -2,12 +2,13 @@
 
 {% block content %}
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/sim_results.css') }}">
-  <!-- The Modal -->
   <div id="myModal" class="modal">
-    <!-- Modal content -->
     <div class="modal-content">
       <span class="close">&times;</span>
-      <img id="emblem" src="{{ url_for('static', filename='images/emblem.png') }}">
+      <img id="emblem" class="spin" src="{{ url_for('static', filename='images/emblem.png') }}">
+      <div class="progress">
+        <div class="progress-bar" role="progressbar"></div>
+      </div>
     </div>
   </div>
   <script src="{{ url_for('static', filename='js/sim_results.js') }}" ></script>
