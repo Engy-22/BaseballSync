@@ -53,7 +53,7 @@ def get_year_data(year):
     logger.log("\tdone writing to database: time = " + time_converter(time.time() - write_start))
     total_time = time_converter(time.time() - start_time)
     logger.log('year_data download completed: time = ' + total_time + '\n\n')
-    driver_logger.log('\t\tTime = ' + total_time + ' seconds')
+    driver_logger.log('\t\tTime = ' + total_time)
 
 
 def load_url(year, stat_type):

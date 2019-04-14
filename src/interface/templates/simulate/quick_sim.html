@@ -2,46 +2,6 @@
 
 {% block content %}
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/simulate.css') }}">
-  <div class="row hidden" id="matchup">
-    <button class="swap-button btn btn-primary btn-sm" type="button">Switch Home and Away</button>
-    <div>
-      <figure class="column">
-        <div class="simulate-dropdown">
-          <h3>Away</h3>
-          <img id="away_matchup" src="">
-          <div class="simulate-dropdown">
-            <div class="simulate-dropdown-content">
-              <a href="#">Team Info</a>
-              <a href="#">Set Lineup</a>
-              <a href="#">Adjust Player Attributes</a>
-              <a class="remove_team" href="#">Remove Team</a>
-            </div>
-          </div>
-        </div>
-        <figcaption id="away_caption">
-        </figcaption>
-      </figure>
-      <figure class="column">
-      <h1 id="at-symbol">@</h1>
-      </figure>
-      <figure class="column">
-        <div class="simulate-dropdown">
-          <h3>Home</h3>
-          <img id="home_matchup" src="">
-          <div class="simulate-dropdown">
-            <div class="simulate-dropdown-content">
-              <a href="#">Team Info</a>
-              <a href="#">Set Lineup</a>
-              <a href="#">Adjust Player Attributes</a>
-              <a class="remove_team" href="#">Remove Team</a>
-            </div>
-          </div>
-        </div>
-        <figcaption id="home_caption">
-        </figcaption>
-      </figure>
-    </div>
-  </div>
   <div class="simulate-content-section">
     <table class="outer-table">
       <thead>
@@ -91,24 +51,62 @@
       </tbody>
     </table>
   </div>
-  <form class="simulate-content-section hidden" method="POST" action="">
-    {{ form.hidden_tag() }}
-    <fieldset class="form-group">
-      <div class="form-group">
-        {{ form.games.label(class="form-control-label") }}
-        {% if form.games.errors %}
-          {{ form.games(class="form-control form-control-lg is-invalid") }}
-          <div class="invalid-feedback">
-            <span>{{ error }}</span>
+  <div class="row hidden" id="matchup">
+    <form method="POST" action="">
+      <button class="swap-button btn btn-primary btn-sm" type="button">Switch Home and Away</button>
+      <div>
+        <figure class="column">
+          <div class="simulate-dropdown">
+            <h3>Away</h3>
+            <img id="away_matchup" src="">
+            <div class="simulate-dropdown">
+              <div class="simulate-dropdown-content">
+                <a href="#">Team Info</a>
+                <a href="#">Set Lineup</a>
+                <a href="#">Adjust Player Attributes</a>
+                <a class="remove_team" href="#">Remove Team</a>
+              </div>
+            </div>
           </div>
-        {% else %}
-          {{ form.games(class="form-control form-control-lg") }}
-        {% endif %}
+          <figcaption id="away_caption">
+          </figcaption>
+        </figure>
+        <figure class="column">
+        <h1 id="at-symbol">@</h1>
+        </figure>
+        <figure class="column">
+          <div class="simulate-dropdown">
+            <h3>Home</h3>
+            <img id="home_matchup" src="">
+            <div class="simulate-dropdown">
+              <div class="simulate-dropdown-content">
+                <a href="#">Team Info</a>
+                <a href="#">Set Lineup</a>
+                <a href="#">Adjust Player Attributes</a>
+                <a class="remove_team" href="#">Remove Team</a>
+              </div>
+            </div>
+          </div>
+          <figcaption id="home_caption">
+          </figcaption>
+        </figure>
       </div>
-    </fieldset>
-    <div class="form-group">
-      {{ form.submit(class="btn btn-outline-info") }}
-    </div>
-  </form>
+      {{ form.hidden_tag() }}
+      <div class="form-group">
+      {{ form.games.label(class="form-control-label") }}
+      {% if form.games.errors %}
+        {{ form.games(class="form-control form-control-lg is-invalid") }}
+        <div class="invalid-feedback">
+          <span>{{ error }}</span>
+        </div>
+      {% else %}
+        {{ form.games(class="form-control form-control-lg") }}
+      {% endif %}
+      </div>
+      <div class="form-group">
+        {{ form.submit(id="simulate-btn", class="btn btn-outline-info") }}
+      </div>
+    </form>
+  </div>
   <script src="{{ url_for('static', filename='js/quick_sim.js') }}" ></script>
 {% endblock content %}

@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+
+{% block content %}
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/sim_results.css') }}">
+  <!-- The Modal -->
+  <div id="myModal" class="modal">
+    <!-- Modal content -->
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <img id="emblem" src="{{ url_for('static', filename='images/emblem.png') }}">
+    </div>
+  </div>
+  <script src="{{ url_for('static', filename='js/sim_results.js') }}" ></script>
+{% endblock content %}

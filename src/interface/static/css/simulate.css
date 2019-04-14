@@ -1,3 +1,12 @@
+.simulate-content-section {
+  background: #ffffff;
+  padding: 1rem 2rem;
+  border: 1px solid #dddddd;
+  border-radius: 3px;
+  margin: 2rem;
+  width: 59rem;
+}
+
 .league_pic {
   padding: 2rem 0rem 2rem 0rem;
   text-align: center;
@@ -70,15 +79,6 @@ figcaption {
   margin-right: 0.75rem;
 }
 
-.simulate-content-section {
-  background: #ffffff;
-  padding: 1rem 2rem;
-  border: 1px solid #dddddd;
-  border-radius: 3px;
-  margin: 2rem;
-  width: 59rem;
-}
-
 .column {
   float: left;
   width: 33.33%;
@@ -127,4 +127,8 @@ figcaption {
 
 #at-symbol {
   margin: 5rem 0rem 0rem 5rem;
+}
+
+#simulate-btn {
+  margin-left: 32rem;
 }

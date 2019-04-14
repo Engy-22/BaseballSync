@@ -7,7 +7,7 @@ from utilities.properties import log_prefix, import_driver_logger as driver_logg
 
 def send_results():
     print('Emailing results')
-    driver_logger.log('\tEmailing results\n\n')
+    driver_logger.log('\tEmailing results\n\n\n\n')
     sender = config.MAIL_USERNAME
     recipient = config.MAIL_RECIPIENT
     pwd = config.MAIL_PASSWORD

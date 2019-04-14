@@ -1,7 +1,6 @@
 from flask_login import login_required
-from flask import render_template, Blueprint, flash
+from flask import render_template, Blueprint, url_for, redirect, flash
 from interface.simulate.forms import QuickSimForm
-import random
 from utilities.database.wrappers.baseball_data_connection import DatabaseConnection
 from utilities.properties import sandbox_mode
 
@@ -19,10 +18,16 @@ def simulate_page():
 def quick_sim():
     form = QuickSimForm()
     if form.validate_on_submit():
-        print('asdf')
-        print(form.games.data)
+        games = form.games.data
+        return redirect(url_for('simulate.sim_results'))
     return render_template('simulate/quick_sim.html', title="Quick Sim", form=form, current_year='2019',
                            league_structure=get_league_structure())
+
+
+@simulate.route("/simulate/sim_results")
+@login_required
+def sim_results():
+    return render_template('simulate/sim_results.html')
 
 
 def get_league_structure():
