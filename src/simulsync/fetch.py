@@ -50,6 +50,7 @@ def fetch_game(url, past_game_data):
 
 
 def get_latest_pitch(past_game_data):
+    pitch_outcomes = {'B': 'ball', 'S': 'strike', 'X': 'in play'}
     try:
         simulsync_xml = minidom.parse(os.path.join('simulsync', 'simulsync.xml'))
         if past_game_data['latest_pitch'] != 'get_the_latest_pitch':
@@ -59,7 +60,8 @@ def get_latest_pitch(past_game_data):
                 for pitch in at_bat.getElementsByTagName('pitch'):
                     if latest_pitch_found:
                         latest_pitch = pitch.getAttribute('play_guid')
-                        print('\t' + pitch.getAttribute('pitch_type'))
+                        print('\t' + pitch.getAttribute('des') + ' ' + pitch.getAttribute('pitch_type') + ' (' +
+                              pitch_outcomes[pitch.getAttribute('type')] + ')')
                     else:
                         if pitch.getAttribute('play_guid') == past_game_data['latest_pitch']:
                             latest_pitch_found = True

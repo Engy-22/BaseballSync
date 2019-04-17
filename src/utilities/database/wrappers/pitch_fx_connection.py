@@ -1,6 +1,6 @@
 import os
 import pymysql
-from config import Config as config
+from src.config import Config as config
 
 
 class PitchFXDatabaseConnection:
