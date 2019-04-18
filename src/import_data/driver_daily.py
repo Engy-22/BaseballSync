@@ -65,7 +65,7 @@ def main(from_server, day, month, year, frame=None):
 
 
 def driver(day, month, year):
-    driver_logger.log(str(year))
+    driver_logger.log(str(month) + '/' + str(day) + '/' + str(year))
     driver_time = time.time()
     print('\n\n' + str(year))
     populate_teams_table(year)
@@ -90,5 +90,5 @@ def driver(day, month, year):
     pitcher_spray_chart_constructor(year)
     team_certainties(year)
     consolidate_data(year)
-    driver_logger.log('Time taken to download ' + str(year) + ' data: ' + time_converter(time.time()-driver_time)
-                      + '\n')
+    driver_logger.log('Time taken to download ' + str(month) + '/' + str(day) + '/' + str(year) + ' data: '
+                      + time_converter(time.time()-driver_time) + '\n')
