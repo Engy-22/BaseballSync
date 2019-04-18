@@ -33,6 +33,7 @@ from import_data.consolidata.driver import consolidate_data
 from import_data.player_data.pitching.determine_pitcher_roles import determine_pitcher_roles_year
 from utilities.properties import import_driver_logger as driver_logger
 from utilities.database.automated_migration import auto_migrate
+from import_data.leagues.create_strike_zone import create_strike_zone
 from import_data.email_results import send_results
 
 
@@ -48,6 +49,7 @@ def main(from_server, day, month, year, frame=None):
             league_table_constructor()
             manager_table_constructor()
             driver(day, month, year)
+            create_strike_zone()
             clean_up_deadlocked_file()
             auto_migrate()
             driver_logger.log('Driver complete for year ' + str(year) + ': time = '

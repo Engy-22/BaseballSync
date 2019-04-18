@@ -37,6 +37,7 @@ from utilities.clean_up_deadlocked_file import clean_up_deadlocked_file
 from import_data.consolidata.driver import consolidate_data
 from import_data.player_data.pitching.determine_pitcher_roles import determine_pitcher_roles_year
 from utilities.database.automated_migration import auto_migrate
+from import_data.leagues.create_strike_zone import create_strike_zone
 from utilities.properties import import_driver_logger as driver_logger
 
 
@@ -54,6 +55,7 @@ def main(from_server, begin_year, end_year, frame=None):
         for year in range(begin_year, end_year, 1):
             years.append(year)
             driver(year)
+        create_strike_zone()
         rank_driver(years[-1])
         comparisons_driver(years[-1])
         hof_finder()

@@ -19,3 +19,6 @@ if the virtual environment gets removed for whatever reason, you'll have to recr
 
 nginx = web server (handles static files, not python code)
 gunicorn handles python code
+
+Helpful link for Boostrap dropdowns, navbars, progress bars, modals, etc.:
+https://app.pluralsight.com/player?course=bootstrap-introduction&author=scott-allen&name=bootstrap-m4-components&clip=4

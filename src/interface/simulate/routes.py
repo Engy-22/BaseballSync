@@ -13,7 +13,7 @@ def simulate_page():
     return render_template('simulate/simulate.html', title="Simulate", recent_simulations=recent_simulations)
 
 
-@simulate.route("/simulate/quick_sim", methods=['GET', 'POST'])
+@simulate.route("/simulate/quick_sim2", methods=['GET', 'POST'])
 @login_required
 def quick_sim():
     form = QuickSimForm()
@@ -21,8 +21,12 @@ def quick_sim():
         games = form.games.data
         return render_template('simulate/sim_results.html', title='Sim Results')
         # return redirect(url_for('simulate.sim_results'))
-    return render_template('simulate/quick_sim.html', title="Quick Sim", form=form, current_year='2019',
-                           league_structure=get_league_structure())
+    league_structure = get_league_structure()
+    current_year = '2019'
+    print(len(league_structure[current_year]))
+    return render_template('simulate/quick_sim2.html', title="Quick Sim", form=form, current_year=current_year,
+                           league_structure=league_structure, league_len=len(league_structure[current_year]),
+                           division_len=len(league_structure[current_year]['nl']))
 
 
 @simulate.route("/simulate/sim_results")
