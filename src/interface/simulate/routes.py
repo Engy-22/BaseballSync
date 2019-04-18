@@ -3,6 +3,8 @@ from flask import render_template, Blueprint, url_for, redirect, flash
 from interface.simulate.forms import QuickSimForm
 from utilities.database.wrappers.baseball_data_connection import DatabaseConnection
 from utilities.properties import sandbox_mode
+from utilities.get_most_recent_year import get_most_recent_year
+
 
 simulate = Blueprint('simulate', __name__)
 
@@ -22,8 +24,7 @@ def quick_sim():
         return render_template('simulate/sim_results.html', title='Sim Results')
         # return redirect(url_for('simulate.sim_results'))
     league_structure = get_league_structure()
-    current_year = '2019'
-    print(len(league_structure[current_year]))
+    current_year = str(get_most_recent_year())
     return render_template('simulate/quick_sim2.html', title="Quick Sim", form=form, current_year=current_year,
                            league_structure=league_structure, league_len=len(league_structure[current_year]),
                            division_len=len(league_structure[current_year]['nl']))

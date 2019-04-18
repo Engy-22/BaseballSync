@@ -10,12 +10,12 @@
           {% for division, teams in divisions.items() %}
             <div class="col-md-{{ 12//division_len }}">
               <a href="#">{{ division }}</a>
-                <div class="row">
-                  {% for team_id, team_name in teams.items() %}
-                      <img class="unselected_team" alt="{{ team_name }}" src="{{ url_for('static',
-                      filename='images/model/teams/' + team_id + current_year + '.jpg') }}"/>
-                  {% endfor %}
-                </div>
+              <div class="row">
+                {% for team_id, team_name in teams.items() %}
+                    <img class="unselected_team" alt="{{ team_name }}" src="{{ url_for('static',
+                    filename='images/model/teams/' + team_id + current_year + '.jpg') }}"/>
+                {% endfor %}
+              </div>
             </div>
           {% endfor %}
         </div>
