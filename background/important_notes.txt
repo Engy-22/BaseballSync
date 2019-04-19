@@ -7,7 +7,7 @@ to pull updated code onto raspberry pi, be in the baseball-sync folder, then do 
 logs are at /var/log/baseballsync/baseballsync.err.log and /var/log/baseballsync/baseballsync.out.log
 
 if the virtual environment gets removed for whatever reason, you'll have to recreate it. Follow steps below:
-    to create a virtualenv do "python3 -m venv [venv_name]" from baseball-sync/src
+    to create a virtualenv do "python3.6 -m venv [venv_name]" from baseball-sync/src
     then do sudo pip install -r requirements.txt
     try to run web service by doing sudo systemctl restart nginx (to start web server), then gunicorn -w 9 run:app.
         Note: all this must be done from (venv) /home/baseball-sync/src.
