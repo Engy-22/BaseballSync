@@ -21,11 +21,11 @@ def manager_table_constructor():
     rows = table.split('<tr')
     with ThreadPoolExecutor(os.cpu_count()) as executor:
         for row in rows:
-            if '<td class="left " csk="' in row:
+            if '<td class="left" csk="' in row:
                 this_row = row.split('</tr>')[0]
                 try:
                     manager_id = this_row.split('<a href="/managers/')[1].split('.shtml')[0].replace("'", "\'")
-                    last_first = this_row.split('</tr>')[0].split('<td class="left " csk="')[1].split('"')[0]
+                    last_first = this_row.split('</tr>')[0].split('<td class="left" csk="')[1].split('"')[0]
                     last = last_first.split(',')[0].replace("'", "\'")
                     first = last_first.split(',')[1].replace("'", "\'")
                     wins = this_row.split('data-stat="W">')[1].split('<')[0]
@@ -43,6 +43,3 @@ def write_to_file(data):
     db = DatabaseConnection(sandbox_mode)
     db.write('insert into managers (managerId, lastName, firstName, wins, loses) values (' + data + ');')
     db.close()
-
-
-# manager_table_constructor()

@@ -67,7 +67,7 @@ def main(from_server, day, month, year, frame=None):
 def driver(day, month, year):
     driver_logger.log(str(month) + '/' + str(day) + '/' + str(year))
     driver_time = time.time()
-    print('\n\n' + str(year))
+    print('\n\n' + str(month) + '/' + str(day) + '/' + str(year))
     populate_teams_table(year)
     get_year_data(year)
     ballpark_and_manager_data(year)
