@@ -8,8 +8,10 @@ from utilities.properties import sandbox_mode, import_driver_logger as driver_lo
 def create_strike_zone():
     driver_logger.log('\tCreating Strike Zone')
     db = PitchFXDatabaseConnection(sandbox_mode)
-    x_points = db.read('select x from pitcher_pitches where x and ball_strike = "strike" and swing_take = "take";')
-    y_points = db.read('select y from pitcher_pitches where y and ball_strike = "strike" and swing_take = "take";')
+    x_points = db.read('select x from pitcher_pitches where x is not NULL and ball_strike = "strike" and swing_take '
+                       '= "take";')
+    y_points = db.read('select y from pitcher_pitches where is not NULL y and ball_strike = "strike" and swing_take '
+                       '= "take";')
     db.close()
     points = {}
     x_coordinates = [int(x[0]) for x in x_points]

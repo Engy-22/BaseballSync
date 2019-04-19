@@ -5,7 +5,8 @@ from utilities.properties import sandbox_mode
 
 
 def write_to_file(innings_url, player_type, player_id, team_id, year, month, day, matchup, count, pitch_type,
-                  ball_strike, swing_take, outcome, trajectory, field, direction, original_player_id, x_coord, y_coord):
+                  ball_strike, swing_take, outcome, trajectory, field, direction, original_player_id, x_coord, y_coord,
+                  velocity):
     if player_id is None:
         with open(os.path.join("..", "..", "baseball-sync", "src", "import_data", "player_data", "pitch_fx",
                                "multiple_players.csv"), 'a') as file:
@@ -27,19 +28,36 @@ def write_to_file(innings_url, player_type, player_id, team_id, year, month, day
         db_to_read.close()
         db = PitchFXDatabaseConnection(sandbox_mode)
         if x_coord == 'None' or y_coord == 'None':
-            db.write('insert into ' + player_type + '_pitches (pitchid, playerid, year, month, day, matchup, count, '
-                     'pitch_type, swing_take, ball_strike, outcome, trajectory, field, direction, P' + player_type[0]
-                     + '_uniqueidentifier) values (default, "' + player_id + '", ' + str(year) + ', ' + month + ', '
-                     + day + ', "' + matchup + '", "' + str(count) + '", "' + pitch_type + '", "' + swing_take + '", "'
-                     + ball_strike + '", "' + outcome + '", "' + trajectory + '", "' + field + '", "' + direction
-                     + '", ' + p_uid + ');')
+            if velocity == 'None':
+                db.write('insert into ' + player_type + '_pitches (pitchid, playerid, year, month, day, matchup, count,'
+                         ' pitch_type, swing_take, ball_strike, outcome, trajectory, field, direction, P'
+                         + player_type[0] + '_uniqueidentifier) values (default, "' + player_id + '", ' + str(year)
+                         + ', ' + month + ', ' + day + ', "' + matchup + '", "' + str(count) + '", "' + pitch_type
+                         + '", "' + swing_take + '", "' + ball_strike + '", "' + outcome + '", "' + trajectory + '", "'
+                         + field + '", "' + direction + '", ' + p_uid + ');')
+            else:
+                db.write('insert into ' + player_type + '_pitches (pitchid, playerid, year, month, day, matchup, count,'
+                         ' pitch_type, swing_take, ball_strike, outcome, trajectory, field, direction, velocity, P'
+                         + player_type[0] + '_uniqueidentifier) values (default, "' + player_id + '", ' + str(year)
+                         + ', ' + month + ', ' + day + ', "' + matchup + '", "' + str(count) + '", "' + pitch_type
+                         + '", "' + swing_take + '", "' + ball_strike + '", "' + outcome + '", "' + trajectory + '", "'
+                         + field + '", "' + direction + '", ' + velocity + ', ' + p_uid + ');')
         else:
-            db.write('insert into ' + player_type + '_pitches (pitchid, playerid, year, month, day, matchup, count, '
-                     'pitch_type, swing_take, ball_strike, outcome, trajectory, field, direction, x, y, P'
-                     + player_type[0] + '_uniqueidentifier) values (default, "' + player_id + '", ' + str(year) + ', '
-                     + month + ', ' + day + ', "' + matchup + '", "' + str(count) + '", "' + pitch_type + '", "'
-                     + swing_take + '", "' + ball_strike + '", "' + outcome + '", "' + trajectory + '", "' + field
-                     + '", "' + direction + '", ' + x_coord + ', ' + y_coord + ', ' + p_uid + ');')
+            if velocity == 'None':
+                db.write('insert into ' + player_type + '_pitches (pitchid, playerid, year, month, day, matchup, count,'
+                         ' pitch_type, swing_take, ball_strike, outcome, trajectory, field, direction, x, y, P'
+                         + player_type[0] + '_uniqueidentifier) values (default, "' + player_id + '", ' + str(year)
+                         + ', ' + month + ', ' + day + ', "' + matchup + '", "' + str(count) + '", "' + pitch_type
+                         + '", "' + swing_take + '", "' + ball_strike + '", "' + outcome + '", "' + trajectory + '", "'
+                         + field + '", "' + direction + '", ' + x_coord + ', ' + y_coord + ', ' + p_uid + ');')
+            else:
+                db.write('insert into ' + player_type + '_pitches (pitchid, playerid, year, month, day, matchup, count,'
+                         ' pitch_type, swing_take, ball_strike, outcome, trajectory, field, direction, x, y, velocity,'
+                         ' P' + player_type[0] + '_uniqueidentifier) values (default, "' + player_id + '", ' + str(year)
+                         + ', ' + month + ', ' + day + ', "' + matchup + '", "' + str(count) + '", "' + pitch_type
+                         + '", "' + swing_take + '", "' + ball_strike + '", "' + outcome + '", "' + trajectory + '", "'
+                         + field + '", "' + direction + '", ' + x_coord + ', ' + y_coord + ', ' + velocity + ', '
+                         + p_uid + ');')
         db.close()
 
 

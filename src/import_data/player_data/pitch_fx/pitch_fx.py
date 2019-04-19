@@ -202,15 +202,16 @@ def parse_pitch(innings_url, year, month, day, pitch, meta_data, last_pitch):
         swing_take = determine_swing_or_take(pitch.getAttribute('des'))
         x_coord = pitch.getAttribute('x')
         y_coord = pitch.getAttribute('y')
+        velo = pitch.getAttribute('start_speed')
         with ThreadPoolExecutor(os.cpu_count()) as executor2:
             executor2.submit(write_to_file, innings_url, 'pitcher', meta_data['pitcher_id'], meta_data['pitcher_team'],
                              year, month, day, meta_data['batter_orientation'], count, pitch_type, ball_strike,
                              swing_take, outcome, trajectory, field, direction, meta_data['original_pitcher_id'],
-                             x_coord, y_coord)
+                             x_coord, y_coord, velo)
             executor2.submit(write_to_file, innings_url, 'batter', meta_data['batter_id'], meta_data['batter_team'],
                              year, month, day, meta_data['pitcher_orientation'], count, pitch_type, ball_strike,
                              swing_take, outcome, trajectory, field, direction, meta_data['original_batter_id'],
-                             x_coord, y_coord)
+                             x_coord, y_coord, velo)
     except KeyError:
         pass
 
