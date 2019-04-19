@@ -10,7 +10,7 @@ def create_strike_zone():
     db = PitchFXDatabaseConnection(sandbox_mode)
     x_points = db.read('select x from pitcher_pitches where x is not NULL and ball_strike = "strike" and swing_take '
                        '= "take";')
-    y_points = db.read('select y from pitcher_pitches where is not NULL y and ball_strike = "strike" and swing_take '
+    y_points = db.read('select y from pitcher_pitches where y is not NULL and ball_strike = "strike" and swing_take '
                        '= "take";')
     db.close()
     points = {}

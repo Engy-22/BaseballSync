@@ -1,0 +1,48 @@
+Metadata-Version: 2.0
+Name: sabr
+Version: 1.2
+Summary: SABRmetrics calculator for Python
+Home-page: https://github.com/Shinichi-Nakagawa/sabr
+Author: Shinichi Nakagawa
+Author-email: spirits.is.my.rader@gmail.com
+License: MIT License
+Keywords: baseball,MLB,SABRmetrics,SABR,Major league baseball
+Platform: UNKNOWN
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Intended Audience :: Science/Research
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Natural Language :: English
+Classifier: Programming Language :: Python :: 2
+Classifier: Programming Language :: Python :: 3
+
+====================
+sabr
+====================
+
+SABRmetrics calculator for Python
+
+Requirement
+====================
+
+python 2.7+
+
+Install
+====================
+
+    $ pip install sabr
+
+Usage
+====================
+
+.. code-block:: python
+
+    from sabr.stats import Stats
+
+    h9 = Stats.hr9(26, 209.7)  # Yu Darvish(2013) HR/9
+
+License
+====================
+
+MIT License http://opensource.org/licenses/MIT
+
+
