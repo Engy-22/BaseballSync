@@ -15,7 +15,7 @@ def simulate_page():
     return render_template('simulate/simulate.html', title="Simulate", recent_simulations=recent_simulations)
 
 
-@simulate.route("/simulate/quick_sim2", methods=['GET', 'POST'])
+@simulate.route("/simulate/quick_sim", methods=['GET', 'POST'])
 @login_required
 def quick_sim():
     form = QuickSimForm()

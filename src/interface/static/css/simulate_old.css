@@ -133,3 +133,7 @@ figcaption {
 #simulate-btn {
   margin-left: 32rem;
 }
+
+.push-grid-left {
+  padding-left: 5rem;
+}

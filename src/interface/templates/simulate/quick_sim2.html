@@ -1,26 +1,35 @@
 {% extends "layout.html" %}
 
 {% block content %}
-<div class="container">
-  <div class="row" id="league-names-row">
-    {% for league, divisions in league_structure[current_year].items() %}
-      <div class="col-lg-{{ 12//league_len }} mr-0">
-        <img src="{{ url_for('static', filename='images/model/leagues/' + league + '.png') }}"/>
-        <div class="row" id="division-names-row">
-          {% for division, teams in divisions.items() %}
-            <div class="col-md-{{ 12//division_len }}">
-              <a href="#">{{ division }}</a>
-              <div class="row">
-                {% for team_id, team_name in teams.items() %}
-                    <img class="unselected_team" alt="{{ team_name }}" src="{{ url_for('static',
-                    filename='images/model/teams/' + team_id + current_year + '.jpg') }}"/>
-                {% endfor %}
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/quick_sim.css') }}">
+  <div class="container-fluid content-section">
+    <div class="row" id="league-names-row">
+      {% for league, divisions in league_structure[current_year].items() %}
+        <div class="col-lg-{{ 12//league_len }} text-center">
+          <img class="league_pic" src="{{ url_for('static', filename='images/model/leagues/' + league + '.png') }}"/>
+          <div class="row mt-4" id="division-names-row">
+            {% for division, teams in divisions.items() %}
+              <div class="col-md-{{ 12//division_len }}">
+                <a class="division-header" href="#">{{ division }}</a>
+                <div class="row">
+                  {% for team_id, team_name in teams.items() %}
+                    <a href="#">
+                      <figure class="team-entity">
+                        <img class="unselected_team mt-5 ml-4" alt="{{ team_name }}" src="{{ url_for('static',
+                        filename='images/model/teams/' + team_id + current_year + '.jpg') }}"/>
+                        <figcaption class="team_label mt-2 ml-4">
+                          {{ team_name }}
+                        </figcaption>
+                      </figure>
+                    </a>
+                  {% endfor %}
+                </div>
               </div>
-            </div>
-          {% endfor %}
+            {% endfor %}
+          </div>
         </div>
-      </div>
-    {% endfor %}
+      {% endfor %}
+    </div>
   </div>
-</div>
+<!--  <script src="{{ url_for('static', filename='js/quick_sim.js') }}" ></script>-->
 {% endblock content %}

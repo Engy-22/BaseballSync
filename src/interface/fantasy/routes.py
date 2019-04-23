@@ -20,3 +20,8 @@ def fantasy_daily():
 def fantasy_season():
     fantasy_teams = [str(random.randint(1, 5)), str(random.randint(2, 10))]
     return render_template('fantasy/season.html', title="Season-Long Fantasy", fantasy_teams=fantasy_teams)
+
+
+@fantasy.route("/fantasy/simulsync")
+def simulsync():
+    return render_template('fantasy/simulsync.html', title="SimulSync")
