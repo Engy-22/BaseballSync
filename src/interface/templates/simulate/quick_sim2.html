@@ -31,5 +31,66 @@
       {% endfor %}
     </div>
   </div>
-<!--  <script src="{{ url_for('static', filename='js/quick_sim.js') }}" ></script>-->
+
+  <div class="row hidden" id="matchup">
+    <form method="POST" action="">
+      <button class="swap-button btn btn-primary btn-sm" type="button">Switch Home and Away</button>
+      <div>
+        <figure class="column">
+          <div class="simulate-dropdown">
+            <h3>Away</h3>
+            <img id="away_matchup" src="">
+            <div class="simulate-dropdown">
+              <div class="simulate-dropdown-content">
+                <a>Team Info</a>
+                <a>Set Lineup</a>
+                <a>Adjust Player Attributes</a>
+                <a class="remove_team">Remove Team</a>
+              </div>
+            </div>
+          </div>
+          <figcaption id="away_caption">
+            Cleveland Indians (2018)
+          </figcaption>
+        </figure>
+        <figure class="column">
+        <h1 id="at-symbol">@</h1>
+        </figure>
+        <figure class="column">
+          <div class="simulate-dropdown">
+            <h3>Home</h3>
+            <img id="home_matchup" src="">
+            <div class="simulate-dropdown">
+              <div class="simulate-dropdown-content">
+                <a>Team Info</a>
+                <a>Set Lineup</a>
+                <a>Adjust Player Attributes</a>
+                <a class="remove_team">Remove Team</a>
+              </div>
+            </div>
+          </div>
+          <figcaption id="home_caption">
+            Baltimore Orioles (2018)
+          </figcaption>
+        </figure>
+      </div>
+      {{ form.hidden_tag() }}
+      <div class="form-group">
+      {{ form.games.label(class="form-control-label") }}
+      {% if form.games.errors %}
+        {{ form.games(class="form-control form-control-lg is-invalid") }}
+        <div class="invalid-feedback">
+          <span>{{ error }}</span>
+        </div>
+      {% else %}
+        {{ form.games(class="form-control form-control-lg") }}
+      {% endif %}
+      </div>
+      <div class="form-group">
+        {{ form.submit(id="simulate-btn", class="btn btn-outline-info") }}
+      </div>
+    </form>
+  </div>
+
+  <script src="{{ url_for('static', filename='js/quick_sim2.js') }}" ></script>
 {% endblock content %}

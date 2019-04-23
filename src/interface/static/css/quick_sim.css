@@ -17,9 +17,7 @@
 
 .selected_team {
   width: 50%;
-  display: block;
-  margin: auto;
-  box-shadow: 0px 12px 22px 10px #2ced7c;
+  box-shadow: 0px 12px 22px 12px #2ced7c;
 }
 
 .unselected_team {
