@@ -31,6 +31,7 @@ $(document).ready(function() {
         }); //end anonymous function
     }); //end swap-button click function
 
+
     $('.team-entity').on('click', function() {
         $(this).find('img').toggleClass('unselected_team selected_team'); //change selected team to be highlighted or unhighlighted
         if ($('.selected_team').length == 2) {
@@ -62,6 +63,8 @@ function hide_table() {
 
 
 function display_matchup() {
+    $('#away_caption').html($('#away_team').parent().find('figcaption').text());
+    $('#home_caption').html($('#home_team').parent().find('figcaption').text());
     $('#away_matchup').attr('src', $('#away_team').attr('src'));
     $('#home_matchup').attr('src', $('#home_team').attr('src'));
     $('#matchup').removeClass('hidden')

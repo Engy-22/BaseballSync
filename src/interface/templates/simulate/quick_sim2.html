@@ -3,6 +3,16 @@
 {% block content %}
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/quick_sim.css') }}">
   <div class="container-fluid content-section">
+    <div class="btn-group">
+      <button type="button" class="btn btn-default btn-secondary dropdown-toggle" data-toggle="dropdown">
+        {{ current_year }}<span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu scrollable-menu" role="menu">
+        {% for year, _ in league_structure.items() %}
+          <li><a href="#">{{ year }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
     <div class="row" id="league-names-row">
       {% for league, divisions in league_structure[current_year].items() %}
         <div class="col-lg-{{ 12//league_len }} text-center">
@@ -32,47 +42,48 @@
     </div>
   </div>
 
-  <div class="row hidden" id="matchup">
+  <div class="container-fluid hidden matchup-content-section" id="matchup">
     <form method="POST" action="">
       <button class="swap-button btn btn-primary btn-sm" type="button">Switch Home and Away</button>
-      <div>
-        <figure class="column">
-          <div class="simulate-dropdown">
-            <h3>Away</h3>
-            <img id="away_matchup" src="">
-            <div class="simulate-dropdown">
-              <div class="simulate-dropdown-content">
-                <a>Team Info</a>
-                <a>Set Lineup</a>
-                <a>Adjust Player Attributes</a>
-                <a class="remove_team">Remove Team</a>
-              </div>
+      <div class="dropdown" id="select_ballpark">
+        <button class="btn dropdown-toggle btn-secondary" id="ballpark_dropdown" type="button" data-toggle="dropdown">Change Game Location</button>
+        <div class="dropdown-menu">
+          <a class="dropdown-item set-neutral-park">Neutral Site</a>
+          <a class="dropdown-item pick-new-park">Select a new ballpark</a>
+        </div>
+      </div>
+      <div class="row matchup-row">
+        <div class="column" id="away-column">
+          <h3>Away</h3>
+          <figure class="dropdown">
+            <img class="dropdown-toggle" id="away_matchup" src="" data-toggle="dropdown">
+            <div class="dropdown-menu">
+              <a class="dropdown-item">Team Info</a>
+              <a class="dropdown-item">Set Lineup</a>
+              <a class="dropdown-item">Adjust Player Attributes</a>
+              <a class="dropdown-item remove_team">Remove Team</a>
             </div>
-          </div>
-          <figcaption id="away_caption">
-            Cleveland Indians (2018)
-          </figcaption>
-        </figure>
-        <figure class="column">
-        <h1 id="at-symbol">@</h1>
-        </figure>
-        <figure class="column">
-          <div class="simulate-dropdown">
-            <h3>Home</h3>
-            <img id="home_matchup" src="">
-            <div class="simulate-dropdown">
-              <div class="simulate-dropdown-content">
-                <a>Team Info</a>
-                <a>Set Lineup</a>
-                <a>Adjust Player Attributes</a>
-                <a class="remove_team">Remove Team</a>
-              </div>
+            <figcaption id="away_caption">
+            </figcaption>
+          </figure>
+        </div>
+        <div class="column">
+          <h1 id="at-symbol">@</h1>
+        </div>
+        <div class="column" id="home-column">
+          <h3>Home</h3>
+          <figure class="dropdown">
+            <img class="dropdown-toggle" id="home_matchup" src="" data-toggle="dropdown">
+            <div class="dropdown-menu">
+              <a class="dropdown-item">Team Info</a>
+              <a class="dropdown-item">Set Lineup</a>
+              <a class="dropdown-item">Adjust Player Attributes</a>
+              <a class="dropdown-item remove_team">Remove Team</a>
             </div>
-          </div>
-          <figcaption id="home_caption">
-            Baltimore Orioles (2018)
-          </figcaption>
-        </figure>
+            <figcaption id="home_caption">
+            </figcaption>
+          </figure>
+        </div>
       </div>
       {{ form.hidden_tag() }}
       <div class="form-group">
@@ -91,6 +102,5 @@
       </div>
     </form>
   </div>
-
   <script src="{{ url_for('static', filename='js/quick_sim2.js') }}" ></script>
 {% endblock content %}

@@ -1,3 +1,13 @@
+.matchup-content-section {
+  background: #ffffff;
+  padding-top: 20px;
+  padding-left: 20px;
+  border: 1px solid #dddddd;
+  border-radius: 3px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
 .league_pic {
   padding: 2rem 0rem 2rem 0rem;
   text-align: center;
@@ -22,4 +32,55 @@
 
 .unselected_team {
   width: 50%;
+}
+
+.dropdown:hover>.dropdown-menu {
+  display: block;
+}
+
+.dropdown>.dropdown-toggle:active {
+  pointer-events: none;
+}
+
+.dropdown-item {
+  cursor: default;
+}
+
+.matchup-row {
+  margin: 5rem 0rem 3rem 15rem;
+}
+
+#away-column {
+  margin-right: 4rem;
+}
+
+#home-column {
+  margin-left: 6rem;
+}
+
+#at-symbol {
+  margin-top: 5rem;
+}
+
+h3 {
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+#away_caption {
+  margin: 0rem 0rem -0.25rem 0rem;
+  text-align: center;
+}
+
+#home_caption {
+  margin: 0rem 0rem -0.25rem 0rem;
+  text-align: center;
+}
+
+#ballpark_dropdown {
+  margin-bottom: -0.25rem;
+}
+
+#select_ballpark {
+  float: right;
 }
