@@ -2,6 +2,10 @@ $(document).ready(function() {
 
     $('#matchup').hide();
 
+    $('.year_in_dropdown').click(function() {
+        $('#years_dropdown').text($(this).text());
+    }); //end year dropdown onclick event
+
     $('.remove_team').click(function() {
         remove_matchup();
         var this_team = $(this).parent().parent().parent().find('img').attr('id').split('_', 1)[0];

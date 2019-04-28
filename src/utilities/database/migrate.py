@@ -9,7 +9,6 @@ try:
 except ImportError:
     from utilities.database.wrappers.baseball_data_connection import DatabaseConnection
     from utilities.database.wrappers.pitch_fx_connection import PitchFXDatabaseConnection
-from utilities.properties import sandbox_mode
 from concurrent.futures import ThreadPoolExecutor
 
 font = ('Times', 12)
@@ -61,7 +60,11 @@ def migrate(db_name, years):
 def migrate_all(db_name):
     print("Transferring all " + db_name + " sandbox data to production environment")
     if db_name == 'baseballData':
-        db = DatabaseConnection(sandbox_mode)
+        from_db = DatabaseConnection(sandbox_mode=True)
+        to_db = DatabaseConnection(sandbox_mode=False)
+        to_db.write('drop database baseballData_sandbox;')
+        to_db.write('create database baseballData_sandbox;')
+        to_db.close()
         try:
             file = open(os.path.join("..", "..", "..", "background", "table_definitions.txt"), 'rt')
         except FileNotFoundError:
@@ -71,10 +74,14 @@ def migrate_all(db_name):
         with ThreadPoolExecutor(os.cpu_count()) as executor:
             for line in table_defs:
                 table_name = line.split('create table ')[1].split(' (')[0]
-                executor.submit(db.write('insert into ' + db_name + '.' + table_name + ' select * from ' + db_name
-                                         + '_sandbox.' + table_name + ';'))
+                executor.submit(from_db.write('insert into ' + db_name + '.' + table_name + ' select * from ' + db_name
+                                              + '_sandbox.' + table_name + ';'))
     else:
-        db = PitchFXDatabaseConnection(sandbox_mode)
+        from_db = PitchFXDatabaseConnection(sandbox_mode=True)
+        to_db = PitchFXDatabaseConnection(sandbox_mode=False)
+        to_db.write('drop database baseballData;')
+        to_db.write('create database baseballData;')
+        to_db.close()
         try:
             file = open(os.path.join("..", "..", "..", "background", "pitch_fx_tables.txt"), 'rt')
         except FileNotFoundError:
@@ -82,21 +89,21 @@ def migrate_all(db_name):
         table_defs = [line.split('create table ')[1].split(' (')[0] for line in file.readlines()]
         file.close()
         with ThreadPoolExecutor(os.cpu_count()) as executor:
-            for table in db.read('show tables;'):
+            for table in from_db.read('show tables;'):
                 if table[0] not in table_defs:
                     fields = ''
-                    for column in db.read('describe ' + table[0] + ';'):
+                    for column in from_db.read('describe ' + table[0] + ';'):
                         fields += column[0] + ' ' + column[1] + ', '
-                    db.write('create table ' + db_name + '.' + table[0] + ' (' + fields[:-2] + ');')
-                executor.submit(db.write('insert into ' + db_name + '.' + table[0] + ' select * from ' + db_name
-                                         + '_sandbox.' + table[0] + ';'))
-    db.close()
+                    from_db.write('create table ' + db_name + '.' + table[0] + ' (' + fields[:-2] + ');')
+                executor.submit(from_db.write('insert into ' + db_name + '.' + table[0] + ' select * from ' + db_name
+                                              + '_sandbox.' + table[0] + ';'))
+    from_db.close()
 
 
 def migrate_year(db_name, year):
     print("Transferring " + str(year) + " sandbox data to production environment")
     if db_name == 'baseballData':
-        db = DatabaseConnection(sandbox_mode)
+        db = DatabaseConnection(sandbox_mode=True)
         try:
             file = open(os.path.join("..", "..", "..", "background", "table_definitions.txt"), 'rt')
         except FileNotFoundError:
@@ -121,28 +128,25 @@ def migrate_year(db_name, year):
                     executor.submit(db.write('insert into ' + db_name + '.' + table_name + ' select * from ' + db_name
                                              + '_sandbox.' + table_name + ';'))
     else:
-        if db_name == 'pitchers_pitch_fx':
-            db = PitchFXDatabaseConnection(sandbox_mode)
-        else:
-            db = BatterPitchFXDatabaseConnection(sandbox_mode)
-            try:
-                file = open(os.path.join("..", "..", "..", "background", "table_definitions.txt"), 'rt')
-            except FileNotFoundError:
-                file = open(os.path.join("..", "..", "baseball-sync", "background", "table_definitions.txt"), 'rt')
-            table_defs = file.readlines()
-            file.close()
-            with ThreadPoolExecutor(os.cpu_count()) as executor:
-                for line in table_defs:
-                    table_name = line.split('create table ')[1].split(' (')[0]
-                    if table_name.split('_')[0] in ['vr', 'vl', 'hbp']:  # appending rows based on year field
+        db = PitchFXDatabaseConnection(sandbox_mode=True)
+        try:
+            file = open(os.path.join("..", "..", "..", "background", "table_definitions.txt"), 'rt')
+        except FileNotFoundError:
+            file = open(os.path.join("..", "..", "baseball-sync", "background", "table_definitions.txt"), 'rt')
+        table_defs = file.readlines()
+        file.close()
+        with ThreadPoolExecutor(os.cpu_count()) as executor:
+            for line in table_defs:
+                table_name = line.split('create table ')[1].split(' (')[0]
+                if table_name.split('_')[0] in ['vr', 'vl', 'hbp']:  # appending rows based on year field
+                    executor.submit(db.write('insert into ' + db_name + '.' + table_name + ' select * from '
+                                             + db_name + '_sandbox.' + table_name + ' where year = ' + str(year)
+                                             + ';'))
+                else:  # totally replacing the prod table with snadbox table ['']
+                    if table_name.split(')')[0] == str(year):
                         executor.submit(db.write('insert into ' + db_name + '.' + table_name + ' select * from '
-                                                 + db_name + '_sandbox.' + table_name + ' where year = ' + str(year)
-                                                 + ';'))
-                    else:  # totally replacing the prod table with snadbox table ['']
-                        if table_name.split(')')[0] == str(year):
-                            executor.submit(db.write('insert into ' + db_name + '.' + table_name + ' select * from '
-                                                     + db_name + '_sandbox.' + table_name + ' where year = '
-                                                     + str(year) + ';'))
+                                                 + db_name + '_sandbox.' + table_name + ' where year = '
+                                                 + str(year) + ';'))
     db.close()
 
 

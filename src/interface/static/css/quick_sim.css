@@ -84,3 +84,13 @@ h3 {
 #select_ballpark {
   float: right;
 }
+
+.scrollable-menu {
+    height: auto;
+    max-height: 15rem;
+    overflow-x: hidden;
+}
+
+.year_in_dropdown {
+  color: black;
+}
