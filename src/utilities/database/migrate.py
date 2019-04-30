@@ -60,11 +60,11 @@ def migrate(db_name, years):
 def migrate_all(db_name):
     print("Transferring all " + db_name + " sandbox data to production environment")
     if db_name == 'baseballData':
-        from_db = DatabaseConnection(sandbox_mode=True)
-        to_db = DatabaseConnection(sandbox_mode=False)
-        to_db.write('drop database baseballData_sandbox;')
-        to_db.write('create database baseballData_sandbox;')
-        to_db.close()
+        db = DatabaseConnection(sandbox_mode=True)
+        # to_db = DatabaseConnection(sandbox_mode=False)
+        # to_db.write('drop database baseballData;')
+        # to_db.write('create database baseballData;')
+        # to_db.close()
         try:
             file = open(os.path.join("..", "..", "..", "background", "table_definitions.txt"), 'rt')
         except FileNotFoundError:
@@ -74,14 +74,10 @@ def migrate_all(db_name):
         with ThreadPoolExecutor(os.cpu_count()) as executor:
             for line in table_defs:
                 table_name = line.split('create table ')[1].split(' (')[0]
-                executor.submit(from_db.write('insert into ' + db_name + '.' + table_name + ' select * from ' + db_name
+                executor.submit(db.write('insert into ' + db_name + '.' + table_name + ' select * from ' + db_name
                                               + '_sandbox.' + table_name + ';'))
     else:
-        from_db = PitchFXDatabaseConnection(sandbox_mode=True)
-        to_db = PitchFXDatabaseConnection(sandbox_mode=False)
-        to_db.write('drop database baseballData;')
-        to_db.write('create database baseballData;')
-        to_db.close()
+        db = PitchFXDatabaseConnection(sandbox_mode=True)
         try:
             file = open(os.path.join("..", "..", "..", "background", "pitch_fx_tables.txt"), 'rt')
         except FileNotFoundError:
@@ -89,15 +85,15 @@ def migrate_all(db_name):
         table_defs = [line.split('create table ')[1].split(' (')[0] for line in file.readlines()]
         file.close()
         with ThreadPoolExecutor(os.cpu_count()) as executor:
-            for table in from_db.read('show tables;'):
+            for table in db.read('show tables;'):
                 if table[0] not in table_defs:
                     fields = ''
-                    for column in from_db.read('describe ' + table[0] + ';'):
+                    for column in db.read('describe ' + table[0] + ';'):
                         fields += column[0] + ' ' + column[1] + ', '
-                    from_db.write('create table ' + db_name + '.' + table[0] + ' (' + fields[:-2] + ');')
-                executor.submit(from_db.write('insert into ' + db_name + '.' + table[0] + ' select * from ' + db_name
+                    db.write('create table ' + db_name + '.' + table[0] + ' (' + fields[:-2] + ');')
+                executor.submit(db.write('insert into ' + db_name + '.' + table[0] + ' select * from ' + db_name
                                               + '_sandbox.' + table[0] + ';'))
-    from_db.close()
+    db.close()
 
 
 def migrate_year(db_name, year):

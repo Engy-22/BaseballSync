@@ -3,14 +3,20 @@ $(document).ready(function() {
     $('#matchup').hide();
 
     $('.year_in_dropdown').click(function() {
-        $('#years_dropdown').text($(this).text());
+        var new_year = $(this).text()
+        $('#years_dropdown').text(new_year);
+        $.post("/simulate/quick_sim",
+            {"newest_year": new_year},
+            function(data) {display_new_teams(data);} // display the teams for the year returned
+        ); //end ajax post request
     }); //end year dropdown onclick event
 
     $('.remove_team').click(function() {
         remove_matchup();
-        var this_team = $(this).parent().parent().parent().find('img').attr('id').split('_', 1)[0];
+        var this_team = $(this).parent().parent().parent().find('img').attr('id').split('_')[0];
         $('#' + this_team + '_team').attr('id', '')
-                                    .attr('class', 'unselected_team');
+                                    .attr('class', 'unselected_team mt-5 ml-4');
+        show_table();
     }); //end remove_team click function
 
     $('.swap-button').click(function() {
@@ -77,7 +83,7 @@ function display_matchup() {
 
 
 function show_table() {
-    $('.simulate-content-section').fadeIn(750); //show the entire league table again
+    $('.content-section').fadeIn(750); //show the entire league table again
 };
 
 
@@ -86,3 +92,26 @@ function remove_matchup() {
         show_table();
     });
 };
+
+
+function display_new_teams(league_structure) { //display the grid of teams given any particular year
+    var text = '<div class="row" id="league-names-row">';
+    var json = JSON.parse(league_structure);
+    Object.keys(json['new_year']).forEach(function(league) {
+        text += '<div class="col-lg-' + 12/json['league_len'].toString() + ' text-center"><img class="league_pic" src="../static/images/model/leagues/' + league + '.png"/><div class="row mt-4" id="division-names-row">';
+        Object.keys(json['new_year'][league]).forEach(function(division) {
+            text += '<div class="col-md-' + 12/json['division_len'].toString() + '"><a class="division-header" href="#">' + division + '</a><div class="row">';
+            Object.keys(json['new_year'][league][division]).forEach(function(team) {
+                text += '<a href="#"><figure class="team-entity">';
+                text += '<img class="unselected_team mt-5 ml-4" alt="' + json['new_year'][league][division][team] + '" src="../static/images/model/teams/' + team + json['year'] + '.jpg"/>';
+                text += '<figcaption class="team_label mt-2 ml-4">' + json['new_year'][league][division][team] + '</figcaption></figure></a>';
+            }); //end teams in division for loop
+            text += '</div>';
+            text += '</div>';
+        }); //end divisions in league for loop
+        text += '</div>';
+        text += '</div>';
+    }); //end leagues in MLB for loop
+    text += '</div>';
+    $('.teams_grid').html(text);
+}; //end display_new_teams function
