@@ -38,7 +38,6 @@ def quick_sim():
 
 
 def get_league_structure(current_year):
-    print(current_year)
     division_names = {'e': 'East', 'c': 'Central', 'w': 'West'}
     league_structure = {}
     db = DatabaseConnection(sandbox_mode=False)

@@ -3,16 +3,27 @@
 {% block content %}
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/quick_sim.css') }}">
   <div class="container-fluid content-section">
-    <div class="btn-group">
-      <button type="button" id="years_dropdown" class="btn btn-default btn-secondary dropdown-toggle" data-toggle="dropdown">
-        {{ current_year }}<span class="caret"></span>
-      </button>
-      <ul class="dropdown-menu scrollable-menu" role="menu">
-        {% for year in year_list %}
-          <li><a class="year_in_dropdown" href="#">{{ year }}</a></li>
-        {% endfor %}
-      </ul>
+    <div class="row top-row">
+      <div class="column">
+        <div class="btn-group dropdown">
+          <button type="button" id="years_dropdown" class="btn btn-default btn-secondary dropdown-toggle" data-toggle="dropdown">
+            {{ current_year }}<span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu scrollable-menu" role="menu">
+            {% for year in year_list %}
+              <li><a class="year_in_dropdown" href="#">{{ year }}</a></li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+      <div id="away_contender_year_column" class="column">
+        <div></div>
+      </div>
+      <div id="home_contender_year_column" class="column">
+        <div></div>
+      </div>
     </div>
+
     <div class="teams_grid">
       <div class="row" id="league-names-row">
         {% for league, divisions in league_structure.items() %}
@@ -60,6 +71,7 @@
           <figure class="dropdown">
             <img class="dropdown-toggle" id="away_matchup" src="" data-toggle="dropdown">
             <div class="dropdown-menu">
+              <a class="dropdown-item">Go to...</a>
               <a class="dropdown-item">Team Info</a>
               <a class="dropdown-item">Set Lineup</a>
               <a class="dropdown-item">Adjust Player Attributes</a>
@@ -77,6 +89,7 @@
           <figure class="dropdown">
             <img class="dropdown-toggle" id="home_matchup" src="" data-toggle="dropdown">
             <div class="dropdown-menu">
+              <a class="dropdown-item">Go to...</a>
               <a class="dropdown-item">Team Info</a>
               <a class="dropdown-item">Set Lineup</a>
               <a class="dropdown-item">Adjust Player Attributes</a>
@@ -104,5 +117,5 @@
       </div>
     </form>
   </div>
-  <script src="{{ url_for('static', filename='js/quick_sim2.js') }}" ></script>
+  <script src="{{ url_for('static', filename='js/quick_sim.js') }}" ></script>
 {% endblock content %}

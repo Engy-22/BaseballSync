@@ -72,9 +72,17 @@ h3 {
   text-align: center;
 }
 
+#away_matchup {
+  margin-left: 1.0rem;
+}
+
 #home_caption {
   margin: 0rem 0rem -0.25rem 0rem;
   text-align: center;
+}
+
+#home_matchup {
+  margin-left: 1.0rem;
 }
 
 #ballpark_dropdown {
@@ -86,11 +94,15 @@ h3 {
 }
 
 .scrollable-menu {
-    height: auto;
-    max-height: 15rem;
-    overflow-x: hidden;
+  height: auto;
+  max-height: 15rem;
+  overflow-x: hidden;
 }
 
 .year_in_dropdown {
   color: black;
+}
+
+.top-row {
+  margin: 1rem;
 }
