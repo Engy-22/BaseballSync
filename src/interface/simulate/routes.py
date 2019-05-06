@@ -38,18 +38,18 @@ def quick_sim():
 
 
 def get_league_structure(current_year):
-    division_names = {'e': 'East', 'c': 'Central', 'w': 'West'}
+    division_names = {'e': 'East', 'c': 'Central', 'w': 'West', 'N': 'None'}
     league_structure = {}
     db = DatabaseConnection(sandbox_mode=False)
     for league in set(db.read('select league from team_years where year = ' + str(current_year) + ';')):
-        league_structure[league[0]] = {}
+        league_structure[league[0].lower()] = {}
         for division in set(db.read('select division from team_years where league = "' + league[0]
                                     + '" and year = ' + str(current_year) + ';')):
             division_name = division_names[division[0]]
-            league_structure[league[0]][division_name] = {}
+            league_structure[league[0].lower()][division_name] = {}
             for team_id in db.read('select teamId from team_years where division = "' + division[0]
                                    + '" and league="' + league[0] + '" and year = ' + str(current_year) + ';'):
-                league_structure[league[0]][division_name][team_id[0]] = \
+                league_structure[league[0].lower()][division_name][team_id[0]] = \
                     db.read('select teamName from teams where teamId="' + team_id[0] + '";')[0][0]
     db.close()
     return league_structure

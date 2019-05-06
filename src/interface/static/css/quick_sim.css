@@ -103,6 +103,18 @@ h3 {
   color: black;
 }
 
+#years_dropdown {
+  margin-bottom: -0.25rem;
+}
+
 .top-row {
   margin: 1rem;
+}
+
+.emblem-default {
+  width: 20%;
+}
+
+.shrink-anchor {
+  width: 25%
 }

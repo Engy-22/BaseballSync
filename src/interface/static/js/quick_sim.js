@@ -38,31 +38,6 @@ $(document).ready(function() {
     }); //end swap-button onclick function
 
 
-//    $(document).on('click', '.team-entity', function() {
-//        $(this).find('img').toggleClass('unselected_team selected_team'); //change selected team to be highlighted or unhighlighted
-//        if ($('.selected_team').length == 2) {
-//            if ($('#home_team').length > 0) {
-//                $(this).find('img').attr('id', 'away_team');
-//                display_contender($(this).find('figcaption').html(), 'away_contender_year', $('#years_dropdown').text());
-//            } else {
-//                $(this).find('img').attr('id', 'home_team');
-//                display_contender($(this).find('figcaption').html(), 'home_contender_year', $('#years_dropdown').text());
-//            } //end if-else
-//            $('.unselected_team').parent('figure').addClass('hide-figure');
-//            hide_table();
-//        } else {
-//            $('.unselected_team').parent('figure').removeClass('hide-figure');
-//            if ($('.selected_team').length == 1) {
-//                $(this).find('img').attr('id', 'away_team');
-//                display_contender($(this).find('figcaption').html(), 'away_contender_year', $('#years_dropdown').text());
-//            }
-//        } //end if-else
-//        $('.unselected_team').attr('id', '');
-//        return false;
-//    }); //end onclick event function
-//}); //end document ready function
-
-
     $(document).on('click', '.team-entity', function() {
         $(this).find('img').toggleClass('unselected_team selected_team'); //change selected team to be highlighted or unhighlighted
         if ($('#away_contender_year').length > 0) {
@@ -117,7 +92,11 @@ function display_new_teams(league_structure) { //display the grid of teams given
     Object.keys(json['new_year']).forEach(function(league) {
         text += '<div class="col-lg-' + 12/json['league_len'].toString() + ' text-center"><img class="league_pic" src="../static/images/model/leagues/' + league + '.png"/><div class="row mt-4" id="division-names-row">';
         Object.keys(json['new_year'][league]).forEach(function(division) {
-            text += '<div class="col-md-' + 12/json['division_len'].toString() + '"><a class="division-header" href="#">' + division + '</a><div class="row">';
+            if (division != 'None') {
+                text += '<div class="col-md-' + 12/json['division_len'].toString() + '"><a class="division-header" href="#">' + division + '</a><div class="row">';
+            } else {
+                text += '<div class="col-md-' + 12/json['division_len'].toString() + '"><div class="row">'
+            } //end if-branch
             Object.keys(json['new_year'][league][division]).forEach(function(team) {
                 text += '<a href="#"><figure class="team-entity">';
                 text += '<img class="unselected_team mt-5 ml-' + 12/json['division_len'].toString() + '" alt="' + json['new_year'][league][division][team] + '" src="../static/images/model/teams/' + team + json['year'] + '.jpg"/>';
@@ -131,6 +110,13 @@ function display_new_teams(league_structure) { //display the grid of teams given
     }); //end leagues in MLB for loop
     text += '</div>';
     $('.teams_grid').html(text);
+
+    $('img').on("error", function() {
+      $(this).attr('src', '../static/images/emblem.png');
+      $(this).addClass('emblem-default');
+      $(this).parent().addClass('shrink-anchor');
+    });
+
     return false;
 }; //end display_new_teams function
 
