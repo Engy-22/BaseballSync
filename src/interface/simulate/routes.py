@@ -1,6 +1,6 @@
 import json
 from flask_login import login_required
-from flask import render_template, Blueprint, url_for, redirect, flash, jsonify, request
+from flask import render_template, redirect, url_for, Blueprint, request
 from interface.simulate.forms import QuickSimForm
 from utilities.database.wrappers.baseball_data_connection import DatabaseConnection
 from utilities.get_most_recent_year import get_most_recent_year
@@ -16,23 +16,29 @@ def simulate_page():
 
 
 @simulate.route('/simulate/quick_sim', methods=['POST'])
-def change_year_view():
-    new_year = request.form.get('newest_year')
-    league_structure = get_league_structure(new_year)
-    return json.dumps({'new_year': league_structure, 'league_len': len(league_structure),
-                       'division_len': len(league_structure['nl']), 'year': new_year})
+def accept_post_request():
+    # form = QuickSimForm()
+    # if form.validate_on_submit():
+    #     games = form.games.data
+    #     return redirect(url_for('simulate.sim_results'))
+    # else:
+    post_id = int(request.form.get('post_id'))
+    if post_id == 1:
+        print('form not submitted')
+        new_year = request.form.get('newest_year')
+        league_structure = get_league_structure(new_year)
+        return json.dumps({'new_year': league_structure, 'league_len': len(league_structure),
+                           'division_len': len(league_structure['nl']), 'year': new_year})
+    else:
+        return sim_results()
 
 
-@simulate.route("/simulate/quick_sim", methods=['GET', 'POST'])
+@simulate.route("/simulate/quick_sim")
 @login_required
 def quick_sim():
-    form = QuickSimForm()
-    if form.validate_on_submit():
-        games = form.games.data
-        return render_template('simulate/sim_results.html', title='Sim Results')
     current_year = str(get_most_recent_year())
     league_structure = get_league_structure(current_year)
-    return render_template('simulate/quick_sim.html', title="Quick Sim", form=form, current_year=current_year,
+    return render_template('simulate/quick_sim.html', title="Quick Sim", current_year=current_year,
                            league_structure=league_structure, league_len=len(league_structure),
                            division_len=len(league_structure['nl']), year_list=get_year_list())
 
@@ -60,3 +66,9 @@ def get_year_list():
     years = db.read('select year from years;')
     db.close()
     return reversed([year[0] for year in years])
+
+
+@simulate.route("/simulate/sim_results")
+@login_required
+def sim_results():
+    return render_template('simulate/sim_results.html')

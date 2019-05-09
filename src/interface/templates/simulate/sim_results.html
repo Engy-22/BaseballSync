@@ -3,8 +3,8 @@
 {% block content %}
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/sim_results.css') }}">
   <div id="myModal" class="modal">
-    <div class="modal-content">
-      <span class="close">&times;</span>
+    <div class="modal-content" data-keyboard="false" data-backdrop="static">
+      <span id="close">&times;</span>
       <img id="emblem" class="spin" src="{{ url_for('static', filename='images/emblem.png') }}">
       <div class="progress">
         <div class="progress-bar" role="progressbar"></div>

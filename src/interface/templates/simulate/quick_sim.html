@@ -56,66 +56,55 @@
   </div>
 
   <div class="container-fluid hidden matchup-content-section" id="matchup">
-    <form method="POST" action="">
-      <button class="swap-button btn btn-primary btn-sm" type="button">Switch Home and Away</button>
-      <div class="dropdown" id="select_ballpark">
-        <button class="btn dropdown-toggle btn-secondary" id="ballpark_dropdown" type="button" data-toggle="dropdown">Change Game Location</button>
-        <div class="dropdown-menu">
-          <a class="dropdown-item set-neutral-park">Neutral Site</a>
-          <a class="dropdown-item pick-new-park">Select a new ballpark</a>
-        </div>
+    <button class="swap-button btn btn-primary btn-sm" type="button">Switch Home and Away</button>
+    <div class="dropdown" id="select_ballpark">
+      <button class="btn dropdown-toggle btn-secondary" id="ballpark_dropdown" type="button" data-toggle="dropdown">Change Game Location</button>
+      <div class="dropdown-menu">
+        <a class="dropdown-item set-neutral-park">Neutral Site</a>
+        <a class="dropdown-item pick-new-park">Select a new ballpark</a>
       </div>
-      <div class="row matchup-row">
-        <div class="column" id="away-column">
-          <h3>Away</h3>
-          <figure class="dropdown">
-            <img class="dropdown-toggle" id="away_matchup" src="" data-toggle="dropdown">
-            <div class="dropdown-menu">
-              <a class="dropdown-item">Go to...</a>
-              <a class="dropdown-item">Team Info</a>
-              <a class="dropdown-item">Set Lineup</a>
-              <a class="dropdown-item">Adjust Player Attributes</a>
-              <a class="dropdown-item remove_team">Remove Team</a>
-            </div>
-            <figcaption id="away_caption">
-            </figcaption>
-          </figure>
-        </div>
-        <div class="column">
-          <h1 id="at-symbol">@</h1>
-        </div>
-        <div class="column" id="home-column">
-          <h3>Home</h3>
-          <figure class="dropdown">
-            <img class="dropdown-toggle" id="home_matchup" src="" data-toggle="dropdown">
-            <div class="dropdown-menu">
-              <a class="dropdown-item">Go to...</a>
-              <a class="dropdown-item">Team Info</a>
-              <a class="dropdown-item">Set Lineup</a>
-              <a class="dropdown-item">Adjust Player Attributes</a>
-              <a class="dropdown-item remove_team">Remove Team</a>
-            </div>
-            <figcaption id="home_caption">
-            </figcaption>
-          </figure>
-        </div>
+    </div>
+    <div class="row matchup-row">
+      <div class="column" id="away-column">
+        <h3>Away</h3>
+        <figure class="dropdown">
+          <img class="dropdown-toggle" id="away_matchup" src="" data-toggle="dropdown">
+          <div class="dropdown-menu">
+            <a class="dropdown-item">Go to...</a>
+            <a class="dropdown-item">Team Info</a>
+            <a class="dropdown-item">Set Lineup</a>
+            <a class="dropdown-item">Adjust Player Attributes</a>
+            <a class="dropdown-item remove_team">Remove Team</a>
+          </div>
+          <figcaption id="away_caption">
+          </figcaption>
+        </figure>
       </div>
-      {{ form.hidden_tag() }}
-      <div class="form-group">
-      {{ form.games.label(class="form-control-label") }}
-      {% if form.games.errors %}
-        {{ form.games(class="form-control form-control-lg is-invalid") }}
-        <div class="invalid-feedback">
-          <span>{{ error }}</span>
-        </div>
-      {% else %}
-        {{ form.games(class="form-control form-control-lg") }}
-      {% endif %}
+      <div class="column">
+        <h1 id="at-symbol">@</h1>
       </div>
-      <div class="form-group">
-        {{ form.submit(id="simulate-btn", class="btn btn-outline-info") }}
+      <div class="column" id="home-column">
+        <h3>Home</h3>
+        <figure class="dropdown">
+          <img class="dropdown-toggle" id="home_matchup" src="" data-toggle="dropdown">
+          <div class="dropdown-menu">
+            <a class="dropdown-item">Go to...</a>
+            <a class="dropdown-item">Team Info</a>
+            <a class="dropdown-item">Set Lineup</a>
+            <a class="dropdown-item">Adjust Player Attributes</a>
+            <a class="dropdown-item remove_team">Remove Team</a>
+          </div>
+          <figcaption id="home_caption">
+          </figcaption>
+        </figure>
       </div>
-    </form>
+    </div>
+    <div class="row">
+      <span class="col-md-3"></span>
+      <input class="form-control col-md-6" id="games-input-box" type="text" placeholder="Please specify the number of games">
+      <button class="btn btn-success btn-sm col-md-1" id="simulate-button" type="button">Simulate</button>
+      <span class="col-md-2"></span>
+    </div>
   </div>
   <script src="{{ url_for('static', filename='js/quick_sim.js') }}" ></script>
 {% endblock content %}

@@ -9,8 +9,9 @@ class QuickSimForm(FlaskForm):
     games = StringField('Games', validators=[DataRequired()])
     submit = SubmitField('Simulate')
 
-    def validate_games(self, games):
+    @staticmethod
+    def validate_games(form, *args):
         try:
-            int(games.data)
+            int(form.games.data)
         except TypeError:
             raise ValidationError("Please enter a valid number of games. Must be an integer.")

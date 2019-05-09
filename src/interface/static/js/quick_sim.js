@@ -6,7 +6,8 @@ $(document).ready(function() {
         var new_year = $(this).text()
         $('#years_dropdown').text(new_year);
         $.post("/simulate/quick_sim",
-            {"newest_year": new_year},
+            {"post_id": 1,
+             "newest_year": new_year},
             function(data) {display_new_teams(data);} // display the teams for the year returned
         ); //end ajax post request
         return false;
@@ -53,12 +54,21 @@ $(document).ready(function() {
         }
         return false;
     }); //end onclick event function
+
+    $(document).on('click', '#simulate-button', function() {
+        validate_input();
+    }); //end simulate button onclick event
 }); //end document ready function
 
 
 function hide_table() {
     $('.content-section').fadeOut('slow', function() { //hide the entire grid
         display_matchup(); //display the matchup
+        $(document).on('keypress', function(event) {
+        if (event.which == 13) {
+            validate_input();
+            }
+        });
         return false;
     });
 }; //end hide_table function
@@ -76,6 +86,11 @@ function display_matchup() {
 
 function show_table() {
     $('.content-section').fadeIn(750); //show the entire league table again
+    $(document).on('keypress', function(event) {
+    if (event.which == 13) {
+        event.preventDefault();
+        }
+    });
 };
 
 
@@ -132,3 +147,16 @@ function remove_contender(team, home_away) {
     $('#' + home_away).html('');
     $('#' + home_away + '_contender').find('div').attr('id', '');
 }; //end remove_contender function
+
+
+function validate_input() {
+    if ($('#games-input-box').val().match('/^[0-9]+$/')) {
+        alert('good input');
+        $.post("/simulate/quick_sim",
+            {"post_id": 2}
+        ); //end ajax post request
+        return false;
+    } else {
+        alert('bad input');
+    } //end validation if-else branch
+};

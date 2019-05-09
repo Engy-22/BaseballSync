@@ -118,3 +118,13 @@ h3 {
 .shrink-anchor {
   width: 25%
 }
+
+#games-input-box {
+  margin-right: 2rem;
+  margin-bottom: 2rem;
+}
+
+#simulate-button {
+  margin-right: 2rem;
+  margin-bottom: 2rem;
+}
