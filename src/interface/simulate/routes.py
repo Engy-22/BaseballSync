@@ -30,6 +30,16 @@ def accept_post_request():
         return json.dumps({'new_year': league_structure, 'league_len': len(league_structure),
                            'division_len': len(league_structure['nl']), 'year': new_year})
     else:
+        away_info = request.form.get('away_team')
+        home_info = request.form.get('home_team')
+        condensed_away_info = away_info.strip().replace('  ', '')
+        condensed_home_info = home_info.strip().replace('  ', '')
+        away_team = condensed_away_info.split('\n')[0]
+        away_year = condensed_away_info.split('\n')[2]
+        home_team = condensed_home_info.split('\n')[0]
+        home_year = condensed_home_info.split('\n')[2]
+        print(away_team + ' ' + away_year)
+        print(home_team + ' ' + home_year)
         return sim_results()
 
 

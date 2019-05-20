@@ -15,6 +15,7 @@ $(document).ready(function() {
 
     $(document).on('click', '.remove_team', function() {
         remove_matchup();
+        remove_contender($(this).parent().parent().parent().find('h3').text());
         var this_team = $(this).parent().parent().parent().find('img').attr('id').split('_')[0];
         $('#' + this_team + '_team').attr('id', '')
                                     .attr('class', 'unselected_team mt-5 ml-4');
@@ -42,16 +43,20 @@ $(document).ready(function() {
     $(document).on('click', '.team-entity', function() {
         $(this).find('img').toggleClass('unselected_team selected_team'); //change selected team to be highlighted or unhighlighted
         if ($('#away_contender_year').length > 0) {
-            $(this).find('img').attr('id', 'home_team');
-            display_contender($(this).find('figcaption').html(), 'home_contender_year', $('#years_dropdown').text(), $(this).find('img').attr('src'));
+            if ($('#away_contender_year').text() != $(this).find('figcaption').html() + ' ' + $('#years_dropdown').text() + ';' + $(this).find('img').attr('src')) {
+                $(this).find('img').attr('id', 'home_team');
+                display_contender($(this).find('figcaption').html(), 'home_contender_year', $('#years_dropdown').text(), $(this).find('img').attr('src'));
+            } else {
+                $('#away_contender_year').text('');
+                } //end if-else to check if this team has been selected before
         } else {
             $(this).find('img').attr('id', 'away_team');
             display_contender($(this).find('figcaption').html(), 'away_contender_year', $('#years_dropdown').text(), $(this).find('img').attr('src'));
-        } //end if-else
+            } //end if-else
         $('.unselected_team').attr('id', '');
         if ($('#away_contender_year').text().length > 0 && $('#home_contender_year').text().length > 0) {
             hide_table();
-        }
+            }
         return false;
     }); //end onclick event function
 
@@ -67,7 +72,7 @@ function hide_table() {
         $(document).on('keypress', function(event) {
         if (event.which == 13) {
             validate_input();
-            }
+            } //if the user presses enter, take the input textbox out of focus. If it's still in focus, you can't see the error border.
         });
         return false;
     });
@@ -90,15 +95,15 @@ function show_table() {
     if (event.which == 13) {
         event.preventDefault();
         }
-    });
-};
+    }); //end keypress function for "enter" button
+}; //end show_table function
 
 
 function remove_matchup() {
     $('#matchup').fadeOut(750, function() { //hide the matchup
         show_table();
     });
-};
+}; //end remove_matchup function
 
 
 function display_new_teams(league_structure) { //display the grid of teams given any particular year
@@ -143,20 +148,33 @@ function display_contender(team_name, home_away, year, img_src) {
 }; //end display_contender function
 
 
-function remove_contender(team, home_away) {
-    $('#' + home_away).html('');
-    $('#' + home_away + '_contender').find('div').attr('id', '');
+function remove_contender(home_away) {
+    $('#' + home_away + '_contender_year_column').html('');
+    $('#' + home_away + '_contender_year_column').find('div').attr('id', '');
 }; //end remove_contender function
 
 
 function validate_input() {
-    if ($('#games-input-box').val().match('/^[0-9]+$/')) {
-        alert('good input');
-        $.post("/simulate/quick_sim",
-            {"post_id": 2}
-        ); //end ajax post request
-        return false;
+    if ($('#games-input-box').val().match(/^\d+$/)) {
+        submit_games();
     } else {
-        alert('bad input');
+        trigger_error();
     } //end validation if-else branch
-};
+}; //end validate_input function
+
+
+function submit_games() {
+    $.post("/simulate/quick_sim",
+        {"post_id": 2,
+         "away_team": $('#away_caption').html(),
+         "home_team": $('#home_caption').html()},
+//        function(data) {alert('submitted');}
+    ); //end ajax post request
+}; //end submit_games function
+
+
+function trigger_error() {
+    var text_box = $('#games-input-box');
+    text_box.addClass('error');
+    text_box.parent().find('p').text('Error: Please enter a valid integer.');
+}; //end trigger_error function

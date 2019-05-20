@@ -121,10 +121,19 @@ h3 {
 
 #games-input-box {
   margin-right: 2rem;
-  margin-bottom: 2rem;
 }
 
 #simulate-button {
   margin-right: 2rem;
+  margin-bottom: 2rem;
+}
+
+.error {
+  border: 0.25rem solid;
+  border-color: red;
+}
+
+#error_message {
+  color: red;
   margin-bottom: 2rem;
 }
