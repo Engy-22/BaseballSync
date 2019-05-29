@@ -1,3 +1,4 @@
+import os
 from utilities.database.wrappers.baseball_data_connection import DatabaseConnection
 from utilities.properties import sandbox_mode
 
@@ -6,6 +7,7 @@ class Player:
     
     def __init__(self, player_id: str, team_id: str, year: int):
         self.player_id = player_id
+        self.first_name, self.last_name = self.retrieve_name()
         self.team_id = team_id
         self.year = year
         self.primary_position = self.retrieve_primary_position()
@@ -14,12 +16,20 @@ class Player:
         self.year_positions = []
         self.throws_with = self.throwing_handedness()
         self.bats_with = self.batting_handedness()
-        self.batting_stats = self.retrieve_batting_stats()
-        self.pitching_stats = self.retrieve_pitching_stats()
-        self.fielding_stats = self.retrieve_fielding_stats()
+        self.batting_stats = None
+        self.pitching_stats = None
+        self.fielding_stats = None
         self.image_url = self.construct_image_url()
 
 ### Retrievers ###
+    def retrieve_name(self):
+        db = DatabaseConnection(sandbox_mode)
+        name = db.read('select firstName, lastName from players where playerId = "' + self.player_id + '";')[0]
+        first_name = name[0]
+        last_name = name[1]
+        db.close()
+        return first_name, last_name
+
     def retrieve_primary_position(self):
         db = DatabaseConnection(sandbox_mode)
         position = db.read('select primaryPosition from players where playerId = "' + self.player_id + '";')[0][0]
@@ -45,16 +55,16 @@ class Player:
         return throws_with
 
     def retrieve_batting_stats(self):
-        return 'batting stats'
+        self.batting_stats = 'batting stats'
 
     def retrieve_pitching_stats(self):
-        return 'pitching stats'
+        self.pitching_stats = 'pitching stats'
 
     def retrieve_fielding_stats(self):
-        return 'fielding stats'
+        self.fielding_stats = 'fielding stats'
 
     def construct_image_url(self):
-        return 'images\\players\\' + self.player_id
+        return os.path.join('images', 'players', self.player_id)
 ### END Retrievers ###
 
 ### SETTERS ###
@@ -104,8 +114,7 @@ class Player:
 
     def get_batting_spots(self):
         return self.batting_spots
+
+    def get_full_name(self):
+        return self.first_name + ' ' + self.last_name
 ### End Getters ###
-
-
-# p = Player('lindofr01', 'CLE', 2016)
-# print(p.get_batting_spots())

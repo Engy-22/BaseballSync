@@ -7,7 +7,7 @@ from utilities.logger import Logger
 from utilities.time_converter import time_converter
 import time
 
-logger = Logger(os.path.join("..", "..", "baseball-sync", "logs", "controller", "create_lineup.log"))
+logger = Logger(os.path.join("..", "..", "logs", "sandbox", "controller", "create_lineup.log"))
 
 
 def create_lineup(team_id, year, roster, game_num, use_dh):
@@ -40,6 +40,7 @@ def create_lineup(team_id, year, roster, game_num, use_dh):
             position_list.append(position)
         place += 1
     logger.log('Time = ' + time_converter(time.time() - start_time) + '\n\n')
+    return batting_order, position, starting_pitcher
 
 
 def get_player_randomly(roster, spot, position_list, use_dh):

@@ -5,6 +5,7 @@ class PlateAppearance:
         self.pitcher = pitcher
         self.balls = 0
         self.strikes = 0
+        self.outcome = None
 
 ### RETRIEVERS ###
 ### END RETRIEVERS ###
@@ -15,6 +16,9 @@ class PlateAppearance:
 
     def increment_strikes(self):
         self.strikes += 1
+
+    def set_outcome(self, outcome):
+        self.outcome = outcome
 ### END SETTERS ###
 
 ### GETTERS ###
@@ -23,4 +27,7 @@ class PlateAppearance:
 
     def get_strikes(self):
         return self.strikes
+
+    def get_outcome(self):
+        return self.outcome
 ### END GETTERS ###

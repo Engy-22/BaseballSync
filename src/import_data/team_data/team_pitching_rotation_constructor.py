@@ -61,7 +61,7 @@ def get_pitchers(year):
         schedule = {}
         try:
             for i in def_lineups:
-                if 'th class="left "' in i:
+                if 'th class="left"' in i or 'th class="left" ' in i:
                     pitcher_list.append(i.split('data-stat="P"><a data-entry-id="')[1].split('"')[0].replace("'", "\'"))
                     game_num = i.split('<a name="')[1].split('"')[0]
                     schedule[game_num] = []
@@ -103,7 +103,3 @@ def write_to_file_schedule(team_id, year, schedule):
                      + str(ty_uid) + ', ' + game + ', (select ty_uniqueidentifier from team_years where teamid = "'
                      + data[0] + '" and year = ' + str(year) + '), "' + data[1] + '", "' + data[2] + '");')
     db.close()
-
-
-# for year in range(1996, 1998, 1):
-# team_pitching_rotation_constructor(2012)

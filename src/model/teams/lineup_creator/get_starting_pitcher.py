@@ -16,6 +16,3 @@ def get_starting_pitcher(team_id, year, game_number):
                       + str(get_game(game_number, int(wins_losses[0][0]) + int(wins_losses[0][1]))) + ';')[0][0]
     db.close()
     return Player(pitcher, team_id, year)
-
-
-# print(get_starting_pitcher('TEX', 2016, 5))

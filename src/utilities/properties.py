@@ -10,7 +10,7 @@ if sandbox_mode:
         controller_driver_logger = Logger(os.path.join(log_prefix, "controller", "main.log"))
         simulsync_driver_logger = Logger(os.path.join(log_prefix, "simulsync", "trigger.log"))
     except FileNotFoundError:
-        log_prefix = os.path.join("..", "logs", "sandbox")
+        log_prefix = os.path.join("..", "..", "logs", "sandbox")
         import_driver_logger = Logger(os.path.join(log_prefix, "import_data", "driver.log"))
         controller_driver_logger = Logger(os.path.join(log_prefix, "controller", "main.log"))
         simulsync_driver_logger = Logger(os.path.join(log_prefix, "simulsync", "trigger.log"))

@@ -13,6 +13,8 @@ class Team:
         self.roster = self.retrieve_roster()
         self.batting_order = []
         self.defensive_lineup = {}
+        self.lineup_place = 0
+        self.pitcher = ''
         self.year_off_rank = None
         self.year_def_rank = None
         self.year_ovr_rank = None
@@ -47,12 +49,25 @@ class Team:
         return roster
 
     def set_lineup(self, game_num, use_dh):
-        return create_lineup(self.team_id, self.year, self.roster, game_num, use_dh)
+        batting_order, positions, pitcher = create_lineup(self.team_id, self.year, self.roster, game_num, use_dh)
+        self.batting_order = batting_order
+        self.defensive_lineup = positions
+        self.pitcher = pitcher
+
 ### END RETRIEVERS ###
 
 ### SETTERS ###
     def add_player_to_roster(self, player_id, positions):
         self.roster[player_id] = positions
+
+    def set_batting_order(self, batting_order):
+        self.batting_order = batting_order
+
+    def set_lineup_place(self, place):
+        self.lineup_place = place
+
+    def set_pitcher(self, pitcher):
+        self.pitcher = pitcher
 ### SETTERS ###
 
 ### GETTERS ###
@@ -64,6 +79,15 @@ class Team:
 
     def get_roster(self):
         return self.roster
+
+    def get_pitcher(self):
+        return self.pitcher
+
+    def get_batting_order(self):
+        return self.batting_order
+
+    def get_lineup_place(self):
+        return self.lineup_place
 
     def get_year_off_rank(self):
         return self.year_off_rank
