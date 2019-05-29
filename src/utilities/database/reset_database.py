@@ -62,7 +62,7 @@ def driver(from_server, previous_frame, vars, all_years, begin_year=None, end_ye
 
 
 def do_reset(from_server, variables, year):
-    clear_logs()
+    clear_logs('import_data')
     if not from_server:
         frame.withdraw()
         for env, dbs in variables.items():
