@@ -3,7 +3,7 @@ import os
 from utilities.logger import Logger
 from model.pitch import Pitch
 
-logger = Logger(os.path.join("..", "..", "logs", "sandbox", "controller", "pitch.log"))
+logger = Logger(os.path.join("..", "logs", "sandbox", "controller", "pitch.log"))
 
 
 def simulate_pitch(pitcher, batter, balls, strikes, inning, driver_logger):

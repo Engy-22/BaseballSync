@@ -7,7 +7,7 @@ from utilities.logger import Logger
 from utilities.time_converter import time_converter
 import time
 
-logger = Logger(os.path.join("..", "..", "logs", "sandbox", "controller", "create_lineup.log"))
+logger = Logger(os.path.join("..", "logs", "sandbox", "controller", "create_lineup.log"))
 
 
 def create_lineup(team_id, year, roster, game_num, use_dh):

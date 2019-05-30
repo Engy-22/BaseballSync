@@ -166,9 +166,10 @@ function validate_input() {
 function submit_games() {
     $.post("/simulate/quick_sim",
         {"post_id": 2,
-         "away_team": $('#away_caption').html(),
-         "home_team": $('#home_caption').html()},
-//        function(data) {alert('submitted');}
+         "away_team": $('#away_matchup').attr('src'),
+         "home_team": $('#home_matchup').attr('src'),
+         "games": $('#games-input-box').val()},
+        function(data) {alert(data);}
     ); //end ajax post request
 }; //end submit_games function
 

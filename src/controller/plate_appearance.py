@@ -6,7 +6,7 @@ import time
 from utilities.logger import Logger
 from utilities.time_converter import time_converter
 
-logger = Logger(os.path.join("..", "..", "logs", "sandbox", "controller", "plate_appearance.log"))
+logger = Logger(os.path.join("..", "logs", "sandbox", "controller", "plate_appearance.log"))
 
 
 def simulate_plate_appearance(lineup, place, pitcher, inning, driver_logger):

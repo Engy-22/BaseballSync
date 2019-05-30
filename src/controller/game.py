@@ -7,7 +7,7 @@ from controller.inning import simulate_inning
 from utilities.time_converter import time_converter
 from utilities.properties import controller_driver_logger as driver_logger
 
-logger = Logger(os.path.join("..", "..", "logs", "sandbox", "controller", "game.log"))
+logger = Logger(os.path.join("..", "logs", "sandbox", "controller", "game.log"))
 
 
 def simulate_game(game_num, away_team, home_team):
@@ -34,9 +34,17 @@ def simulate_game(game_num, away_team, home_team):
         home_team.set_lineup_place(inning_data['bottom']['place'])
         game.increment_away_score(inning_data['top']['runs'])
         game.increment_home_score(inning_data['bottom']['runs'])
+    game_data['winner'] = determine_winner(game, away_team, home_team)
     total_time = time_converter(time.time() - start_time)
     logger.log("Done simulating game: " + away_team.get_team_id() + " @ " + home_team.get_team_id() + ": Time = "
                + total_time + '\n\n')
-    driver_logger.log("\tDone simulating game: " + away_team.get_team_id() + " @ " + home_team.get_team_id() + ": Time = "
-                      + total_time)
+    driver_logger.log("\tDone simulating game: " + away_team.get_team_id() + " @ " + home_team.get_team_id()
+                      + ": Time = " + total_time)
     return game_data
+
+
+def determine_winner(game, away_team, home_team):
+    if game.get_away_score() > game.get_home_score():
+        return away_team.get_team_id()
+    else:
+        return home_team.get_team_id()

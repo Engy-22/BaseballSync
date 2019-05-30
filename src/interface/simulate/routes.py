@@ -4,6 +4,7 @@ from flask import render_template, redirect, url_for, Blueprint, request
 from interface.simulate.forms import QuickSimForm
 from utilities.database.wrappers.baseball_data_connection import DatabaseConnection
 from utilities.get_most_recent_year import get_most_recent_year
+from controller.simulation import simulation
 
 
 simulate = Blueprint('simulate', __name__)
@@ -32,15 +33,12 @@ def accept_post_request():
     else:
         away_info = request.form.get('away_team')
         home_info = request.form.get('home_team')
-        condensed_away_info = away_info.strip().replace('  ', '')
-        condensed_home_info = home_info.strip().replace('  ', '')
-        away_team = condensed_away_info.split('\n')[0]
-        away_year = condensed_away_info.split('\n')[2]
-        home_team = condensed_home_info.split('\n')[0]
-        home_year = condensed_home_info.split('\n')[2]
-        print(away_team + ' ' + away_year)
-        print(home_team + ' ' + home_year)
-        return sim_results()
+        games = int(request.form.get('games'))
+        away_team = away_info.split('.jpg')[0][-7:-4]
+        away_year = int(away_info.split('.jpg')[0][-4:])
+        home_team = home_info.split('.jpg')[0][-7:-4]
+        home_year = int(home_info.split('.jpg')[0][-4:])
+        return simulation(away_team, away_year, home_team, home_year, games)
 
 
 @simulate.route("/simulate/quick_sim")
