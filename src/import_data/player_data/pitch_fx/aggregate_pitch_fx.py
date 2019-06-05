@@ -6,15 +6,14 @@ import time
 import datetime
 from concurrent.futures import ThreadPoolExecutor
 from utilities.time_converter import time_converter
-# from utilities.properties import log_prefix, import_driver_logger as driver_logger
+from utilities.properties import log_prefix, import_driver_logger as driver_logger
 
-# logger = Logger(os.path.join(log_prefix, "import_data", "aggregate_pitch_fx.log"))
-logger = Logger('C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\sandbox\\import_data\\driver.log')
+logger = Logger(os.path.join(log_prefix, "import_data", "aggregate_pitch_fx.log"))
 
 
 def aggregate_pitch_fx(year, month=None, day=None):
     print('Aggregating pitch fx data')
-    # driver_logger.log("\tAggregating pitch fx data")
+    driver_logger.log("\tAggregating pitch fx data")
     start_time = time.time()
     logger.log("Aggregating pitch fx data for " + str(year) + ' || Timestamp: ' + datetime.datetime.today().
                strftime('%Y-%m-%d %H:%M:%S'))
@@ -22,23 +21,23 @@ def aggregate_pitch_fx(year, month=None, day=None):
     aggregate_and_write(year, month, day, 'batting')
     total_time = time_converter(time.time() - start_time)
     logger.log("Done aggregating " + str(year) + " pitch fx data: Time = " + total_time + '\n\n')
-    # driver_logger.log("\t\tTime = " + total_time)
+    driver_logger.log("\t\tTime = " + total_time)
 
 
 def aggregate_and_write(year, month, day, player_type):
     start_time = time.time()
-    # driver_logger.log("\t\tAggregating " + player_type + " data")
+    driver_logger.log("\t\tAggregating " + player_type + " data")
     logger.log("\tAggregating " + player_type + " data and writing to database")
     for player_id in get_players(year, month, day, player_type):
         aggregate(year, month, day, player_id[0], player_type)
         # break
     total_time = time_converter(time.time()-start_time)
     logger.log("\tDone aggregating and writing " + player_type + " data: Time = " + total_time)
-    # driver_logger.log("\t\t\tTime = " + total_time)
+    driver_logger.log("\t\t\tTime = " + total_time)
 
 
 def aggregate(year, month, day, player_id, player_type):
-    print(player_id)
+    # print(player_id)
     logger.log('\t' + player_id)
     start_time = time.time()
     matchups = ['vr', 'vl']
@@ -86,8 +85,8 @@ def aggregate(year, month, day, player_id, player_type):
                     fields[matchup][count][pitch_type] = sort_further_by_field(pitch_type_list)
                     directions[matchup][count][pitch_type] = sort_further_by_direction(pitch_type_list)
                 write_pitch_usage(player_id, p_uid, year, matchup, count, pitch_usage[matchup][count], player_type)
-                write_swing_rate(player_id, p_uid, year, matchup, count, pitch_usage, swing_rates[matchup][count],
-                                 player_type)
+                write_swing_rate(player_id, p_uid, year, matchup, count, pitch_usage[matchup][count],
+                                 swing_rates[matchup][count], player_type)
                 write_strike_percent(player_id, p_uid, year, matchup, count, pitch_usage[matchup][count],
                                      strike_percents[matchup][count], player_type)
                 write_outcomes(player_id, p_uid, year, matchup, count, pitch_type_outcomes[matchup][count], player_type)
@@ -96,15 +95,14 @@ def aggregate(year, month, day, player_id, player_type):
                 write_field_by_pitch_type(player_id, p_uid, year, matchup, count, fields[matchup][count], player_type)
                 write_direction_by_pitch_type(player_id, p_uid, year, matchup, count, directions[matchup][count],
                                               player_type)
-        for outcome, pitches in sort_pitches_by_outcome(pitches).items():
-            trajectories_by_outcome[matchup][outcome] = calculate_trajectory_by_outome(pitches)
-            fields_by_outcome[matchup][outcome] = calculate_field_by_outcome(pitches)
-            directions_by_outcome[matchup][outcome] = calculate_direction_by_outcome(pitches)
+        for outcome, truncated_pitches in sort_pitches_by_outcome(pitches).items():
+            trajectories_by_outcome[matchup][outcome] = calculate_trajectory_by_outome(truncated_pitches)
+            fields_by_outcome[matchup][outcome] = calculate_field_by_outcome(truncated_pitches)
+            directions_by_outcome[matchup][outcome] = calculate_direction_by_outcome(truncated_pitches)
         write_trajectory_by_outcome(player_id, p_uid, year, matchup, trajectories_by_outcome[matchup], player_type)
         write_field_by_outcome(player_id, p_uid, year, matchup, fields_by_outcome[matchup], player_type)
         write_direction_by_outcome(player_id, p_uid, year, matchup, directions_by_outcome[matchup], player_type)
     logger.log('\t\tTime = ' + time_converter(time.time()-start_time))
-    return pitches
 
 
 def get_player_unique_stat_id(year, player_type, player_id):
@@ -523,10 +521,10 @@ def sort_further_by_direction(pitches):
 def sort_pitches_by_outcome(pitches):
     outcomes = {}
     for pitch in pitches:
-        if pitch[2] in outcomes:
-            outcomes[pitch[2]].append(pitch[3:])
+        if pitch[10] in outcomes:
+            outcomes[pitch[10]].append(pitch[11:])
         else:
-            outcomes[pitch[2]] = [pitch[3:]]
+            outcomes[pitch[10]] = [pitch[11:]]
     return outcomes
 
 
@@ -543,21 +541,21 @@ def calculate_trajectory_by_outome(pitches):
 def calculate_field_by_outcome(pitches):
     fields = {}
     for pitch in pitches:
-        if pitch[0] in fields:
-            fields[pitch[0]] += 1
+        if pitch[1] in fields:
+            fields[pitch[1]] += 1
         else:
-            fields[pitch[0]] = 1
+            fields[pitch[1]] = 1
     return fields
 
 
 def calculate_direction_by_outcome(pitches):
     directions = {}
     for pitch in pitches:
-        if pitch[0] in directions:
-            directions[pitch[0]] += 1
+        if pitch[2] in directions:
+            directions[pitch[2]] += 1
         else:
-            directions[pitch[0]] = 1
+            directions[pitch[2]] = 1
     return directions
 
 
-aggregate_pitch_fx(2017)
+# aggregate_pitch_fx(2017)

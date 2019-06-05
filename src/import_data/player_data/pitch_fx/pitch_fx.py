@@ -18,7 +18,7 @@ from import_data.player_data.pitch_fx.translators.determine_direction import det
 from import_data.player_data.pitch_fx.translators.resolve_player_id import resolve_player_id
 from import_data.player_data.pitch_fx.translators.resolve_team_id import resolve_team_id
 from import_data.player_data.pitch_fx.translators.find_pickoff_successes import find_pickoff_successes
-from import_data.player_data.pitch_fx.aggregate_pitch_fx_data import aggregate_pitch_fx_data
+from import_data.player_data.pitch_fx.aggregate_pitch_fx import aggregate_pitch_fx
 from utilities.properties import sandbox_mode, log_prefix, import_driver_logger as driver_logger
 
 innings = {}
@@ -41,25 +41,25 @@ def get_pitch_fx_data(year, month=None, day=None):
         opening_day = db.read('select opening_day from years where year = ' + str(year) + ';')[0][0]
         db.close()
         for month in range(3, 12, 1):
-            if month > 4:
-                if month >= int(opening_day.split('-')[0]):
-                    for day in range(1, 32, 1):
-                        # if day > 14:
-                        if month == int(opening_day.split('-')[0]) and int(day) < int(opening_day.split('-')[1]):
-                            continue
-                        if len(str(day)) == 1:
-                            this_day = '0' + str(day)
-                        else:
-                            this_day = str(day)
-                        if len(str(month)) == 1:
-                            this_month = '0' + str(month)
-                        else:
-                            this_month = str(month)
-                        get_day_data(this_day, this_month, str(year))
+            # if month > 11:
+            if month >= int(opening_day.split('-')[0]):
+                for day in range(1, 32, 1):
+                    # if day > 14:
+                    if month == int(opening_day.split('-')[0]) and int(day) < int(opening_day.split('-')[1]):
+                        continue
+                    if len(str(day)) == 1:
+                        this_day = '0' + str(day)
+                    else:
+                        this_day = str(day)
+                    if len(str(month)) == 1:
+                        this_month = '0' + str(month)
+                    else:
+                        this_month = str(month)
+                    get_day_data(this_day, this_month, str(year))
         logger.log("Done fetching " + str(year) + " pitch fx data: time = " + time_converter(time.time()-start_time)
                    + '\n\n\n\n')
         driver_logger.log("\t\tTime = " + time_converter(time.time()-start_time))
-        aggregate_pitch_fx_data(year)
+        aggregate_pitch_fx(year)
     else:
         driver_logger.log("\tFetching " + str(month) + "-" + str(day) + "-" + str(year) + " pitch fx data")
         print("Fetching " + str(month) + "-" + str(day) + "-" + str(year) + " pitch fx data")
@@ -67,7 +67,7 @@ def get_pitch_fx_data(year, month=None, day=None):
                    + datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S'))
         get_day_data(str(day), str(month), str(year))
         driver_logger.log("\t\tTime = " + time_converter(time.time()-start_time))
-        aggregate_pitch_fx_data(year, month, day)
+        aggregate_pitch_fx(year, month, day)
 
 
 def get_day_data(day, month, year):
