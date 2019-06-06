@@ -37,11 +37,9 @@ def aggregate_and_write(year, month, day, player_type):
 
 
 def aggregate(year, month, day, player_id, player_type):
-    # print(player_id)
     logger.log('\t' + player_id)
     start_time = time.time()
     matchups = ['vr', 'vl']
-    opponent = 'hb' if player_type == 'pitching' else 'hp'
     pitch_usage = {}
     pitch_type_outcomes = {}
     swing_rates = {}
@@ -556,6 +554,3 @@ def calculate_direction_by_outcome(pitches):
         else:
             directions[pitch[2]] = 1
     return directions
-
-
-# aggregate_pitch_fx(2017)

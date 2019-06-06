@@ -476,9 +476,3 @@ def write_direction_by_outcome(player_id, p_uid, year, matchup, direction_by_out
                                              + player_id + '" and year = ' + str(year) + ' and matchup = "' + matchup
                                              + '" and outcome = "' + outcome + '";'))
     db.close()
-
-
-# aggregate_pitch_fx_data(2018)
-# aggregate(2018, 'morriak01', 'pitching')
-# for year in range(2014, 2018):
-#     aggregate_pitch_fx_data(year)
