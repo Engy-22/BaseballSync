@@ -53,7 +53,11 @@ class Team:
         self.batting_order = batting_order
         self.defensive_lineup = positions
         self.pitcher = pitcher
-
+        if self.pitcher.get_pitching_stats() is None:
+            self.pitcher.retrieve_pitching_stats()
+        for player in self.batting_order:
+            if player.get_batting_stats() is None:
+                player.retrieve_batting_stats()
 ### END RETRIEVERS ###
 
 ### SETTERS ###

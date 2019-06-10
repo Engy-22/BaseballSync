@@ -1,11 +1,14 @@
 import os
 import json
+import time
 import statistics as stat
 from utilities.database.wrappers.pitch_fx_connection import PitchFXDatabaseConnection
 from utilities.properties import sandbox_mode, import_driver_logger as driver_logger
+from utilities.time_converter import time_converter
 
 
 def create_strike_zone():
+    start_time = time.time()
     driver_logger.log('\tCreating Strike Zone')
     db = PitchFXDatabaseConnection(sandbox_mode)
     x_points = db.read('select x from pitcher_pitches where x is not NULL and ball_strike = "strike" and swing_take '
@@ -26,3 +29,4 @@ def create_strike_zone():
     points['y_high'] = (3 * y_stdev)
     with open(os.path.join("..", "background", "strike_zone.json"), "w") as strike_zone_file:
         json.dump(points, strike_zone_file)
+    driver_logger.log('\t\tTime = ' + time_converter(time.time() - start_time))
