@@ -25,8 +25,7 @@ def hof_finder():
         year = row.split('<a href="/awards/hof_')[1].split('.shtml')[0]
         induction_type = row.split('data-stat="category_hof">')[1].split('<')[0]
         if induction_type == 'Player':
-            db.write('update players set HOF = ' + str(year)
-                                         + ' where playerId = "' + person + '";')
+            db.write('update players set HOF = ' + str(year) + ' where playerId = "' + person + '";')
         elif induction_type == 'Manager':
             db.write('update managers set HOF = ' + str(year) + ' where managerId = "' + person + '";')
         else:
@@ -35,6 +34,3 @@ def hof_finder():
     total_time = time_converter(time.time() - start_time)
     logger.log("Done finding hall of famers: time = " + total_time + '\n\n')
     driver_logger.log("\t\tTime = " + total_time)
-
-
-# hof_finder(Logger("C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\import_data\\dump.log"))

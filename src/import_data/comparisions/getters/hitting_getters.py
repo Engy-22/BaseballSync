@@ -23,6 +23,7 @@ def get_year_totals(year, logger):
     logger.log('\t\t\tGetting ' + str(year) + ' batting totals')
     year_totals = {'R': 0, 'RBI': 0, 'H': 0, '2B': 0, '3B': 0, 'HR': 0, 'SB': 0, 'BB': 0, 'SO': 0}
     db = DatabaseConnection(sandbox_mode=True)
+    print(db.read('select pa from years where year = ' + str(year) + ';'))
     pa = int(db.read('select pa from years where year = ' + str(year) + ';')[0][0])
     for key, value in year_totals.items():
         year_totals[key] = float(db.read('select ' + key + ' from years where year=' + str(year) + ';')[0][0])

@@ -54,7 +54,7 @@ def main(from_server, begin_year, end_year, frame=None):
         years = []
         for year in range(begin_year, end_year, 1):
             years.append(year)
-            # driver(year)
+            driver(year)
         create_strike_zone()
         rank_driver(years[-1])
         comparisons_driver(years[-1])

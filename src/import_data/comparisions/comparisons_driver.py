@@ -14,14 +14,17 @@ from import_data.comparisions.stat_gatherers.defensive_comparison_engine import 
 from import_data.comparisions.getters.defensive_team_getters import get_defensive_stats, get_year_totals as defensive_year_totals
 from utilities.time_converter import time_converter
 from utilities.properties import log_prefix, import_driver_logger as driver_logger
+from utilities.data_continuity import data_continuity
 
 logger = Logger(os.path.join(log_prefix, "import_data", "comparisons_driver.log"))
 
 
 def comparisons_driver(most_recent_year):
-    if most_recent_year < 1998:
-        driver_logger.log("\tCannot make comparisons before 1998")
-        logger.log("Cannot make comparisons before 1998")
+    if most_recent_year < 1998 or not data_continuity(most_recent_year):
+        driver_logger.log("\tCannot make comparisons if there is not data continuity back to 1876 or the current year "
+                          "is prior to  1998")
+        logger.log("Cannot make comparisons if there is not data continuity back to 1876 or the current year is prior "
+                   "to  1998")
         return
     driver_logger.log("\tBeginning comparisons driver")
     start_time = time.time()
