@@ -59,20 +59,20 @@ class Player:
     def retrieve_batting_stats(self):
         with open(os.path.join("..", "background", "batting_pitch_fx_tables.csv")) as tables_file:
             tables = tables_file.readlines()
-        db = DatabaseConnection(sandbox_mode=True)
+        db = DatabaseConnection(sandbox_mode=False)
         for table in tables:
-            print(db.read('select * from ' + table + ' where playerid = "' + self.player_id + ' and year = '
-                          + str(self.year) + '";'))
+            print(table, db.read('select * from ' + table + ' where playerid = "' + self.player_id + '" and year = '
+                                 + str(self.year) + ';'))
         db.close()
         self.batting_stats = 'batting stats'
 
     def retrieve_pitching_stats(self):
         with open(os.path.join("..", "background", "pitching_pitch_fx_tables.csv")) as tables_file:
             tables = tables_file.readlines()
-        db = DatabaseConnection(sandbox_mode=True)
+        db = DatabaseConnection(sandbox_mode=False)
         for table in tables:
-            print(db.read('select * from ' + table[:-1] + ' where playerid = "' + self.player_id + '" and year = '
-                          + str(self.year) + ';'))
+            print(table, db.read('select * from ' + table[:-1] + ' where playerid = "' + self.player_id + '" and year = '
+                                 + str(self.year) + ';'))
         db.close()
         self.pitching_stats = 'pitching stats'
 
