@@ -250,7 +250,7 @@ def write_swing_rate(player_id, p_uid, year, matchup, count, pitch_usage, swing_
             values += ', ' + str(round(swings/pitch_usage[pitch_type], 3))
         db.write('insert into swing_rate_' + player_type + ' (uid, playerid, year, matchup, count' + fields + ', p_uid)'
                  ' values (default, "' + player_id + '", ' + str(year) + ', "' + matchup + '", "' + count + '"'
-                 + values + ', p_uid = ' + str(p_uid) + ');')
+                 + values + ', ' + str(p_uid) + ');')
     else:
         sets = ''
         for pitch_type, swings in swing_rates.items():
@@ -274,7 +274,7 @@ def write_strike_percent(player_id, p_uid, year, matchup, count, pitch_usage, st
             values += ', ' + str(round(strikes/pitch_usage[pitch_type], 3))
         db.write('insert into strike_percent_' + player_type + ' (uid, playerid, year, matchup, count' + fields
                  + ', p_uid) values (default, "' + player_id + '", ' + str(year) + ', "' + matchup + '", "' + count
-                 + '"' + values + ', p_uid = ' + str(p_uid) + ');')
+                 + '"' + values + ', ' + str(p_uid) + ');')
     else:
         sets = ''
         for pitch_type, strikes in strike_percents.items():
@@ -282,35 +282,6 @@ def write_strike_percent(player_id, p_uid, year, matchup, count, pitch_usage, st
         if len(sets) > 0:
             db.write('update strike_percent_' + player_type + ' set ' + sets[:-2] + ' where playerid = "' + player_id
                      + '", and year = ' + str(year) + ' and matchup = "' + matchup + '", and count = "' + count + '";')
-    db.close()
-
-
-def write_trajectory_by_pitch_type(player_id, p_uid, year, matchup, count, trajectories, player_type):
-    db = DatabaseConnection(sandbox_mode=True)
-    fields = ''
-    total_pitches = {}
-    for pitch_type, trajectory in trajectories.items():
-        fields += ', ' + pitch_type + ' float'
-        total_pitches[pitch_type] = 0
-        for _, total in trajectory.items():
-            total_pitches[pitch_type] += total
-    with ThreadPoolExecutor(os.cpu_count()) as executor4:
-        for pitch_type, trajectory in trajectories.items():
-            for trajectory, total in trajectory.items():
-                if len(db.read('select * from trajectory_' + player_type + ' where playerid = "' + player_id
-                               + '" and year = ' + str(year) + ' and matchup = "' + matchup + '" and count = "' + count
-                               + '" and trajectory = "' + trajectory + '";')) == 0:
-                    executor4.submit(db.write('insert into trajectory_' + player_type + ' (uid, playerid, year, '
-                                              'matchup, count, trajectory,' + ' ' + pitch_type + ', p_uid) values '
-                                              '(default, "' + player_id + '", ' + str(year) + ', "' + matchup + '", "'
-                                              + count + '", "' + trajectory + '", '
-                                              + str(round(total/total_pitches[pitch_type], 3))
-                                              + ', ' + str(p_uid) + ');'))
-                else:
-                    executor4.submit(db.write('update trajectory_' + player_type + ' set ' + pitch_type + ' = '
-                                              + str(round(total/total_pitches[pitch_type], 3)) + ' where playerid = "'
-                                              + player_id + '" and year = ' + str(year) + ' and matchup = "' + matchup
-                                              + '" and count = "' + count + '" and trajectory = "' + trajectory + '";'))
     db.close()
 
 
@@ -325,20 +296,50 @@ def write_field_by_pitch_type(player_id, p_uid, year, matchup, count, field, pla
             total_pitches[pitch_type] += total
     with ThreadPoolExecutor(os.cpu_count()) as executor4:
         for pitch_type, dictionary in field.items():
-            for field, total in dictionary.items():
+            for field_type, total in dictionary.items():
                 if len(db.read('select * from field_' + player_type + ' where playerid = "' + player_id
                                + '" and year = ' + str(year) + ' and matchup = "' + matchup + '" and count = "' + count
-                               + '" and field = "' + field + '";')) == 0:
+                               + '" and field = "' + field_type + '";')) == 0:
                     executor4.submit(db.write('insert into field_' + player_type + ' (uid, playerid, year, matchup, '
                                               'count, field, ' + pitch_type + ', p_uid) values (default, "' + player_id
-                                              + '", ' + str(year) + ', "' + matchup + '", "' + count + '", "' + field
-                                              + '", ' + str(round(total/total_pitches[pitch_type], 3)) + ', '
-                                              + str(p_uid) + ');'))
+                                              + '", ' + str(year) + ', "' + matchup + '", "' + count + '", "'
+                                              + field_type + '", ' + str(round(total/total_pitches[pitch_type], 3))
+                                              + ', ' + str(p_uid) + ');'))
                 else:
                     executor4.submit(db.write('update field_' + player_type + ' set ' + pitch_type + ' = '
                                               + str(round(total/total_pitches[pitch_type], 3)) + ' where playerid = "'
                                               + player_id + '" and year = ' + str(year) + ' and matchup = "' + matchup
-                                              + '" and count = "' + count + '" and field = "' + field + '";'))
+                                              + '" and count = "' + count + '" and field = "' + field_type + '";'))
+    db.close()
+
+
+def write_trajectory_by_pitch_type(player_id, p_uid, year, matchup, count, trajectories, player_type):
+    db = DatabaseConnection(sandbox_mode=True)
+    fields = ''
+    total_pitches = {}
+    for pitch_type, trajectory in trajectories.items():
+        fields += ', ' + pitch_type + ' float'
+        total_pitches[pitch_type] = 0
+        for _, total in trajectory.items():
+            total_pitches[pitch_type] += total
+    with ThreadPoolExecutor(os.cpu_count()) as executor4:
+        for pitch_type, trajectory in trajectories.items():
+            for trajectory_type, total in trajectory.items():
+                if len(db.read('select * from trajectory_' + player_type + ' where playerid = "' + player_id
+                               + '" and year = ' + str(year) + ' and matchup = "' + matchup + '" and count = "' + count
+                               + '" and trajectory = "' + trajectory_type + '";')) == 0:
+                    executor4.submit(db.write('insert into trajectory_' + player_type + ' (uid, playerid, year, '
+                                              'matchup, count, trajectory,' + ' ' + pitch_type + ', p_uid) values '
+                                              '(default, "' + player_id + '", ' + str(year) + ', "' + matchup + '", "'
+                                              + count + '", "' + trajectory_type + '", '
+                                              + str(round(total/total_pitches[pitch_type], 3))
+                                              + ', ' + str(p_uid) + ');'))
+                else:
+                    executor4.submit(db.write('update trajectory_' + player_type + ' set ' + pitch_type + ' = '
+                                              + str(round(total/total_pitches[pitch_type], 3)) + ' where playerid = "'
+                                              + player_id + '" and year = ' + str(year) + ' and matchup = "' + matchup
+                                              + '" and count = "' + count + '" and trajectory = "' + trajectory_type
+                                              + '";'))
     db.close()
 
 
@@ -353,20 +354,20 @@ def write_direction_by_pitch_type(player_id, p_uid, year, matchup, count, direct
             total_pitches[pitch_type] += total
     with ThreadPoolExecutor(os.cpu_count()) as executor4:
         for pitch_type, dictionary in direction.items():
-            for direction, total in dictionary.items():
+            for direction_type, total in dictionary.items():
                 if len(db.read('select * from direction_' + player_type + ' where playerid = "' + player_id
                                + '" and year = ' + str(year) + ' and matchup = "' + matchup + '" and count = "' + count
-                               + '" and direction = "' + direction + '";')) == 0:
+                               + '" and direction = "' + direction_type + '";')) == 0:
                     executor4.submit(db.write('insert into direction_' + player_type + ' (uid, playerid, year, matchup,'
                                               ' count, direction, ' + pitch_type + ', p_uid) values (default, "'
                                               + player_id + '", ' + str(year) + ', "' + matchup + '", "' + count
-                                              + '", "' + direction + '", ' + str(round(total/total_pitches[pitch_type],
-                                                                                       3)) + ', ' + str(p_uid) + ');'))
+                                              + '", "' + direction_type + '", '
+                                              + str(round(total/total_pitches[pitch_type], 3)) + ', ' + str(p_uid) + ');'))
                 else:
                     executor4.submit(db.write('update direction_' + player_type + ' set ' + pitch_type + ' = '
                                               + str(round(total/total_pitches[pitch_type], 3)) + ' where playerid = "'
                                               + player_id + '" and year = ' + str(year) + ' and matchup = "' + matchup
-                                              + '" and count = "' + count + '" and direction = "' + direction + '";'))
+                                              + '" and count = "' + count + '" and direction = "' + direction_type + '";'))
     db.close()
 
 
