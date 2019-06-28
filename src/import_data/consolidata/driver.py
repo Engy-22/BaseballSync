@@ -17,7 +17,6 @@ def consolidate_data(year):
     start_time = time.time()
     logger.log("Consolidating team data || Timestamp: " + datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S'))
     db = DatabaseConnection(sandbox_mode)
-    # for year in db.read('select year from years;'):
     for ty_uid in db.read('select ty_uniqueidentifier from team_years where year = ' + str(year) + ';'):
         write_roster_info(ty_uid[0], {'hitter_spots': consolidate_hitter_spots(ty_uid[0]),
                                       'player_positions': consolidate_player_positions(ty_uid[0])})
@@ -27,4 +26,4 @@ def consolidate_data(year):
     driver_logger.log("\t\tTime = " + total_time)
 
 
-# consolidate_data()
+consolidate_data(2017)

@@ -1,9 +1,10 @@
 import random
 import os
-from utilities.logger import Logger
 from model.pitch import Pitch
+from utilities.logger import Logger
+from utilities.properties import log_prefix
 
-logger = Logger(os.path.join("..", "logs", "sandbox", "controller", "pitch.log"))
+logger = Logger(os.path.join(log_prefix, "controller", "pitch.log"))
 
 
 def simulate_pitch(pitcher, batter, balls, strikes, inning, driver_logger):

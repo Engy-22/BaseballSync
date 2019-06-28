@@ -1,19 +1,18 @@
 import os
-from model.teams.lineup_creator.get_starting_pitcher import get_starting_pitcher
 from model.teams.lineup_creator.reorganize_data import reorganize_batting_spots
 from model.teams.lineup_creator.check_existing_lineup import player_available, position_available, sp_can_bat_here
 from random import randint
 from utilities.logger import Logger
 from utilities.time_converter import time_converter
+from utilities.properties import log_prefix
 import time
 
-logger = Logger(os.path.join("..", "logs", "sandbox", "controller", "create_lineup.log"))
+logger = Logger(os.path.join(log_prefix, "controller", "create_lineup.log"))
 
 
-def create_lineup(team_id, year, roster, game_num, use_dh):
+def create_lineup(team_id, year, roster, starting_pitcher, opposing_pitcher_handedness, use_dh):
     start_time = time.time()
     logger.log('Creating lineup for ' + team_id + ' (' + str(year) + ')')
-    starting_pitcher = get_starting_pitcher(team_id, year, game_num)
     batting_order = []
     position_list = []
     place = 1
@@ -24,9 +23,10 @@ def create_lineup(team_id, year, roster, game_num, use_dh):
             batting_order.append(starting_pitcher)
             position_list.append('SP')
         else:
-            batter, position = get_player_randomly(roster, place, position_list, use_dh)
+            batter, position = get_player_randomly(roster, place, position_list, opposing_pitcher_handedness, use_dh)
             if not player_available(batting_order, batter) or position is None:
-                batter, position = get_player_incrementally(roster, batting_order, place, position_list, use_dh)
+                batter, position = get_player_incrementally(roster, batting_order, place, position_list, use_dh,
+                                                            opposing_pitcher_handedness)
                 if batter is None:
                     batting_order = []
                     position_list = []
@@ -40,12 +40,12 @@ def create_lineup(team_id, year, roster, game_num, use_dh):
             position_list.append(position)
         place += 1
     logger.log('Time = ' + time_converter(time.time() - start_time) + '\n\n')
-    return batting_order, position, starting_pitcher
+    return batting_order, position
 
 
-def get_player_randomly(roster, spot, position_list, use_dh):
+def get_player_randomly(roster, spot, position_list, opposing_pitcher_handedness, use_dh):
     logger.log('\t\tGetting player randomly')
-    options = reorganize_batting_spots(roster, spot)
+    options = reorganize_batting_spots(roster, spot, opposing_pitcher_handedness)
     games = 0
     for player, starts in options.items():
         games += starts
@@ -53,25 +53,30 @@ def get_player_randomly(roster, spot, position_list, use_dh):
     temp_count = 0
     for player, starts in options.items():
         if picker <= temp_count + starts:
-            return player, get_position_incrementally(player, position_list, player.get_year_positions(), use_dh, spot)
+            return player, get_position_incrementally(player, position_list, player.get_year_positions(), use_dh,
+                                                      opposing_pitcher_handedness, spot)
         else:
             temp_count += starts
 
 
-def get_player_incrementally(roster, batting_order, spot, position_list, use_dh, index=0):
+def get_player_incrementally(roster, batting_order, spot, position_list, use_dh, opposing_pitcher_handedness, index=0):
     logger.log('\t\tGetting player incrementally')
     try:
-        player = sorted(reorganize_batting_spots(roster, spot).items(), key=lambda kv: kv[1], reverse=True)[index][0]
+        player = sorted(reorganize_batting_spots(roster, spot, opposing_pitcher_handedness).items(),
+                        key=lambda kv: kv[1], reverse=True)[index][0]
     except IndexError:
         return None, None
-    position = get_position_incrementally(player, position_list, player.get_year_positions(), use_dh, spot)
+    position = get_position_incrementally(player, position_list, player.get_year_positions(), use_dh,
+                                          opposing_pitcher_handedness, spot)
     if not(player_available(batting_order, player)) or position is None:
-        return get_player_incrementally(roster, batting_order, spot, position_list, use_dh, index+1)
+        return get_player_incrementally(roster, batting_order, spot, position_list, use_dh, opposing_pitcher_handedness,
+                                        index+1)
     else:
         return player, position
 
 
-def get_position_incrementally(player, position_list, player_position_options, use_dh, place, index=0):
+def get_position_incrementally(player, position_list, player_position_options, use_dh, place,
+                               opposing_pitcher_handedness, index=0):
     logger.log('\t\t\tGetting position incrementally')
     try:
         new_position = player_position_options[index]
@@ -81,14 +86,16 @@ def get_position_incrementally(player, position_list, player_position_options, u
                     return new_position
                 else:
                     return get_position_incrementally(player, position_list, player_position_options, use_dh, place,
-                                                      index + 1)
+                                                      opposing_pitcher_handedness, index + 1)
             else:
-                if new_position != 'DH' or (new_position == 'SP' and sp_can_bat_here(player, place)):
+                if new_position != 'DH' or (new_position == 'SP' and sp_can_bat_here(player, place,
+                                                                                     opposing_pitcher_handedness)):
                     return new_position
                 else:
                     return get_position_incrementally(player, position_list, player_position_options, use_dh, place,
-                                                      index + 1)
+                                                      opposing_pitcher_handedness, index + 1)
         else:
-            return get_position_incrementally(player, position_list, player_position_options, use_dh, place, index + 1)
+            return get_position_incrementally(player, position_list, player_position_options, use_dh, place,
+                                              opposing_pitcher_handedness, index + 1)
     except IndexError:
         return None

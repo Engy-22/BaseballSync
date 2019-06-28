@@ -17,7 +17,7 @@ def aggregate_pitch_fx(year, month=None, day=None):
     start_time = time.time()
     logger.log("Aggregating pitch fx data for " + str(year) + ' || Timestamp: ' + datetime.datetime.today().
                strftime('%Y-%m-%d %H:%M:%S'))
-    aggregate_and_write(year, month, day, 'pitching')
+    # aggregate_and_write(year, month, day, 'pitching')
     aggregate_and_write(year, month, day, 'batting')
     total_time = time_converter(time.time() - start_time)
     logger.log("Done aggregating " + str(year) + " pitch fx data: Time = " + total_time + '\n\n')
@@ -262,8 +262,6 @@ def write_swing_rate(player_id, p_uid, year, matchup, count, pitch_usage, swing_
 
 
 def write_strike_percent(player_id, p_uid, year, matchup, count, pitch_usage, strike_percents, player_type):
-    if player_type != 'pitching':
-        return
     db = DatabaseConnection(sandbox_mode=True)
     if len(db.read('select uid from strike_percent_' + player_type + ' where playerid = "' + player_id + '" and year = '
                    + str(year) + ' and matchup = "' + matchup + '" and count = "' + count + '"')) == 0:

@@ -8,7 +8,7 @@ from utilities.translate_team_id import translate_team_id
 from utilities.logger import Logger
 from utilities.time_converter import time_converter
 from concurrent.futures import ThreadPoolExecutor
-from utilities.properties import sandbox_mode, log_prefix, import_driver_logger as driver_logger
+from utilities.properties import log_prefix, import_driver_logger as driver_logger
 
 pages = {}
 logger = Logger(os.path.join(log_prefix, "import_data", "team_pitching_rotation_constructor.log"))
@@ -27,7 +27,7 @@ def team_pitching_rotation_constructor(year):
     logger.log("Downloading " + str(year) + " team batting order data || Timestamp: " + datetime.datetime.today()
                .strftime('%Y-%m-%d %H:%M:%S'))
     logger.log("\tdownloading team pages")
-    with open(os.path.join("..", "..", "baseball-sync", "background", "yearTeams.txt"), 'r') as year_file:
+    with open(os.path.join("..", "background", "yearTeams.txt"), 'r') as year_file:
         with ThreadPoolExecutor(os.cpu_count()) as executor:
             for line in year_file:
                 if str(year) in line:
@@ -80,7 +80,7 @@ def get_pitchers(year):
 
 
 def write_to_file_pitchers(team, year, pitchers):
-    db = DatabaseConnection(sandbox_mode)
+    db = DatabaseConnection(sandbox_mode=True)
     for i in range(len(pitchers)):
         if len(db.read('select starterId from starting_pitchers where playerId = "' + pitchers[i] + '" and gameNum = '
                        + str(i+1) + ' and TY_uniqueidentifier = (select TY_uniqueidentifier from team_years where '
@@ -92,7 +92,7 @@ def write_to_file_pitchers(team, year, pitchers):
 
 
 def write_to_file_schedule(team_id, year, schedule):
-    db = DatabaseConnection(sandbox_mode)
+    db = DatabaseConnection(sandbox_mode=True)
     ty_uid = db.read('select ty_uniqueidentifier from team_years where teamid = "' + team_id + '" and year = '
                      + str(year) + ';')[0][0]
     for game, data in schedule.items():
@@ -103,3 +103,6 @@ def write_to_file_schedule(team_id, year, schedule):
                      + str(ty_uid) + ', ' + game + ', (select ty_uniqueidentifier from team_years where teamid = "'
                      + data[0] + '" and year = ' + str(year) + '), "' + data[1] + '", "' + data[2] + '");')
     db.close()
+
+
+# team_pitching_rotation_constructor(2017)

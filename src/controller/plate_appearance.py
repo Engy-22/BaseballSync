@@ -1,12 +1,13 @@
 import random
 import os
+import time
 from model.plate_appearance import PlateAppearance
 from controller.pitch import simulate_pitch
-import time
 from utilities.logger import Logger
+from utilities.properties import log_prefix
 from utilities.time_converter import time_converter
 
-logger = Logger(os.path.join("..", "logs", "sandbox", "controller", "plate_appearance.log"))
+logger = Logger(os.path.join(log_prefix, "controller", "plate_appearance.log"))
 
 
 def simulate_plate_appearance(lineup, place, pitcher, inning, driver_logger):

@@ -1,16 +1,17 @@
 import os
 import time
-from utilities.logger import Logger
 from model.game import Game
 from model.league import League
+from model.teams.lineup_creator.get_starting_pitcher import get_starting_pitcher
 from controller.inning import simulate_inning
+from utilities.logger import Logger
 from utilities.time_converter import time_converter
-from utilities.properties import controller_driver_logger as driver_logger
+from utilities.properties import log_prefix, controller_driver_logger as driver_logger
 
-logger = Logger(os.path.join("..", "logs", "sandbox", "controller", "game.log"))
+logger = Logger(os.path.join(log_prefix, "controller", "game.log"))
 
 
-def simulate_game(game_num, away_team, home_team):
+def simulate_game(game_num, away_team, home_team, away_year, home_year):
     driver_logger.log("Starting game " + str(game_num) + " simulation: " + away_team.get_team_id() + " @ "
                       + home_team.get_team_id())
     start_time = time.time()
@@ -20,8 +21,10 @@ def simulate_game(game_num, away_team, home_team):
     league = League(home_team.get_team_id(), home_team.get_year())
     lineup_time = time.time()
     logger.log("\tCreating lineups")
-    away_team.set_lineup(game_num, use_dh=league.get_rules())
-    home_team.set_lineup(game_num, use_dh=league.get_rules())
+    away_pitcher = get_starting_pitcher(away_team.get_team_id(), away_year, game_num)
+    home_pitcher = get_starting_pitcher(home_team.get_team_id(), home_year, game_num)
+    away_team.set_lineup(away_pitcher, home_pitcher, use_dh=league.get_rules())
+    home_team.set_lineup(home_pitcher, away_pitcher, use_dh=league.get_rules())
     logger.log("\t\t" + time_converter(time.time() - lineup_time))
     while game.get_inning() <= 9 or game.get_away_score() == game.get_home_score():
         inning_data = simulate_inning(game, {'top': away_team.get_batting_order(),

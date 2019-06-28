@@ -33,31 +33,43 @@ class Team:
 
     def retrieve_roster(self):
         roster = []
-        for data in self.team_info.split(',&')[:-1]:
-            datum = data.split('-')
-            roster.append(Player(datum[0], self.team_id, self.year))
-            batting_info = datum[1].split(',|')[0].split(',')
-            position_info = datum[1].split(',|')[1].split(',')
+        for player_data in self.team_info.split(',&')[:-1]:
+            player_info = player_data.split('-')
+            roster.append(Player(player_info[0], self.team_id, self.year))
+            position_info = player_info[1].split(',|')[1].split(',')
             batting_spots = {}
-            for ent in batting_info:
-                try:
-                    batting_spots[int(ent.split(':')[0])] = int(ent.split(':')[1])
-                except ValueError:
-                    batting_spots[int(ent.split(':')[0])] = 0
-            roster[-1].set_batting_spots(batting_spots)
-            roster[-1].set_year_positions(position_info)
+            match_ups = {0: 'vr', 1: 'vl'}
+            for match_up_num, match_up in match_ups.items():
+                temp_batting_info = player_info[1].split('#')[match_up_num+1]
+                if 'vl' in temp_batting_info:
+                    batting_info = temp_batting_info.split(',vl')[0].split(',|')[0].split(',')
+                else:
+                    batting_info = temp_batting_info.split(',vl')[0].split(',|')[0].split(',')
+                batting_spots[match_up] = {}
+                for ent in batting_info:
+                    try:
+                        batting_spots[match_up][int(ent.split(':')[0])] = int(ent.split(':')[1])
+                    except ValueError:
+                        batting_spots[match_up][int(ent.split(':')[0])] = 0
+                    except IndexError:
+                        print(ent)
+                roster[-1].set_batting_spots(batting_spots)
+                roster[-1].set_year_positions(position_info)
         return roster
 
-    def set_lineup(self, game_num, use_dh):
-        batting_order, positions, pitcher = create_lineup(self.team_id, self.year, self.roster, game_num, use_dh)
+    def set_lineup(self, starting_pitcher, opposing_pitcher, use_dh):
+        batting_order, positions = create_lineup(self.team_id, self.year, self.roster, starting_pitcher,
+                                                 opposing_pitcher.get_throwing_handedness(), use_dh)
         self.batting_order = batting_order
         self.defensive_lineup = positions
-        self.pitcher = pitcher
+        self.pitcher = starting_pitcher
         if self.pitcher.get_pitching_stats() is None:
             self.pitcher.retrieve_pitching_stats()
         for player in self.batting_order:
+            print(player.get_full_name())
             if player.get_batting_stats() is None:
                 player.retrieve_batting_stats()
+        print('\n\n')
 ### END RETRIEVERS ###
 
 ### SETTERS ###
@@ -116,4 +128,4 @@ class Team:
 ### GETTERS ###
 
 
-# team = Team("TEX", 2016)
+# team = Team("CLE", 2017)

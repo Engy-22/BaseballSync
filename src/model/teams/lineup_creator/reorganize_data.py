@@ -1,7 +1,7 @@
-def reorganize_batting_spots(roster, spot):
+def reorganize_batting_spots(roster, spot, opposing_pitcher_handedness):
     options = {}
     for player in roster:
-        starts = player.get_batting_spots()[spot]
+        starts = player.get_batting_spots()['v' + opposing_pitcher_handedness.lower()][spot]
         if starts > 0:
             options[player] = starts
     return options
