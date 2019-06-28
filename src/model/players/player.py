@@ -57,22 +57,30 @@ class Player:
         return throws_with
 
     def retrieve_batting_stats(self):
-        with open(os.path.join("..", "background", "batting_pitch_fx_tables.csv")) as tables_file:
-            tables = tables_file.readlines()
-        db = DatabaseConnection(sandbox_mode=True)
-        for table in tables:
-            print(db.read('select * from ' + table + ' where playerid = "' + self.player_id + ' and year = '
-                          + str(self.year) + '";'))
+        try:
+            tables_file = open(os.path.join("..", "background", "batting_pitch_fx_tables.csv"))
+        except FileNotFoundError:
+            tables_file = open(os.path.join("..", "..", "background", "batting_pitch_fx_tables.csv"))
+        tables = tables_file.readlines()
+        tables_file.close()
+        db = DatabaseConnection(sandbox_mode=False)
+        # for table in tables:
+        #     print(table, db.read('select * from ' + table + ' where playerid = "' + self.player_id + '" and year = '
+        #                          + str(self.year) + ';'))
         db.close()
         self.batting_stats = 'batting stats'
 
     def retrieve_pitching_stats(self):
-        with open(os.path.join("..", "background", "pitching_pitch_fx_tables.csv")) as tables_file:
-            tables = tables_file.readlines()
-        db = DatabaseConnection(sandbox_mode=True)
-        for table in tables:
-            print(db.read('select * from ' + table[:-1] + ' where playerid = "' + self.player_id + '" and year = '
-                          + str(self.year) + ';'))
+        try:
+            tables_file = open(os.path.join("..", "background", "pitching_pitch_fx_tables.csv"))
+        except FileNotFoundError:
+            tables_file = open(os.path.join("..", "..", "background", "pitching_pitch_fx_tables.csv"))
+        tables = tables_file.readlines()
+        tables_file.close()
+        db = DatabaseConnection(sandbox_mode=False)
+        # for table in tables:
+        #     print(table, db.read('select * from ' + table[:-1] + ' where playerid = "' + self.player_id
+        #                          + '" and year = ' + str(self.year) + ';'))
         db.close()
         self.pitching_stats = 'pitching stats'
 

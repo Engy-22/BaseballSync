@@ -19,7 +19,7 @@ def simulation(away_team_id, away_year, home_team_id, home_year, games):
     away_team_wins = 0
     home_team_wins = 0
     for game in range(games):
-        game_data = simulate_game(game+1, away_team, home_team)
+        game_data = simulate_game(game+1, away_team, home_team, away_year, home_year)
         if game_data['winner'] == away_team.get_team_id():
             away_team_wins += 1
         else:
@@ -34,7 +34,10 @@ def determine_series_winner(away_team, away_wins, home_team, home_wins, games):
             winner = away_team
         else:
             winner = home_team
-        return winner.get_team_id() + ' wins the ' + str(games) + ' game series: ' + away_team.get_team_id() \
+        return winner.get_team_id() + ' wins the ' + str(games) + ' game series: ' + away_team.get_team_id()\
                + ' ' + str(away_wins) + ' | ' + home_team.get_team_id() + ' ' + str(home_wins)
     else:
         return 'The ' + str(away_wins+home_wins) + ' series has ended in a tie'
+
+
+# simulation('LAD', 2017, 'CLE', 2017, 10)

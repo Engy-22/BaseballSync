@@ -1,11 +1,12 @@
 import os
 import time
+from controller.plate_appearance import simulate_plate_appearance
 from model.inning import Inning
 from utilities.logger import Logger
-from controller.plate_appearance import simulate_plate_appearance
+from utilities.properties import log_prefix
 from utilities.time_converter import time_converter
 
-logger = Logger(os.path.join("..", "logs", "sandbox", "controller", "inning.log"))
+logger = Logger(os.path.join(log_prefix, "controller", "inning.log"))
 
 
 def simulate_inning(game, lineup, place, pitcher, driver_logger):
