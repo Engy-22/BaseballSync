@@ -57,10 +57,9 @@ def write_roster_info(ty_uid, info):
         for player_id_reference, positions in info['player_positions'].items():
             if player_id == player_id_reference:
                 for static_match_up in ['vr', 'vl']:
-                    # for match_up, spots in match_ups[static_match_up].items():
                     this_string += static_match_up + '#'
                     for place, total in match_ups[static_match_up].items():
-                            this_string += str(place) + ':' + str(total) + ','
+                        this_string += str(place) + ':' + str(total) + ','
                 this_string += '|'
                 for position in positions:
                     this_string += position + ','

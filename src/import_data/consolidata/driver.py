@@ -2,6 +2,7 @@ import os
 from utilities.database.wrappers.baseball_data_connection import DatabaseConnection
 from import_data.consolidata.team_roster_info import consolidate_hitter_spots, consolidate_player_positions,\
     write_roster_info
+from import_data.consolidata.player_stats import consolidate_player_stats
 from utilities.logger import Logger
 from utilities.properties import sandbox_mode, log_prefix, import_driver_logger as driver_logger
 from utilities.time_converter import time_converter
@@ -19,11 +20,14 @@ def consolidate_data(year):
     db = DatabaseConnection(sandbox_mode)
     for ty_uid in db.read('select ty_uniqueidentifier from team_years where year = ' + str(year) + ';'):
         write_roster_info(ty_uid[0], {'hitter_spots': consolidate_hitter_spots(ty_uid[0]),
-                                      'player_positions': consolidate_player_positions(ty_uid[0])})
+                                      'player_positions': consolidate_player_positions(ty_uid[0]),
+                                      'batter_stats': consolidate_player_stats('batting'),
+                                      'pitcher_stats': consolidate_player_stats('pitching'),
+                                      'fielder_stats': consolidate_player_stats('fielding')})
     db.close()
     total_time = time_converter(time.time() - start_time)
     logger.log("Done consolidating team data: Time = " + total_time)
     driver_logger.log("\t\tTime = " + total_time)
 
 
-consolidate_data(2017)
+# consolidate_data(2017)
