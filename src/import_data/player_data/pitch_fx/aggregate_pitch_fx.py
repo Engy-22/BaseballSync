@@ -488,20 +488,20 @@ def calculate_swing_rate(pitches):
 def sort_further_by_trajectory(pitches):
     trajectories = {}
     for pitch in pitches:
-        if pitch[4] in trajectories:
-            trajectories[pitch[4]] += 1
+        if pitch[3] in trajectories:
+            trajectories[pitch[3]] += 1
         else:
-            trajectories[pitch[4]] = 1
+            trajectories[pitch[3]] = 1
     return trajectories
 
 
 def sort_further_by_field(pitches):
     fields = {}
     for pitch in pitches:
-        if pitch[5] in fields:
-            fields[pitch[5]] += 1
+        if pitch[4] in fields:
+            fields[pitch[4]] += 1
         else:
-            fields[pitch[5]] = 1
+            fields[pitch[4]] = 1
     return fields
 
 
