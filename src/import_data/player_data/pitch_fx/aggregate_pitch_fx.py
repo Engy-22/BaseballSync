@@ -17,7 +17,7 @@ def aggregate_pitch_fx(year, month=None, day=None):
     start_time = time.time()
     logger.log("Aggregating pitch fx data for " + str(year) + ' || Timestamp: ' + datetime.datetime.today().
                strftime('%Y-%m-%d %H:%M:%S'))
-    # aggregate_and_write(year, month, day, 'pitching')
+    aggregate_and_write(year, month, day, 'pitching')
     aggregate_and_write(year, month, day, 'batting')
     total_time = time_converter(time.time() - start_time)
     logger.log("Done aggregating " + str(year) + " pitch fx data: Time = " + total_time + '\n\n')

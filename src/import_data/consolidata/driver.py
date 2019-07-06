@@ -21,13 +21,14 @@ def consolidate_data(year):
     for ty_uid in db.read('select ty_uniqueidentifier from team_years where year = ' + str(year) + ';'):
         write_roster_info(ty_uid[0], {'hitter_spots': consolidate_hitter_spots(ty_uid[0]),
                                       'player_positions': consolidate_player_positions(ty_uid[0]),
-                                      'batter_stats': consolidate_player_stats('batting'),
-                                      'pitcher_stats': consolidate_player_stats('pitching'),
-                                      'fielder_stats': consolidate_player_stats('fielding')})
+                                      'batter_stats': consolidate_player_stats(ty_uid[0], 'batting', year),
+                                      'pitcher_stats': consolidate_player_stats(ty_uid[0], 'pitching', year),
+                                      'fielder_stats': consolidate_player_stats(ty_uid[0], 'fielding', year)})
+        break
     db.close()
     total_time = time_converter(time.time() - start_time)
     logger.log("Done consolidating team data: Time = " + total_time)
     driver_logger.log("\t\tTime = " + total_time)
 
 
-# consolidate_data(2017)
+consolidate_data(2017)

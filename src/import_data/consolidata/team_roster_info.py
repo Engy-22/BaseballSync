@@ -10,7 +10,7 @@ def consolidate_player_positions(ty_uid):
     roster = {}
     for player in players_positions:
         roster[player[0]] = player[1].split(',')
-    return roster
+    return stringify_player_positions(roster)
 
 
 def consolidate_hitter_spots(ty_uid):
@@ -31,7 +31,7 @@ def consolidate_hitter_spots(ty_uid):
                 batting_spots[player_id][match_up][spot] = ent
                 spot += 1
     db.close()
-    return ensure_both_match_ups_are_present(batting_spots)
+    return stringify_hitter_spots(ensure_both_match_ups_are_present(batting_spots))
 
 
 def ensure_both_match_ups_are_present(batting_spots):
@@ -50,23 +50,50 @@ def ensure_both_match_ups_are_present(batting_spots):
 
 
 def write_roster_info(ty_uid, info):
-    db = DatabaseConnection(sandbox_mode=True)
+    print(format_data(info))
+    # db = DatabaseConnection(sandbox_mode=True)
+    # db.write('update team_years set team_info = "' + format_data(info) + '" where ty_uniqueidentifier = ' + str(ty_uid)
+    #          + ';')
+    # db.close()
+
+
+def format_data(info):
     this_string = ''
-    for player_id, match_ups in info['hitter_spots'].items():
-        this_string += player_id + '-'
-        for player_id_reference, positions in info['player_positions'].items():
-            if player_id == player_id_reference:
-                for static_match_up in ['vr', 'vl']:
-                    this_string += static_match_up + '#'
-                    for place, total in match_ups[static_match_up].items():
-                        this_string += str(place) + ':' + str(total) + ','
-                this_string += '|'
-                for position in positions:
-                    this_string += position + ','
-                this_string += '&'
-                break
-    db.write('update team_years set team_info = "' + this_string + '" where ty_uniqueidentifier = ' + str(ty_uid) + ';')
-    db.close()
+    players_dict = {}
+    for data_type, string_dicts in info.items():
+        print(data_type)
+        for player_id, stringified_data in string_dicts.items():
+            print('\t' + player_id)
+            if player_id not in players_dict:
+                players_dict[player_id] = stringified_data + '|'
+            else:
+                players_dict[player_id] += stringified_data + '|'
+    for player_id, player_data in players_dict.items():
+        this_string += player_id + '*' + player_data[:-1] + '&'
+    return this_string[:-1]
+
+
+def stringify_hitter_spots(hitter_spots):
+    final_spots = {}
+    for player_id, info in hitter_spots.items():
+        temp_string = ''
+        for match_up, spots in info.items():
+            temp_string += match_up + '#'
+            for spot, number in spots.items():
+                temp_string += str(spot) + ':' + str(number) + ','
+            temp_string = temp_string[:-1] + '+'
+        final_spots[player_id] = temp_string[:-1]
+    return final_spots
+
+
+def stringify_player_positions(roster):
+    stingified_roster = {}
+    for player_id, positions in roster.items():
+        stingified_positions = ''
+        for position in positions:
+            stingified_positions += position + ','
+        stingified_roster[player_id] = stingified_positions[:-1]
+    return stingified_roster
 
 
 # print(consolidate_player_positions(2))
