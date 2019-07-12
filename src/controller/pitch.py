@@ -11,8 +11,8 @@ def simulate_pitch(pitcher, batter, balls, strikes, inning, driver_logger):
     driver_logger.log('Simulating ' + str(balls) + '-' + str(strikes) + ' pitch')
     logger.log('Simulating ' + str(balls) + '-' + str(strikes) + ' pitch')
     pitch = Pitch(pitcher, balls, strikes)
-    if pitcher.get_pitching_stats() is None:
-        pitcher.retrieve_pitching_stats()
+    # if pitcher.get_pitching_stats() is None:
+    #     pitcher.get_pitching_stats()
     pitch_data = {}
     pitch_data['ball_strike'] = ball_strike()
     pitch_data['trajectory'] = ''

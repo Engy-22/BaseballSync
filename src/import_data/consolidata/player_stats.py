@@ -8,40 +8,52 @@ def consolidate_player_stats(ty_uid, player_type, year):
     db = DatabaseConnection(sandbox_mode=True)
     if player_type != 'fielding':
         for p_uid in db.read('select p_uid from direction_' + player_type + ' group by p_uid;'):
+            p_uids = [p_uid[0]]
             if player_is_on_this_team(ty_uid, p_uid, player_type, year):
+                if player_was_on_more_than_one_team(p_uid, player_type, year):
+                    p_uids.append(get_uid_of_player_for_this_team(ty_uid, p_uid, player_type, year))
                 player_id = get_player_id(p_uid, player_type)
                 player_stats[player_id] = {}
-                player_stats[player_id]['standard_' + player_type + '_stats'] = \
-                    consolidate_traditional_player_stats(db.read('select * from player_' + player_type + ' where p'
-                                                                 + player_type[0] + '_uniqueidentifier = ' + str(p_uid[0])
-                                                                 + ';')[0],
-                                                         get_db_field_names(db.read('describe player_' + player_type
-                                                                                    + ';')))
+                player_stats[player_id]['standard_' + player_type + '_stats'] = {}
+                for uid in p_uids:
+                    player_stats[player_id]['standard_' + player_type + '_stats'][get_team_id(uid, player_type)] = \
+                        consolidate_traditional_player_stats(
+                            db.read('select * from player_' + player_type + ' where p' + player_type[0]
+                                    + '_uniqueidentifier = ' + str(uid) + ';')[0], get_db_field_names(
+                                db.read('describe player_' + player_type + ';')))
                 try:
                     with open(os.path.join("..", "background", player_type + "_pitch_fx_tables.csv")) as tables_file:
                         tables = tables_file.readlines()
                 except FileNotFoundError:
-                    with open(os.path.join("..", "..", "..", "background", player_type + "_pitch_fx_tables.csv")) as\
+                    with open(os.path.join("..", "..", "..", "background", player_type + "_pitch_fx_tables.csv")) as \
                             tables_file:
                         tables = tables_file.readlines()
                 player_stats[player_id]['advanced_' + player_type + '_stats'] = {}
                 for table in tables:
                     player_stats[player_id]['advanced_' + player_type + '_stats'][table[:-1]] = \
                         consolidate_pitch_fx(db.read('select * from ' + table[:-1] + ' where p_uid = ' + str(p_uid[0])
-                                                     + ';'), table[:-1], get_db_field_names(db.read('describe '
-                                                                                                    + table[:-1] + ';')))
-                break
+                                                     + ';'), table[:-1],
+                                             get_db_field_names(db.read('describe ' + table[:-1] + ';')))
     else:
         for player_role in ['batting', 'pitching']:
             for p_uid in db.read('select p_uid from direction_' + player_role + ' group by p_uid;'):
-                if player_is_on_this_team(ty_uid, p_uid, player_type, year):
-                    player_id = get_player_id(p_uid, player_role)
-                    player_stats[player_id] = {}
-                    player_stats[player_id]['standard_' + player_type + '_stats'] = \
-                        consolidate_traditional_player_stats(db.read(player_fielding_uid_query(p_uid, player_role,
-                                                                                               year))[0],
-                                                             get_db_field_names(db.read('describe player_fielding;')))
-                    break
+                p_uids = [p_uid[0]]
+                try:
+                    if player_is_on_this_team(ty_uid, db.read(
+                            player_fielding_uid_query(p_uid[0], player_role, year, selector='pf_uniqueidentifier'))[0],
+                                              player_type, year):
+                        if player_was_on_more_than_one_team(p_uid, player_type, year):
+                            p_uids.append(get_uid_of_player_for_this_team(ty_uid, p_uid, player_type, year))
+                        player_id = get_player_id(p_uid, player_role)
+                        player_stats[player_id] = {}
+                        player_stats[player_id]['standard_' + player_type + '_stats'] = {}
+                        for uid in p_uids:
+                            player_stats[player_id]['standard_' + player_type + '_stats']\
+                                [get_team_id(uid, player_type)] = consolidate_traditional_player_stats(
+                                db.read(player_fielding_uid_query(uid, player_role, year))[0],
+                                get_db_field_names(db.read('describe player_fielding;')))
+                except IndexError:
+                    continue
     db.close()
     return stringify_player_stats(player_stats, player_type)
 
@@ -64,11 +76,11 @@ def consolidate_pitch_fx(table_data, table_name, table_fields):
         return stringify_consolidated_pitch_fx(consolidate_pitch_fx_vertical(table_data, table_fields), 'vertical',
                                                table_name)
     elif table_name in ['direction_by_outcome_batting', 'field_by_outcome_batting', 'trajectory_by_outcome_batting',
-                        'pitch_usage', 'direction_by_outcome_pitching', 'field_by_outcome_pitching',
-                        'trajectory_by_outcome_pitching']:
+                        'pitch_usage_batting', 'pitch_usage_pitching', 'direction_by_outcome_pitching',
+                        'field_by_outcome_pitching', 'trajectory_by_outcome_pitching']:
         return stringify_consolidated_pitch_fx(consolidate_pitch_fx_horizontal(table_data, table_fields), 'horizontal',
                                                table_name)
-    else:  # [swing_rate_batting, strike_percent_batting, swing_rate_pitching, strike_percent_pitching, hbp]
+    else:  # [swing_rate_batting, strike_percent_batting, swing_rate_pitching, strike_percent_pitching, hbp_pitching, hbp_batting]
         return stringify_consolidated_pitch_fx(consolidate_pitch_fx_individual(table_data, table_fields, table_name),
                                                'individual', table_name)
 
@@ -76,13 +88,17 @@ def consolidate_pitch_fx(table_data, table_name, table_fields):
 def consolidate_pitch_fx_vertical(table_data, table_fields):
     stats = {'vr': {}, 'vl': {}}
     for record in table_data:
-        if record[4] not in stats[record[3]]:
-            stats[record[3]][record[4]] = {}
-        if record[5] not in stats[record[3]][record[4]]:
-            stats[record[3]][record[4]][record[5]] = {}
+        match_up = record[3]
+        count = record[4]
+        outcome = record[5]
+        if count not in stats[match_up]:
+            stats[match_up][count] = {}
+        if outcome not in stats[match_up][count]:
+            stats[match_up][count][outcome] = {}
         for pitch in range(len(record[6:-1])):
-            if record[pitch+6] is not None:
-                stats[record[3]][record[4]][record[5]][table_fields[pitch+6]] = float(record[pitch+6])
+            pitch_type = pitch+6
+            if record[pitch_type] is not None:
+                stats[match_up][count][outcome][table_fields[pitch_type]] = float(record[pitch_type])
     return stats
 
 
@@ -98,7 +114,7 @@ def consolidate_pitch_fx_horizontal(table_data, table_fields):
 
 def consolidate_pitch_fx_individual(table_data, table_fields, table_name):
     stats = {'vr': {}, 'vl': {}}
-    if table_name == 'hbp':
+    if 'hbp' in table_name:
         for record in table_data:
             for field in range(len(record[4:-1])):
                 if record[field+4] is not None:
@@ -118,12 +134,14 @@ def stringify_consolidated_pitch_fx(consolidated_dictionary, consolidation_type,
         for match_up, count_data in consolidated_dictionary.items():
             stringified_consolidated_dictionary += match_up + ':'
             for count, sub_headers in count_data.items():
-                stringified_consolidated_dictionary += count + '-'
+                stringified_consolidated_dictionary += count + '_'
                 for sub_header, pitch_types in sub_headers.items():
                     stringified_consolidated_dictionary += sub_header + '>'
                     for pitch_type, number in pitch_types.items():
                         stringified_consolidated_dictionary += pitch_type + '=' + str(number) + ','
                     stringified_consolidated_dictionary = stringified_consolidated_dictionary[:-1] + '+'
+                stringified_consolidated_dictionary = stringified_consolidated_dictionary[:-1] + ';'
+            stringified_consolidated_dictionary = stringified_consolidated_dictionary[:-1] + '%'
     elif consolidation_type == 'horizontal':
         for match_up, sub_headers in consolidated_dictionary.items():
             stringified_consolidated_dictionary += match_up + ':'
@@ -132,8 +150,9 @@ def stringify_consolidated_pitch_fx(consolidated_dictionary, consolidation_type,
                 for entity_type, entity in secondary_sub_headers.items():
                     stringified_consolidated_dictionary += entity_type + '=' + str(entity) + ','
                 stringified_consolidated_dictionary = stringified_consolidated_dictionary[:-1] + '+'
+            stringified_consolidated_dictionary = stringified_consolidated_dictionary[:-1] + '%'
     else:
-        if table_name == 'hbp':
+        if 'hbp' in table_name:
             for match_up, pitch_types in consolidated_dictionary.items():
                 stringified_consolidated_dictionary += match_up + ':'
                 for pitch_type, number in pitch_types.items():
@@ -141,15 +160,17 @@ def stringify_consolidated_pitch_fx(consolidated_dictionary, consolidation_type,
                         stringified_consolidated_dictionary += pitch_type + '=' + str(number) + ','
                     else:
                         stringified_consolidated_dictionary += 'None,'
-                stringified_consolidated_dictionary = stringified_consolidated_dictionary[:-1] + '+'
+                    stringified_consolidated_dictionary = stringified_consolidated_dictionary[:-1] + '+'
+                stringified_consolidated_dictionary = stringified_consolidated_dictionary[:-1] + '%'
         else:
             for match_up, count_data in consolidated_dictionary.items():
                 stringified_consolidated_dictionary += match_up + ':'
                 for count, pitch_types in count_data.items():
-                    stringified_consolidated_dictionary += count + '-'
+                    stringified_consolidated_dictionary += count + '_'
                     for pitch_type, number in pitch_types.items():
                         stringified_consolidated_dictionary += pitch_type + '=' + str(number) + ','
                     stringified_consolidated_dictionary = stringified_consolidated_dictionary[:-1] + '+'
+                stringified_consolidated_dictionary = stringified_consolidated_dictionary[:-1] + '%'
     return stringified_consolidated_dictionary[:-1]
 
 
@@ -183,21 +204,68 @@ def get_player_id(p_uid, player_type):
 def player_is_on_this_team(ty_uid, p_uid, player_type, year):
     player_on_team = False
     db = DatabaseConnection(sandbox_mode=True)
-    for team_id in db.read('select pt_uniqueidentifier from player_' + player_type + ' where p' + player_type[0]
-                           + '_uniqueidentifier = ' + str(p_uid[0]) + ' and year = ' + str(year) + ';'):
-        print(team_id[0], ' == ', db.read('select teamId from team_years where ty_uniqueidentifier = ' + str(ty_uid) + ';')[0][0])
-        if team_id[0] == db.read('select teamId from team_years where ty_uniqueidentifier = ' + str(ty_uid) + ';')[0][0]:
-            print('\t\t\tFound a player')
-            player_on_team = True
-            break
+    this_players_uid_corresponding_team_id = \
+        db.read('select teamId from player_teams where pt_uniqueidentifier = (select pt_uniqueidentifier from player_'
+                + player_type + ' where p' + player_type[0] + '_uniqueidentifier = ' + str(p_uid[0]) + ' and year = '
+                + str(year) + ');')[0][0]
+    if this_players_uid_corresponding_team_id == db.read('select teamId from team_years where ty_uniqueidentifier = '
+                                                         + str(ty_uid) + ';')[0][0]:
+        player_on_team = True
+    elif this_players_uid_corresponding_team_id == 'TOT':
+        for pt_uid in db.read('select pt_uniqueidentifier from player_teams where playerId = (select playerId from '
+                              'player_teams where pt_uniqueidentifier = (select pt_uniqueidentifier from player_'
+                              + player_type + ' where year = ' + str(year) + ' and p' + player_type[0]
+                              + '_uniqueidentifier = ' + str(p_uid[0]) + '));'):
+            if db.read('select teamId from team_years where ty_uniqueidentifier = ' + str(ty_uid) + ';')[0][0] == \
+                    db.read('select teamId from player_teams where pt_uniqueidentifier = ' + str(pt_uid[0]) + ';')[0][0]:
+                player_on_team = True
     db.close()
     return player_on_team
 
 
-def player_fielding_uid_query(p_uid, player_type, year):
-    return 'select * from player_fielding where pf_uniqueidentifier = (select pf_uniqueidentifier from ' \
-           'player_fielding where pt_uniqueidentifier = (select pt_uniqueidentifier from player_' + player_type\
-           + ' where p' + player_type[0] + '_uniqueidentifier = ' + str(p_uid[0]) + ') and year = ' + str(year) + ');'
+def player_was_on_more_than_one_team(p_uid, player_type, year):
+    db = DatabaseConnection(sandbox_mode=True)
+    this_players_uid_corresponding_team_id = \
+        db.read('select teamId from player_teams where pt_uniqueidentifier = (select pt_uniqueidentifier from player_'
+                + player_type + ' where p' + player_type[0] + '_uniqueidentifier = ' + str(p_uid[0]) + ' and year = '
+                + str(year) + ');')[0][0]
+    db.close()
+    if this_players_uid_corresponding_team_id == 'TOT':
+        return True
+    else:
+        return False
 
 
-# print(consolidate_player_stats('fielding'))
+def get_uid_of_player_for_this_team(ty_uid, p_uid, player_type, year):
+    db = DatabaseConnection(sandbox_mode=True)
+    uid = db.read('select p' + player_type[0] + '_uniqueidentifier from player_' + player_type + ' where year = '
+                  + str(year) + ' and pt_uniqueidentifier = (select pt_uniqueidentifier from player_teams where '
+                  'playerId = (select playerId from player_teams where pt_uniqueidentifier = (select '
+                  'pt_uniqueidentifier from player_' + player_type + ' where p' + player_type[0] + '_uniqueidentifier '
+                  '= ' + str(p_uid[0]) + ')) and teamId = (select teamId from team_years where ty_uniqueidentifier = '
+                  + str(ty_uid) + '));')[0][0]
+    db.close()
+    return uid
+
+
+def player_fielding_uid_query(p_uid, player_type, year, selector='*'):
+    if selector == '*':
+        return 'select * from player_fielding where pf_uniqueidentifier = (select pf_uniqueidentifier from ' \
+               'player_fielding where pt_uniqueidentifier = (select pt_uniqueidentifier from player_' + player_type \
+               + ' where p' + player_type[0] + '_uniqueidentifier = ' + str(p_uid) + ') and year = ' + str(year) + ');'
+    else:
+        return 'select pf_uniqueidentifier from player_fielding where pt_uniqueidentifier = (select ' \
+               'pt_uniqueidentifier from player_' + player_type + ' where p' + player_type[0] + '_uniqueidentifier = ' \
+               + str(p_uid) + ') and year = ' + str(year) + ';'
+
+
+def get_team_id(uid, player_type):
+    db = DatabaseConnection(sandbox_mode=True)
+    team_id = db.read('select teamId from player_teams where pt_uniqueidentifier = (select pt_uniqueidentifier from '
+                      'player_' + player_type + ' where p' + player_type[0] + '_uniqueidentifier = ' + str(uid)
+                      + ')')[0][0]
+    db.close()
+    return team_id
+
+
+# print(consolidate_player_stats(11, 'pitching', 2017))

@@ -60,4 +60,4 @@ def determine_pitcher_roles_year(year):
     driver_logger.log("\t\tTime = " + total_time)
 
 
-# determine_pitcher_roles_year(1971)
+# determine_pitcher_roles_year(2017)

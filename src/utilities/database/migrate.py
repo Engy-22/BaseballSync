@@ -75,7 +75,7 @@ def migrate_all(db_name):
             for line in table_defs:
                 table_name = line.split('create table ')[1].split(' (')[0]
                 executor.submit(db.write('insert into ' + db_name + '.' + table_name + ' select * from ' + db_name
-                                              + '_sandbox.' + table_name + ';'))
+                                         + '_sandbox.' + table_name + ';'))
     else:
         db = PitchFXDatabaseConnection(sandbox_mode=True)
         try:
@@ -92,7 +92,7 @@ def migrate_all(db_name):
                         fields += column[0] + ' ' + column[1] + ', '
                     db.write('create table ' + db_name + '.' + table[0] + ' (' + fields[:-2] + ');')
                 executor.submit(db.write('insert into ' + db_name + '.' + table[0] + ' select * from ' + db_name
-                                              + '_sandbox.' + table[0] + ';'))
+                                         + '_sandbox.' + table[0] + ';'))
     db.close()
 
 

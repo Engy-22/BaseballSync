@@ -61,9 +61,7 @@ def format_data(info):
     this_string = ''
     players_dict = {}
     for data_type, string_dicts in info.items():
-        print(data_type)
         for player_id, stringified_data in string_dicts.items():
-            print('\t' + player_id)
             if player_id not in players_dict:
                 players_dict[player_id] = stringified_data + '|'
             else:

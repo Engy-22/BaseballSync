@@ -22,16 +22,20 @@ def team_fielding_file_constructor(year):
     logger.log("Downloading " + str(year) + " team fielding positions || Timestamp: " + datetime.datetime.today()
                .strftime('%Y-%m-%d %H:%M:%S'))
     logger.log("\tDownloading team pages")
-    with open(os.path.join("..", "..", "baseball-sync", "background", "yearTeams.txt"), 'r') as year_file:
-        with ThreadPoolExecutor(os.cpu_count()) as executor:
-            for line in year_file:
-                if str(year) in line:
-                    temp_line = line.split(',')[1:-1]
-                    for team in temp_line:
-                        split_team = team.split(';')
-                        if "TOT" not in split_team:
-                            executor.submit(load_url, year, split_team[0], split_team[1])
-                    break
+    try:
+        year_file = open(os.path.join("..", "background", "yearTeams.txt"), 'r')
+    except FileNotFoundError:
+        year_file = open(os.path.join("..", "..", "..", "background", "yearTeams.txt"), 'r')
+    with ThreadPoolExecutor(os.cpu_count()) as executor:
+        for line in year_file:
+            if str(year) in line:
+                temp_line = line.split(',')[1:-1]
+                for team in temp_line:
+                    split_team = team.split(';')
+                    if "TOT" not in split_team:
+                        executor.submit(load_url, year, split_team[0], split_team[1])
+                year_file.close()
+                break
     logger.log("\t\tTime = " + time_converter(time.time() - start_time))
     logger.log("\tOrganizing team position data")
     write_time = time.time()
@@ -63,11 +67,17 @@ def write_to_file(year):
                     position_summary = row.split('data-stat="pos_summary" >')[1].split('<')[0]
                     if '-' in position_summary:
                         positions = position_summary.split('-')
-                        for i in range(len(positions)):
-                            if i != len(positions)-1:
-                                this_string += positions[i] + ","
+                        for position_index in range(len(positions)):
+                            if this_is_position_player_pitching(primary_keys[-1], positions, position_index, team_id,
+                                                                year) or \
+                                    this_is_pitcher_playing_in_the_field(primary_keys[-1], positions, position_index,
+                                                                         team_id, year):
+                                continue  # don't give positions players RP eligibility who threw mop-up innings
                             else:
-                                this_string += positions[i]
+                                if position_index != len(positions)-1:
+                                    this_string += positions[position_index] + ","
+                                else:
+                                    this_string += positions[position_index]
                     else:
                         this_string += position_summary
                     this_string += '"'
@@ -77,9 +87,43 @@ def write_to_file(year):
                                    + this_string.split(',')[0] + ' and TY_uniqueidentifier = ' + ty_uid + ';')) == 0:
                         db.write('insert into player_positions (PPos_uniqueidentifier, playerId, positions, '
                                  'TY_uniqueidentifier) values (default, ' + this_string + ', ' + ty_uid + ');')
+                    else:
+                        split_positions = this_string.split(',')[1:]
+                        if split_positions[-1] == '"':
+                            del split_positions[-1]
+                            split_positions[-1] += '"'
+                        db.write('update player_positions set positions = ' + ','.join(split_positions) + ' where '
+                                 'playerId = ' + this_string.split(',')[0] + ' and TY_uniqueidentifier = ' + ty_uid
+                                 + ';')
         except IndexError:
             pass
         db.close()
 
 
-# team_fielding_file_constructor(2012)
+def this_is_position_player_pitching(player_id, position_list, position_index, team_id, year):
+    this_is_a_position_player_pitching = False
+    if position_list[position_index] == 'P' and \
+            any(position in position_list for position in ['C', '1B', '2B', '3B', 'SS', 'LF', 'CF', 'RF', 'DH']):
+        db = DatabaseConnection(sandbox_mode=True)
+        if float(db.read('select ip from player_pitching where year = ' + str(year) + ' and pt_uniqueidentifier = '
+                         '(select pt_uniqueidentifier from player_teams where playerId = "' + player_id + '" and teamId'
+                         ' = "' + team_id + '");')[0][0]) < 10.0:
+            this_is_a_position_player_pitching = True
+        db.close()
+    return this_is_a_position_player_pitching
+
+
+def this_is_pitcher_playing_in_the_field(player_id, position_list, position_index, team_id, year):
+    this_is_a_position_player_pitching = False
+    if position_list[position_index] != 'P' and 'P' in position_list:
+        db = DatabaseConnection(sandbox_mode=True)
+        where_clause = 'where year = ' + str(year) + ' and pt_uniqueidentifier = (select pt_uniqueidentifier from' \
+                       ' player_teams where playerId = "' + player_id + '" and teamId = "' + team_id + '");'
+        if float(db.read('select ip from player_pitching ' + where_clause)[0][0]) >= 10.0:
+            if int(db.read('select pa from player_batting ' + where_clause)[0][0]) < 25:
+                this_is_a_position_player_pitching = True
+        db.close()
+    return this_is_a_position_player_pitching
+
+
+# team_fielding_file_constructor(2017)

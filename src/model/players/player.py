@@ -56,36 +56,36 @@ class Player:
         db.close()
         return throws_with
 
-    def retrieve_batting_stats(self):
-        try:
-            tables_file = open(os.path.join("..", "background", "batting_pitch_fx_tables.csv"))
-        except FileNotFoundError:
-            tables_file = open(os.path.join("..", "..", "background", "batting_pitch_fx_tables.csv"))
-        tables = tables_file.readlines()
-        tables_file.close()
-        db = DatabaseConnection(sandbox_mode=False)
-        # for table in tables:
-        #     print(table, db.read('select * from ' + table + ' where playerid = "' + self.player_id + '" and year = '
-        #                          + str(self.year) + ';'))
-        db.close()
-        self.batting_stats = 'batting stats'
-
-    def retrieve_pitching_stats(self):
-        try:
-            tables_file = open(os.path.join("..", "background", "pitching_pitch_fx_tables.csv"))
-        except FileNotFoundError:
-            tables_file = open(os.path.join("..", "..", "background", "pitching_pitch_fx_tables.csv"))
-        tables = tables_file.readlines()
-        tables_file.close()
-        db = DatabaseConnection(sandbox_mode=False)
-        # for table in tables:
-        #     print(table, db.read('select * from ' + table[:-1] + ' where playerid = "' + self.player_id
-        #                          + '" and year = ' + str(self.year) + ';'))
-        db.close()
-        self.pitching_stats = 'pitching stats'
-
-    def retrieve_fielding_stats(self):
-        self.fielding_stats = 'fielding stats'
+    # def retrieve_batting_stats(self):
+    #     try:
+    #         tables_file = open(os.path.join("..", "background", "batting_pitch_fx_tables.csv"))
+    #     except FileNotFoundError:
+    #         tables_file = open(os.path.join("..", "..", "background", "batting_pitch_fx_tables.csv"))
+    #     tables = tables_file.readlines()
+    #     tables_file.close()
+    #     db = DatabaseConnection(sandbox_mode=False)
+    #     # for table in tables:
+    #     #     print(table, db.read('select * from ' + table + ' where playerid = "' + self.player_id + '" and year = '
+    #     #                          + str(self.year) + ';'))
+    #     db.close()
+    #     self.batting_stats = 'batting stats'
+    #
+    # def retrieve_pitching_stats(self):
+    #     try:
+    #         tables_file = open(os.path.join("..", "background", "pitching_pitch_fx_tables.csv"))
+    #     except FileNotFoundError:
+    #         tables_file = open(os.path.join("..", "..", "background", "pitching_pitch_fx_tables.csv"))
+    #     tables = tables_file.readlines()
+    #     tables_file.close()
+    #     db = DatabaseConnection(sandbox_mode=False)
+    #     # for table in tables:
+    #     #     print(table, db.read('select * from ' + table[:-1] + ' where playerid = "' + self.player_id
+    #     #                          + '" and year = ' + str(self.year) + ';'))
+    #     db.close()
+    #     self.pitching_stats = 'pitching stats'
+    #
+    # def retrieve_fielding_stats(self):
+    #     self.fielding_stats = 'fielding stats'
 
     def construct_image_url(self):
         return os.path.join('images', 'players', self.player_id)
@@ -97,6 +97,15 @@ class Player:
 
     def set_year_positions(self, year_positions):
         self.year_positions = year_positions
+
+    def set_batting_stats(self, batting_stats):
+        self.batting_stats = batting_stats
+
+    def set_pitching_stats(self, pitching_stats):
+        self.pitching_stats = pitching_stats
+
+    def set_fielding_stats(self, fielding_stats):
+        self.fielding_stats = fielding_stats
 ### END SETTERS ###
 
 ### Getters ###
