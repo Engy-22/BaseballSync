@@ -55,34 +55,32 @@ def consolidate_player_stats(ty_uid, player_type, year):
                 except IndexError:
                     continue
     db.close()
-    return stringify_player_stats(player_stats, player_type)
+    return player_stats
+    # return stringify_player_stats(player_stats, player_type)
 
 
 def consolidate_traditional_player_stats(table_data, table_fields):
     stats_reached = False
-    stat_string = ''
+    stat_dict = {}
     for field_num in range(len(table_fields)):
         if stats_reached:
-            stat_string += table_fields[field_num] + ':' + str(table_data[field_num]) + ','
+            stat_dict[table_fields[field_num]] = table_data[field_num]
         else:
             if table_fields[field_num] == 'complete_year':
                 stats_reached = True
-    return stat_string[:-1]
+    return stat_dict
 
 
 def consolidate_pitch_fx(table_data, table_name, table_fields):
     if table_name in ['direction_batting', 'field_batting', 'outcomes_batting', 'trajectory_batting',
                       'direction_pitching', 'field_pitching', 'outcomes_pitching', 'trajectory_pitching']:
-        return stringify_consolidated_pitch_fx(consolidate_pitch_fx_vertical(table_data, table_fields), 'vertical',
-                                               table_name)
+        return consolidate_pitch_fx_vertical(table_data, table_fields)
     elif table_name in ['direction_by_outcome_batting', 'field_by_outcome_batting', 'trajectory_by_outcome_batting',
                         'pitch_usage_batting', 'pitch_usage_pitching', 'direction_by_outcome_pitching',
                         'field_by_outcome_pitching', 'trajectory_by_outcome_pitching']:
-        return stringify_consolidated_pitch_fx(consolidate_pitch_fx_horizontal(table_data, table_fields), 'horizontal',
-                                               table_name)
+        return consolidate_pitch_fx_horizontal(table_data, table_fields)
     else:  # [swing_rate_batting, strike_percent_batting, swing_rate_pitching, strike_percent_pitching, hbp_pitching, hbp_batting]
-        return stringify_consolidated_pitch_fx(consolidate_pitch_fx_individual(table_data, table_fields, table_name),
-                                               'individual', table_name)
+        return consolidate_pitch_fx_individual(table_data, table_fields, table_name)
 
 
 def consolidate_pitch_fx_vertical(table_data, table_fields):
@@ -126,70 +124,6 @@ def consolidate_pitch_fx_individual(table_data, table_fields, table_name):
                 if record[field+5] is not None:
                     stats[record[3]][record[4]][table_fields[field+5]] = float(record[field+5])
     return stats
-
-
-def stringify_consolidated_pitch_fx(consolidated_dictionary, consolidation_type, table_name):
-    stringified_consolidated_dictionary = ''
-    if consolidation_type == 'vertical':
-        for match_up, count_data in consolidated_dictionary.items():
-            stringified_consolidated_dictionary += match_up + ':'
-            for count, sub_headers in count_data.items():
-                stringified_consolidated_dictionary += count + '_'
-                for sub_header, pitch_types in sub_headers.items():
-                    stringified_consolidated_dictionary += sub_header + '>'
-                    for pitch_type, number in pitch_types.items():
-                        stringified_consolidated_dictionary += pitch_type + '=' + str(number) + ','
-                    stringified_consolidated_dictionary = stringified_consolidated_dictionary[:-1] + '+'
-                stringified_consolidated_dictionary = stringified_consolidated_dictionary[:-1] + ';'
-            stringified_consolidated_dictionary = stringified_consolidated_dictionary[:-1] + '%'
-    elif consolidation_type == 'horizontal':
-        for match_up, sub_headers in consolidated_dictionary.items():
-            stringified_consolidated_dictionary += match_up + ':'
-            for sub_header, secondary_sub_headers in sub_headers.items():
-                stringified_consolidated_dictionary += sub_header + '>'
-                for entity_type, entity in secondary_sub_headers.items():
-                    stringified_consolidated_dictionary += entity_type + '=' + str(entity) + ','
-                stringified_consolidated_dictionary = stringified_consolidated_dictionary[:-1] + '+'
-            stringified_consolidated_dictionary = stringified_consolidated_dictionary[:-1] + '%'
-    else:
-        if 'hbp' in table_name:
-            for match_up, pitch_types in consolidated_dictionary.items():
-                stringified_consolidated_dictionary += match_up + ':'
-                for pitch_type, number in pitch_types.items():
-                    if pitch_type:
-                        stringified_consolidated_dictionary += pitch_type + '=' + str(number) + ','
-                    else:
-                        stringified_consolidated_dictionary += 'None,'
-                    stringified_consolidated_dictionary = stringified_consolidated_dictionary[:-1] + '+'
-                stringified_consolidated_dictionary = stringified_consolidated_dictionary[:-1] + '%'
-        else:
-            for match_up, count_data in consolidated_dictionary.items():
-                stringified_consolidated_dictionary += match_up + ':'
-                for count, pitch_types in count_data.items():
-                    stringified_consolidated_dictionary += count + '_'
-                    for pitch_type, number in pitch_types.items():
-                        stringified_consolidated_dictionary += pitch_type + '=' + str(number) + ','
-                    stringified_consolidated_dictionary = stringified_consolidated_dictionary[:-1] + '+'
-                stringified_consolidated_dictionary = stringified_consolidated_dictionary[:-1] + '%'
-    return stringified_consolidated_dictionary[:-1]
-
-
-def stringify_player_stats(player_stats, player_type):
-    stringified_player_stats = {}
-    for player_id, info in player_stats.items():
-        this_string = ''
-        for stat_type, stats in info.items():
-            this_string += stat_type + '@'
-            if isinstance(stats, dict):
-                for table_name, second_stats in stats.items():
-                    this_string += table_name + '#' + second_stats + '^'
-            else:
-                this_string += stats
-        if player_type != 'fielding':
-            stringified_player_stats[player_id] = this_string[:-1]
-        else:
-            stringified_player_stats[player_id] = this_string
-    return stringified_player_stats
 
 
 def get_player_id(p_uid, player_type):
@@ -268,4 +202,4 @@ def get_team_id(uid, player_type):
     return team_id
 
 
-# print(consolidate_player_stats(11, 'pitching', 2017))
+# consolidate_player_stats(11, 'pitching', 2017)

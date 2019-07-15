@@ -1,7 +1,7 @@
 import os
 from utilities.database.wrappers.baseball_data_connection import DatabaseConnection
-from import_data.consolidata.team_roster_info import consolidate_hitter_spots, consolidate_player_positions,\
-    write_roster_info
+from import_data.consolidata.team_roster_info import consolidate_hitter_spots, consolidate_player_positions
+from import_data.consolidata.write_consolidated_data import write_roster_info
 from import_data.consolidata.player_stats import consolidate_player_stats
 from utilities.logger import Logger
 from utilities.properties import sandbox_mode, log_prefix, import_driver_logger as driver_logger
@@ -28,18 +28,17 @@ def consolidate_data(year):
                                       'pitcher_stats': consolidate_player_stats(ty_uid[0], 'pitching', year),
                                       'fielder_stats': consolidate_player_stats(ty_uid[0], 'fielding', year)})
         logger.log('\t\tTime = ' + time_converter(time.time() - team_start_time))
-        # break
     db.close()
     total_time = time_converter(time.time() - start_time)
     logger.log("Done consolidating team data: Time = " + total_time)
     driver_logger.log("\t\tTime = " + total_time)
 
 
-consolidate_data(2017)
-# ty_uid = 11
-# temp_year = 2017
-# write_roster_info(ty_uid, {'hitter_spots': consolidate_hitter_spots(ty_uid),
-#                            'player_positions': consolidate_player_positions(ty_uid),
-#                            'batter_stats': consolidate_player_stats(ty_uid, 'batting', temp_year),
-#                            'pitcher_stats': consolidate_player_stats(ty_uid, 'pitching', temp_year),
-#                            'fielder_stats': consolidate_player_stats(ty_uid, 'fielding', temp_year)})
+# consolidate_data(2017)
+ty_uid = 2
+temp_year = 2017
+write_roster_info(ty_uid, {'hitter_spots': consolidate_hitter_spots(ty_uid),
+                           'player_positions': consolidate_player_positions(ty_uid),
+                           'batter_stats': consolidate_player_stats(ty_uid, 'batting', temp_year),
+                           'pitcher_stats': consolidate_player_stats(ty_uid, 'pitching', temp_year),
+                           'fielder_stats': consolidate_player_stats(ty_uid, 'fielding', temp_year)})
