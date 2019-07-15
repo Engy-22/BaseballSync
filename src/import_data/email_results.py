@@ -39,8 +39,7 @@ def get_driver_results():
 
 def get_csv_results():
     results = ''
-    with open(os.path.join("..", "..", "baseball-sync", "src", "import_data", "player_data", "pitch_fx",
-                           "multiple_players.csv")) as file:
+    with open(os.path.join("..", "src", "import_data", "player_data", "pitch_fx", "multiple_players.csv")) as file:
         for row in file:
             results += row
         if len(results) > 0:

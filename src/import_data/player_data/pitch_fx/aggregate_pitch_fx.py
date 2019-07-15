@@ -575,7 +575,7 @@ def change_multi_team_players_uids(year, month, day, player_type):
         baseball_data_db = DatabaseConnection(sandbox_mode=True)
         try:
             pt_uid_tot = baseball_data_db.read('select pt_uniqueidentifier from player_teams where playerId = "'
-                                               + uid_player[1] + '" and teamId = "TOT";')[0][0]
+                                               + uid_player[0] + '" and teamId = "TOT";')[0][0]
         except IndexError:
             baseball_data_db.close()
             continue
@@ -586,13 +586,13 @@ def change_multi_team_players_uids(year, month, day, player_type):
                                       + ';')[0][0]
             baseball_data_db.close()
             pitch_fx_db = PitchFXDatabaseConnection(sandbox_mode=True)
-            pitch_fx_db.write('update ' + player_type[:-3] + 'er_pitches set p' + player_type[0] + '_uniqueidentifier ='
-                              ' ' + str(p_uid_for_tot_stats) + ' where playerId = "' + uid_player[1] + '";')
+            pitch_fx_db.write('update ' + player_type[:-3] + 'er_pitches set p' + player_type[0] + '_uniqueidentifier'
+                              ' = ' + str(p_uid_for_tot_stats) + ' where playerId = "' + uid_player[0] + '";')
             pitch_fx_db.close()
         except IndexError:
             baseball_data_db.close()
     logger.log('\t\tTime = ' + time_converter(time.time() - start_time))
 
 
-# aggregate_pitch_fx(2017)
-# aggregate(2017, None, None, 'grayso01', 'pitching')
+aggregate_pitch_fx(2017)
+# aggregate(2017, None, None, 'breslcr01', 'pitching')
