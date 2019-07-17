@@ -164,7 +164,7 @@ def write_to_db(team_id, stats, trajectory, manager_ids, year, park_name):
     if len(db.read('select parkId from ballparks where parkName = "' + park_name + '";')) == 0:
         db.write('alter table ballparks drop index parkId')
         db.write('insert into ballparks (parkId, parkName) values (default, "' + park_name + '");')
-        db.write('alter table ballparks add index(parkId)')
+        db.write('alter table ballparks add index(parkId);')
     if len(db.read('select BY_uniqueidentifier from ballpark_years where teamId = "' + team_id + '" and year = '
                    + str(year) + ';')) == 0:
         db.write('alter table ballpark_years drop index BY_uniqueidentifier')
@@ -179,7 +179,7 @@ def write_to_db(team_id, stats, trajectory, manager_ids, year, park_name):
         db.write('insert into ballpark_years (BY_uniqueidentifier, teamId, year, ' + field_list + 'parkId) values '
                  '(default, "' + team_id + '", ' + str(year) + ', ' + value_list + '(select parkId from ballparks '
                  'where parkName = "' + park_name + '"));')
-        db.write('alter table ballpark_years add index(BY_uniqueidentifier)')
+        db.write('alter table ballpark_years add index(BY_uniqueidentifier);')
     else:
         sets = ''
         for key, value in stats.items():
