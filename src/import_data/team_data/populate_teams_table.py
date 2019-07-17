@@ -14,10 +14,11 @@ def populate_teams_table(year):
     driver_logger.log('\tPopulating teams table')
     print("Populating teams table")
     start_time = time.time()
-    logger.log('Begin populating teams table for ' + str(year) + ' || Timestamp: ' + datetime.datetime.today()\
+    logger.log('Begin populating teams table for ' + str(year) + ' || Timestamp: ' + datetime.datetime.today()
                .strftime('%Y-%m-%d %H:%M:%S'))
     with open(os.path.join("..", "background", "yearTeams.txt"), 'rt') as file:
         db = DatabaseConnection(sandbox_mode)
+        db.write('ALTER TABLE teams DROP INDEX teamId;')
         for line in file:
             if str(year) in line:
                 temp_line = line.split(',')[1:-1]
@@ -26,6 +27,7 @@ def populate_teams_table(year):
                     db.write('insert into teams (teamId, teamName) values ("' + team_id + '", "'
                              + translate_team_name(team_id).replace("'", "\'") + '");')
                 break
+    db.write('ALTER TABLE teams ADD INDEX(teamId);')
     db.close()
     total_time = time.time() - start_time
     logger.log('Populating teams table completed: ' + time_converter(total_time))

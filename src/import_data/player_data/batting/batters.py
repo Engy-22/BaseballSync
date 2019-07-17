@@ -162,7 +162,9 @@ def write_to_db(player_id, player_attributes):
         values += '", "' + value
     db = DatabaseConnection(sandbox_mode)
     if len(db.read('select * from players where playerid = "' + player_id + '";')) == 0:
+        db.write('ALTER TABLE players DROP INDEX playerId;')
         db.write('insert into players (playerid ' + fields + ') values ("' + player_id + values + '");')
+        db.write('ALTER TABLE players ADD INDEX(playerId);')
     db.close()
 
 

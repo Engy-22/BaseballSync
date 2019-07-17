@@ -10,7 +10,8 @@ logger = Logger(os.path.join(log_prefix, "import_data", "league_table_constructo
 def league_table_constructor():
     driver_logger.log('\tPopulating leagues table (all-time)')
     print('Populating leagues table (all-time)')
-    logger.log('Begin populating leagues table || Timestamp: ' + datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S'))
+    logger.log('Begin populating leagues table || Timestamp: '
+               + datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S'))
     leagues = {'NL': 'National League',
                'AL': 'American League',
                'AA': 'American Association',
@@ -19,8 +20,10 @@ def league_table_constructor():
                'UA': 'Union Association',
                'NA': 'National Association'}
     db = DatabaseConnection(sandbox_mode)
+    db.write('ALTER TABLE leagues DROP INDEX leagueId;')
     for league_id, league_name in leagues.items():
         db.write('insert into leagues (leagueId, leagueName) values ("' + league_id + '", "' + league_name + '");')
+    db.write('ALTER TABLE leagues ADD INDEX(leagueId);')
     db.close()
     logger.log('Populating leagues table completed\n\n')
     driver_logger.log('\t\tPopulating leagues table completed')

@@ -34,7 +34,9 @@ def get_year_data(year):
     stat_list = {"batting": batting_list, "pitching": pitching_list, "fielding": fielding_list}
     db = DatabaseConnection(sandbox_mode)
     if len(db.read('select * from years where year = ' + str(year) + ';')) == 0:
+        db.write('alter table years drop index year;')
         db.write('insert into years (year) values (' + str(year) + ');')
+        db.write('alter table years add index(year);')
     db.close()
     write_opening_day(year)
     download_start = time.time()

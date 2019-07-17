@@ -39,24 +39,19 @@ def consolidate_player_stats(ty_uid, player_type, year):
             for p_uid in db.read('select p_uid from direction_' + player_role + ' group by p_uid;'):
                 p_uids = [p_uid[0]]
                 try:
-                    if player_is_on_this_team(ty_uid, db.read(
-                            player_fielding_uid_query(p_uid[0], player_role, year, selector='pf_uniqueidentifier'))[0],
-                                              player_type, year):
+                    if player_is_on_this_team(ty_uid, db.read(player_fielding_uid_query(
+                            p_uid[0], player_role, year, selector='pf_uniqueidentifier'))[0], player_type, year):
                         if player_was_on_more_than_one_team(p_uid, player_type, year):
                             p_uids.append(get_uid_of_player_for_this_team(ty_uid, p_uid, player_type, year))
                         player_id = get_player_id(p_uid, player_role)
-                        player_stats[player_id] = {}
-                        player_stats[player_id]['standard_' + player_type + '_stats'] = {}
                         for uid in p_uids:
-                            player_stats[player_id]['standard_' + player_type + '_stats']\
-                                [get_team_id(uid, player_type)] = consolidate_traditional_player_stats(
+                            player_stats[player_id] = consolidate_traditional_player_stats(
                                 db.read(player_fielding_uid_query(uid, player_role, year))[0],
                                 get_db_field_names(db.read('describe player_fielding;')))
                 except IndexError:
                     continue
     db.close()
     return player_stats
-    # return stringify_player_stats(player_stats, player_type)
 
 
 def consolidate_traditional_player_stats(table_data, table_fields):
@@ -136,6 +131,8 @@ def get_player_id(p_uid, player_type):
 
 
 def player_is_on_this_team(ty_uid, p_uid, player_type, year):
+    # if p_uid[0] in [207]:
+    #     print(ty_uid, p_uid, player_type, year)
     player_on_team = False
     db = DatabaseConnection(sandbox_mode=True)
     this_players_uid_corresponding_team_id = \
@@ -150,8 +147,11 @@ def player_is_on_this_team(ty_uid, p_uid, player_type, year):
                               'player_teams where pt_uniqueidentifier = (select pt_uniqueidentifier from player_'
                               + player_type + ' where year = ' + str(year) + ' and p' + player_type[0]
                               + '_uniqueidentifier = ' + str(p_uid[0]) + '));'):
-            if db.read('select teamId from team_years where ty_uniqueidentifier = ' + str(ty_uid) + ';')[0][0] == \
-                    db.read('select teamId from player_teams where pt_uniqueidentifier = ' + str(pt_uid[0]) + ';')[0][0]:
+            if db.read('select count(*) from player_' + player_type + ' where year = ' + str(year) + ' and '
+                       'pt_uniqueidentifier = ' + str(pt_uid[0]) + ';')[0][0] > 0 and \
+                    (db.read('select teamId from team_years where ty_uniqueidentifier = ' + str(ty_uid) + ';')[0][0] ==
+                     db.read('select teamId from player_teams where pt_uniqueidentifier = ' + str(pt_uid[0])
+                             + ';')[0][0]):
                 player_on_team = True
     db.close()
     return player_on_team
@@ -171,6 +171,7 @@ def player_was_on_more_than_one_team(p_uid, player_type, year):
 
 
 def get_uid_of_player_for_this_team(ty_uid, p_uid, player_type, year):
+    # print(ty_uid, p_uid, player_type, year)
     db = DatabaseConnection(sandbox_mode=True)
     uid = db.read('select p' + player_type[0] + '_uniqueidentifier from player_' + player_type + ' where year = '
                   + str(year) + ' and pt_uniqueidentifier = (select pt_uniqueidentifier from player_teams where '
@@ -202,4 +203,4 @@ def get_team_id(uid, player_type):
     return team_id
 
 
-# consolidate_player_stats(11, 'pitching', 2017)
+# print(consolidate_player_stats(2, 'fielding', 2017))

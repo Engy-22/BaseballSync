@@ -19,6 +19,9 @@ def manager_table_constructor():
     logger.log('Begin populating teams table || Timestamp: ' + datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S'))
     table = str(bs(urllib.request.urlopen('https://www.baseball-reference.com/managers/'), 'html.parser'))
     rows = table.split('<tr')
+    db = DatabaseConnection(sandbox_mode=True)
+    db.write('ALTER TABLE managers DROP INDEX managerId;')
+    db.close()
     with ThreadPoolExecutor(os.cpu_count()) as executor:
         for row in rows:
             if '<td class="left" csk="' in row:
@@ -34,6 +37,9 @@ def manager_table_constructor():
                                                    + loses)
                 except AttributeError:
                     continue
+    db = DatabaseConnection(sandbox_mode=True)
+    db.write('ALTER TABLE managers ADD INDEX(managerId);')
+    db.close()
     total_time = time.time() - start_time
     logger.log('Constructing manager table completed: time = ' + time_converter(total_time))
     driver_logger.log('\t\tTime = ' + time_converter(total_time))

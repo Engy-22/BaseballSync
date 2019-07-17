@@ -425,7 +425,7 @@ def write_field_by_outcome(player_id, p_uid, year, matchup, field_by_outcome, pl
     db.close()
 
 
-def write_direction_by_outcome(player_id, p_uid, year, matchup, direction_by_outcome, player_type):
+def write_direction_by_outcome(player_id, p_uid, year, match_up, direction_by_outcome, player_type):
     db = DatabaseConnection(sandbox_mode=True)
     outcome_totals = {}
     for outcome, dictionary in direction_by_outcome.items():
@@ -437,24 +437,24 @@ def write_direction_by_outcome(player_id, p_uid, year, matchup, direction_by_out
         with ThreadPoolExecutor(os.cpu_count()) as executor:
             for direction, total in dictionary.items():
                 if len(db.read('select * from direction_by_outcome_' + player_type + ' where playerid = "' + player_id
-                               + '" and year = ' + str(year) + ' and matchup = "' + matchup + '" and outcome = "'
+                               + '" and year = ' + str(year) + ' and matchup = "' + match_up + '" and outcome = "'
                                + outcome + '";')) == 0:
                     executor.submit(db.write('insert into direction_by_outcome_' + player_type + ' (uid, playerid, '
                                              'year, matchup, outcome, ' + direction + ', p_uid) values (default, "'
-                                             + player_id + '", ' + str(year) + ', "' + matchup + '", "' + outcome + '",'
+                                             + player_id + '", ' + str(year) + ', "' + match_up + '", "' + outcome + '",'
                                              + str(round(total/outcome_totals[outcome], 3)) + ', ' + str(p_uid) + ');'))
                 else:
                     executor.submit(db.write('update direction_by_outcome_' + player_type + ' set ' + direction + ' = '
                                              + str(round(total/outcome_totals[outcome], 3)) + ' where playerid = "'
-                                             + player_id + '" and year = ' + str(year) + ' and matchup = "' + matchup
+                                             + player_id + '" and year = ' + str(year) + ' and matchup = "' + match_up
                                              + '" and outcome = "' + outcome + '";'))
     db.close()
 
 
-def sort_by_pitch_type(pitches, matchup, balls, strikes):
+def sort_by_pitch_type(pitches, match_up, balls, strikes):
     pitches_by_type = {}
     for pitch in pitches:
-        if pitch[5][:2] == matchup:
+        if pitch[5][:2] == match_up:
             if int(pitch[6][0]) == balls and int(pitch[6][-1]) == strikes:
                 if pitch[7] in pitches_by_type:
                     pitches_by_type[pitch[7]].append(pitch[8:])

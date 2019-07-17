@@ -33,19 +33,23 @@ class Team:
         return literal_eval(team_info)
 
     def retrieve_roster(self):
+        # print(self.team_info['fielder_stats'])
         roster = []
         for player_id, positions in self.team_info['player_positions'].items():
             roster.append(Player(player_id, self.team_id, self.year))
             roster[-1].set_year_positions(positions)
             if any(pitcher_type in roster[-1].get_year_positions() for pitcher_type in ['RP', 'SP']):
-                roster[-1].set_pitching_stats(self.team_info['pitcher_stats'][player_id])
-            #     if any(position in roster[-1].get_year_positions() for position in ['C', '1B', '2B', '3B', 'SS', 'LF',
-            #                                                                         'CF', 'RF', 'DH']):
-            #         roster[-1].set_batting_stats(self.team_info['batter_stats'])
-            #         roster[-1].set_batting_spots(self.team_info['hitter_spots'][player_id])
-            # else:
-            #     roster[-1].set_batting_stats(self.team_info['batter_stats'])
-            #     roster[-1].set_batting_spots(self.team_info['hitter_spots'][player_id])
+                try:  # this should be removed eventually
+                    roster[-1].set_pitching_stats(self.team_info['pitcher_stats'][player_id])
+                except KeyError:  # this should be removed eventually
+                    continue
+                if any(position in roster[-1].get_year_positions() for position in ['C', '1B', '2B', '3B', 'SS', 'LF',
+                                                                                    'CF', 'RF', 'DH']):
+                    # roster[-1].set_batting_stats(self.team_info['batter_stats'][player_id])
+                    roster[-1].set_batting_spots(self.team_info['hitter_spots'][player_id])
+            else:
+                # roster[-1].set_batting_stats(self.team_info['batter_stats'][player_id])
+                roster[-1].set_batting_spots(self.team_info['hitter_spots'][player_id])
         return roster
 
     def set_lineup(self, starting_pitcher, opposing_pitcher, use_dh):
@@ -115,4 +119,8 @@ class Team:
 ### GETTERS ###
 
 
-team = Team("CLE", 2017)
+# import time
+# from utilities.time_converter import time_converter
+# start_time = time.time()
+# team = Team("CLE", 2017)
+# print(time_converter(time.time() - start_time))
