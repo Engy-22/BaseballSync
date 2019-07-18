@@ -9,29 +9,22 @@ class Player:
     
     def __init__(self, player_id: str, team_id: str, year: int):
         self.player_id = player_id
-        self.first_name, self.last_name = self.retrieve_name()
+        self.first_name = None
+        self.last_name = None
         self.team_id = team_id
         self.year = year
-        self.primary_position = self.retrieve_primary_position()
-        self.secondary_positions = self.retrieve_secondary_positions()
+        self.primary_position = None
+        self.secondary_positions = None
         self.batting_spots = {}
         self.year_positions = []
-        self.throws_with = self.throwing_handedness()
-        self.bats_with = self.batting_handedness()
+        self.throws_with = None
+        self.bats_with = None
         self.batting_stats = None
         self.pitching_stats = None
         self.fielding_stats = None
-        self.image_url = self.construct_image_url()
+        self.image_url = None
 
 ### Retrievers ###
-    def retrieve_name(self):
-        db = DatabaseConnection(sandbox_mode)
-        name = db.read('select firstName, lastName from players where playerId = "' + self.player_id + '";')[0]
-        first_name = name[0]
-        last_name = name[1]
-        db.close()
-        return first_name, last_name
-
     def retrieve_primary_position(self):
         db = DatabaseConnection(sandbox_mode)
         position = db.read('select primaryPosition from players where playerId = "' + self.player_id + '";')[0][0]
@@ -49,12 +42,6 @@ class Player:
         bats_with = db.read('select batsWith from players where playerId = "' + self.player_id + '";')[0][0]
         db.close()
         return bats_with
-
-    def throwing_handedness(self):
-        db = DatabaseConnection(sandbox_mode)
-        throws_with = db.read('select throwsWith from players where playerId = "' + self.player_id + '";')[0][0]
-        db.close()
-        return throws_with
 
     # def retrieve_batting_stats(self):
     #     try:
@@ -106,6 +93,18 @@ class Player:
 
     def set_fielding_stats(self, fielding_stats):
         self.fielding_stats = fielding_stats
+
+    def set_throwing_handedness(self):
+        db = DatabaseConnection(sandbox_mode)
+        self.throws_with = db.read('select throwsWith from players where playerId = "' + self.player_id + '";')[0][0]
+        db.close()
+
+    def set_full_name(self):
+        db = DatabaseConnection(sandbox_mode)
+        name = db.read('select firstName, lastName from players where playerId = "' + self.player_id + '";')[0]
+        self.first_name = name[0]
+        self.last_name = name[1]
+        db.close()
 ### END SETTERS ###
 
 ### Getters ###
@@ -149,5 +148,8 @@ class Player:
         return self.batting_spots
 
     def get_full_name(self):
-        return self.first_name + ' ' + self.last_name
+        try:
+            return self.first_name + ' ' + self.last_name
+        except TypeError:
+            return None
 ### End Getters ###

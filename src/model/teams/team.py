@@ -37,29 +37,20 @@ class Team:
         roster = []
         for player_id, positions in self.team_info['player_positions'].items():
             roster.append(Player(player_id, self.team_id, self.year))
-            roster[-1].set_year_positions(positions)
-            if any(pitcher_type in roster[-1].get_year_positions() for pitcher_type in ['RP', 'SP']):
-                try:  # this should be removed eventually
-                    roster[-1].set_pitching_stats(self.team_info['pitcher_stats'][player_id])
-                except KeyError:  # this should be removed eventually
-                    continue
-                if any(position in roster[-1].get_year_positions() for position in ['C', '1B', '2B', '3B', 'SS', 'LF',
-                                                                                    'CF', 'RF', 'DH']):
-                    # roster[-1].set_batting_stats(self.team_info['batter_stats'][player_id])
-                    roster[-1].set_batting_spots(self.team_info['hitter_spots'][player_id])
-            else:
-                # roster[-1].set_batting_stats(self.team_info['batter_stats'][player_id])
-                roster[-1].set_batting_spots(self.team_info['hitter_spots'][player_id])
         return roster
 
     def set_lineup(self, starting_pitcher, opposing_pitcher, use_dh):
-        batting_order, positions = create_lineup(self.team_id, self.year, self.roster, starting_pitcher,
-                                                 opposing_pitcher.get_throwing_handedness(), use_dh)
+        batting_order, positions = create_lineup(self.team_id, self.year, self.roster, self.team_info, starting_pitcher,
+                                                 opposing_pitcher, use_dh)
         self.batting_order = batting_order
         self.defensive_lineup = positions
         self.pitcher = starting_pitcher
         for player in self.batting_order:
+            if not player.get_full_name():
+                player.set_full_name()
             print(player.get_full_name())
+        if not self.pitcher.get_full_name():
+            self.pitcher.set_full_name()
         print('SP:', self.pitcher.get_full_name(), '\n\n')
 ### END RETRIEVERS ###
 

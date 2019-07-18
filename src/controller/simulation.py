@@ -40,4 +40,4 @@ def determine_series_winner(away_team, away_wins, home_team, home_wins, games):
         return 'The ' + str(away_wins+home_wins) + ' series has ended in a tie'
 
 
-# simulation('LAD', 2017, 'CLE', 2017, 10)
+simulation('MIN', 2017, 'CLE', 2017, 1)

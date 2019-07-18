@@ -15,7 +15,8 @@ def simulate_game(game_num, away_team, home_team, away_year, home_year):
     driver_logger.log("Starting game " + str(game_num) + " simulation: " + away_team.get_team_id() + " @ "
                       + home_team.get_team_id())
     start_time = time.time()
-    logger.log("Starting game " + str(game_num) + " simulation: " + away_team.get_team_id() + " @ " + home_team.get_team_id())
+    logger.log("Starting game " + str(game_num) + " simulation: " + away_team.get_team_id() + " @ "
+               + home_team.get_team_id())
     game_data = {}
     game = Game(away_team.get_team_id(), home_team.get_team_id())
     league = League(home_team.get_team_id(), home_team.get_year())
