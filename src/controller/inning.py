@@ -9,16 +9,20 @@ from utilities.time_converter import time_converter
 logger = Logger(os.path.join(log_prefix, "controller", "inning.log"))
 
 
-def simulate_inning(game, lineup, place, pitcher, driver_logger):
+def simulate_inning(game, away_team_info, home_team_info, lineup, place, pitcher, driver_logger):
     inning_num = str(game.get_inning())
     driver_logger.log('\tInning ' + inning_num)
     start_time = time.time()
     inning = Inning()
     inning_data = {'top': {}, 'bottom': {}}
-    logger.log("Starting inning simulation: " + game.get_away_team() + " @ " + game.get_home_team() + " - " + inning_num)
+    batting_team = {'top': away_team_info, 'bottom': home_team_info}
+    pitching_team = {'bottom': away_team_info, 'top': home_team_info}
+    logger.log("Starting inning simulation: " + game.get_away_team() + " @ " + game.get_home_team() + " - "
+               + inning_num)
     for half in ['top', 'bottom']:
         inning.set_half_inning(half)
-        for key, value in simulate_half_inning(game, inning, lineup[half], place[half], pitcher[half]).items():
+        for key, value in simulate_half_inning(game, batting_team[half], pitching_team[half], inning, lineup[half],
+                                               place[half], pitcher[half]).items():
             inning_data[half][key] = value  # put the half inning data into the inning data dictionary
     game.increment_inning()
     total_time = time_converter(time.time() - start_time)
@@ -28,7 +32,7 @@ def simulate_inning(game, lineup, place, pitcher, driver_logger):
     return inning_data
 
 
-def simulate_half_inning(game, inning, lineup, place, pitcher):
+def simulate_half_inning(game, batting_team_info, pitching_team_info, inning, lineup, place, pitcher):
     start_time = time.time()
     inning_num = game.get_inning()
     half_inning = inning.get_half_inning()
@@ -37,7 +41,9 @@ def simulate_half_inning(game, inning, lineup, place, pitcher):
     while inning.get_outs() < 3:
         if inning_num == '9' and half_inning == 'bottom' and game.get_home_score() > game.get_away_score():
             return half_inning_data
-        plate_appearance_data = simulate_plate_appearance(lineup, place, pitcher, inning, logger)
+        plate_appearance_data = simulate_plate_appearance(batting_team_info['batter_stats'],
+                                                          pitching_team_info['pitcher_stats'], lineup, place, pitcher,
+                                                          inning, logger)
         if plate_appearance_data['increment_batter']:
             place = increment_lineup_place(place)
         inning.increment_outs(plate_appearance_data['outs'])

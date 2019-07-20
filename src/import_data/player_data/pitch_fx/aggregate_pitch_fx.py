@@ -594,5 +594,5 @@ def change_multi_team_players_uids(year, month, day, player_type):
     logger.log('\t\tTime = ' + time_converter(time.time() - start_time))
 
 
-aggregate_pitch_fx(2017)
+# aggregate_pitch_fx(2017)
 # aggregate(2017, None, None, 'breslcr01', 'pitching')

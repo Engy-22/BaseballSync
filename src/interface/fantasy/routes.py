@@ -1,5 +1,7 @@
-from flask import render_template, Blueprint
+import os
 import random
+import json
+from flask import render_template, Blueprint
 
 fantasy = Blueprint('fantasy', __name__)
 
@@ -24,4 +26,6 @@ def fantasy_season():
 
 @fantasy.route("/fantasy/simulsync")
 def simulsync():
-    return render_template('fantasy/simulsync.html', title="SimulSync")
+    with open(os.path.join('..', 'background', 'strike_zone.json')) as strike_zone_file:
+        strike_out_json = json.load(strike_zone_file)
+    return render_template('fantasy/simulsync.html', title="SimulSync", strike_zone_dimensions=strike_out_json)

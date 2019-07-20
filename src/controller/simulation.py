@@ -19,7 +19,8 @@ def simulation(away_team_id, away_year, home_team_id, home_year, games):
     away_team_wins = 0
     home_team_wins = 0
     for game in range(games):
-        game_data = simulate_game(game+1, away_team, home_team, away_year, home_year)
+        game_data = simulate_game(game+1, away_team, away_team.get_team_info(), home_team, home_team.get_team_info(),
+                                  away_year, home_year)
         if game_data['winner'] == away_team.get_team_id():
             away_team_wins += 1
         else:

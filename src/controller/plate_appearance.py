@@ -10,20 +10,28 @@ from utilities.time_converter import time_converter
 logger = Logger(os.path.join(log_prefix, "controller", "plate_appearance.log"))
 
 
-def simulate_plate_appearance(lineup, place, pitcher, inning, driver_logger):
+def simulate_plate_appearance(batting_info, pitching_info, lineup, place, pitcher, inning, driver_logger):
     driver_logger.log('\t\tPlate appearance ' + lineup[place].get_full_name() + " vs. " + pitcher.get_full_name())
     start_time = time.time()
     logger.log("Simulating plate appearance: " + lineup[place].get_full_name() + " vs. " + pitcher.get_full_name())
+    batter = lineup[place]
+    if not batter.get_batting_stats():
+        batter.set_batting_stats(batting_info[batter.get_player_id()])
+    if not pitcher.get_pitching_stats():
+        pitcher.set_pitching_stats(pitching_info[pitcher.get_player_id()])
     plate_appearance_data = {'increment_batter': True}
-    plate_appearance = PlateAppearance(lineup[place], pitcher)
-    while plate_appearance.get_balls() < 4 and plate_appearance.get_strikes() < 3 and plate_appearance.get_outcome() is None:
-        pitch_data = simulate_pitch(pitcher, lineup[place], plate_appearance.get_balls(), plate_appearance.get_strikes(),
-                                    inning, logger)
-################### random data ###################
+    plate_appearance = PlateAppearance(batter, pitcher)
+    batter_orientation = batter_handedness(batter, pitcher)
+    pitcher_orientation = pitcher_handedness(pitcher)
+    while plate_appearance.get_balls() < 4 and plate_appearance.get_strikes() < 3 and \
+            plate_appearance.get_outcome() is None:
+        pitch_data = simulate_pitch(pitcher, batter, batter_orientation, pitcher_orientation,
+                                    plate_appearance.get_balls(), plate_appearance.get_strikes(), logger)
         if pitch_data['ball_strike'] == 'ball':
             plate_appearance.increment_balls()
         else:
             plate_appearance.increment_strikes()
+################### random data ###################
     plate_appearance_data['runs'] = random.randint(0, 3)
     plate_appearance_data['hits'] = random.randint(0, 3)
     plate_appearance_data['errors'] = random.randint(0, 1)
@@ -40,3 +48,19 @@ def simulate_plate_appearance(lineup, place, pitcher, inning, driver_logger):
 def calculate_outs(outcome):
     if outcome is None:
         return 1
+
+
+def batter_handedness(batter, pitcher):
+    if not batter.get_batting_handedness():
+        batter.set_batting_handedness()
+    batter_orientation = batter.get_batting_handedness()
+    if batter_orientation == 'B':
+        batter_orientation = 'L' if pitcher.get_throwing_handedness() == 'R' else 'R'
+    return 'v' + batter_orientation.lower()
+
+
+def pitcher_handedness(pitcher):
+    if not pitcher.get_throwing_handedness():
+        pitcher.set_throwing_handedness()
+    pitcher_orientation = pitcher.get_throwing_handedness()
+    return 'v' + pitcher_orientation.lower()

@@ -37,12 +37,6 @@ class Player:
         db.close()
         return position
 
-    def batting_handedness(self):
-        db = DatabaseConnection(sandbox_mode)
-        bats_with = db.read('select batsWith from players where playerId = "' + self.player_id + '";')[0][0]
-        db.close()
-        return bats_with
-
     # def retrieve_batting_stats(self):
     #     try:
     #         tables_file = open(os.path.join("..", "background", "batting_pitch_fx_tables.csv"))
@@ -97,6 +91,11 @@ class Player:
     def set_throwing_handedness(self):
         db = DatabaseConnection(sandbox_mode)
         self.throws_with = db.read('select throwsWith from players where playerId = "' + self.player_id + '";')[0][0]
+        db.close()
+
+    def set_batting_handedness(self):
+        db = DatabaseConnection(sandbox_mode)
+        self.bats_with = db.read('select batsWith from players where playerId = "' + self.player_id + '";')[0][0]
         db.close()
 
     def set_full_name(self):

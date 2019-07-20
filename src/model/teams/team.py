@@ -72,6 +72,9 @@ class Team:
     def get_team_id(self):
         return self.team_id
 
+    def get_team_info(self):
+        return self.team_info
+
     def get_year(self):
         return self.year
 

@@ -35,7 +35,7 @@ def consolidate_data(year):
 
 
 # consolidate_data(2017)
-ty_uid = 11
+ty_uid = 2
 temp_year = 2017
 write_roster_info(ty_uid, {'hitter_spots': consolidate_hitter_spots(ty_uid),
                            'player_positions': consolidate_player_positions(ty_uid),

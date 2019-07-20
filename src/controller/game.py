@@ -11,7 +11,7 @@ from utilities.properties import log_prefix, controller_driver_logger as driver_
 logger = Logger(os.path.join(log_prefix, "controller", "game.log"))
 
 
-def simulate_game(game_num, away_team, home_team, away_year, home_year):
+def simulate_game(game_num, away_team, away_team_info, home_team, home_team_info, away_year, home_year):
     driver_logger.log("Starting game " + str(game_num) + " simulation: " + away_team.get_team_id() + " @ "
                       + home_team.get_team_id())
     start_time = time.time()
@@ -28,8 +28,8 @@ def simulate_game(game_num, away_team, home_team, away_year, home_year):
     home_team.set_lineup(home_pitcher, away_pitcher, use_dh=league.get_rules())
     logger.log("\t\t" + time_converter(time.time() - lineup_time))
     while game.get_inning() <= 9 or game.get_away_score() == game.get_home_score():
-        inning_data = simulate_inning(game, {'top': away_team.get_batting_order(),
-                                             'bottom': home_team.get_batting_order()},
+        inning_data = simulate_inning(game, away_team_info, home_team_info, {'top': away_team.get_batting_order(),
+                                                                             'bottom': home_team.get_batting_order()},
                                       {'top': away_team.get_lineup_place(), 'bottom': home_team.get_lineup_place()},
                                       {'top': home_team.get_pitcher(), 'bottom': away_team.get_pitcher()}, logger)
         away_team.set_batting_order(inning_data['top']['lineup'])
