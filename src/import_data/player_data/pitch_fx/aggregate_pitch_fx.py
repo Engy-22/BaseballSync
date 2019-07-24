@@ -1,9 +1,10 @@
 import os
+import json
+import time
+import datetime
 from utilities.database.wrappers.baseball_data_connection import DatabaseConnection
 from utilities.database.wrappers.pitch_fx_connection import PitchFXDatabaseConnection
 from utilities.logger import Logger
-import time
-import datetime
 from concurrent.futures import ThreadPoolExecutor
 from utilities.time_converter import time_converter
 from utilities.properties import log_prefix, import_driver_logger as driver_logger
@@ -87,8 +88,8 @@ def aggregate(year, month, day, player_id, player_type):
                 write_pitch_usage(player_id, p_uid, year, match_up, count, pitch_usage[match_up][count], player_type)
                 write_swing_rate(player_id, p_uid, year, match_up, count, pitch_usage[match_up][count],
                                  swing_rates[match_up][count], player_type)
-                write_strike_percent(player_id, p_uid, year, match_up, count, pitch_usage[match_up][count],
-                                     strike_percents[match_up][count], player_type)
+                write_strike_percent(player_id, p_uid, year, match_up, count, strike_percents[match_up][count],
+                                     player_type)
                 write_outcomes(player_id, p_uid, year, match_up, count, pitch_type_outcomes[match_up][count],
                                player_type)
                 write_trajectory_by_pitch_type(player_id, p_uid, year, match_up, count, trajectories[match_up][count],
@@ -263,25 +264,25 @@ def write_swing_rate(player_id, p_uid, year, matchup, count, pitch_usage, swing_
     db.close()
 
 
-def write_strike_percent(player_id, p_uid, year, matchup, count, pitch_usage, strike_percents, player_type):
+def write_strike_percent(player_id, p_uid, year, match_up, count, strike_percents, player_type):
     db = DatabaseConnection(sandbox_mode=True)
     if len(db.read('select uid from strike_percent_' + player_type + ' where playerid = "' + player_id + '" and year = '
-                   + str(year) + ' and matchup = "' + matchup + '" and count = "' + count + '"')) == 0:
+                   + str(year) + ' and matchup = "' + match_up + '" and count = "' + count + '"')) == 0:
         fields = ''
         values = ''
-        for pitch_type, strikes in strike_percents.items():
+        for pitch_type, strike_percent in strike_percents.items():
             fields += ', ' + pitch_type
-            values += ', ' + str(round(strikes/pitch_usage[pitch_type], 3))
+            values += ', ' + str(round(strike_percent, 3))
         db.write('insert into strike_percent_' + player_type + ' (uid, playerid, year, matchup, count' + fields
-                 + ', p_uid) values (default, "' + player_id + '", ' + str(year) + ', "' + matchup + '", "' + count
+                 + ', p_uid) values (default, "' + player_id + '", ' + str(year) + ', "' + match_up + '", "' + count
                  + '"' + values + ', ' + str(p_uid) + ');')
     else:
         sets = ''
-        for pitch_type, strikes in strike_percents.items():
-            sets + ' = ' + str(round(strikes/pitch_usage[pitch_type], 3)) + ', '
+        for pitch_type, strike_percent in strike_percents.items():
+            sets += pitch_type + ' = ' + str(round(strike_percent, 3)) + ', '
         if len(sets) > 0:
             db.write('update strike_percent_' + player_type + ' set ' + sets[:-2] + ' where playerid = "' + player_id
-                     + '", and year = ' + str(year) + ' and matchup = "' + matchup + '", and count = "' + count + '";')
+                     + '" and year = ' + str(year) + ' and matchup = "' + match_up + '" and count = "' + count + '";')
     db.close()
 
 
@@ -476,9 +477,23 @@ def sort_further_by_outcome(pitches):
 def calculate_strike_percent(pitches):
     strikes = 0
     for pitch in pitches:
-        if pitch[1] == 'strike':
+        x = float(pitch[6])
+        y = float(pitch[7])
+        zone_x = strike_zone_coordinate('x')
+        zone_y = strike_zone_coordinate('y')
+        if zone_x['low'] < x < zone_x['high'] and zone_y['low'] < y < zone_y['high']:
             strikes += 1
     return strikes / len(pitches)
+
+
+def strike_zone_coordinate(coordinate):
+    try:
+        with open(os.path.join('..', '..', 'background', 'strike_zone.json')) as strike_zone_file:
+            strike_zone = json.load(strike_zone_file)
+    except FileNotFoundError:
+        with open(os.path.join('..', '..', '..', '..', 'background', 'strike_zone.json')) as strike_zone_file:
+            strike_zone = json.load(strike_zone_file)
+    return {'low': float(strike_zone.get(coordinate + '_low')), 'high': float(strike_zone.get(coordinate + '_high'))}
 
 
 def calculate_swing_rate(pitches):
@@ -595,4 +610,4 @@ def change_multi_team_players_uids(year, month, day, player_type):
 
 
 # aggregate_pitch_fx(2017)
-# aggregate(2017, None, None, 'breslcr01', 'pitching')
+# aggregate(2017, None, None, 'salech01', 'pitching')

@@ -4,6 +4,7 @@ class Inning:
         self.away_runs = 0
         self.home_runs = 0
         self.bases = {1: None, 2: None, 3: None}
+        self.half_inning = ''
 
 ### RETRIEVERS ###
 ### END RETRIEVERS ###

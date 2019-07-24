@@ -22,7 +22,7 @@ def simulate_pitch(pitcher, batter, batter_orientation, pitcher_orientation, bal
                                            {True: 'swing', False: 'take'})
     except KeyError:
         swing_take = None
-    driver_logger.log('\t' + pitch.get_pitch_type() + ' - ' + ball_strike + ' - ' + swing_take)
+    # driver_logger.log('\t' + pitch.get_pitch_type() + ' - ' + ball_strike + ' - ' + swing_take)
     pitch_data = {'ball_strike': ball_strike, 'swing_take': swing_take,
                   'trajectory': '', 'field': '', 'direction': '', 'outcome': ''}
     return pitch_data

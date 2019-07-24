@@ -23,10 +23,17 @@ def create_strike_zone():
     y_stdev = stat.stdev(y_coordinates)
     points['x_middle'] = stat.mean(x_coordinates)
     points['y_middle'] = stat.mean(y_coordinates)
-    points['x_low'] = -(3 * x_stdev)
-    points['x_high'] = (3 * x_stdev)
-    points['y_low'] = -(3 * y_stdev)
-    points['y_high'] = (3 * y_stdev)
-    with open(os.path.join("..", "background", "strike_zone.json"), "w") as strike_zone_file:
-        json.dump(points, strike_zone_file)
+    points['x_low'] = points['x_middle'] - (3 * x_stdev)
+    points['x_high'] = points['x_middle'] + (3 * x_stdev)
+    points['y_low'] = points['y_middle'] - (3 * y_stdev)
+    points['y_high'] = points['y_middle'] + (3 * y_stdev)
+    try:
+        with open(os.path.join("..", "background", "strike_zone.json"), "w") as strike_zone_file:
+            json.dump(points, strike_zone_file)
+    except FileNotFoundError:
+        with open(os.path.join("..", "..", "..", "background", "strike_zone.json"), "w") as strike_zone_file:
+            json.dump(points, strike_zone_file)
     driver_logger.log('\t\tTime = ' + time_converter(time.time() - start_time))
+
+
+# create_strike_zone()

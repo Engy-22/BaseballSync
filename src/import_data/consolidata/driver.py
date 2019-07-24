@@ -35,10 +35,10 @@ def consolidate_data(year):
 
 
 # consolidate_data(2017)
-ty_uid = 2
-temp_year = 2017
-write_roster_info(ty_uid, {'hitter_spots': consolidate_hitter_spots(ty_uid),
-                           'player_positions': consolidate_player_positions(ty_uid),
-                           'batter_stats': consolidate_player_stats(ty_uid, 'batting', temp_year),
-                           'pitcher_stats': consolidate_player_stats(ty_uid, 'pitching', temp_year),
-                           'fielder_stats': consolidate_player_stats(ty_uid, 'fielding', temp_year)})
+# ty_uid = 2
+# temp_year = 2017
+# write_roster_info(ty_uid, {'hitter_spots': consolidate_hitter_spots(ty_uid),
+#                            'player_positions': consolidate_player_positions(ty_uid),
+#                            'batter_stats': consolidate_player_stats(ty_uid, 'batting', temp_year),
+#                            'pitcher_stats': consolidate_player_stats(ty_uid, 'pitching', temp_year),
+#                            'fielder_stats': consolidate_player_stats(ty_uid, 'fielding', temp_year)})
