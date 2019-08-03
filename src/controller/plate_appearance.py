@@ -35,15 +35,17 @@ def simulate_plate_appearance(batting_info, pitching_info, lineup, place, pitche
         elif plate_appearance.get_strikes() == 3:
             plate_appearance.set_outcome('K')
 ################### random data ###################
-    plate_appearance_data['runs'] = random.randint(0, 3)
-    plate_appearance_data['hits'] = random.randint(0, 3)
+    plate_appearance_data['runs'] = random.randint(0, 1)
+    plate_appearance_data['hits'] = random.randint(0, 1)
     plate_appearance_data['errors'] = random.randint(0, 1)
     plate_appearance_data['lineup'] = lineup
     plate_appearance_data['pitcher'] = pitcher
 ################### random data ###################
     plate_appearance_data['outs'] = calculate_outs(plate_appearance.get_outcome())
     total_time = time_converter(time.time() - start_time)
+    logger.log('\tOutcome: ' + plate_appearance.get_outcome())
     logger.log("Done simulating plate appearance: Time = " + total_time + '\n\n')
+    driver_logger.log('\t\tOutcome: ' + plate_appearance.get_outcome())
     driver_logger.log("\t\t\tTime = " + total_time)
     return plate_appearance_data
 

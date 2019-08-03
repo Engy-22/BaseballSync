@@ -74,7 +74,7 @@ def consolidate_pitch_fx(table_data, table_name, table_fields):
                         'pitch_usage_batting', 'pitch_usage_pitching', 'direction_by_outcome_pitching',
                         'field_by_outcome_pitching', 'trajectory_by_outcome_pitching']:
         return consolidate_pitch_fx_horizontal(table_data, table_fields)
-    else:  # [swing_rate_batting, strike_percent_batting, swing_rate_pitching, strike_percent_pitching, hbp_pitching, hbp_batting]
+    else:  # [swing_rate_batting, strike_percent_batting, swing_rate_pitching, strike_percent_pitching, hbp_pitching, hbp_batting, pitch_count_pitching, pitch_count_batting]
         return consolidate_pitch_fx_individual(table_data, table_fields, table_name)
 
 
@@ -112,12 +112,33 @@ def consolidate_pitch_fx_individual(table_data, table_fields, table_name):
             for field in range(len(record[4:-1])):
                 if record[field+4] is not None:
                     stats[record[3]][table_fields[field+5]] = float(record[field+4])
+    elif 'swing_rate' in table_name:
+        for record in table_data:
+            if record[4] not in stats[record[3]]:
+                stats[record[3]][record[4]] = {}
+                stats[record[3]][record[4]]['strike'] = {}
+                stats[record[3]][record[4]]['ball'] = {}
+            for field in range(len(record[6:-1])):
+                if record[field+6] is not None:
+                    if record[5]:
+                        stats[record[3]][record[4]]['strike'][table_fields[field+6]] = float(record[field+6])
+                    else:
+                        stats[record[3]][record[4]]['ball'][table_fields[field+6]] = float(record[field+6])
+    # elif 'overall_pitch_usage' in table_name:
+    elif 'overall_' in table_name:
+        stats = {}
+        for field in range(len(table_data[0][3:-1])):
+            if table_data[0][field+3] is not None:
+                stats[table_fields[field+3]] = float(table_data[0][field+3])
     else:
         for record in table_data:
             stats[record[3]][record[4]] = {}
             for field in range(len(record[5:-1])):
                 if record[field+5] is not None:
-                    stats[record[3]][record[4]][table_fields[field+5]] = float(record[field+5])
+                    if 'pitch_count' not in table_name:
+                        stats[record[3]][record[4]][table_fields[field+5]] = float(record[field+5])
+                    else:
+                        stats[record[3]][record[4]][table_fields[field+5]] = int(record[field+5])
     return stats
 
 
@@ -131,8 +152,6 @@ def get_player_id(p_uid, player_type):
 
 
 def player_is_on_this_team(ty_uid, p_uid, player_type, year):
-    # if p_uid[0] in [207]:
-    #     print(ty_uid, p_uid, player_type, year)
     player_on_team = False
     db = DatabaseConnection(sandbox_mode=True)
     this_players_uid_corresponding_team_id = \
@@ -171,7 +190,6 @@ def player_was_on_more_than_one_team(p_uid, player_type, year):
 
 
 def get_uid_of_player_for_this_team(ty_uid, p_uid, player_type, year):
-    # print(ty_uid, p_uid, player_type, year)
     db = DatabaseConnection(sandbox_mode=True)
     uid = db.read('select p' + player_type[0] + '_uniqueidentifier from player_' + player_type + ' where year = '
                   + str(year) + ' and pt_uniqueidentifier = (select pt_uniqueidentifier from player_teams where '

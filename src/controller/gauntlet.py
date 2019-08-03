@@ -1,4 +1,5 @@
 import random
+from collections import OrderedDict
 
 
 def pick_from_options(data_dictionary):
@@ -8,6 +9,10 @@ def pick_from_options(data_dictionary):
         board += frequency
         if dart < board:
             return data_type
+    try:
+        return list(OrderedDict(data_dictionary))[-1]
+    except IndexError:
+        return None
 
 
 def pick_one_or_the_other(probability, choices):

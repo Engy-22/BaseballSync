@@ -49,6 +49,10 @@ def simulate_game(game_num, away_team, away_team_info, home_team, home_team_info
 
 def determine_winner(game, away_team, home_team):
     if game.get_away_score() > game.get_home_score():
+        logger.log(away_team.get_team_id() + ' won: ' + str(game.get_away_score()) + ' to '
+                   + str(game.get_home_score()))
         return away_team.get_team_id()
     else:
+        logger.log(away_team.get_team_id() + ' won: ' + str(game.get_home_score()) + ' to '
+                   + str(game.get_away_score()))
         return home_team.get_team_id()

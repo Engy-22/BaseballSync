@@ -30,7 +30,7 @@ def consolidate_data(year):
         logger.log('\t\tTime = ' + time_converter(time.time() - team_start_time))
     db.close()
     total_time = time_converter(time.time() - start_time)
-    logger.log("Done consolidating team data: Time = " + total_time)
+    logger.log("Done consolidating team data: Time = " + total_time + '\n\n')
     driver_logger.log("\t\tTime = " + total_time)
 
 

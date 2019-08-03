@@ -10,21 +10,24 @@ def time_converter(seconds):
         if days >= 1:
             time += str(days) + ' day'
             if days == 1:
-                time += ' ' + time_converter(seconds - (days * (60 * 60 * 24)))
+                time += ' '
             else:
-                time += 's ' + time_converter(seconds - (days * (60 * 60 * 24)))
+                time += 's '
+            time += time_converter(seconds - (days * (60 * 60 * 24)))
         elif hours >= 1:
             time += str(hours) + ' hour'
             if hours == 1:
-                time += ' ' + time_converter(seconds - (hours * (60 * 60)))
+                time += ' '
             else:
-                time += 's ' + time_converter(seconds - (hours * (60 * 60)))
+                time += 's '
+            time += time_converter(seconds - (hours * (60 * 60)))
         elif minutes >= 1:
             time += str(minutes) + ' minute'
             if minutes == 1:
-                time += ' ' + time_converter(seconds - (minutes * 60))
+                time += ' '
             else:
-                time += 's ' + time_converter(seconds - (minutes * 60))
+                time += 's '
+            time += time_converter(seconds - (minutes * 60))
         else:
             time += str(round(seconds, 2))
             if seconds == 1:
