@@ -1,8 +1,9 @@
 import os
+import json
 from model.pitch import Pitch
 from utilities.logger import Logger
 from utilities.properties import log_prefix
-from controller.gauntlet import pick_from_options, pick_one_or_the_other
+from controller.gauntlet import pick_from_options, pick_one_or_the_other, get_location
 
 logger = Logger(os.path.join(log_prefix, "controller", "pitch.log"))
 
@@ -14,9 +15,10 @@ def simulate_pitch(pitcher, batter, batter_orientation, pitcher_orientation, bal
     pitch = Pitch(pitcher, determine_pitch_type(pitcher, batter, pitcher_orientation, batter_orientation, count),
                   balls, strikes)
     ball_strike = determine_ball_or_strike(pitcher, batter, pitcher_orientation, batter_orientation, count, pitch)
-    batter_swing_rate = get_batter_swing_rate(batter, pitcher_orientation, count, ball_strike, pitch)
-    swing_take = determine_if_batter_swung(batter_swing_rate, batter_orientation, pitcher, count, ball_strike, pitch)
-    driver_logger.log('\t' + pitch.get_pitch_type() + ' - ' + ball_strike + ' - ' + swing_take)
+    swing_take = determine_if_batter_swung(
+        get_batter_swing_rate(batter, pitcher_orientation, count, ball_strike, pitch), batter_orientation, pitcher,
+        batter, count, ball_strike, pitch)
+    driver_logger.log('\t\t' + pitch.get_pitch_type() + ' - ' + ball_strike + ' - ' + swing_take)
     pitch_data = {'ball_strike': ball_strike, 'swing_take': swing_take,
                   'trajectory': '', 'field': '', 'direction': '', 'outcome': ''}
     return pitch_data
@@ -31,12 +33,8 @@ def determine_pitch_type(pitcher, batter, pitcher_orientation, batter_orientatio
     if pitch_type:  # if the pitcher has been in this scenario before
         return pitch_type
     else:  # if the pitcher has not been in this scenario before, get their overall pitch usage numbers
-        try:
-            return pick_from_options(pitcher.get_pitching_stats()['advanced_pitching_stats']
-                                     ['overall_pitch_usage_pitching'])
-        except KeyError:
-            print(pitcher.get_player_id())
-            raise KeyError
+        return pick_from_options(pitcher.get_pitching_stats()['advanced_pitching_stats']
+                                 ['overall_pitch_usage_pitching'])
 
 
 def coordinate_pitch_usages(pitches_available, batter, pitcher_orientation, count):
@@ -71,34 +69,98 @@ def inflate_pitch_options(batter_pitches, pitcher_pitches):
 
 
 def determine_ball_or_strike(pitcher, batter, pitcher_orientation, batter_orientation, count, pitch):
-    """average the pitcher's strike percent and the batter's strike percent against in this scenario
-    (assuming they're both present)"""
+    """average out the batter and pitcher means for the pitch thrown in the given count, as well as their standard
+    deviations (assuming this information is available given the scenario) and determine an x & y coordinate based upon
+    these values. Then use strike_zone.json to determine whether the pitch was a strike or not."""
+    try:  # assuming pitcher and batter data is present
+        average_x_mean = \
+            (pitcher.get_pitching_stats()['advanced_pitching_stats']['pitch_location_pitching'][batter_orientation]
+             [count][pitch.get_pitch_type() + '_x_mean'] + batter.get_batting_stats()['advanced_batting_stats']
+             ['pitch_location_batting'][pitcher_orientation][count][pitch.get_pitch_type() + '_x_mean']) / 2
+        average_x_deviation = \
+            (pitcher.get_pitching_stats()['advanced_pitching_stats']['pitch_location_pitching'][batter_orientation]
+             [count][pitch.get_pitch_type() + '_x_stdev'] + batter.get_batting_stats()['advanced_batting_stats']
+             ['pitch_location_batting'][pitcher_orientation][count][pitch.get_pitch_type() + '_x_stdev']) / 2
+        average_y_mean = \
+            (pitcher.get_pitching_stats()['advanced_pitching_stats']['pitch_location_pitching'][batter_orientation]
+             [count][pitch.get_pitch_type() + '_y_mean'] + batter.get_batting_stats()['advanced_batting_stats']
+             ['pitch_location_batting'][pitcher_orientation][count][pitch.get_pitch_type() + '_y_mean']) / 2
+        average_y_deviation = \
+            (pitcher.get_pitching_stats()['advanced_pitching_stats']['pitch_location_pitching'][batter_orientation]
+             [count][pitch.get_pitch_type() + '_y_stdev'] + batter.get_batting_stats()['advanced_batting_stats']
+             ['pitch_location_batting'][pitcher_orientation][count][pitch.get_pitch_type() + '_y_stdev']) / 2
+    except KeyError:  # batter data is not present for this scenario
+        try:  # just take the pitcher's mean and deviation for pitch locations for this scenario
+            average_x_mean = pitcher.get_pitching_stats()['advanced_pitching_stats']['pitch_location_pitching']\
+                [batter_orientation][count][pitch.get_pitch_type() + '_x_mean']
+            average_x_deviation = pitcher.get_pitching_stats()['advanced_pitching_stats']['pitch_location_pitching']\
+                [batter_orientation][count][pitch.get_pitch_type() + '_x_stdev']
+            average_y_mean = pitcher.get_pitching_stats()['advanced_pitching_stats']['pitch_location_pitching']\
+                [batter_orientation][count][pitch.get_pitch_type() + '_y_mean']
+            average_y_deviation = pitcher.get_pitching_stats()['advanced_pitching_stats']['pitch_location_pitching']\
+                [batter_orientation][count][pitch.get_pitch_type() + '_y_stdev']
+        except KeyError:  # pitcher data is not preset either
+            try:  # take batter and pitcher overall average mean and deviation for the pitch type, regardless of count
+                average_x_mean = \
+                    (pitcher.get_pitching_stats()['advanced_pitching_stats']['overall_pitch_location_pitching']
+                     [pitch.get_pitch_type() + '_x_mean'] + batter.get_batting_stats()['advanced_batting_stats']
+                     ['overall_pitch_location_batting'][pitch.get_pitch_type() + '_x_mean']) / 2
+                average_x_deviation = \
+                    (pitcher.get_pitching_stats()['advanced_pitching_stats']['overall_pitch_location_pitching']
+                     [pitch.get_pitch_type() + '_x_stdev'] + batter.get_batting_stats()['advanced_batting_stats']
+                     ['overall_pitch_location_batting'][pitch.get_pitch_type() + '_x_stdev']) / 2
+                average_y_mean = \
+                    (pitcher.get_pitching_stats()['advanced_pitching_stats']['overall_pitch_location_pitching']
+                     [pitch.get_pitch_type() + '_y_mean'] + batter.get_batting_stats()['advanced_batting_stats']
+                     ['overall_pitch_location_batting'][pitch.get_pitch_type() + '_y_mean']) / 2
+                average_y_deviation = \
+                    (pitcher.get_pitching_stats()['advanced_pitching_stats']['overall_pitch_location_pitching']
+                     [pitch.get_pitch_type() + '_y_stdev'] + batter.get_batting_stats()['advanced_batting_stats']
+                     ['overall_pitch_location_batting'][pitch.get_pitch_type() + '_y_stdev']) / 2
+            except KeyError:  # overall batter data is not available for this pitch, just take the pitcher's overall mean and deviation for the pitch, regardless of count/match up
+                average_x_mean = pitcher.get_pitching_stats()['advanced_pitching_stats']\
+                    ['overall_pitch_location_pitching'][pitch.get_pitch_type() + '_x_mean']
+                average_x_deviation = pitcher.get_pitching_stats()['advanced_pitching_stats']\
+                    ['overall_pitch_location_pitching'][pitch.get_pitch_type() + '_x_stdev']
+                average_y_mean = pitcher.get_pitching_stats()['advanced_pitching_stats']\
+                    ['overall_pitch_location_pitching'][pitch.get_pitch_type() + '_y_mean']
+                average_y_deviation = pitcher.get_pitching_stats()['advanced_pitching_stats']\
+                    ['overall_pitch_location_pitching'][pitch.get_pitch_type() + '_y_stdev']
+    x = get_location(average_x_mean, average_x_deviation)
+    y = get_location(average_y_mean, average_y_deviation)
+    if pitch_in_zone(x, y, strike_zone_coordinate('x'), strike_zone_coordinate('y')):
+        return 'strike'
+    else:
+        return 'ball'
+
+
+def pitch_in_zone(x, y, x_coordinates, y_coordinates):
+    return x_coordinates['low'] < x < x_coordinates['high'] and y_coordinates['low'] < y < y_coordinates['high']
+
+
+def strike_zone_coordinate(coordinate):
     try:
-        return pick_one_or_the_other(
-            (pitcher.get_pitching_stats()['advanced_pitching_stats']['strike_percent_pitching'][batter_orientation]
-             [count][pitch.get_pitch_type()] + batter.get_batting_stats()['advanced_batting_stats']
-             ['strike_percent_batting'][pitcher_orientation][count][pitch.get_pitch_type()]) / 2,
-            {True: 'strike', False: 'ball'})
-    except KeyError:  # there's no strike percent batter data for this scenario
-        try:  # so just take the pitcher's strike percent data (assuming the pitcher's been in this scenario before)
-            return pick_one_or_the_other(
-                pitcher.get_pitching_stats()['advanced_pitching_stats']['strike_percent_pitching'][batter_orientation]
-                [count][pitch.get_pitch_type()], {True: 'strike', False: 'ball'})
-        except KeyError:  # if there's no strike percent data for the pitcher either, get the pitcher's overall strike percent data
-            return pick_one_or_the_other(pitcher.get_pitching_stats()['advanced_pitching_stats']
-                                         ['overall_strike_percent_pitching'][pitch.get_pitch_type()],
-                                         {True: 'strike', False: 'ball'})
+        with open(os.path.join('..', '..', 'background', 'strike_zone.json')) as strike_zone_file:
+            strike_zone = json.load(strike_zone_file)
+    except FileNotFoundError:
+        with open(os.path.join('..', '..', '..', '..', 'background', 'strike_zone.json')) as strike_zone_file:
+            strike_zone = json.load(strike_zone_file)
+    return {'low': float(strike_zone.get(coordinate + '_low')), 'high': float(strike_zone.get(coordinate + '_high'))}
 
 
 def get_batter_swing_rate(batter, pitcher_orientation, count, ball_strike, pitch):
-    try:  # determine how often the batter swings given the scenario (assuming the batter has been in the scenario before)
+    """determine how often the batter swings given the scenario (assuming the batter has been in the scenario before)"""
+    try:
         return batter.get_batting_stats()['advanced_batting_stats']['swing_rate_batting'][pitcher_orientation][count]\
             [ball_strike][pitch.get_pitch_type()]
     except KeyError:  # this batter has never been in this scenario before
         return None
 
 
-def determine_if_batter_swung(batter_swing_rate, batter_orientation, pitcher, count, ball_strike, pitch):
+def determine_if_batter_swung(batter_swing_rate, batter_orientation, pitcher, batter, count, ball_strike, pitch):
+    """determine if the batter swung at the pitch or not based on his tendency to do so given the count, pitch_type,
+    match up and location; in accordance with the pitcher's induced swing rate given the count pitch_type, match up and
+    location"""
     if batter_swing_rate:  # if the batter has data about this scenario
         try:  # average the batter's swing rate and the pitcher's swing rate against (assuming they're both present)
             return pick_one_or_the_other(
@@ -106,10 +168,19 @@ def determine_if_batter_swung(batter_swing_rate, batter_orientation, pitcher, co
                  [batter_orientation][count][ball_strike][pitch.get_pitch_type()]) / 2, {True: 'swing', False: 'take'})
         except KeyError:  # pitcher doesn't have data about this position, so just take the hitter's swing rate
             return pick_one_or_the_other(batter_swing_rate, {True: 'swing', False: 'take'})
-    else:  # if the batter has no data about this scenario
-        try:  # just take the pitcher's swing rate against him (assuming that data exists)
+    else:  # if the batter has no data in this scenario
+        try:  # just take the pitcher's swing rate against (assuming that data exists)
             return pick_one_or_the_other(
                 pitcher.get_pitching_stats()['advanced_pitching_stats']['swing_rate_pitching'][batter_orientation]
                 [count][ball_strike][pitch.get_pitch_type()], {True: 'swing', False: 'take'})
-        except KeyError:  # there's no pitcher data in this scenario. Take the league average swing rate for the year of the batter
-            return pick_one_or_the_other(0.5, {True: 'swing', False: 'take'})
+        except KeyError:  # there's also no pitcher data in this scenario.
+            try:  # Take the overall swing rate average for the pitcher and hitter on this particular pitch (assuming the batter has seen this pitch before)
+                return pick_one_or_the_other(
+                    (pitcher.get_pitching_stats()['advanced_pitching_stats']['overall_swing_rate_pitching'][ball_strike]
+                     [pitch.get_pitch_type()] + batter.get_batting_stats()['advanced_batting_stats']
+                     ['overall_swing_rate_batting'][ball_strike][pitch.get_pitch_type()]) / 2,
+                    {True: 'swing', False: 'take'})
+            except KeyError:  # the batter hasn't seen this pitch before, so just take pitcher's overall swing rate against on this pitch
+                return pick_one_or_the_other(
+                    pitcher.get_pitching_stats()['advanced_pitching_stats']['overall_swing_rate_pitching'][ball_strike]
+                    [pitch.get_pitch_type()], {True: 'swing', False: 'take'})

@@ -10,23 +10,37 @@ from utilities.time_converter import time_converter
 def create_strike_zone():
     start_time = time.time()
     driver_logger.log('\tCreating Strike Zone')
-    db = PitchFXDatabaseConnection(sandbox_mode)
-    x_points = db.read('select x from pitcher_pitches where x is not NULL and ball_strike = "strike" and swing_take '
-                       '= "take";')
-    y_points = db.read('select y from pitcher_pitches where y is not NULL and ball_strike = "strike" and swing_take '
-                       '= "take";')
-    db.close()
     points = {}
-    x_coordinates = [int(x[0]) for x in x_points]
-    y_coordinates = [int(y[0]) for y in y_points]
-    x_stdev = stat.stdev(x_coordinates)
-    y_stdev = stat.stdev(y_coordinates)
-    points['x_middle'] = stat.mean(x_coordinates)
-    points['y_middle'] = stat.mean(y_coordinates)
-    points['x_low'] = points['x_middle'] - (3 * x_stdev)
-    points['x_high'] = points['x_middle'] + (3 * x_stdev)
-    points['y_low'] = points['y_middle'] - (3 * y_stdev)
-    points['y_high'] = points['y_middle'] + (3 * y_stdev)
+    db = PitchFXDatabaseConnection(sandbox_mode)
+    x_strikes = [x[0] for x in db.read('select x from pitcher_pitches where x is not NULL and ball_strike = "strike" '
+                                       'and swing_take = "take";')]
+    x_strikes.sort()
+    y_strikes = [y[0] for y in db.read('select y from pitcher_pitches where y is not NULL and ball_strike = "strike" '
+                                       'and swing_take = "take";')]
+    y_strikes.sort()
+    passes = 1
+    for median, coordinates in {stat.median(x_strikes): x_strikes, stat.median(y_strikes): y_strikes}.items():
+        coordinate_orientation = 'x' if passes == 1 else 'y'
+        threshold = 1000
+        for direction in ['positive', 'negative']:
+            sparse_intervals = 0
+            if direction == 'positive':
+                incrementer = 1
+            else:
+                incrementer = -1
+            place_on_number_line = median + incrementer
+            while sparse_intervals < 3:  # a sparse interval is an interval with less than a given number of data points
+                if coordinates.count(place_on_number_line) < threshold:
+                    sparse_intervals += 1  # increment the number of sparse interval
+                else:
+                    sparse_intervals = 0  # reset the number of sparse intervals
+                place_on_number_line += incrementer  # move farther from the median in the appropriate direction
+            points[coordinate_orientation + ('_high' if direction == 'positive' else '_low')] =\
+                place_on_number_line - (incrementer * 3)
+        points[coordinate_orientation + '_middle'] =\
+            (points[coordinate_orientation + '_low'] + points[coordinate_orientation + '_high']) / 2
+        passes += 1
+    db.close()
     try:
         with open(os.path.join("..", "background", "strike_zone.json"), "w") as strike_zone_file:
             json.dump(points, strike_zone_file)

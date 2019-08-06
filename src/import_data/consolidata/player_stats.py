@@ -112,6 +112,22 @@ def consolidate_pitch_fx_individual(table_data, table_fields, table_name):
             for field in range(len(record[4:-1])):
                 if record[field+4] is not None:
                     stats[record[3]][table_fields[field+5]] = float(record[field+4])
+    elif 'overall_' in table_name:
+        if 'swing_rate' not in table_name:
+            stats = {}
+            for field in range(len(table_data[0][3:-1])):
+                if table_data[0][field+3] is not None:
+                    stats[table_fields[field+3]] = float(table_data[0][field+3])
+        else:
+            stats = {'ball': {}, 'strike': {}}
+            for record in table_data:
+                for field in range(len(table_data[0][4:-1])):
+                    if record[3] == 1:
+                        if record[field+4] is not None:
+                            stats['strike'][table_fields[field+4]] = float(record[field+4])
+                    else:
+                        if record[field+4] is not None:
+                            stats['ball'][table_fields[field+4]] = float(record[field+4])
     elif 'swing_rate' in table_name:
         for record in table_data:
             if record[4] not in stats[record[3]]:
@@ -124,12 +140,6 @@ def consolidate_pitch_fx_individual(table_data, table_fields, table_name):
                         stats[record[3]][record[4]]['strike'][table_fields[field+6]] = float(record[field+6])
                     else:
                         stats[record[3]][record[4]]['ball'][table_fields[field+6]] = float(record[field+6])
-    # elif 'overall_pitch_usage' in table_name:
-    elif 'overall_' in table_name:
-        stats = {}
-        for field in range(len(table_data[0][3:-1])):
-            if table_data[0][field+3] is not None:
-                stats[table_fields[field+3]] = float(table_data[0][field+3])
     else:
         for record in table_data:
             stats[record[3]][record[4]] = {}

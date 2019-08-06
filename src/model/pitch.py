@@ -5,7 +5,6 @@ class Pitch:
         self.pitch_type = pitch_type
         self.balls = balls
         self.strikes = strikes
-        self.strike = ''  # bool
 
 ### RETRIEVERS ###
 ### END RETRIEVERS ###

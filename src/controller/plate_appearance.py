@@ -60,6 +60,8 @@ def calculate_outs(outcome):
 def batter_handedness(batter, pitcher):
     if not batter.get_batting_handedness():
         batter.set_batting_handedness()
+    if not pitcher.get_throwing_handedness():
+        pitcher.set_throwing_handedness()
     batter_orientation = batter.get_batting_handedness()
     if batter_orientation == 'B':
         batter_orientation = 'L' if pitcher.get_throwing_handedness() == 'R' else 'R'
@@ -71,3 +73,16 @@ def pitcher_handedness(pitcher):
         pitcher.set_throwing_handedness()
     pitcher_orientation = pitcher.get_throwing_handedness()
     return 'v' + pitcher_orientation.lower()
+
+
+# from model.players.player import Player
+# from model.teams.team import Team
+# mets = Team('NYM', 2017)
+# indians = Team('CLE', 2017)
+# lindor = Player('lindofr01', 'CLE', 2017)
+# lindor.set_full_name()
+# degrom = Player('degroja01', 'NYM', 2017)
+# degrom.set_full_name()
+# simulate_plate_appearance(indians.get_team_info()['batter_stats'], mets.get_team_info()['pitcher_stats'], [lindor], 0,
+#                           degrom, 1, Logger('C:\\Users\\Anthony Raimondo\\PycharmProjects\\baseball-sync\\logs\\'
+#                                             'sandbox\\controller\\inning.log'))

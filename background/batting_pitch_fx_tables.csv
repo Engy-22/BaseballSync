@@ -1,5 +1,6 @@
 overall_pitch_usage_batting
-overall_strike_percent_batting
+overall_pitch_location_batting
+overall_swing_rate_batting
 direction_by_outcome_batting
 direction_batting
 field_batting
@@ -9,6 +10,6 @@ outcomes_batting
 pitch_count_batting
 pitch_usage_batting
 swing_rate_batting
-strike_percent_batting
+pitch_location_batting
 trajectory_batting
 trajectory_by_outcome_batting

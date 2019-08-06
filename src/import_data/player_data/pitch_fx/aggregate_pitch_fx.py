@@ -2,6 +2,7 @@ import os
 import json
 import time
 import datetime
+import statistics as stat
 from utilities.database.wrappers.baseball_data_connection import DatabaseConnection
 from utilities.database.wrappers.pitch_fx_connection import PitchFXDatabaseConnection
 from utilities.logger import Logger
@@ -46,7 +47,7 @@ def aggregate(year, month, day, player_id, player_type):
     pitch_usage = {}
     pitch_type_outcomes = {}
     swing_rates = {}
-    strike_percents = {}
+    pitch_locations = {}
     trajectories = {}
     fields = {}
     directions = {}
@@ -60,7 +61,7 @@ def aggregate(year, month, day, player_id, player_type):
         pitch_usage[match_up] = {}
         pitch_type_outcomes[match_up] = {}
         swing_rates[match_up] = {}
-        strike_percents[match_up] = {}
+        pitch_locations[match_up] = {}
         trajectories[match_up] = {}
         fields[match_up] = {}
         directions[match_up] = {}
@@ -73,24 +74,23 @@ def aggregate(year, month, day, player_id, player_type):
                 pitch_usage[match_up][count] = {}
                 pitch_type_outcomes[match_up][count] = {}
                 swing_rates[match_up][count] = {}
-                strike_percents[match_up][count] = {}
+                pitch_locations[match_up][count] = {}
                 trajectories[match_up][count] = {}
                 fields[match_up][count] = {}
                 directions[match_up][count] = {}
                 for pitch_type, pitch_type_list in sort_by_pitch_type(pitches, match_up, ball, strike).items():
-                    pitch_usage[match_up][count][pitch_type] = len(pitch_type_list)
+                    # pitch_usage[match_up][count][pitch_type] = len(pitch_type_list)
                     # pitch_type_outcomes[match_up][count][pitch_type] = sort_further_by_outcome(pitch_type_list)
                     # swing_rates[match_up][count][pitch_type] = calculate_swing_rate(pitch_type_list)
-                    # strike_percents[match_up][count][pitch_type] = calculate_strike_percent(
-                    #     pitch_type_list, strike_zone_coordinate('x'), strike_zone_coordinate('y'))
+                    pitch_locations[match_up][count][pitch_type] = calculate_pitch_locations(pitch_type_list)
                 #     trajectories[match_up][count][pitch_type] = sort_further_by_trajectory(pitch_type_list)
                 #     fields[match_up][count][pitch_type] = sort_further_by_field(pitch_type_list)
                 #     directions[match_up][count][pitch_type] = sort_further_by_direction(pitch_type_list)
                 # write_pitch_count(player_id, p_uid, year, match_up, count, pitch_usage[match_up][count], player_type)
                 # write_pitch_usage(player_id, p_uid, year, match_up, count, pitch_usage[match_up][count], player_type)
                 # write_swing_rate(player_id, p_uid, year, match_up, count, swing_rates[match_up][count], player_type)
-                # write_strike_percent(player_id, p_uid, year, match_up, count, strike_percents[match_up][count],
-                #                      player_type)
+                # write_pitch_locations(player_id, p_uid, year, match_up, count, pitch_locations[match_up][count],
+                #                       player_type)
         #         write_outcomes(player_id, p_uid, year, match_up, count, pitch_type_outcomes[match_up][count],
         #                        player_type)
         #         write_trajectory_by_pitch_type(player_id, p_uid, year, match_up, count, trajectories[match_up][count],
@@ -106,7 +106,8 @@ def aggregate(year, month, day, player_id, player_type):
         # write_field_by_outcome(player_id, p_uid, year, match_up, fields_by_outcome[match_up], player_type)
         # write_direction_by_outcome(player_id, p_uid, year, match_up, directions_by_outcome[match_up], player_type)
     # write_overall_pitch_usage(player_id, p_uid, year, pitch_usage, player_type)
-    write_overall_strike_percentage(year, p_uid, pitches, player_id, player_type)
+    write_overall_pitch_locations(year, p_uid, pitches, player_id, player_type)
+    # write_overall_swing_rate(year, p_uid, pitches, player_id, player_type)
     logger.log('\t\tTime = ' + time_converter(time.time()-start_time))
 
 
@@ -223,42 +224,92 @@ def write_overall_pitch_usage(player_id, p_uid, year, pitch_type_dict, player_ty
     db.close()
 
 
-def write_overall_strike_percentage(year, p_uid, pitches, player_id, player_type):
-    pitch_counts = {}
-    strikes = {}
-    strike_percents = {}
+def write_overall_pitch_locations(year, p_uid, pitches, player_id, player_type):
+    x_coordinates = {}
+    y_coordinates = {}
+    for pitch in pitches:
+        if pitch[7] in x_coordinates:
+            x_coordinates[pitch[7]].append(pitch[14])
+            y_coordinates[pitch[7]].append(pitch[15])
+        else:
+            x_coordinates[pitch[7]] = [pitch[14]]
+            y_coordinates[pitch[7]] = [pitch[15]]
+    db = DatabaseConnection(sandbox_mode=True)
+    if len(db.read('select uid from overall_pitch_location_' + player_type + ' where playerid = "' + player_id
+                   + '" and year = ' + str(year) + ';')) == 0:
+        fields = ''
+        values = ''
+        for axis, coordinates in {'x': x_coordinates, 'y': y_coordinates}.items():
+            for pitch_type, locations in coordinates.items():
+                if len(locations) > 1:
+                    fields += pitch_type + '_' + axis + '_mean, ' + pitch_type + '_' + axis + '_stdev, '
+                    values += str(round(stat.mean(locations), 3)) + ', ' + str(round(stat.stdev(locations), 3)) + ', '
+        db.write('insert into overall_pitch_location_' + player_type + ' (uid, playerid, year, ' + fields + 'p_uid) '
+                 'values (default, "' + player_id + '", ' + str(year) + ', ' + values + str(p_uid) + ');')
+    else:
+        sets = ''
+        for axis, coordinates in {'x': x_coordinates, 'y': y_coordinates}.items():
+            for pitch_type, locations in coordinates.items():
+                if len(locations) > 1:
+                    sets += pitch_type + '_' + axis + '_mean = ' + str(round(stat.mean(locations), 3)) + ', ' + \
+                            pitch_type + '_' + axis + '_stdev = ' + str(round(stat.stdev(locations), 3)) + ', '
+        if len(sets) > 0:
+            db.write('update overall_pitch_location_' + player_type + ' set ' + sets[:-2] + ' where playerid = "'
+                     + player_id + '" and year = ' + str(year) + ';')
+    db.close()
+
+
+def write_overall_swing_rate(year, p_uid, pitches, player_id, player_type):
+    pitch_counts = {'ball': {}, 'strike': {}}
+    swings = {'ball': {}, 'strike': {}}
+    swing_rates = {}
     x_coordinate = strike_zone_coordinate('x')
     y_coordinate = strike_zone_coordinate('y')
     for pitch in pitches:
         pitch_type = pitch[7]
-        if pitch_type in pitch_counts:
-            pitch_counts[pitch_type] += 1
-            if pitch_in_zone(pitch[14], pitch[15], x_coordinate, y_coordinate):
-                strikes[pitch_type] += 1
-        else:
-            pitch_counts[pitch_type] = 1
-            if pitch_in_zone(pitch[14], pitch[15], x_coordinate, y_coordinate):
-                strikes[pitch_type] = 1
+        if pitch_in_zone(pitch[14], pitch[15], x_coordinate, y_coordinate):
+            if pitch_type in pitch_counts['strike']:
+                pitch_counts['strike'][pitch_type] += 1
+                if pitch[8] == 'swing':
+                    swings['strike'][pitch_type] += 1
             else:
-                strikes[pitch_type] = 0
-    for pitch_thrown, total in pitch_counts.items():
-        strike_percents[pitch_thrown] = str(round(strikes[pitch_thrown]/total, 3))
+                pitch_counts['strike'][pitch_type] = 1
+                if pitch[8] == 'swing':
+                    swings['strike'][pitch_type] = 1
+                else:
+                    swings['strike'][pitch_type] = 0
+        else:
+            if pitch_type in pitch_counts['ball']:
+                pitch_counts['ball'][pitch_type] += 1
+                if pitch[8] == 'swing':
+                    swings['ball'][pitch_type] += 1
+            else:
+                pitch_counts['ball'][pitch_type] = 1
+                if pitch[8] == 'swing':
+                    swings['ball'][pitch_type] = 1
+                else:
+                    swings['ball'][pitch_type] = 0
     db = DatabaseConnection(sandbox_mode=True)
-    if len(db.read('select uid from overall_strike_percent_' + player_type + ' where playerid = "' + player_id
-                   + '" and year = ' + str(year) + ';')) == 0:
-        fields = ''
-        values = ''
-        for pitch_type, strike_percent in strike_percents.items():
-            fields += pitch_type + ', '
-            values += strike_percent + ', '
-        db.write('insert into overall_strike_percent_' + player_type + ' (uid, playerid, year, ' + fields + 'p_uid) '
-                 'values (default, "' + player_id + '", ' + str(year) + ', ' + values + str(p_uid) + ');')
-    else:
-        sets = ''
-        for pitch_type, strike_percent in strike_percents.items():
-            sets += pitch_type + ' = ' + strike_percent + ', '
-        db.write('update overall_strike_percent_' + player_type + ' set ' + sets[:-2] + ' where playerid = "'
-                 + player_id + '" and year = ' + str(year) + ';')
+    for location in ['ball', 'strike']:
+        for pitch_thrown, total in pitch_counts[location].items():
+            swing_rates[pitch_thrown] = str(round(swings[location][pitch_thrown]/total, 3))
+        if len(db.read('select uid from overall_swing_rate_' + player_type + ' where playerid = "' + player_id
+                       + '" and year = ' + str(year) + ' and strike = ' + str(location == 'strike') + ';')) == 0:
+            fields = ''
+            values = ''
+            for pitch_type, swing_rate in swing_rates.items():
+                fields += pitch_type + ', '
+                values += swing_rate + ', '
+            db.write('insert into overall_swing_rate_' + player_type + ' (uid, playerid, year, strike, ' + fields
+                     + 'p_uid) values (default, "' + player_id + '", ' + str(year) + ', ' + str(location == 'strike')
+                     + ', ' + values + str(p_uid) + ');')
+        else:
+            sets = ''
+            for pitch_type, swing_rate in swing_rates.items():
+                sets += pitch_type + ' = ' + swing_rate + ', '
+            if len(sets) > 0:
+                db.write('update overall_swing_rate_' + player_type + ' set ' + sets[:-2] + ' where playerid = "'
+                         + player_id + '" and year = ' + str(year) + ' and strike = ' + str(location == 'strike') + ';')
     db.close()
 
 
@@ -376,24 +427,28 @@ def write_swing_rate(player_id, p_uid, year, match_up, count, swing_rates, playe
     db.close()
 
 
-def write_strike_percent(player_id, p_uid, year, match_up, count, strike_percents, player_type):
+def write_pitch_locations(player_id, p_uid, year, match_up, count, pitch_locations, player_type):
     db = DatabaseConnection(sandbox_mode=True)
-    if len(db.read('select uid from strike_percent_' + player_type + ' where playerid = "' + player_id + '" and year = '
+    if len(db.read('select uid from pitch_location_' + player_type + ' where playerid = "' + player_id + '" and year = '
                    + str(year) + ' and matchup = "' + match_up + '" and count = "' + count + '"')) == 0:
         fields = ''
         values = ''
-        for pitch_type, strike_percent in strike_percents.items():
-            fields += ', ' + pitch_type
-            values += ', ' + str(round(strike_percent, 3))
-        db.write('insert into strike_percent_' + player_type + ' (uid, playerid, year, matchup, count' + fields
+        for pitch_type, pitch_location_data in pitch_locations.items():
+            for pitch_stat, value in pitch_location_data.items():
+                if value:
+                    fields += ', ' + pitch_type + '_' + pitch_stat
+                    values += ', ' + str(value)
+        db.write('insert into pitch_location_' + player_type + ' (uid, playerid, year, matchup, count' + fields
                  + ', p_uid) values (default, "' + player_id + '", ' + str(year) + ', "' + match_up + '", "' + count
                  + '"' + values + ', ' + str(p_uid) + ');')
     else:
         sets = ''
-        for pitch_type, strike_percent in strike_percents.items():
-            sets += pitch_type + ' = ' + str(round(strike_percent, 3)) + ', '
+        for pitch_type, pitch_location_data in pitch_locations.items():
+            for pitch_stat, value in pitch_location_data.items():
+                if value:
+                    sets += pitch_type + '_' + pitch_stat + ' = ' + str(value) + ', '
         if len(sets) > 0:
-            db.write('update strike_percent_' + player_type + ' set ' + sets[:-2] + ' where playerid = "' + player_id
+            db.write('update pitch_location_' + player_type + ' set ' + sets[:-2] + ' where playerid = "' + player_id
                      + '" and year = ' + str(year) + ' and matchup = "' + match_up + '" and count = "' + count + '";')
     db.close()
 
@@ -586,12 +641,17 @@ def sort_further_by_outcome(pitches):
     return outcomes
 
 
-def calculate_strike_percent(pitches, x_coordinate, y_coordinate):
-    strikes = 0
+def calculate_pitch_locations(pitches):
+    x_coordinates = []
+    y_coordinates = []
     for pitch in pitches:
-        if pitch_in_zone(pitch[6], pitch[7], x_coordinate, y_coordinate):
-            strikes += 1
-    return strikes / len(pitches)
+        x_coordinates.append(pitch[6])
+        y_coordinates.append(pitch[7])
+    if len(x_coordinates) > 1:
+        return {'x_mean': round(stat.mean(x_coordinates), 3), 'x_stdev': round(stat.stdev(x_coordinates), 3),
+                'y_mean': round(stat.mean(y_coordinates), 3), 'y_stdev': round(stat.stdev(y_coordinates), 3)}
+    else:
+        return {'x_mean': None, 'x_stdev': None, 'y_mean': None, 'y_stdev': None}
 
 
 def pitch_in_zone(x, y, x_coordinates, y_coordinates):
@@ -735,4 +795,4 @@ def change_multi_team_players_uids(year, month, day, player_type):
 
 
 # aggregate_pitch_fx(2017)
-# aggregate(2017, None, None, 'salech01', 'pitching')
+# aggregate(2017, None, None, 'klubeco01', 'pitching')
