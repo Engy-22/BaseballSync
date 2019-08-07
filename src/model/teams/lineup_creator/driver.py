@@ -1,11 +1,12 @@
 import os
+import time
 from model.teams.lineup_creator.reorganize_data import reorganize_batting_spots
 from model.teams.lineup_creator.check_existing_lineup import player_available, position_available, sp_can_bat_here
+from model.players.batter import Batter
 from random import randint
 from utilities.logger import Logger
 from utilities.time_converter import time_converter
 from utilities.properties import log_prefix
-import time
 
 logger = Logger(os.path.join(log_prefix, "controller", "create_lineup.log"))
 
@@ -22,7 +23,7 @@ def create_lineup(team_id, year, roster, team_info, starting_pitcher, opposing_p
         logger.log('\tPlace ' + str(place))
         if not use_dh and place == 9 and 'SP' not in position_list:
             logger.log('\t\tAdding starting pitcher')
-            batting_order.append(starting_pitcher)
+            batting_order.append(Batter(starting_pitcher.get_player_id(), team_id, year))
             position_list.append('SP')
         else:
             batter, position = get_player_randomly(roster, team_info, place, position_list,
