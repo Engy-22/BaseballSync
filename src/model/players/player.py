@@ -18,6 +18,7 @@ class Player:
         self.year_positions = []
         self.throws_with = None
         self.fielding_stats = None
+        self.simulation_fielding_stats = {}
         self.image_url = None
 
 ### Retrievers ###
@@ -35,9 +36,9 @@ class Player:
 
     def construct_image_url(self):
         return os.path.join('images', 'players', self.player_id)
-### END Retrievers ###
+### End Retrievers ###
 
-### SETTERS ###
+### Setters ###
     def set_year_positions(self, year_positions):
         self.year_positions = year_positions
 
@@ -55,7 +56,10 @@ class Player:
         self.first_name = name[0]
         self.last_name = name[1]
         db.close()
-### END SETTERS ###
+
+    def set_simulation_fielding_stats(self, stat, value):
+        self.simulation_fielding_stats[stat] = value
+### End Setters ###
 
 ### Getters ###
     def get_player_id(self):
@@ -90,4 +94,7 @@ class Player:
             return self.first_name + ' ' + self.last_name
         except TypeError:
             return None
+
+    def get_simulation_fielding_stats(self, stat):
+        return self.simulation_fielding_stats[stat]
 ### End Getters ###

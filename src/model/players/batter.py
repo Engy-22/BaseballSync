@@ -9,6 +9,7 @@ class Batter(Player):
         self.stats = None
         self.bats_with = None
         self.batting_spots = {}
+        self.simulation_stats = {}
 
     def set_batting_spots(self, batting_spots):
         self.batting_spots = batting_spots
@@ -21,6 +22,9 @@ class Batter(Player):
         self.bats_with = db.read('select batsWith from players where playerId = "' + self.player_id + '";')[0][0]
         db.close()
 
+    def set_simulation_stats(self, stat, value):
+        self.simulation_stats[stat] = value
+
     def get_batting_handedness(self):
         return self.bats_with
 
@@ -29,3 +33,6 @@ class Batter(Player):
 
     def get_batting_spots(self):
         return self.batting_spots
+
+    def get_simulation_stats(self, stat):
+        return self.simulation_stats[stat]
