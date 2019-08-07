@@ -14,14 +14,15 @@ def simulate_pitch(pitcher, batter, batter_orientation, pitcher_orientation, bal
     logger.log('Simulating ' + count + ' pitch')
     pitch = Pitch(pitcher, determine_pitch_type(pitcher, batter, pitcher_orientation, batter_orientation, count),
                   balls, strikes)
-    ball_strike = determine_ball_or_strike(pitcher, batter, pitcher_orientation, batter_orientation, count, pitch)
+    pitch_location = determine_pitch_location(pitcher, batter, pitcher_orientation, batter_orientation, count, pitch)
+    ball_strike = determine_ball_strike(pitch_location)
     swing_take = determine_if_batter_swung(
         get_batter_swing_rate(batter, pitcher_orientation, count, ball_strike, pitch), batter_orientation, pitcher,
         batter, count, ball_strike, pitch)
+    outcome = determine_outcome(balls, strikes, ball_strike, swing_take)
     driver_logger.log('\t\t' + pitch.get_pitch_type() + ' - ' + ball_strike + ' - ' + swing_take)
-    pitch_data = {'ball_strike': ball_strike, 'swing_take': swing_take,
-                  'trajectory': '', 'field': '', 'direction': '', 'outcome': ''}
-    return pitch_data
+    return {'ball_strike': ball_strike, 'swing_take': swing_take, 'trajectory': '', 'field': '', 'direction': '',
+            'outcome': outcome, 'pa_completed': pa_completed(outcome)}
 
 
 def determine_pitch_type(pitcher, batter, pitcher_orientation, batter_orientation, count):
@@ -68,7 +69,7 @@ def inflate_pitch_options(batter_pitches, pitcher_pitches):
     return pitch_collection
 
 
-def determine_ball_or_strike(pitcher, batter, pitcher_orientation, batter_orientation, count, pitch):
+def determine_pitch_location(pitcher, batter, pitcher_orientation, batter_orientation, count, pitch):
     """average out the batter and pitcher means for the pitch thrown in the given count, as well as their standard
     deviations (assuming this information is available given the scenario) and determine an x & y coordinate based upon
     these values. Then use strike_zone.json to determine whether the pitch was a strike or not."""
@@ -126,9 +127,11 @@ def determine_ball_or_strike(pitcher, batter, pitcher_orientation, batter_orient
                     ['overall_pitch_location_pitching'][pitch.get_pitch_type() + '_y_mean']
                 average_y_deviation = pitcher.get_pitching_stats()['advanced_pitching_stats']\
                     ['overall_pitch_location_pitching'][pitch.get_pitch_type() + '_y_stdev']
-    x = get_location(average_x_mean, average_x_deviation)
-    y = get_location(average_y_mean, average_y_deviation)
-    if pitch_in_zone(x, y, strike_zone_coordinate('x'), strike_zone_coordinate('y')):
+    return get_location(average_x_mean, average_x_deviation), get_location(average_y_mean, average_y_deviation)
+
+
+def determine_ball_strike(pitch_location):
+    if pitch_in_zone(pitch_location[0], pitch_location[1], strike_zone_coordinate('x'), strike_zone_coordinate('y')):
         return 'strike'
     else:
         return 'ball'
@@ -184,3 +187,31 @@ def determine_if_batter_swung(batter_swing_rate, batter_orientation, pitcher, ba
                 return pick_one_or_the_other(
                     pitcher.get_pitching_stats()['advanced_pitching_stats']['overall_swing_rate_pitching'][ball_strike]
                     [pitch.get_pitch_type()], {True: 'swing', False: 'take'})
+
+
+def determine_outcome(balls, strikes, ball_strike, swing_take):
+    if ball_strike == 'strike':
+        if strikes == 2:
+            if swing_take == 'swing':
+                return 'K (swinging)'
+            else:
+                return 'K (looking)'
+        else:
+            if swing_take == 'swing':
+                return 'strike (swinging)'
+            else:
+                return 'strike (looking)'
+    else:
+        if balls == 3 and ball_strike == 'ball' and swing_take == 'take':
+            return 'BB'
+        elif swing_take == 'swing':
+            if strikes == 2:
+                return 'K (swinging)'
+            else:
+                return 'strike (swinging)'
+        else:
+            return 'ball'
+
+
+def pa_completed(pitch_outcome):
+    return pitch_outcome in ['BB', 'K (swinging)', 'K (looking)']

@@ -2,7 +2,7 @@ from ast import literal_eval
 from utilities.database.wrappers.baseball_data_connection import DatabaseConnection
 from utilities.properties import sandbox_mode
 from model.teams.lineup_creator.driver import create_lineup
-from model.players.player import Player
+from model.players.batter import Batter
 
 
 class Team:
@@ -36,7 +36,7 @@ class Team:
         # print(self.team_info['fielder_stats'])
         roster = []
         for player_id, positions in self.team_info['player_positions'].items():
-            roster.append(Player(player_id, self.team_id, self.year))
+            roster.append(Batter(player_id, self.team_id, self.year))
         return roster
 
     def set_lineup(self, starting_pitcher, opposing_pitcher, use_dh):

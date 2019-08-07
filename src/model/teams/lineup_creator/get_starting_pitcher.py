@@ -1,6 +1,6 @@
 from utilities.database.wrappers.baseball_data_connection import DatabaseConnection
 from utilities.properties import sandbox_mode
-from model.players.player import Player
+from model.players.pitcher import Pitcher
 
 
 def get_starting_pitcher(team_id, year, game_number):
@@ -15,4 +15,4 @@ def get_starting_pitcher(team_id, year, game_number):
                       ' from team_years where teamid = "' + team_id + '" and year = ' + str(year) + ') and gameNum = '
                       + str(get_game(game_number, int(wins_losses[0][0]) + int(wins_losses[0][1]))) + ';')[0][0]
     db.close()
-    return Player(pitcher, team_id, year)
+    return Pitcher(pitcher, team_id, year)

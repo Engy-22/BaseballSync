@@ -26,14 +26,13 @@ def simulate_plate_appearance(batting_info, pitching_info, lineup, place, pitche
     while plate_appearance.get_outcome() is None:
         pitch_data = simulate_pitch(pitcher, batter, batter_orientation, pitcher_orientation,
                                     plate_appearance.get_balls(), plate_appearance.get_strikes(), logger)
-        if pitch_data['ball_strike'] == 'ball':
-            plate_appearance.increment_balls()
+        if pitch_data['pa_completed']:
+            plate_appearance.set_outcome(pitch_data['outcome'])
         else:
-            plate_appearance.increment_strikes()
-        if plate_appearance.get_balls() == 4:
-            plate_appearance.set_outcome('BB')
-        elif plate_appearance.get_strikes() == 3:
-            plate_appearance.set_outcome('K')
+            if pitch_data['outcome'] == 'ball':
+                plate_appearance.increment_balls()
+            else:
+                plate_appearance.increment_strikes()
 ################### random data ###################
     plate_appearance_data['runs'] = random.randint(0, 1)
     plate_appearance_data['hits'] = random.randint(0, 1)
@@ -53,7 +52,7 @@ def simulate_plate_appearance(batting_info, pitching_info, lineup, place, pitche
 def calculate_outs(outcome):
     if outcome == "BB":
         return 0
-    elif outcome == "K":
+    elif "K " in outcome:
         return 1
 
 

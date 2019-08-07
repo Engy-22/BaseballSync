@@ -37,8 +37,11 @@ def create_strike_zone():
                 place_on_number_line += incrementer  # move farther from the median in the appropriate direction
             points[coordinate_orientation + ('_high' if direction == 'positive' else '_low')] =\
                 place_on_number_line - (incrementer * 3)
-        points[coordinate_orientation + '_middle'] =\
+        points[coordinate_orientation + '_middle'] = \
             (points[coordinate_orientation + '_low'] + points[coordinate_orientation + '_high']) / 2
+        for meridian, multiplier in {'_meridian_1': 1, '_meridian_2': 2}.items():
+            points[coordinate_orientation + meridian] = points[coordinate_orientation + '_low'] + \
+                ((points[coordinate_orientation + '_high'] - points[coordinate_orientation + '_low']) / 3) * multiplier
         passes += 1
     db.close()
     try:
