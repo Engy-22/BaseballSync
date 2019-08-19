@@ -3,14 +3,20 @@ import json
 import time
 import datetime
 import statistics as stat
+from ast import literal_eval
+from concurrent.futures import ThreadPoolExecutor
 from utilities.database.wrappers.baseball_data_connection import DatabaseConnection
 from utilities.database.wrappers.pitch_fx_connection import PitchFXDatabaseConnection
 from utilities.logger import Logger
-from concurrent.futures import ThreadPoolExecutor
 from utilities.time_converter import time_converter
 from utilities.properties import log_prefix, import_driver_logger as driver_logger
 
 logger = Logger(os.path.join(log_prefix, "import_data", "aggregate_pitch_fx.log"))
+all_pitchers_batting_data = {"temp_pitch_location_batting": {}, "pitch_location_batting": {},
+                             "outcome_by_direction_batting": {}, "direction_batting": {}, "field_batting": {},
+                             "outcome_by_field_batting": {}, "outcomes_batting": {}, "temp_swing_rate_batting": {},
+                             "pitch_count_batting": {}, "pitch_usage_batting": {}, "trajectory_batting": {},
+                             "outcome_by_trajectory_batting": {}, "swing_rate_batting": {}}
 
 
 def aggregate_pitch_fx(year, month=None, day=None):
@@ -19,8 +25,8 @@ def aggregate_pitch_fx(year, month=None, day=None):
     start_time = time.time()
     logger.log("Aggregating pitch fx data for " + str(year) + ' || Timestamp: ' + datetime.datetime.today().
                strftime('%Y-%m-%d %H:%M:%S'))
-    # change_multi_team_players_uids(year, month, day, 'pitching')
-    # change_multi_team_players_uids(year, month, day, 'batting')
+    change_multi_team_players_uids(year, month, day, 'pitching')
+    change_multi_team_players_uids(year, month, day, 'batting')
     aggregate_and_write(year, month, day, 'pitching')
     aggregate_and_write(year, month, day, 'batting')
     total_time = time_converter(time.time() - start_time)
@@ -35,6 +41,8 @@ def aggregate_and_write(year, month, day, player_type):
     for player_id in get_players(year, month, day, player_type):
         aggregate(year, month, day, player_id[0], player_type)
         # break
+    if player_type == 'batting':
+        round_up_and_write_all_pitchers_batting_stats(year)
     total_time = time_converter(time.time()-start_time)
     logger.log("\tDone aggregating and writing " + player_type + " data: Time = " + total_time)
     driver_logger.log("\t\t\tTime = " + total_time)
@@ -51,13 +59,10 @@ def aggregate(year, month, day, player_id, player_type):
     trajectories = {}
     fields = {}
     directions = {}
-    trajectories_by_outcome = {}
-    fields_by_outcome = {}
-    directions_by_outcome = {}
     p_uid = get_player_unique_stat_id(year, player_type, player_id)
     pitches = get_player_pitches(p_uid, year, month, day, player_type)
     for match_up in match_ups:
-        # aggregate_hbp(player_id, year, match_up, p_uid, player_type)
+        aggregate_hbp(player_id, year, match_up, p_uid, player_type)
         pitch_usage[match_up] = {}
         pitch_type_outcomes[match_up] = {}
         swing_rates[match_up] = {}
@@ -65,9 +70,6 @@ def aggregate(year, month, day, player_id, player_type):
         trajectories[match_up] = {}
         fields[match_up] = {}
         directions[match_up] = {}
-        trajectories_by_outcome[match_up] = {}
-        fields_by_outcome[match_up] = {}
-        directions_by_outcome[match_up] = {}
         for ball in range(4):
             for strike in range(3):
                 count = str(ball) + '-' + str(strike)
@@ -79,35 +81,35 @@ def aggregate(year, month, day, player_id, player_type):
                 fields[match_up][count] = {}
                 directions[match_up][count] = {}
                 for pitch_type, pitch_type_list in sort_by_pitch_type(pitches, match_up, ball, strike).items():
-                    # pitch_usage[match_up][count][pitch_type] = len(pitch_type_list)
-                    # pitch_type_outcomes[match_up][count][pitch_type] = sort_further_by_outcome(pitch_type_list)
-                    # swing_rates[match_up][count][pitch_type] = calculate_swing_rate(pitch_type_list)
+                    if this_batter_is_a_pitcher(p_uid):
+                        accumulate_all_pitchers_dict(pitch_type, pitch_type_list, match_up, count)
+                    pitch_usage[match_up][count][pitch_type] = len(pitch_type_list)
+                    pitch_type_outcomes[match_up][count][pitch_type] = sort_further_by_outcome(pitch_type_list)
+                    swing_rates[match_up][count][pitch_type] = calculate_swing_rate(pitch_type_list)
                     pitch_locations[match_up][count][pitch_type] = calculate_pitch_locations(pitch_type_list)
-                #     trajectories[match_up][count][pitch_type] = sort_further_by_trajectory(pitch_type_list)
-                #     fields[match_up][count][pitch_type] = sort_further_by_field(pitch_type_list)
-                #     directions[match_up][count][pitch_type] = sort_further_by_direction(pitch_type_list)
-                # write_pitch_count(player_id, p_uid, year, match_up, count, pitch_usage[match_up][count], player_type)
-                # write_pitch_usage(player_id, p_uid, year, match_up, count, pitch_usage[match_up][count], player_type)
-                # write_swing_rate(player_id, p_uid, year, match_up, count, swing_rates[match_up][count], player_type)
-                # write_pitch_locations(player_id, p_uid, year, match_up, count, pitch_locations[match_up][count],
-                #                       player_type)
-        #         write_outcomes(player_id, p_uid, year, match_up, count, pitch_type_outcomes[match_up][count],
-        #                        player_type)
-        #         write_trajectory_by_pitch_type(player_id, p_uid, year, match_up, count, trajectories[match_up][count],
-        #                                        player_type)
-        #         write_field_by_pitch_type(player_id, p_uid, year, match_up, count, fields[match_up][count], player_type)
-        #         write_direction_by_pitch_type(player_id, p_uid, year, match_up, count, directions[match_up][count],
-        #                                       player_type)
-        # for outcome, truncated_pitches in sort_pitches_by_outcome(pitches).items():
-        #     trajectories_by_outcome[match_up][outcome] = calculate_trajectory_by_outcome(truncated_pitches)
-        #     fields_by_outcome[match_up][outcome] = calculate_field_by_outcome(truncated_pitches)
-        #     directions_by_outcome[match_up][outcome] = calculate_direction_by_outcome(truncated_pitches)
-        # write_trajectory_by_outcome(player_id, p_uid, year, match_up, trajectories_by_outcome[match_up], player_type)
-        # write_field_by_outcome(player_id, p_uid, year, match_up, fields_by_outcome[match_up], player_type)
-        # write_direction_by_outcome(player_id, p_uid, year, match_up, directions_by_outcome[match_up], player_type)
-    # write_overall_pitch_usage(player_id, p_uid, year, pitch_usage, player_type)
+                    trajectories[match_up][count][pitch_type] = sort_further_by_trajectory(pitch_type_list)
+                    fields[match_up][count][pitch_type] = sort_further_by_field(pitch_type_list)
+                    directions[match_up][count][pitch_type] = sort_further_by_direction(pitch_type_list)
+                write_pitch_count(player_id, p_uid, year, match_up, count, pitch_usage[match_up][count], player_type)
+                write_pitch_usage(player_id, p_uid, year, match_up, count, pitch_usage[match_up][count], player_type)
+                write_swing_rate(player_id, p_uid, year, match_up, count, swing_rates[match_up][count], player_type)
+                write_pitch_locations(player_id, p_uid, year, match_up, count, pitch_locations[match_up][count],
+                                      player_type)
+                write_outcomes(player_id, p_uid, year, match_up, count, pitch_type_outcomes[match_up][count],
+                               player_type)
+                write_trajectory_by_pitch_type(player_id, p_uid, year, match_up, count, trajectories[match_up][count],
+                                               player_type)
+                write_field_by_pitch_type(player_id, p_uid, year, match_up, count, fields[match_up][count], player_type)
+                write_direction_by_pitch_type(player_id, p_uid, year, match_up, count, directions[match_up][count],
+                                              player_type)
+        write_outcome_by_trajectory(player_id, p_uid, year, match_up, sort_outcomes_by_trajectory(pitches, match_up),
+                                    player_type)
+        write_outcome_by_field(player_id, p_uid, year, match_up, sort_outcomes_by_field(pitches, match_up), player_type)
+        write_outcome_by_direction(player_id, p_uid, year, match_up, sort_outcomes_by_direction(pitches, match_up),
+                                   player_type)
+    write_overall_pitch_usage(player_id, p_uid, year, pitch_usage, player_type)
     write_overall_pitch_locations(year, p_uid, pitches, player_id, player_type)
-    # write_overall_swing_rate(year, p_uid, pitches, player_id, player_type)
+    write_overall_swing_rate(year, p_uid, pitches, player_id, player_type)
     logger.log('\t\tTime = ' + time_converter(time.time()-start_time))
 
 
@@ -541,81 +543,91 @@ def write_direction_by_pitch_type(player_id, p_uid, year, matchup, count, direct
     db.close()
 
 
-def write_trajectory_by_outcome(player_id, p_uid, year, matchup, trajectory_by_outcome, player_type):
+def write_outcome_by_trajectory(player_id, p_uid, year, match_up, outcome_by_trajectory, player_type):
     db = DatabaseConnection(sandbox_mode=True)
-    outcome_totals = {}
-    for outcome, dictionary in trajectory_by_outcome.items():
-        for trajectory, total in dictionary.items():
-            if outcome in outcome_totals:
-                outcome_totals[outcome] += total
+    trajectory_totals = {}
+    for trajectory, outcomes in outcome_by_trajectory.items():
+        for outcome, total in outcomes.items():
+            if trajectory in trajectory_totals:
+                trajectory_totals[trajectory] += total
             else:
-                outcome_totals[outcome] = total
+                trajectory_totals[trajectory] = total
         with ThreadPoolExecutor(os.cpu_count()) as executor:
-            for trajectory, total in dictionary.items():
-                if len(db.read('select * from trajectory_by_outcome_' + player_type + ' where playerid = "' + player_id
-                               + '" and year = ' + str(year) + ' and matchup = "' + matchup + '" and outcome = "'
-                               + outcome + '";')) == 0:
-                    executor.submit(db.write('insert into trajectory_by_outcome_' + player_type + ' (uid, playerid, '
-                                             'year, matchup, outcome, ' + trajectory + ', p_uid) values (default, "'
-                                             + player_id + '", ' + str(year) + ', "' + matchup + '", "' + outcome + '",'
-                                             + str(round(total/outcome_totals[outcome], 3)) + ', ' + str(p_uid) + ');'))
+            for outcome, total in outcomes.items():
+                if len(db.read('select * from outcome_by_trajectory_' + player_type + ' where playerid = "' + player_id
+                               + '" and year = ' + str(year) + ' and matchup = "' + match_up + '" and trajectory = "'
+                               + trajectory + '";')) == 0:
+                    executor.submit(db.write('insert into outcome_by_trajectory_' + player_type + ' (uid, playerid, '
+                                             'year, matchup, trajectory, '
+                                             + outcome.replace(' ', '_').replace(')', '').replace('(', '') + ', p_uid) '
+                                             'values (default, "' + player_id + '", ' + str(year) + ', "' + match_up
+                                             + '", "' + trajectory + '", '
+                                             + str(round(total/trajectory_totals[trajectory], 3)) + ', ' + str(p_uid)
+                                             + ');'))
                 else:
-                    executor.submit(db.write('update trajectory_by_outcome_' + player_type + ' set ' + trajectory
-                                             + ' = ' + str(round(total/outcome_totals[outcome], 3)) + ' where playerid '
+                    executor.submit(db.write('update outcome_by_trajectory_' + player_type + ' set '
+                                             + outcome.replace(' ', '_').replace(')', '').replace('(', '') + ' = '
+                                             + str(round(total/trajectory_totals[trajectory], 3)) + ' where playerid '
                                              '= "' + player_id + '" and year = ' + str(year) + ' and matchup = "'
-                                             + matchup + '" and outcome = "' + outcome + '";'))
+                                             + match_up + '" and trajectory = "' + trajectory + '";'))
     db.close()
 
 
-def write_field_by_outcome(player_id, p_uid, year, matchup, field_by_outcome, player_type):
+def write_outcome_by_field(player_id, p_uid, year, match_up, outcome_by_field, player_type):
     db = DatabaseConnection(sandbox_mode=True)
-    outcome_totals = {}
-    for outcome, dictionary in field_by_outcome.items():
-        for field, total in dictionary.items():
-            if outcome in outcome_totals:
-                outcome_totals[outcome] += total
+    field_totals = {}
+    for field, outcomes in outcome_by_field.items():
+        for outcome, total in outcomes.items():
+            if field in field_totals:
+                field_totals[field] += total
             else:
-                outcome_totals[outcome] = total
+                field_totals[field] = total
         with ThreadPoolExecutor(os.cpu_count()) as executor:
-            for field, total in dictionary.items():
-                if len(db.read('select * from field_by_outcome_' + player_type + ' where playerid = "' + player_id
-                               + '" and year = ' + str(year) + ' and matchup = "' + matchup + '" and outcome = "'
-                               + outcome + '";')) == 0:
-                    executor.submit(db.write('insert into field_by_outcome_' + player_type + ' (uid, playerid, year, '
-                                             'matchup, outcome, ' + field + ', p_uid) values (default, "' + player_id
-                                             + '", ' + str(year) + ', "' + matchup + '", "' + outcome + '", '
-                                             + str(round(total/outcome_totals[outcome], 3)) + ', ' + str(p_uid) + ');'))
+            for outcome, total in outcomes.items():
+                if len(db.read('select * from outcome_by_field_' + player_type + ' where playerid = "' + player_id
+                               + '" and year = ' + str(year) + ' and matchup = "' + match_up + '" and field = "'
+                               + field + '";')) == 0:
+                    executor.submit(db.write('insert into outcome_by_field_' + player_type + ' (uid, playerid, '
+                                             'year, matchup, field, '
+                                             + outcome.replace(' ', '_').replace(')', '').replace('(', '') + ', p_uid) '
+                                             'values (default, "' + player_id + '", ' + str(year) + ', "' + match_up
+                                             + '", "' + field + '", ' + str(round(total/field_totals[field], 3)) + ', '
+                                             + str(p_uid) + ');'))
                 else:
-                    executor.submit(db.write('update field_by_outcome_' + player_type + ' set ' + field + ' = '
-                                             + str(round(total/outcome_totals[outcome], 3)) + ' where playerid = "'
-                                             + player_id + '" and year = ' + str(year) + ' and matchup = "' + matchup
-                                             + '" and outcome = "' + outcome + '";'))
+                    executor.submit(db.write('update outcome_by_field_' + player_type + ' set '
+                                             + outcome.replace(' ', '_').replace(')', '').replace('(', '') + ' = '
+                                             + str(round(total/field_totals[field], 3)) + ' where playerid '
+                                             '= "' + player_id + '" and year = ' + str(year) + ' and matchup = "'
+                                             + match_up + '" and field = "' + field + '";'))
     db.close()
 
 
-def write_direction_by_outcome(player_id, p_uid, year, match_up, direction_by_outcome, player_type):
+def write_outcome_by_direction(player_id, p_uid, year, match_up, outcome_by_direction, player_type):
     db = DatabaseConnection(sandbox_mode=True)
-    outcome_totals = {}
-    for outcome, dictionary in direction_by_outcome.items():
-        for direction, total in dictionary.items():
-            if outcome in outcome_totals:
-                outcome_totals[outcome] += total
+    direction_totals = {}
+    for direction, outcomes in outcome_by_direction.items():
+        for outcome, total in outcomes.items():
+            if direction in direction_totals:
+                direction_totals[direction] += total
             else:
-                outcome_totals[outcome] = total
+                direction_totals[direction] = total
         with ThreadPoolExecutor(os.cpu_count()) as executor:
-            for direction, total in dictionary.items():
-                if len(db.read('select * from direction_by_outcome_' + player_type + ' where playerid = "' + player_id
-                               + '" and year = ' + str(year) + ' and matchup = "' + match_up + '" and outcome = "'
-                               + outcome + '";')) == 0:
-                    executor.submit(db.write('insert into direction_by_outcome_' + player_type + ' (uid, playerid, '
-                                             'year, matchup, outcome, ' + direction + ', p_uid) values (default, "'
-                                             + player_id + '", ' + str(year) + ', "' + match_up + '", "' + outcome + '",'
-                                             + str(round(total/outcome_totals[outcome], 3)) + ', ' + str(p_uid) + ');'))
+            for outcome, total in outcomes.items():
+                if len(db.read('select * from outcome_by_direction_' + player_type + ' where playerid = "' + player_id
+                               + '" and year = ' + str(year) + ' and matchup = "' + match_up + '" and direction = "'
+                               + direction + '";')) == 0:
+                    executor.submit(db.write('insert into outcome_by_direction_' + player_type + ' (uid, playerid, '
+                                             'year, matchup, direction, '
+                                             + outcome.replace(' ', '_').replace(')', '').replace('(', '') + ', p_uid) '
+                                             'values (default, "' + player_id + '", ' + str(year) + ', "' + match_up
+                                             + '", "' + direction + '", ' + str(round(total/direction_totals[direction],
+                                                                                      3)) + ', ' + str(p_uid) + ');'))
                 else:
-                    executor.submit(db.write('update direction_by_outcome_' + player_type + ' set ' + direction + ' = '
-                                             + str(round(total/outcome_totals[outcome], 3)) + ' where playerid = "'
-                                             + player_id + '" and year = ' + str(year) + ' and matchup = "' + match_up
-                                             + '" and outcome = "' + outcome + '";'))
+                    executor.submit(db.write('update outcome_by_direction_' + player_type + ' set '
+                                             + outcome.replace(' ', '_').replace(')', '').replace('(', '') + ' = '
+                                             + str(round(total/direction_totals[direction], 3)) + ' where playerid '
+                                             '= "' + player_id + '" and year = ' + str(year) + ' and matchup = "'
+                                             + match_up + '" and direction = "' + direction + '";'))
     db.close()
 
 
@@ -719,44 +731,40 @@ def sort_further_by_direction(pitches):
     return direction
 
 
-def sort_pitches_by_outcome(pitches):
-    outcomes = {}
+def sort_outcomes_by_trajectory(pitches, match_up):
+    trajectories = {'vr': {}, 'vl': {}}
     for pitch in pitches:
-        if pitch[10] in outcomes:
-            outcomes[pitch[10]].append(pitch[11:])
-        else:
-            outcomes[pitch[10]] = [pitch[11:]]
-    return outcomes
+        if pitch[5][:2] == match_up[:2]:
+            if pitch[11] not in trajectories[match_up[:2]]:
+                trajectories[match_up[:2]][pitch[11]] = {}
+            if pitch[10] not in trajectories[match_up[:2]][pitch[11]]:
+                trajectories[match_up[:2]][pitch[11]][pitch[10]] = 0
+            trajectories[match_up[:2]][pitch[11]][pitch[10]] += 1
+    return trajectories[match_up[:2]]
 
 
-def calculate_trajectory_by_outcome(pitches):
-    trajectories = {}
+def sort_outcomes_by_field(pitches, match_up):
+    fields = {'vr': {}, 'vl': {}}
     for pitch in pitches:
-        if pitch[0] in trajectories:
-            trajectories[pitch[0]] += 1
-        else:
-            trajectories[pitch[0]] = 1
-    return trajectories
+        if pitch[5][:2] == match_up[:2]:
+            if pitch[12] not in fields[match_up[:2]]:
+                fields[match_up[:2]][pitch[12]] = {}
+            if pitch[10] not in fields[match_up[:2]][pitch[12]]:
+                fields[match_up[:2]][pitch[12]][pitch[10]] = 0
+            fields[match_up[:2]][pitch[12]][pitch[10]] += 1
+    return fields[match_up[:2]]
 
 
-def calculate_field_by_outcome(pitches):
-    fields = {}
+def sort_outcomes_by_direction(pitches, match_up):
+    directions = {'vr': {}, 'vl': {}}
     for pitch in pitches:
-        if pitch[1] in fields:
-            fields[pitch[1]] += 1
-        else:
-            fields[pitch[1]] = 1
-    return fields
-
-
-def calculate_direction_by_outcome(pitches):
-    directions = {}
-    for pitch in pitches:
-        if pitch[2] in directions:
-            directions[pitch[2]] += 1
-        else:
-            directions[pitch[2]] = 1
-    return directions
+        if pitch[5][:2] == match_up[:2]:
+            if pitch[13] not in directions[match_up[:2]]:
+                directions[match_up[:2]][pitch[13]] = {}
+            if pitch[10] not in directions[match_up[:2]][pitch[13]]:
+                directions[match_up[:2]][pitch[13]][pitch[10]] = 0
+            directions[match_up[:2]][pitch[13]][pitch[10]] += 1
+    return directions[match_up[:2]]
 
 
 def change_multi_team_players_uids(year, month, day, player_type):
@@ -794,5 +802,448 @@ def change_multi_team_players_uids(year, month, day, player_type):
     logger.log('\t\tTime = ' + time_converter(time.time() - start_time))
 
 
+def this_batter_is_a_pitcher(p_uid):
+    db = DatabaseConnection(sandbox_mode=True)
+    if db.read('select primaryPosition from players where playerId = (select playerId from player_teams where '
+               'pt_uniqueidentifier = (select pt_uniqueidentifier from player_batting where pb_uniqueidentifier = '
+               + str(p_uid) + '));')[0][0] in ['SP', 'RP']:
+        is_a_pitcher = True
+    else:
+        is_a_pitcher = False
+    db.close()
+    return is_a_pitcher
+
+
+def accumulate_all_pitchers_dict(pitch_type, pitches, match_up, count):
+    global all_pitchers_batting_data
+    increment_all_pitchers_pitch_count_batting_data_overall(match_up, count, pitch_type, len(pitches))
+    pitch_type_outcomes = {}
+    swing_rates = {}
+    pitch_locations = {}
+    trajectories = {}
+    fields = {}
+    directions = {}
+    outcomes_by_trajectory = {}
+    outcomes_by_field = {}
+    outcomes_by_direction = {}
+    for pitch in pitches:
+        swing_take = pitch[0]
+        outcome = pitch[2]
+        trajectory = pitch[3]
+        field = pitch[4]
+        direction = pitch[5]
+        x = pitch[6]
+        y = pitch[7]
+        pitch_type_outcomes = \
+            accumulate_pitch_type_outcomes_individual(pitch_type_outcomes, match_up, count, pitch_type, outcome)
+        swing_rates = accumulate_swing_rates_individual(swing_rates, match_up, count, pitch_type, swing_take, x, y)
+        pitch_locations = accumulate_pitch_locations_individual(pitch_locations, pitch_type, match_up, count, x, y)
+        trajectories = accumulate_trajectories_by_pitch_type_individual(trajectories, pitch_type, match_up, count,
+                                                                        trajectory)
+        fields = accumulate_fields_by_pitch_type_individual(fields, match_up, count, pitch_type, field)
+        directions = accumulate_directions_by_pitch_type_individual(directions, match_up, count, pitch_type, direction)
+        outcomes_by_trajectory = accumulate_outcomes_by_trajectory_individual(outcomes_by_trajectory, trajectory,
+                                                                              outcome, match_up, count)
+        outcomes_by_field = accumulate_outcomes_by_field_individual(outcomes_by_field, field, outcome, match_up, count)
+        outcomes_by_direction = accumulate_outcomes_by_direction_individual(outcomes_by_direction, direction, outcome,
+                                                                            match_up, count)
+    accumulate_pitch_type_outcomes_overall(pitch_type_outcomes, match_up, count)
+    accumulate_swing_rates_overall(swing_rates, match_up, count)
+    accumulate_pitch_locations_overall(pitch_locations, pitch_type, match_up, count)
+    accumulate_trajectories_overall(trajectories, match_up, count)
+    accumulate_fields_overall(fields, match_up, count)
+    accumulate_directions_overall(directions, match_up, count)
+    accumulate_trajectories_by_outcomes_overall(outcomes_by_trajectory, match_up, count)
+    accumulate_fields_by_outcomes_overall(outcomes_by_field, match_up, count)
+    accumulate_directions_by_outcomes_overall(outcomes_by_direction, match_up, count)
+
+
+def accumulate_pitch_type_outcomes_individual(pitch_type_outcomes, match_up, count, pitch_type, outcome):
+    if match_up not in pitch_type_outcomes:
+        pitch_type_outcomes[match_up] = {}
+    if count not in pitch_type_outcomes[match_up]:
+        pitch_type_outcomes[match_up][count] = {}
+    if pitch_type not in pitch_type_outcomes[match_up][count]:
+        pitch_type_outcomes[match_up][count][pitch_type] = {}
+    if outcome not in pitch_type_outcomes[match_up][count][pitch_type]:
+        pitch_type_outcomes[match_up][count][pitch_type][outcome] = 0
+    pitch_type_outcomes[match_up][count][pitch_type][outcome] += 1
+    return pitch_type_outcomes
+
+
+def accumulate_swing_rates_individual(swing_rates, match_up, count, pitch_type, swing_take, x, y):
+    if match_up not in swing_rates:
+        swing_rates[match_up] = {}
+    if count not in swing_rates[match_up]:
+        swing_rates[match_up][count] = {True: {}, False: {}}
+    if pitch_type not in swing_rates[match_up][count]:
+        swing_rates[match_up][count][True][pitch_type] = []
+        swing_rates[match_up][count][False][pitch_type] = []
+    swing_rates[match_up][count][pitch_in_zone(x, y, strike_zone_coordinate('x'), strike_zone_coordinate('y'))]\
+        [pitch_type].append(swing_take)
+    return swing_rates
+
+
+def accumulate_pitch_locations_individual(pitch_locations, pitch_type, match_up, count, x, y):
+    if match_up not in pitch_locations:
+        pitch_locations[match_up] = {}
+    if count not in pitch_locations[match_up]:
+        pitch_locations[match_up][count] = {}
+    if pitch_type not in pitch_locations[match_up][count]:
+        pitch_locations[match_up][count][pitch_type] = {'x': [], 'y': []}
+    pitch_locations[match_up][count][pitch_type]['x'].append(x)
+    pitch_locations[match_up][count][pitch_type]['y'].append(y)
+    return pitch_locations
+
+
+def accumulate_trajectories_by_pitch_type_individual(trajectories, pitch_type, match_up, count, trajectory):
+    if match_up not in trajectories:
+        trajectories[match_up] = {}
+    if count not in trajectories[match_up]:
+        trajectories[match_up][count] = {}
+    if pitch_type not in trajectories[match_up][count]:
+        trajectories[match_up][count][pitch_type] = {}
+    if trajectory not in trajectories[match_up][count][pitch_type]:
+        trajectories[match_up][count][pitch_type][trajectory] = 0
+    trajectories[match_up][count][pitch_type][trajectory] += 1
+    return trajectories
+
+
+def accumulate_fields_by_pitch_type_individual(fields, match_up, count, pitch_type, field):
+    if match_up not in fields:
+        fields[match_up] = {}
+    if count not in fields[match_up]:
+        fields[match_up][count] = {}
+    if pitch_type not in fields[match_up][count]:
+        fields[match_up][count][pitch_type] = {}
+    if field not in fields[match_up][count][pitch_type]:
+        fields[match_up][count][pitch_type][field] = 0
+    fields[match_up][count][pitch_type][field] += 1
+    return fields
+
+
+def accumulate_directions_by_pitch_type_individual(directions, match_up, count, pitch_type, direction):
+    if match_up not in directions:
+        directions[match_up] = {}
+    if count not in directions[match_up]:
+        directions[match_up][count] = {}
+    if pitch_type not in directions[match_up][count]:
+        directions[match_up][count][pitch_type] = {}
+    if direction not in directions[match_up][count][pitch_type]:
+        directions[match_up][count][pitch_type][direction] = 0
+    directions[match_up][count][pitch_type][direction] += 1
+    return directions
+
+
+def accumulate_outcomes_by_trajectory_individual(outcomes_by_trajectory, trajectory, outcome, match_up, count):
+    if match_up not in outcomes_by_trajectory:
+        outcomes_by_trajectory[match_up] = {}
+    if count not in outcomes_by_trajectory[match_up]:
+        outcomes_by_trajectory[match_up][count] = {}
+    if trajectory not in outcomes_by_trajectory[match_up][count]:
+        outcomes_by_trajectory[match_up][count][trajectory] = {}
+    if outcome not in outcomes_by_trajectory[match_up][count][trajectory]:
+        outcomes_by_trajectory[match_up][count][trajectory][outcome] = 0
+    outcomes_by_trajectory[match_up][count][trajectory][outcome] += 1
+    return outcomes_by_trajectory
+
+
+def accumulate_outcomes_by_field_individual(outcomes_by_field, field, outcome, match_up, count):
+    if match_up not in outcomes_by_field:
+        outcomes_by_field[match_up] = {}
+    if count not in outcomes_by_field[match_up]:
+        outcomes_by_field[match_up][count] = {}
+    if field not in outcomes_by_field[match_up][count]:
+        outcomes_by_field[match_up][count][field] = {}
+    if outcome not in outcomes_by_field[match_up][count][field]:
+        outcomes_by_field[match_up][count][field][outcome] = 0
+    outcomes_by_field[match_up][count][field][outcome] += 1
+    return outcomes_by_field
+
+
+def accumulate_outcomes_by_direction_individual(outcomes_by_direction, direction, outcome, match_up, count):
+    if match_up not in outcomes_by_direction:
+        outcomes_by_direction[match_up] = {}
+    if count not in outcomes_by_direction[match_up]:
+        outcomes_by_direction[match_up][count] = {}
+    if direction not in outcomes_by_direction[match_up][count]:
+        outcomes_by_direction[match_up][count][direction] = {}
+    if outcome not in outcomes_by_direction[match_up][count][direction]:
+        outcomes_by_direction[match_up][count][direction][outcome] = 0
+    outcomes_by_direction[match_up][count][direction][outcome] += 1
+    return outcomes_by_direction
+
+
+def increment_all_pitchers_pitch_count_batting_data_overall(match_up, count, pitch_type, pitch_count):
+    global all_pitchers_batting_data
+    if match_up not in all_pitchers_batting_data['pitch_count_batting']:
+        all_pitchers_batting_data['pitch_count_batting'][match_up] = {}
+    if count not in all_pitchers_batting_data['pitch_count_batting'][match_up]:
+        all_pitchers_batting_data['pitch_count_batting'][match_up][count] = {}
+    if pitch_type not in all_pitchers_batting_data['pitch_count_batting'][match_up][count]:
+        all_pitchers_batting_data['pitch_count_batting'][match_up][count][pitch_type] = 0
+    all_pitchers_batting_data['pitch_count_batting'][match_up][count][pitch_type] += pitch_count
+
+
+def all_pitchers_pitch_usage_batting_data_overall():
+    global all_pitchers_batting_data
+    for match_up, count_data in all_pitchers_batting_data['pitch_count_batting'].items():
+        if match_up not in all_pitchers_batting_data['pitch_usage_batting']:
+            all_pitchers_batting_data['pitch_usage_batting'][match_up] = {}
+        for count, pitch_data in count_data.items():
+            total_pitches_for_this_count = 0
+            if count not in all_pitchers_batting_data['pitch_usage_batting'][match_up]:
+                all_pitchers_batting_data['pitch_usage_batting'][match_up][count] = {}
+            for pitch_type, pitch_count in pitch_data.items():
+                total_pitches_for_this_count += pitch_count
+            for pitch_type, pitch_count in pitch_data.items():
+                all_pitchers_batting_data['pitch_usage_batting'][match_up][count][pitch_type] = \
+                    round(pitch_count/total_pitches_for_this_count, 3)
+
+
+def accumulate_pitch_type_outcomes_overall(pitch_type_outcomes, match_up, count):
+    global all_pitchers_batting_data
+    if match_up not in all_pitchers_batting_data['outcomes_batting']:
+        all_pitchers_batting_data['outcomes_batting'][match_up] = {}
+    if count not in all_pitchers_batting_data['outcomes_batting'][match_up]:
+        all_pitchers_batting_data['outcomes_batting'][match_up][count] = {}
+    for pitch_type, outcomes in pitch_type_outcomes[match_up][count].items():
+        if pitch_type not in all_pitchers_batting_data['outcomes_batting'][match_up][count]:
+            all_pitchers_batting_data['outcomes_batting'][match_up][count][pitch_type] = \
+                pitch_type_outcomes[match_up][count][pitch_type]
+        else:
+            for outcome, occurrences in outcomes. items():
+                if outcome not in all_pitchers_batting_data['outcomes_batting'][match_up][count][pitch_type]:
+                    all_pitchers_batting_data['outcomes_batting'][match_up][count][pitch_type][outcome] = 0
+                all_pitchers_batting_data['outcomes_batting'][match_up][count][pitch_type][outcome] += occurrences
+
+
+def accumulate_swing_rates_overall(swing_rates, match_up, count):
+    global all_pitchers_batting_data
+    if match_up not in all_pitchers_batting_data['temp_swing_rate_batting']:
+        all_pitchers_batting_data['temp_swing_rate_batting'][match_up] = {}
+    if count not in all_pitchers_batting_data['temp_swing_rate_batting'][match_up]:
+        all_pitchers_batting_data['temp_swing_rate_batting'][match_up][count] = {True: {}, False: {}}
+    for boolean in [True, False]:
+        for pitch_type, swings_takes in swing_rates[match_up][count][boolean].items():
+            if pitch_type not in all_pitchers_batting_data['temp_swing_rate_batting'][match_up][count][boolean]:
+                all_pitchers_batting_data['temp_swing_rate_batting'][match_up][count][boolean][pitch_type] = []
+            all_pitchers_batting_data['temp_swing_rate_batting'][match_up][count][boolean][pitch_type] += \
+                swing_rates[match_up][count][boolean][pitch_type]
+
+
+def determine_overall_swing_rates_in_and_out_of_zone(match_up, count):
+    global all_pitchers_batting_data
+    if match_up not in all_pitchers_batting_data['swing_rate_batting']:
+        all_pitchers_batting_data['swing_rate_batting'][match_up] = {}
+    if count not in all_pitchers_batting_data['swing_rate_batting'][match_up]:
+        all_pitchers_batting_data['swing_rate_batting'][match_up][count] = {}
+    try:
+        for strike_ball, pitch_types in all_pitchers_batting_data['temp_swing_rate_batting'][match_up]\
+                [count].items():
+            if strike_ball not in all_pitchers_batting_data['swing_rate_batting'][match_up][count]:
+                all_pitchers_batting_data['swing_rate_batting'][match_up][count][strike_ball] = {}
+            for pitch_type, swings_takes in pitch_types.items():
+                try:
+                    all_pitchers_batting_data['swing_rate_batting'][match_up][count][strike_ball][pitch_type] = \
+                        all_pitchers_batting_data['temp_swing_rate_batting'][match_up][count][strike_ball]\
+                            [pitch_type].count('swing') / \
+                        len(all_pitchers_batting_data['temp_swing_rate_batting'][match_up][count][strike_ball]
+                            [pitch_type])
+                except ZeroDivisionError:
+                    all_pitchers_batting_data['swing_rate_batting'][match_up][count][strike_ball][pitch_type] = \
+                        None
+    except KeyError:
+        all_pitchers_batting_data['swing_rate_batting'][match_up][count] = {True: {}, False: {}}
+
+
+def accumulate_pitch_locations_overall(pitch_locations, pitch_type, match_up, count):
+    global all_pitchers_batting_data
+    if match_up not in all_pitchers_batting_data['temp_pitch_location_batting']:
+        all_pitchers_batting_data['temp_pitch_location_batting'][match_up] = {}
+    if count not in all_pitchers_batting_data['temp_pitch_location_batting'][match_up]:
+        all_pitchers_batting_data['temp_pitch_location_batting'][match_up][count] = {}
+    if pitch_type not in all_pitchers_batting_data['temp_pitch_location_batting'][match_up][count]:
+        all_pitchers_batting_data['temp_pitch_location_batting'][match_up][count][pitch_type] = \
+            {'x': [], 'y': []}
+    for coordinate_type in ['x', 'y']:
+        all_pitchers_batting_data['temp_pitch_location_batting'][match_up][count][pitch_type]\
+            [coordinate_type] += pitch_locations[match_up][count][pitch_type][coordinate_type]
+
+
+def find_mean_and_stdev_of_pitch_locations(match_up, count, pitch_type):
+    global all_pitchers_batting_data
+    if match_up not in all_pitchers_batting_data['pitch_location_batting']:
+        all_pitchers_batting_data['pitch_location_batting'][match_up] = {}
+    if count not in all_pitchers_batting_data['pitch_location_batting'][match_up]:
+        all_pitchers_batting_data['pitch_location_batting'][match_up][count] = {}
+    if pitch_type not in all_pitchers_batting_data['pitch_location_batting'][match_up][count]:
+        all_pitchers_batting_data['pitch_location_batting'][match_up][count][pitch_type] = {}
+    for location in ['x', 'y']:
+        try:
+            all_pitchers_batting_data['pitch_location_batting'][match_up][count][pitch_type]\
+                [location + '_mean'] = stat.mean(all_pitchers_batting_data['temp_pitch_location_batting']\
+                                                                 [match_up][count][pitch_type][location])
+            try:
+                all_pitchers_batting_data['pitch_location_batting'][match_up][count][pitch_type]\
+                    [location + '_stdev'] = stat.stdev(all_pitchers_batting_data['temp_pitch_location_batting']\
+                                                                                [match_up][count][pitch_type][location])
+            except stat.StatisticsError:  # there's one or zero data points. Cannot calculate standard deviation with < 2
+                all_pitchers_batting_data['pitch_location_batting'][match_up][count][pitch_type]\
+                    [location + '_stdev'] = 0
+        except KeyError:  # given pitch_type is not present in all_pitchers_batting_data['temp_pitch_location_batting']
+            all_pitchers_batting_data['pitch_location_batting'][match_up][count][pitch_type]\
+                [location + '_mean'] = None
+            all_pitchers_batting_data['pitch_location_batting'][match_up][count][pitch_type] \
+                [location + '_stdev'] = None
+
+
+def accumulate_trajectories_overall(trajectory_by_pitch_type, match_up, count):
+    global all_pitchers_batting_data
+    if match_up not in all_pitchers_batting_data['trajectory_batting']:
+        all_pitchers_batting_data['trajectory_batting'][match_up] = {}
+    if count not in all_pitchers_batting_data['trajectory_batting'][match_up]:
+        all_pitchers_batting_data['trajectory_batting'][match_up][count] = {}
+    for pitch_type, trajectories in trajectory_by_pitch_type[match_up][count].items():
+        if pitch_type not in all_pitchers_batting_data['trajectory_batting'][match_up][count]:
+            all_pitchers_batting_data['trajectory_batting'][match_up][count][pitch_type] = \
+                trajectory_by_pitch_type[match_up][count][pitch_type]
+        else:
+            for trajectory, occurrences in trajectory_by_pitch_type[match_up][count][pitch_type].items():
+                if trajectory not in all_pitchers_batting_data['trajectory_batting'][match_up][count][pitch_type]:
+                    all_pitchers_batting_data['trajectory_batting'][match_up][count][pitch_type][trajectory] = 0
+                all_pitchers_batting_data['trajectory_batting'][match_up][count][pitch_type][trajectory] += \
+                    trajectory_by_pitch_type[match_up][count][pitch_type][trajectory]
+
+
+def accumulate_fields_overall(fields, match_up, count):
+    global all_pitchers_batting_data
+    if match_up not in all_pitchers_batting_data['field_batting']:
+        all_pitchers_batting_data['field_batting'][match_up] = {}
+    if count not in all_pitchers_batting_data['field_batting'][match_up]:
+        all_pitchers_batting_data['field_batting'][match_up][count] = {}
+    for pitch_type, trajectories in fields[match_up][count].items():
+        if pitch_type not in all_pitchers_batting_data['field_batting'][match_up][count]:
+            all_pitchers_batting_data['field_batting'][match_up][count][pitch_type] = \
+                fields[match_up][count][pitch_type]
+        else:
+            for trajectory, occurrences in fields[match_up][count][pitch_type].items():
+                if trajectory not in all_pitchers_batting_data['field_batting'][match_up][count][pitch_type]:
+                    all_pitchers_batting_data['field_batting'][match_up][count][pitch_type][trajectory] = 0
+                all_pitchers_batting_data['field_batting'][match_up][count][pitch_type][trajectory] += \
+                    fields[match_up][count][pitch_type][trajectory]
+
+
+def accumulate_directions_overall(directions, match_up, count):
+    global all_pitchers_batting_data
+    if match_up not in all_pitchers_batting_data['direction_batting']:
+        all_pitchers_batting_data['direction_batting'][match_up] = {}
+    if count not in all_pitchers_batting_data['direction_batting'][match_up]:
+        all_pitchers_batting_data['direction_batting'][match_up][count] = {}
+    for pitch_type, trajectories in directions[match_up][count].items():
+        if pitch_type not in all_pitchers_batting_data['direction_batting'][match_up][count]:
+            all_pitchers_batting_data['direction_batting'][match_up][count][pitch_type] = \
+                directions[match_up][count][pitch_type]
+        else:
+            for trajectory, occurrences in directions[match_up][count][pitch_type].items():
+                if trajectory not in all_pitchers_batting_data['direction_batting'][match_up][count][pitch_type]:
+                    all_pitchers_batting_data['direction_batting'][match_up][count][pitch_type][trajectory] = 0
+                all_pitchers_batting_data['direction_batting'][match_up][count][pitch_type][trajectory] += \
+                    directions[match_up][count][pitch_type][trajectory]
+
+
+def accumulate_trajectories_by_outcomes_overall(outcome_by_trajectory, match_up, count):
+    global all_pitchers_batting_data
+    if match_up not in all_pitchers_batting_data['outcome_by_trajectory_batting']:
+        all_pitchers_batting_data['outcome_by_trajectory_batting'][match_up] = {}
+    if count not in all_pitchers_batting_data['outcome_by_trajectory_batting'][match_up]:
+        all_pitchers_batting_data['outcome_by_trajectory_batting'][match_up][count] = {}
+    for trajectory, outcomes in outcome_by_trajectory[match_up][count].items():
+        if trajectory not in all_pitchers_batting_data['outcome_by_trajectory_batting'][match_up][count]:
+            all_pitchers_batting_data['outcome_by_trajectory_batting'][match_up][count][trajectory] = \
+                outcome_by_trajectory[match_up][count][trajectory]
+        else:
+            for outcome, occurrences in outcomes.items():
+                if outcome not in all_pitchers_batting_data['outcome_by_trajectory_batting'][match_up][count]\
+                        [trajectory]:
+                    all_pitchers_batting_data['outcome_by_trajectory_batting'][match_up][count][trajectory]\
+                        [outcome] = 0
+                all_pitchers_batting_data['outcome_by_trajectory_batting'][match_up][count][trajectory]\
+                    [outcome] += outcome_by_trajectory[match_up][count][trajectory][outcome]
+
+
+def accumulate_fields_by_outcomes_overall(fields_by_outcome, match_up, count):
+    global all_pitchers_batting_data
+    if match_up not in all_pitchers_batting_data['outcome_by_field_batting']:
+        all_pitchers_batting_data['outcome_by_field_batting'][match_up] = {}
+    if count not in all_pitchers_batting_data['outcome_by_field_batting'][match_up]:
+        all_pitchers_batting_data['outcome_by_field_batting'][match_up][count] = {}
+    for field, outcomes in fields_by_outcome[match_up][count].items():
+        if field not in all_pitchers_batting_data['outcome_by_field_batting'][match_up][count]:
+            all_pitchers_batting_data['outcome_by_field_batting'][match_up][count][field] = \
+                fields_by_outcome[match_up][count][field]
+        else:
+            for outcome, occurrences in outcomes.items():
+                if outcome not in all_pitchers_batting_data['outcome_by_field_batting'][match_up][count]\
+                        [field]:
+                    all_pitchers_batting_data['outcome_by_field_batting'][match_up][count][field]\
+                        [outcome] = 0
+                all_pitchers_batting_data['outcome_by_field_batting'][match_up][count][field]\
+                    [outcome] += fields_by_outcome[match_up][count][field][outcome]
+
+
+def accumulate_directions_by_outcomes_overall(directions_by_outcome, match_up, count):
+    global all_pitchers_batting_data
+    if match_up not in all_pitchers_batting_data['outcome_by_direction_batting']:
+        all_pitchers_batting_data['outcome_by_direction_batting'][match_up] = {}
+    if count not in all_pitchers_batting_data['outcome_by_direction_batting'][match_up]:
+        all_pitchers_batting_data['outcome_by_direction_batting'][match_up][count] = {}
+    for direction, outcomes in directions_by_outcome[match_up][count].items():
+        if direction not in all_pitchers_batting_data['outcome_by_direction_batting'][match_up][count]:
+            all_pitchers_batting_data['outcome_by_direction_batting'][match_up][count][direction] = \
+                directions_by_outcome[match_up][count][direction]
+        else:
+            for outcome, occurrences in outcomes.items():
+                if outcome not in all_pitchers_batting_data['outcome_by_direction_batting'][match_up][count]\
+                        [direction]:
+                    all_pitchers_batting_data['outcome_by_direction_batting'][match_up][count][direction]\
+                        [outcome] = 0
+                all_pitchers_batting_data['outcome_by_direction_batting'][match_up][count][direction]\
+                    [outcome] += directions_by_outcome[match_up][count][direction][outcome]
+
+
+def round_up_and_write_all_pitchers_batting_stats(year):
+    db = PitchFXDatabaseConnection(sandbox_mode=True)
+    pitch_types = db.read('select pitch_type from batter_pitches where year = ' + str(year) + ' group by pitch_type;')
+    db.close()
+    all_pitchers_pitch_usage_batting_data_overall()
+    for match_up in ['vr', 'vl']:
+        for ball in range(4):
+            for strike in range(3):
+                count = str(ball) + '-' + str(strike)
+                for pitch_type in pitch_types:
+                    determine_overall_swing_rates_in_and_out_of_zone(match_up, count)
+                    find_mean_and_stdev_of_pitch_locations(match_up, count, pitch_type[0])
+    del all_pitchers_batting_data['temp_pitch_location_batting']
+    del all_pitchers_batting_data['temp_swing_rate_batting']
+    write_all_pitchers_batting(year)
+
+
+def write_all_pitchers_batting(year):
+    start_time = time.time()
+    logger.log('\tWriting all pitchers\' batting stats.')
+    global all_pitchers_batting_data
+    db = DatabaseConnection(sandbox_mode=True)
+    year_info_dict = literal_eval(db.read('select year_info from years where year = ' + str(year) + ';')[0][0])
+    year_info_dict['pitchers_batting_stats'] = all_pitchers_batting_data
+    db.write('update years set year_info = "' + str(year_info_dict) + '" where year = "' + str(year) + '";')
+    db.close()
+    logger.log('\t\tTime = ' + time_converter(time.time() - start_time))
+
+
 # aggregate_pitch_fx(2017)
-# aggregate(2017, None, None, 'klubeco01', 'pitching')
+# aggregate(2017, None, None, 'colege01', 'batting')
+# aggregate(2017, None, None, 'kershcl01', 'batting')
+# aggregate(2017, None, None, 'scherma01', 'batting')
+# aggregate(2017, None, None, 'strasst01', 'batting')
+# round_up_and_write_all_pitchers_batting_stats(2017)

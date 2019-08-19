@@ -1,10 +1,10 @@
 overall_pitch_usage_pitching
 overall_pitch_location_pitching
 overall_swing_rate_pitching
-direction_by_outcome_pitching
+outcome_by_direction_pitching
 direction_pitching
 field_pitching
-field_by_outcome_pitching
+outcome_by_field_pitching
 hbp_pitching
 outcomes_pitching
 pitch_count_pitching
@@ -12,4 +12,4 @@ pitch_usage_pitching
 swing_rate_pitching
 pitch_location_pitching
 trajectory_pitching
-trajectory_by_outcome_pitching
+outcome_by_trajectory_pitching

@@ -47,10 +47,10 @@ class Team:
         self.pitcher = starting_pitcher
         for player in self.batting_order:
             if not player.get_full_name():
-                player.set_full_name()
+                player.retrieve_full_name()
             print(player.get_full_name())
         if not self.pitcher.get_full_name():
-            self.pitcher.set_full_name()
+            self.pitcher.retrieve_full_name()
         print('SP:', self.pitcher.get_full_name(), '\n\n')
 ### END RETRIEVERS ###
 

@@ -21,8 +21,8 @@ def simulate_pitch(pitcher, batter, batter_orientation, pitcher_orientation, bal
         batter, count, ball_strike, pitch)
     outcome = determine_outcome(balls, strikes, ball_strike, swing_take)
     driver_logger.log('\t\t' + pitch.get_pitch_type() + ' - ' + ball_strike + ' - ' + swing_take)
-    return {'ball_strike': ball_strike, 'swing_take': swing_take, 'trajectory': '', 'field': '', 'direction': '',
-            'outcome': outcome, 'pa_completed': pa_completed(outcome)}
+    return {'swing_take': swing_take, 'trajectory': '', 'field': '', 'direction': '', 'outcome': outcome,
+            'pa_completed': pa_completed(outcome)}
 
 
 def determine_pitch_type(pitcher, batter, pitcher_orientation, batter_orientation, count):

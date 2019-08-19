@@ -60,7 +60,7 @@ def batter_handedness(batter, pitcher):
     if not batter.get_batting_handedness():
         batter.set_batting_handedness()
     if not pitcher.get_throwing_handedness():
-        pitcher.set_throwing_handedness()
+        pitcher.retrieve_throwing_handedness()
     batter_orientation = batter.get_batting_handedness()
     if batter_orientation == 'B':
         batter_orientation = 'L' if pitcher.get_throwing_handedness() == 'R' else 'R'
@@ -69,7 +69,7 @@ def batter_handedness(batter, pitcher):
 
 def pitcher_handedness(pitcher):
     if not pitcher.get_throwing_handedness():
-        pitcher.set_throwing_handedness()
+        pitcher.retrieve_throwing_handedness()
     pitcher_orientation = pitcher.get_throwing_handedness()
     return 'v' + pitcher_orientation.lower()
 

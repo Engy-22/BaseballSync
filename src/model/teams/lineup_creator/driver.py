@@ -15,7 +15,7 @@ def create_lineup(team_id, year, roster, team_info, starting_pitcher, opposing_p
     start_time = time.time()
     logger.log('Creating lineup for ' + team_id + ' (' + str(year) + ')')
     if not opposing_pitcher.get_throwing_handedness():
-        opposing_pitcher.set_throwing_handedness()
+        opposing_pitcher.retrieve_throwing_handedness()
     batting_order = []
     position_list = []
     place = 1

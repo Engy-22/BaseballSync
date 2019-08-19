@@ -34,6 +34,18 @@ class Player:
         db.close()
         return position
 
+    def retrieve_throwing_handedness(self):
+        db = DatabaseConnection(sandbox_mode)
+        self.throws_with = db.read('select throwsWith from players where playerId = "' + self.player_id + '";')[0][0]
+        db.close()
+
+    def retrieve_full_name(self):
+        db = DatabaseConnection(sandbox_mode)
+        name = db.read('select firstName, lastName from players where playerId = "' + self.player_id + '";')[0]
+        self.first_name = name[0]
+        self.last_name = name[1]
+        db.close()
+
     def construct_image_url(self):
         return os.path.join('images', 'players', self.player_id)
 ### End Retrievers ###
@@ -44,18 +56,6 @@ class Player:
 
     def set_fielding_stats(self, fielding_stats):
         self.fielding_stats = fielding_stats
-
-    def set_throwing_handedness(self):
-        db = DatabaseConnection(sandbox_mode)
-        self.throws_with = db.read('select throwsWith from players where playerId = "' + self.player_id + '";')[0][0]
-        db.close()
-
-    def set_full_name(self):
-        db = DatabaseConnection(sandbox_mode)
-        name = db.read('select firstName, lastName from players where playerId = "' + self.player_id + '";')[0]
-        self.first_name = name[0]
-        self.last_name = name[1]
-        db.close()
 
     def set_simulation_fielding_stats(self, stat, value):
         self.simulation_fielding_stats[stat] = value
