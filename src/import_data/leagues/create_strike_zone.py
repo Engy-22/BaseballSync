@@ -35,21 +35,27 @@ def create_strike_zone():
                 else:
                     sparse_intervals = 0  # reset the number of sparse intervals
                 place_on_number_line += incrementer  # move farther from the median in the appropriate direction
-            points[coordinate_orientation + ('_high' if direction == 'positive' else '_low')] =\
+            points[coordinate_orientation + ('_high_strike' if direction == 'positive' else '_low_strike')] =\
                 place_on_number_line - (incrementer * 3)
         points[coordinate_orientation + '_middle'] = \
-            (points[coordinate_orientation + '_low'] + points[coordinate_orientation + '_high']) / 2
+            (points[coordinate_orientation + '_low_strike'] + points[coordinate_orientation + '_high_strike']) / 2
         for meridian, multiplier in {'_meridian_1': 1, '_meridian_2': 2}.items():
-            points[coordinate_orientation + meridian] = points[coordinate_orientation + '_low'] + \
-                ((points[coordinate_orientation + '_high'] - points[coordinate_orientation + '_low']) / 3) * multiplier
+            points[coordinate_orientation + meridian] = points[coordinate_orientation + '_low_strike'] + \
+                ((points[coordinate_orientation + '_high_strike'] - points[coordinate_orientation
+                                                                           + '_low_strike']) / 3) * multiplier
+        for extreme, meridian in {'_low_ball': 1, '_high_ball': 2}.items():
+            points[coordinate_orientation + extreme] = \
+                points[coordinate_orientation + extreme[:-4] + 'strike'] + \
+                (abs(points[coordinate_orientation + extreme[:-4] + 'strike'] -
+                     points[coordinate_orientation + '_meridian_' + str(meridian)]) * (-1 if 'low' in extreme else 1))
         passes += 1
     db.close()
     try:
         with open(os.path.join("..", "background", "strike_zone.json"), "w") as strike_zone_file:
-            json.dump(points, strike_zone_file)
+            json.dump(points, strike_zone_file, sort_keys=True, indent=4)
     except FileNotFoundError:
         with open(os.path.join("..", "..", "..", "background", "strike_zone.json"), "w") as strike_zone_file:
-            json.dump(points, strike_zone_file)
+            json.dump(points, strike_zone_file, sort_keys=True, indent=4)
     driver_logger.log('\t\tTime = ' + time_converter(time.time() - start_time))
 
 

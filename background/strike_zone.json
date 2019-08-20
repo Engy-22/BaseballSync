@@ -1,1 +1,16 @@
-{"x_high": 151.0, "x_low": 82.0, "x_middle": 116.5, "x_meridian_1": 105.0, "x_meridian_2": 128.0, "y_high": 198.0, "y_low": 148.0, "y_middle": 173.0, "y_meridian_1": 164.66666666666666, "y_meridian_2": 181.33333333333334}
+{
+    "x_high_ball": 174.0,
+    "x_high_strike": 151.0,
+    "x_low_ball": 59.0,
+    "x_low_strike": 82.0,
+    "x_meridian_1": 105.0,
+    "x_meridian_2": 128.0,
+    "x_middle": 116.5,
+    "y_high_ball": 214.66666666666666,
+    "y_high_strike": 198.0,
+    "y_low_ball": 131.33333333333334,
+    "y_low_strike": 148.0,
+    "y_meridian_1": 164.66666666666666,
+    "y_meridian_2": 181.33333333333334,
+    "y_middle": 173.0
+}
