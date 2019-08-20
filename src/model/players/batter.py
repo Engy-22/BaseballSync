@@ -1,4 +1,5 @@
 from model.players.player import Player
+from ast import literal_eval
 from utilities.database.wrappers.baseball_data_connection import DatabaseConnection
 
 
@@ -14,8 +15,11 @@ class Batter(Player):
     def set_batting_spots(self, batting_spots):
         self.batting_spots = batting_spots
 
-    def set_batting_stats(self, batting_stats):
-        self.stats = batting_stats
+    def set_batting_stats(self, batting_stats, pitchers_batting_stats):
+        if batting_stats:
+            self.stats = batting_stats
+        else:
+            self.stats = pitchers_batting_stats
 
     def set_batting_handedness(self):
         db = DatabaseConnection(sandbox_mode=True)

@@ -1,6 +1,7 @@
 import random
 import os
 import time
+
 from model.plate_appearance import PlateAppearance
 from controller.pitch import simulate_pitch
 from utilities.logger import Logger
@@ -10,13 +11,14 @@ from utilities.time_converter import time_converter
 logger = Logger(os.path.join(log_prefix, "controller", "plate_appearance.log"))
 
 
-def simulate_plate_appearance(batting_info, pitching_info, lineup, place, pitcher, inning, driver_logger):
+def simulate_plate_appearance(batting_info, pitching_info, batting_year_info, lineup, place, pitcher, strike_zone,
+                              driver_logger):
     driver_logger.log('\t\tPlate appearance ' + lineup[place].get_full_name() + " vs. " + pitcher.get_full_name())
     start_time = time.time()
     logger.log("Simulating plate appearance: " + lineup[place].get_full_name() + " vs. " + pitcher.get_full_name())
     batter = lineup[place]
     if not batter.get_batting_stats():
-        batter.set_batting_stats(batting_info[batter.get_player_id()])
+        batter.set_batting_stats(batting_info.get(batter.get_player_id()), batting_year_info)
     if not pitcher.get_pitching_stats():
         pitcher.set_pitching_stats(pitching_info[pitcher.get_player_id()])
     plate_appearance_data = {'increment_batter': True}
@@ -25,7 +27,7 @@ def simulate_plate_appearance(batting_info, pitching_info, lineup, place, pitche
     pitcher_orientation = pitcher_handedness(pitcher)
     while plate_appearance.get_outcome() is None:
         pitch_data = simulate_pitch(pitcher, batter, batter_orientation, pitcher_orientation,
-                                    plate_appearance.get_balls(), plate_appearance.get_strikes(), logger)
+                                    plate_appearance.get_balls(), plate_appearance.get_strikes(), strike_zone, logger)
         if pitch_data['pa_completed']:
             plate_appearance.set_outcome(pitch_data['outcome'])
         else:

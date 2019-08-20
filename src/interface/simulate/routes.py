@@ -1,6 +1,9 @@
 import json
+from ast import literal_eval
+
 from flask_login import login_required
 from flask import render_template, redirect, url_for, Blueprint, request
+
 from interface.simulate.forms import QuickSimForm
 from utilities.database.wrappers.baseball_data_connection import DatabaseConnection
 from utilities.get_most_recent_year import get_most_recent_year
@@ -38,7 +41,11 @@ def accept_post_request():
         away_year = int(away_info.split('.jpg')[0][-4:])
         home_team = home_info.split('.jpg')[0][-7:-4]
         home_year = int(home_info.split('.jpg')[0][-4:])
-        return simulation(away_team, away_year, home_team, home_year, games)
+        db = DatabaseConnection(sandbox_mode=True)
+        away_year_info = literal_eval(db.read('select year_info from years where year = ' + str(away_year) + ';')[0][0])
+        home_year_info = literal_eval(db.read('select year_info from years where year = ' + str(home_year) + ';')[0][0])
+        db.close()
+        return simulation(away_team, away_year, away_year_info, home_team, home_year, home_year_info, games)
 
 
 @simulate.route("/simulate/quick_sim")

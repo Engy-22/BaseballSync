@@ -1,5 +1,5 @@
 import os
-import json
+
 from model.pitch import Pitch
 from utilities.logger import Logger
 from utilities.properties import log_prefix
@@ -8,14 +8,15 @@ from controller.gauntlet import pick_from_options, pick_one_or_the_other, get_lo
 logger = Logger(os.path.join(log_prefix, "controller", "pitch.log"))
 
 
-def simulate_pitch(pitcher, batter, batter_orientation, pitcher_orientation, balls, strikes, driver_logger):
+def simulate_pitch(pitcher, batter, batter_orientation, pitcher_orientation, balls, strikes, strike_zone,
+                   driver_logger):
     count = str(balls) + '-' + str(strikes)
     driver_logger.log('\tSimulating ' + count + ' pitch')
     logger.log('Simulating ' + count + ' pitch')
     pitch = Pitch(pitcher, determine_pitch_type(pitcher, batter, pitcher_orientation, batter_orientation, count),
                   balls, strikes)
     pitch_location = determine_pitch_location(pitcher, batter, pitcher_orientation, batter_orientation, count, pitch)
-    ball_strike = determine_ball_strike(pitch_location)
+    ball_strike = determine_ball_strike(pitch_location, strike_zone)
     swing_take = determine_if_batter_swung(
         get_batter_swing_rate(batter, pitcher_orientation, count, ball_strike, pitch), batter_orientation, pitcher,
         batter, count, ball_strike, pitch)
@@ -26,8 +27,10 @@ def simulate_pitch(pitcher, batter, batter_orientation, pitcher_orientation, bal
 
 
 def determine_pitch_type(pitcher, batter, pitcher_orientation, batter_orientation, count):
-    """pick a pitch to be thrown based on pitcher tendencies in this scenario and the types of pitches thrown to the
-    batter in this scenario"""
+    """
+    pick a pitch to be thrown based on pitcher tendencies in this scenario and the types of pitches thrown to the
+    batter in this scenario
+    """
     pitch_type = pick_from_options(coordinate_pitch_usages(
         pitcher.get_pitching_stats()['advanced_pitching_stats']['pitch_usage_pitching'][batter_orientation][count],
         batter, pitcher_orientation, count))
@@ -52,9 +55,11 @@ def coordinate_pitch_usages(pitches_available, batter, pitcher_orientation, coun
 
 
 def inflate_pitch_options(batter_pitches, pitcher_pitches):
-    """ a batter may not have faced a pitcher with the same repertoire as this one, so take the pitches
+    """
+     a batter may not have faced a pitcher with the same repertoire as this one, so take the pitches
     (and their frequencies) that the batter has seen and 'inflate' their values accordingly so their sum is equal to
-    1.0 (or thereabout) """
+    1.0 (or thereabout)
+    """
     temp_pitch_collection = {}
     pitch_collection = {}
     total = 0
@@ -70,9 +75,11 @@ def inflate_pitch_options(batter_pitches, pitcher_pitches):
 
 
 def determine_pitch_location(pitcher, batter, pitcher_orientation, batter_orientation, count, pitch):
-    """average out the batter and pitcher means for the pitch thrown in the given count, as well as their standard
+    """
+    average out the batter and pitcher means for the pitch thrown in the given count, as well as their standard
     deviations (assuming this information is available given the scenario) and determine an x & y coordinate based upon
-    these values. Then use strike_zone.json to determine whether the pitch was a strike or not."""
+    these values. Then use strike_zone.json to determine whether the pitch was a strike or not.
+    """
     try:  # assuming pitcher and batter data is present
         average_x_mean = \
             (pitcher.get_pitching_stats()['advanced_pitching_stats']['pitch_location_pitching'][batter_orientation]
@@ -130,8 +137,8 @@ def determine_pitch_location(pitcher, batter, pitcher_orientation, batter_orient
     return get_location(average_x_mean, average_x_deviation), get_location(average_y_mean, average_y_deviation)
 
 
-def determine_ball_strike(pitch_location):
-    if pitch_in_zone(pitch_location[0], pitch_location[1], strike_zone_coordinate('x'), strike_zone_coordinate('y')):
+def determine_ball_strike(pitch_location, strike_zone):
+    if pitch_in_zone(pitch_location[0], pitch_location[1], strike_zone.get('x'), strike_zone.get('y')):
         return 'strike'
     else:
         return 'ball'
@@ -139,16 +146,6 @@ def determine_ball_strike(pitch_location):
 
 def pitch_in_zone(x, y, x_coordinates, y_coordinates):
     return x_coordinates['low'] < x < x_coordinates['high'] and y_coordinates['low'] < y < y_coordinates['high']
-
-
-def strike_zone_coordinate(coordinate):
-    try:
-        with open(os.path.join('..', '..', 'background', 'strike_zone.json')) as strike_zone_file:
-            strike_zone = json.load(strike_zone_file)
-    except FileNotFoundError:
-        with open(os.path.join('..', '..', '..', '..', 'background', 'strike_zone.json')) as strike_zone_file:
-            strike_zone = json.load(strike_zone_file)
-    return {'low': float(strike_zone.get(coordinate + '_low')), 'high': float(strike_zone.get(coordinate + '_high'))}
 
 
 def get_batter_swing_rate(batter, pitcher_orientation, count, ball_strike, pitch):
