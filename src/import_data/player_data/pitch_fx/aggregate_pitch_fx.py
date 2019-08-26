@@ -17,6 +17,11 @@ all_pitchers_batting_data = {"temp_pitch_location_batting": {}, "pitch_location_
                              "outcome_by_field_batting": {}, "outcomes_batting": {}, "temp_swing_rate_batting": {},
                              "pitch_count_batting": {}, "pitch_usage_batting": {}, "trajectory_batting": {},
                              "outcome_by_trajectory_batting": {}, "swing_rate_batting": {}}
+league_pitching_data = {"temp_pitch_location_pitching": {}, "pitch_location_pitching": {},
+                        "outcome_by_direction_pitching": {}, "direction_pitching": {}, "field_pitching": {},
+                        "outcome_by_field_pitching": {}, "outcomes_pitching": {}, "temp_swing_rate_pitching": {},
+                        "pitch_count_pitching": {}, "pitch_usage_pitching": {}, "trajectory_pitching": {},
+                        "outcome_by_trajectory_pitching": {}, "swing_rate_pitching": {}}
 
 
 def aggregate_pitch_fx(year, month=None, day=None):
@@ -43,6 +48,8 @@ def aggregate_and_write(year, month, day, player_type):
         # break
     if player_type == 'batting':
         round_up_and_write_all_pitchers_batting_stats(year)
+    else:
+        round_up_and_write_league_pitching_stats(year)
     total_time = time_converter(time.time()-start_time)
     logger.log("\tDone aggregating and writing " + player_type + " data: Time = " + total_time)
     driver_logger.log("\t\t\tTime = " + total_time)
@@ -81,8 +88,10 @@ def aggregate(year, month, day, player_id, player_type):
                 fields[match_up][count] = {}
                 directions[match_up][count] = {}
                 for pitch_type, pitch_type_list in sort_by_pitch_type(pitches, match_up, ball, strike).items():
+                    if player_type == 'pitching':
+                        accumulate_league_pitch_data(pitch_type, pitch_type_list, match_up, count)
                     if this_batter_is_a_pitcher(p_uid):
-                        accumulate_all_pitchers_dict(pitch_type, pitch_type_list, match_up, count)
+                        accumulate_all_pitchers_batting_dict(pitch_type, pitch_type_list, match_up, count)
                     pitch_usage[match_up][count][pitch_type] = len(pitch_type_list)
                     pitch_type_outcomes[match_up][count][pitch_type] = sort_further_by_outcome(pitch_type_list)
                     swing_rates[match_up][count][pitch_type] = calculate_swing_rate(pitch_type_list)
@@ -677,7 +686,8 @@ def strike_zone_coordinate(coordinate):
     except FileNotFoundError:
         with open(os.path.join('..', '..', '..', '..', 'background', 'strike_zone.json')) as strike_zone_file:
             strike_zone = json.load(strike_zone_file)
-    return {'low': float(strike_zone.get(coordinate + '_low')), 'high': float(strike_zone.get(coordinate + '_high'))}
+    return {'low': float(strike_zone.get(coordinate + '_low_strike')),
+            'high': float(strike_zone.get(coordinate + '_high_strike'))}
 
 
 def calculate_swing_rate(pitches):
@@ -814,7 +824,7 @@ def this_batter_is_a_pitcher(p_uid):
     return is_a_pitcher
 
 
-def accumulate_all_pitchers_dict(pitch_type, pitches, match_up, count):
+def accumulate_all_pitchers_batting_dict(pitch_type, pitches, match_up, count):
     global all_pitchers_batting_data
     increment_all_pitchers_pitch_count_batting_data_overall(match_up, count, pitch_type, len(pitches))
     pitch_type_outcomes = {}
@@ -876,9 +886,10 @@ def accumulate_swing_rates_individual(swing_rates, match_up, count, pitch_type, 
         swing_rates[match_up] = {}
     if count not in swing_rates[match_up]:
         swing_rates[match_up][count] = {True: {}, False: {}}
-    if pitch_type not in swing_rates[match_up][count]:
-        swing_rates[match_up][count][True][pitch_type] = []
-        swing_rates[match_up][count][False][pitch_type] = []
+    if pitch_type not in swing_rates[match_up][count][True]:
+            swing_rates[match_up][count][True][pitch_type] = []
+    if pitch_type not in swing_rates[match_up][count][False]:
+            swing_rates[match_up][count][False][pitch_type] = []
     swing_rates[match_up][count][pitch_in_zone(x, y, strike_zone_coordinate('x'), strike_zone_coordinate('y'))]\
         [pitch_type].append(swing_take)
     return swing_rates
@@ -985,6 +996,17 @@ def increment_all_pitchers_pitch_count_batting_data_overall(match_up, count, pit
     all_pitchers_batting_data['pitch_count_batting'][match_up][count][pitch_type] += pitch_count
 
 
+def increment_league_pitch_count_data(match_up, count, pitch_type, pitch_count):
+    global league_pitching_data
+    if match_up not in league_pitching_data['pitch_count_pitching']:
+        league_pitching_data['pitch_count_pitching'][match_up] = {}
+    if count not in league_pitching_data['pitch_count_pitching'][match_up]:
+        league_pitching_data['pitch_count_pitching'][match_up][count] = {}
+    if pitch_type not in league_pitching_data['pitch_count_pitching'][match_up][count]:
+        league_pitching_data['pitch_count_pitching'][match_up][count][pitch_type] = 0
+    league_pitching_data['pitch_count_pitching'][match_up][count][pitch_type] += pitch_count
+
+
 def all_pitchers_pitch_usage_batting_data_overall():
     global all_pitchers_batting_data
     for match_up, count_data in all_pitchers_batting_data['pitch_count_batting'].items():
@@ -998,6 +1020,22 @@ def all_pitchers_pitch_usage_batting_data_overall():
                 total_pitches_for_this_count += pitch_count
             for pitch_type, pitch_count in pitch_data.items():
                 all_pitchers_batting_data['pitch_usage_batting'][match_up][count][pitch_type] = \
+                    round(pitch_count/total_pitches_for_this_count, 3)
+
+
+def league_pitch_usage_batting_data_overall():
+    global league_pitching_data
+    for match_up, count_data in league_pitching_data['pitch_count_pitching'].items():
+        if match_up not in league_pitching_data['pitch_usage_pitching']:
+            league_pitching_data['pitch_usage_pitching'][match_up] = {}
+        for count, pitch_data in count_data.items():
+            total_pitches_for_this_count = 0
+            if count not in league_pitching_data['pitch_usage_pitching'][match_up]:
+                league_pitching_data['pitch_usage_pitching'][match_up][count] = {}
+            for pitch_type, pitch_count in pitch_data.items():
+                total_pitches_for_this_count += pitch_count
+            for pitch_type, pitch_count in pitch_data.items():
+                league_pitching_data['pitch_usage_pitching'][match_up][count][pitch_type] = \
                     round(pitch_count/total_pitches_for_this_count, 3)
 
 
@@ -1018,6 +1056,23 @@ def accumulate_pitch_type_outcomes_overall(pitch_type_outcomes, match_up, count)
                 all_pitchers_batting_data['outcomes_batting'][match_up][count][pitch_type][outcome] += occurrences
 
 
+def accumulate_league_pitching_pitch_type_outcomes_overall(pitch_type_outcomes, match_up, count):
+    global league_pitching_data
+    if match_up not in league_pitching_data['outcomes_pitching']:
+        league_pitching_data['outcomes_pitching'][match_up] = {}
+    if count not in league_pitching_data['outcomes_pitching'][match_up]:
+        league_pitching_data['outcomes_pitching'][match_up][count] = {}
+    for pitch_type, outcomes in pitch_type_outcomes[match_up][count].items():
+        if pitch_type not in league_pitching_data['outcomes_pitching'][match_up][count]:
+            league_pitching_data['outcomes_pitching'][match_up][count][pitch_type] = \
+                pitch_type_outcomes[match_up][count][pitch_type]
+        else:
+            for outcome, occurrences in outcomes. items():
+                if outcome not in league_pitching_data['outcomes_pitching'][match_up][count][pitch_type]:
+                    league_pitching_data['outcomes_pitching'][match_up][count][pitch_type][outcome] = 0
+                league_pitching_data['outcomes_pitching'][match_up][count][pitch_type][outcome] += occurrences
+
+
 def accumulate_swing_rates_overall(swing_rates, match_up, count):
     global all_pitchers_batting_data
     if match_up not in all_pitchers_batting_data['temp_swing_rate_batting']:
@@ -1029,6 +1084,20 @@ def accumulate_swing_rates_overall(swing_rates, match_up, count):
             if pitch_type not in all_pitchers_batting_data['temp_swing_rate_batting'][match_up][count][boolean]:
                 all_pitchers_batting_data['temp_swing_rate_batting'][match_up][count][boolean][pitch_type] = []
             all_pitchers_batting_data['temp_swing_rate_batting'][match_up][count][boolean][pitch_type] += \
+                swing_rates[match_up][count][boolean][pitch_type]
+
+
+def accumulate_league_pitching_swing_rates_overall(swing_rates, match_up, count):
+    global league_pitching_data
+    if match_up not in league_pitching_data['temp_swing_rate_pitching']:
+        league_pitching_data['temp_swing_rate_pitching'][match_up] = {}
+    if count not in league_pitching_data['temp_swing_rate_pitching'][match_up]:
+        league_pitching_data['temp_swing_rate_pitching'][match_up][count] = {True: {}, False: {}}
+    for boolean in [True, False]:
+        for pitch_type, swings_takes in swing_rates[match_up][count][boolean].items():
+            if pitch_type not in league_pitching_data['temp_swing_rate_pitching'][match_up][count][boolean]:
+                league_pitching_data['temp_swing_rate_pitching'][match_up][count][boolean][pitch_type] = []
+            league_pitching_data['temp_swing_rate_pitching'][match_up][count][boolean][pitch_type] += \
                 swing_rates[match_up][count][boolean][pitch_type]
 
 
@@ -1057,6 +1126,31 @@ def determine_overall_swing_rates_in_and_out_of_zone(match_up, count):
         all_pitchers_batting_data['swing_rate_batting'][match_up][count] = {True: {}, False: {}}
 
 
+def determine_overall_league_pitching_swing_rates_in_and_out_of_zone(match_up, count):
+    global league_pitching_data
+    if match_up not in league_pitching_data['swing_rate_pitching']:
+        league_pitching_data['swing_rate_pitching'][match_up] = {}
+    if count not in league_pitching_data['swing_rate_pitching'][match_up]:
+        league_pitching_data['swing_rate_pitching'][match_up][count] = {}
+    try:
+        for strike_ball, pitch_types in league_pitching_data['temp_swing_rate_pitching'][match_up]\
+                [count].items():
+            if strike_ball not in league_pitching_data['swing_rate_pitching'][match_up][count]:
+                league_pitching_data['swing_rate_pitching'][match_up][count][strike_ball] = {}
+            for pitch_type, swings_takes in pitch_types.items():
+                try:
+                    league_pitching_data['swing_rate_pitching'][match_up][count][strike_ball][pitch_type] = \
+                        league_pitching_data['temp_swing_rate_pitching'][match_up][count][strike_ball]\
+                            [pitch_type].count('swing') / \
+                        len(league_pitching_data['temp_swing_rate_pitching'][match_up][count][strike_ball]
+                            [pitch_type])
+                except ZeroDivisionError:
+                    league_pitching_data['swing_rate_pitching'][match_up][count][strike_ball][pitch_type] = \
+                        None
+    except KeyError:
+        league_pitching_data['swing_rate_pitching'][match_up][count] = {True: {}, False: {}}
+
+
 def accumulate_pitch_locations_overall(pitch_locations, pitch_type, match_up, count):
     global all_pitchers_batting_data
     if match_up not in all_pitchers_batting_data['temp_pitch_location_batting']:
@@ -1068,6 +1162,20 @@ def accumulate_pitch_locations_overall(pitch_locations, pitch_type, match_up, co
             {'x': [], 'y': []}
     for coordinate_type in ['x', 'y']:
         all_pitchers_batting_data['temp_pitch_location_batting'][match_up][count][pitch_type]\
+            [coordinate_type] += pitch_locations[match_up][count][pitch_type][coordinate_type]
+
+
+def accumulate_league_pitching_pitch_locations_overall(pitch_locations, pitch_type, match_up, count):
+    global league_pitching_data
+    if match_up not in league_pitching_data['temp_pitch_location_pitching']:
+        league_pitching_data['temp_pitch_location_pitching'][match_up] = {}
+    if count not in league_pitching_data['temp_pitch_location_pitching'][match_up]:
+        league_pitching_data['temp_pitch_location_pitching'][match_up][count] = {}
+    if pitch_type not in league_pitching_data['temp_pitch_location_pitching'][match_up][count]:
+        league_pitching_data['temp_pitch_location_pitching'][match_up][count][pitch_type] = \
+            {'x': [], 'y': []}
+    for coordinate_type in ['x', 'y']:
+        league_pitching_data['temp_pitch_location_pitching'][match_up][count][pitch_type]\
             [coordinate_type] += pitch_locations[match_up][count][pitch_type][coordinate_type]
 
 
@@ -1098,6 +1206,33 @@ def find_mean_and_stdev_of_pitch_locations(match_up, count, pitch_type):
                 [location + '_stdev'] = None
 
 
+def find_mean_and_stdev_of_league_pitching_pitch_locations(match_up, count, pitch_type):
+    global league_pitching_data
+    if match_up not in league_pitching_data['pitch_location_pitching']:
+        league_pitching_data['pitch_location_pitching'][match_up] = {}
+    if count not in league_pitching_data['pitch_location_pitching'][match_up]:
+        league_pitching_data['pitch_location_pitching'][match_up][count] = {}
+    if pitch_type not in league_pitching_data['pitch_location_pitching'][match_up][count]:
+        league_pitching_data['pitch_location_pitching'][match_up][count][pitch_type] = {}
+    for location in ['x', 'y']:
+        try:
+            league_pitching_data['pitch_location_pitching'][match_up][count][pitch_type]\
+                [location + '_mean'] = stat.mean(league_pitching_data['temp_pitch_location_pitching']\
+                                                                 [match_up][count][pitch_type][location])
+            try:
+                league_pitching_data['pitch_location_pitching'][match_up][count][pitch_type]\
+                    [location + '_stdev'] = stat.stdev(league_pitching_data['temp_pitch_location_pitching']\
+                                                                                [match_up][count][pitch_type][location])
+            except stat.StatisticsError:  # there's one or zero data points. Cannot calculate standard deviation with < 2
+                league_pitching_data['pitch_location_pitching'][match_up][count][pitch_type]\
+                    [location + '_stdev'] = 0
+        except KeyError:  # given pitch_type is not present in league_pitching_data['temp_pitch_location_batting']
+            league_pitching_data['pitch_location_pitching'][match_up][count][pitch_type]\
+                [location + '_mean'] = None
+            league_pitching_data['pitch_location_pitching'][match_up][count][pitch_type] \
+                [location + '_stdev'] = None
+
+
 def accumulate_trajectories_overall(trajectory_by_pitch_type, match_up, count):
     global all_pitchers_batting_data
     if match_up not in all_pitchers_batting_data['trajectory_batting']:
@@ -1113,6 +1248,24 @@ def accumulate_trajectories_overall(trajectory_by_pitch_type, match_up, count):
                 if trajectory not in all_pitchers_batting_data['trajectory_batting'][match_up][count][pitch_type]:
                     all_pitchers_batting_data['trajectory_batting'][match_up][count][pitch_type][trajectory] = 0
                 all_pitchers_batting_data['trajectory_batting'][match_up][count][pitch_type][trajectory] += \
+                    trajectory_by_pitch_type[match_up][count][pitch_type][trajectory]
+
+
+def accumulate_league_pitching_trajectories_overall(trajectory_by_pitch_type, match_up, count):
+    global league_pitching_data
+    if match_up not in league_pitching_data['trajectory_pitching']:
+        league_pitching_data['trajectory_pitching'][match_up] = {}
+    if count not in league_pitching_data['trajectory_pitching'][match_up]:
+        league_pitching_data['trajectory_pitching'][match_up][count] = {}
+    for pitch_type, trajectories in trajectory_by_pitch_type[match_up][count].items():
+        if pitch_type not in league_pitching_data['trajectory_pitching'][match_up][count]:
+            league_pitching_data['trajectory_pitching'][match_up][count][pitch_type] = \
+                trajectory_by_pitch_type[match_up][count][pitch_type]
+        else:
+            for trajectory, occurrences in trajectory_by_pitch_type[match_up][count][pitch_type].items():
+                if trajectory not in league_pitching_data['trajectory_pitching'][match_up][count][pitch_type]:
+                    league_pitching_data['trajectory_pitching'][match_up][count][pitch_type][trajectory] = 0
+                league_pitching_data['trajectory_pitching'][match_up][count][pitch_type][trajectory] += \
                     trajectory_by_pitch_type[match_up][count][pitch_type][trajectory]
 
 
@@ -1134,6 +1287,24 @@ def accumulate_fields_overall(fields, match_up, count):
                     fields[match_up][count][pitch_type][trajectory]
 
 
+def accumulate_league_pitching_fields_overall(fields, match_up, count):
+    global league_pitching_data
+    if match_up not in league_pitching_data['field_pitching']:
+        league_pitching_data['field_pitching'][match_up] = {}
+    if count not in league_pitching_data['field_pitching'][match_up]:
+        league_pitching_data['field_pitching'][match_up][count] = {}
+    for pitch_type, trajectories in fields[match_up][count].items():
+        if pitch_type not in league_pitching_data['field_pitching'][match_up][count]:
+            league_pitching_data['field_pitching'][match_up][count][pitch_type] = \
+                fields[match_up][count][pitch_type]
+        else:
+            for trajectory, occurrences in fields[match_up][count][pitch_type].items():
+                if trajectory not in league_pitching_data['field_pitching'][match_up][count][pitch_type]:
+                    league_pitching_data['field_pitching'][match_up][count][pitch_type][trajectory] = 0
+                league_pitching_data['field_pitching'][match_up][count][pitch_type][trajectory] += \
+                    fields[match_up][count][pitch_type][trajectory]
+
+
 def accumulate_directions_overall(directions, match_up, count):
     global all_pitchers_batting_data
     if match_up not in all_pitchers_batting_data['direction_batting']:
@@ -1149,6 +1320,24 @@ def accumulate_directions_overall(directions, match_up, count):
                 if trajectory not in all_pitchers_batting_data['direction_batting'][match_up][count][pitch_type]:
                     all_pitchers_batting_data['direction_batting'][match_up][count][pitch_type][trajectory] = 0
                 all_pitchers_batting_data['direction_batting'][match_up][count][pitch_type][trajectory] += \
+                    directions[match_up][count][pitch_type][trajectory]
+
+
+def accumulate_league_pitching_directions_overall(directions, match_up, count):
+    global league_pitching_data
+    if match_up not in league_pitching_data['direction_pitching']:
+        league_pitching_data['direction_pitching'][match_up] = {}
+    if count not in league_pitching_data['direction_pitching'][match_up]:
+        league_pitching_data['direction_pitching'][match_up][count] = {}
+    for pitch_type, trajectories in directions[match_up][count].items():
+        if pitch_type not in league_pitching_data['direction_pitching'][match_up][count]:
+            league_pitching_data['direction_pitching'][match_up][count][pitch_type] = \
+                directions[match_up][count][pitch_type]
+        else:
+            for trajectory, occurrences in directions[match_up][count][pitch_type].items():
+                if trajectory not in league_pitching_data['direction_pitching'][match_up][count][pitch_type]:
+                    league_pitching_data['direction_pitching'][match_up][count][pitch_type][trajectory] = 0
+                league_pitching_data['direction_pitching'][match_up][count][pitch_type][trajectory] += \
                     directions[match_up][count][pitch_type][trajectory]
 
 
@@ -1172,6 +1361,26 @@ def accumulate_trajectories_by_outcomes_overall(outcome_by_trajectory, match_up,
                     [outcome] += outcome_by_trajectory[match_up][count][trajectory][outcome]
 
 
+def accumulate_league_pitching_trajectories_by_outcomes_overall(outcome_by_trajectory, match_up, count):
+    global league_pitching_data
+    if match_up not in league_pitching_data['outcome_by_trajectory_pitching']:
+        league_pitching_data['outcome_by_trajectory_pitching'][match_up] = {}
+    if count not in league_pitching_data['outcome_by_trajectory_pitching'][match_up]:
+        league_pitching_data['outcome_by_trajectory_pitching'][match_up][count] = {}
+    for trajectory, outcomes in outcome_by_trajectory[match_up][count].items():
+        if trajectory not in league_pitching_data['outcome_by_trajectory_pitching'][match_up][count]:
+            league_pitching_data['outcome_by_trajectory_pitching'][match_up][count][trajectory] = \
+                outcome_by_trajectory[match_up][count][trajectory]
+        else:
+            for outcome, occurrences in outcomes.items():
+                if outcome not in league_pitching_data['outcome_by_trajectory_pitching'][match_up][count]\
+                        [trajectory]:
+                    league_pitching_data['outcome_by_trajectory_pitching'][match_up][count][trajectory]\
+                        [outcome] = 0
+                league_pitching_data['outcome_by_trajectory_pitching'][match_up][count][trajectory]\
+                    [outcome] += outcome_by_trajectory[match_up][count][trajectory][outcome]
+
+
 def accumulate_fields_by_outcomes_overall(fields_by_outcome, match_up, count):
     global all_pitchers_batting_data
     if match_up not in all_pitchers_batting_data['outcome_by_field_batting']:
@@ -1189,6 +1398,26 @@ def accumulate_fields_by_outcomes_overall(fields_by_outcome, match_up, count):
                     all_pitchers_batting_data['outcome_by_field_batting'][match_up][count][field]\
                         [outcome] = 0
                 all_pitchers_batting_data['outcome_by_field_batting'][match_up][count][field]\
+                    [outcome] += fields_by_outcome[match_up][count][field][outcome]
+
+
+def accumulate_league_pitching_fields_by_outcomes_overall(fields_by_outcome, match_up, count):
+    global league_pitching_data
+    if match_up not in league_pitching_data['outcome_by_field_pitching']:
+        league_pitching_data['outcome_by_field_pitching'][match_up] = {}
+    if count not in league_pitching_data['outcome_by_field_pitching'][match_up]:
+        league_pitching_data['outcome_by_field_pitching'][match_up][count] = {}
+    for field, outcomes in fields_by_outcome[match_up][count].items():
+        if field not in league_pitching_data['outcome_by_field_pitching'][match_up][count]:
+            league_pitching_data['outcome_by_field_pitching'][match_up][count][field] = \
+                fields_by_outcome[match_up][count][field]
+        else:
+            for outcome, occurrences in outcomes.items():
+                if outcome not in league_pitching_data['outcome_by_field_pitching'][match_up][count]\
+                        [field]:
+                    league_pitching_data['outcome_by_field_pitching'][match_up][count][field]\
+                        [outcome] = 0
+                league_pitching_data['outcome_by_field_pitching'][match_up][count][field]\
                     [outcome] += fields_by_outcome[match_up][count][field][outcome]
 
 
@@ -1212,7 +1441,28 @@ def accumulate_directions_by_outcomes_overall(directions_by_outcome, match_up, c
                     [outcome] += directions_by_outcome[match_up][count][direction][outcome]
 
 
+def accumulate_league_pitching_directions_by_outcomes_overall(directions_by_outcome, match_up, count):
+    global league_pitching_data
+    if match_up not in league_pitching_data['outcome_by_direction_pitching']:
+        league_pitching_data['outcome_by_direction_pitching'][match_up] = {}
+    if count not in league_pitching_data['outcome_by_direction_pitching'][match_up]:
+        league_pitching_data['outcome_by_direction_pitching'][match_up][count] = {}
+    for direction, outcomes in directions_by_outcome[match_up][count].items():
+        if direction not in league_pitching_data['outcome_by_direction_pitching'][match_up][count]:
+            league_pitching_data['outcome_by_direction_pitching'][match_up][count][direction] = \
+                directions_by_outcome[match_up][count][direction]
+        else:
+            for outcome, occurrences in outcomes.items():
+                if outcome not in league_pitching_data['outcome_by_direction_pitching'][match_up][count]\
+                        [direction]:
+                    league_pitching_data['outcome_by_direction_pitching'][match_up][count][direction]\
+                        [outcome] = 0
+                league_pitching_data['outcome_by_direction_pitching'][match_up][count][direction]\
+                    [outcome] += directions_by_outcome[match_up][count][direction][outcome]
+
+
 def round_up_and_write_all_pitchers_batting_stats(year):
+    global all_pitchers_batting_data
     db = PitchFXDatabaseConnection(sandbox_mode=True)
     pitch_types = db.read('select pitch_type from batter_pitches where year = ' + str(year) + ' group by pitch_type;')
     db.close()
@@ -1241,9 +1491,82 @@ def write_all_pitchers_batting(year):
     logger.log('\t\tTime = ' + time_converter(time.time() - start_time))
 
 
+def round_up_and_write_league_pitching_stats(year):
+    global league_pitching_data
+    db = PitchFXDatabaseConnection(sandbox_mode=True)
+    pitch_types = db.read('select pitch_type from batter_pitches where year = ' + str(year) + ' group by pitch_type;')
+    db.close()
+    league_pitch_usage_batting_data_overall()
+    for match_up in ['vr', 'vl']:
+        for ball in range(4):
+            for strike in range(3):
+                count = str(ball) + '-' + str(strike)
+                for pitch_type in pitch_types:
+                    determine_overall_league_pitching_swing_rates_in_and_out_of_zone(match_up, count)
+                    find_mean_and_stdev_of_league_pitching_pitch_locations(match_up, count, pitch_type[0])
+    del league_pitching_data['temp_pitch_location_pitching']
+    del league_pitching_data['temp_swing_rate_pitching']
+    write_league_pitching_stats(year)
+
+
+def write_league_pitching_stats(year):
+    start_time = time.time()
+    logger.log('\tWriting league pitching stats.')
+    global league_pitching_data
+    db = DatabaseConnection(sandbox_mode=True)
+    year_info_dict = literal_eval(db.read('select year_info from years where year = ' + str(year) + ';')[0][0])
+    year_info_dict['league_pitching_stats'] = league_pitching_data
+    db.write('update years set year_info = "' + str(year_info_dict) + '" where year = "' + str(year) + '";')
+    db.close()
+    logger.log('\t\tTime = ' + time_converter(time.time() - start_time))
+
+
+def accumulate_league_pitch_data(pitch_type, pitches, match_up, count):
+    global league_pitching_data
+    increment_league_pitch_count_data(match_up, count, pitch_type, len(pitches))
+    pitch_type_outcomes = {}
+    swing_rates = {}
+    pitch_locations = {}
+    trajectories = {}
+    fields = {}
+    directions = {}
+    outcomes_by_trajectory = {}
+    outcomes_by_field = {}
+    outcomes_by_direction = {}
+    for pitch in pitches:
+        swing_take = pitch[0]
+        outcome = pitch[2]
+        trajectory = pitch[3]
+        field = pitch[4]
+        direction = pitch[5]
+        x = pitch[6]
+        y = pitch[7]
+        pitch_type_outcomes = \
+            accumulate_pitch_type_outcomes_individual(pitch_type_outcomes, match_up, count, pitch_type, outcome)
+        swing_rates = accumulate_swing_rates_individual(swing_rates, match_up, count, pitch_type, swing_take, x, y)
+        pitch_locations = accumulate_pitch_locations_individual(pitch_locations, pitch_type, match_up, count, x, y)
+        trajectories = accumulate_trajectories_by_pitch_type_individual(trajectories, pitch_type, match_up, count,
+                                                                        trajectory)
+        fields = accumulate_fields_by_pitch_type_individual(fields, match_up, count, pitch_type, field)
+        directions = accumulate_directions_by_pitch_type_individual(directions, match_up, count, pitch_type, direction)
+        outcomes_by_trajectory = accumulate_outcomes_by_trajectory_individual(outcomes_by_trajectory, trajectory,
+                                                                              outcome, match_up, count)
+        outcomes_by_field = accumulate_outcomes_by_field_individual(outcomes_by_field, field, outcome, match_up, count)
+        outcomes_by_direction = accumulate_outcomes_by_direction_individual(outcomes_by_direction, direction, outcome,
+                                                                            match_up, count)
+    accumulate_league_pitching_pitch_type_outcomes_overall(pitch_type_outcomes, match_up, count)
+    accumulate_league_pitching_swing_rates_overall(swing_rates, match_up, count)
+    accumulate_league_pitching_pitch_locations_overall(pitch_locations, pitch_type, match_up, count)
+    accumulate_league_pitching_trajectories_overall(trajectories, match_up, count)
+    accumulate_league_pitching_fields_overall(fields, match_up, count)
+    accumulate_league_pitching_directions_overall(directions, match_up, count)
+    accumulate_league_pitching_trajectories_by_outcomes_overall(outcomes_by_trajectory, match_up, count)
+    accumulate_league_pitching_fields_by_outcomes_overall(outcomes_by_field, match_up, count)
+    accumulate_league_pitching_directions_by_outcomes_overall(outcomes_by_direction, match_up, count)
+
+
 # aggregate_pitch_fx(2017)
-# aggregate(2017, None, None, 'colege01', 'batting')
-# aggregate(2017, None, None, 'kershcl01', 'batting')
+# aggregate(2017, None, None, 'colege01', 'pitching')
+# aggregate(2017, None, None, 'kershcl01', 'pitching')
 # aggregate(2017, None, None, 'scherma01', 'batting')
 # aggregate(2017, None, None, 'strasst01', 'batting')
-# round_up_and_write_all_pitchers_batting_stats(2017)

@@ -39,9 +39,10 @@ def strike_zone_coordinate(coordinate):
         with open(os.path.join('..', 'background', 'strike_zone.json')) as strike_zone_file:
             strike_zone = json.load(strike_zone_file)
     except FileNotFoundError:
-        with open(os.path.join('..', '..', '..', 'background', 'strike_zone.json')) as strike_zone_file:
+        with open(os.path.join('..', '..', 'background', 'strike_zone.json')) as strike_zone_file:
             strike_zone = json.load(strike_zone_file)
-    return {'low': float(strike_zone.get(coordinate + '_low')), 'high': float(strike_zone.get(coordinate + '_high'))}
+    return {'low': float(strike_zone.get(coordinate + '_low_strike')),
+            'high': float(strike_zone.get(coordinate + '_high_strike'))}
 
 
 def determine_series_winner(away_team, away_wins, home_team, home_wins, games):
@@ -60,12 +61,12 @@ def determine_series_winner(away_team, away_wins, home_team, home_wins, games):
         return 'The ' + str(away_wins+home_wins) + ' game series has ended in a tie'
 
 
-# from utilities.database.wrappers.baseball_data_connection import DatabaseConnection
-# from ast import literal_eval
-# away_year = 2017
-# home_year = 2017
-# db = DatabaseConnection(sandbox_mode=True)
-# away_year_info = literal_eval(db.read('select year_info from years where year = ' + str(away_year) + ';')[0][0])
-# home_year_info = literal_eval(db.read('select year_info from years where year = ' + str(home_year) + ';')[0][0])
-# db.close()
-# simulation('MIN', away_year, away_year_info, 'LAD', home_year, home_year_info, 1)
+from utilities.database.wrappers.baseball_data_connection import DatabaseConnection
+from ast import literal_eval
+away_year = 2017
+home_year = 2017
+db = DatabaseConnection(sandbox_mode=True)
+away_year_info = literal_eval(db.read('select year_info from years where year = ' + str(away_year) + ';')[0][0])
+home_year_info = literal_eval(db.read('select year_info from years where year = ' + str(home_year) + ';')[0][0])
+db.close()
+simulation('MIN', away_year, away_year_info, 'LAD', home_year, home_year_info, 10)

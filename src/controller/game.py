@@ -56,6 +56,6 @@ def determine_winner(game, away_team, home_team):
                    + str(game.get_home_score()))
         return away_team.get_team_id()
     else:
-        logger.log(away_team.get_team_id() + ' won: ' + str(game.get_home_score()) + ' to '
+        logger.log(home_team.get_team_id() + ' won: ' + str(game.get_home_score()) + ' to '
                    + str(game.get_away_score()))
         return home_team.get_team_id()

@@ -6,9 +6,6 @@ class Inning:
         self.bases = {1: None, 2: None, 3: None}
         self.half_inning = ''
 
-### RETRIEVERS ###
-### END RETRIEVERS ###
-
 ### SETTERS ###
     def reset_outs(self):
         self.outs = 0
@@ -19,8 +16,8 @@ class Inning:
     def increment_outs(self, outs):
         self.outs += outs
 
-    def runner_move(self, base, runner):
-        self.bases[base] = runner
+    def set_bases(self, bases):
+        self.bases = bases
 ### END SETTERS ###
 
 ### GETTERS ###
@@ -39,3 +36,6 @@ class Inning:
     def get_bases(self):
         return self.bases
 ### END GETTERS ###
+
+    def runners_left_on_base(self):
+        return 3 - list(self.bases.values()).count(None)

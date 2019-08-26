@@ -9,7 +9,7 @@ logger = Logger(os.path.join(log_prefix, "controller", "pitch.log"))
 
 
 def simulate_pitch(pitcher, batter, batter_orientation, pitcher_orientation, balls, strikes, strike_zone,
-                   driver_logger):
+                   pitching_year_info, driver_logger):
     count = str(balls) + '-' + str(strikes)
     driver_logger.log('\tSimulating ' + count + ' pitch')
     logger.log('Simulating ' + count + ' pitch')
@@ -18,12 +18,13 @@ def simulate_pitch(pitcher, batter, batter_orientation, pitcher_orientation, bal
     pitch_location = determine_pitch_location(pitcher, batter, pitcher_orientation, batter_orientation, count, pitch)
     ball_strike = determine_ball_strike(pitch_location, strike_zone)
     swing_take = determine_if_batter_swung(
-        get_batter_swing_rate(batter, pitcher_orientation, count, ball_strike, pitch), batter_orientation, pitcher,
+        pitching_year_info, get_batter_swing_rate(batter, pitcher_orientation, count, ball_strike, pitch),
+        batter_orientation, pitcher,
         batter, count, ball_strike, pitch)
     outcome = determine_outcome(balls, strikes, ball_strike, swing_take)
     driver_logger.log('\t\t' + pitch.get_pitch_type() + ' - ' + ball_strike + ' - ' + swing_take)
     return {'swing_take': swing_take, 'trajectory': '', 'field': '', 'direction': '', 'outcome': outcome,
-            'pa_completed': pa_completed(outcome)}
+            'pa_completed': pa_completed(outcome), 'wild_pitch': False}
 
 
 def determine_pitch_type(pitcher, batter, pitcher_orientation, batter_orientation, count):
@@ -157,7 +158,8 @@ def get_batter_swing_rate(batter, pitcher_orientation, count, ball_strike, pitch
         return None
 
 
-def determine_if_batter_swung(batter_swing_rate, batter_orientation, pitcher, batter, count, ball_strike, pitch):
+def determine_if_batter_swung(pitching_year_info, batter_swing_rate, batter_orientation, pitcher, batter, count,
+                              ball_strike, pitch):
     """determine if the batter swung at the pitch or not based on his tendency to do so given the count, pitch_type,
     match up and location; in accordance with the pitcher's induced swing rate given the count pitch_type, match up and
     location"""
@@ -181,9 +183,14 @@ def determine_if_batter_swung(batter_swing_rate, batter_orientation, pitcher, ba
                      ['overall_swing_rate_batting'][ball_strike][pitch.get_pitch_type()]) / 2,
                     {True: 'swing', False: 'take'})
             except KeyError:  # the batter hasn't seen this pitch before, so just take pitcher's overall swing rate against on this pitch
-                return pick_one_or_the_other(
-                    pitcher.get_pitching_stats()['advanced_pitching_stats']['overall_swing_rate_pitching'][ball_strike]
-                    [pitch.get_pitch_type()], {True: 'swing', False: 'take'})
+                try:
+                    return pick_one_or_the_other(
+                        pitcher.get_pitching_stats()['advanced_pitching_stats']['overall_swing_rate_pitching']
+                        [ball_strike][pitch.get_pitch_type()], {True: 'swing', False: 'take'})
+                except KeyError:
+                    print('adsfasdfasdfasdfasdfasfadsfasdfasdf')
+                    return pick_one_or_the_other(pitching_year_info['swing_rate_pitching'][ball_strike]
+                                                 [pitch.get_pitch_type()], {True: 'swing', False: 'take'})
 
 
 def determine_outcome(balls, strikes, ball_strike, swing_take):

@@ -7,6 +7,7 @@ class Pitcher(Player):
         super().__init__(player_id, team_id, year)
         self.stats = None
         self.pitch_count = 0
+        self.energy = 100
         self.simulation_stats = {}
 
     def set_pitching_stats(self, pitching_stats):

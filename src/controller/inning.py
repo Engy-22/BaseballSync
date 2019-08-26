@@ -20,13 +20,14 @@ def simulate_inning(game, away_team_info, home_team_info, away_year_info, home_y
     batting_team_info = {'top': away_team_info, 'bottom': home_team_info}
     pitching_team_info = {'bottom': away_team_info, 'top': home_team_info}
     batting_year_info = {'top': away_year_info, 'bottom': home_year_info}  # pitchers' batting stats for a given year
+    pitching_year_info = {'top': home_year_info, 'bottom': away_year_info}  # league pitch_fx data
     logger.log("Starting inning simulation: " + game.get_away_team() + " @ " + game.get_home_team() + " - "
                + inning_num)
     for half in ['top', 'bottom']:
         inning.set_half_inning(half)
         for key, value in simulate_half_inning(game, batting_team_info[half], pitching_team_info[half],
-                                               batting_year_info[half], inning, lineup[half], place[half], strike_zone,
-                                               pitcher[half]).items():
+                                               batting_year_info[half], pitching_year_info[half], inning, lineup[half],
+                                               place[half], strike_zone, pitcher[half]).items():
             inning_data[half][key] = value  # put the half inning data into the inning data dictionary
     game.increment_inning()
     total_time = time_converter(time.time() - start_time)
@@ -36,8 +37,8 @@ def simulate_inning(game, away_team_info, home_team_info, away_year_info, home_y
     return inning_data
 
 
-def simulate_half_inning(game, batting_team_info, pitching_team_info, batting_year_info, inning, lineup, place,
-                         strike_zone, pitcher):
+def simulate_half_inning(game, batting_team_info, pitching_team_info, batting_year_info, pitching_year_info, inning,
+                         lineup, place, strike_zone, pitcher):
     start_time = time.time()
     inning_num = game.get_inning()
     half_inning = inning.get_half_inning()
@@ -50,7 +51,9 @@ def simulate_half_inning(game, batting_team_info, pitching_team_info, batting_ye
         plate_appearance_data = simulate_plate_appearance(batting_team_info['batter_stats'],
                                                           pitching_team_info['pitcher_stats'],
                                                           batting_year_info['pitchers_batting_stats'],
-                                                          lineup, place, pitcher, strike_zone, logger)
+                                                          pitching_year_info['league_pitching_stats'],
+                                                          lineup, place, pitcher, strike_zone, inning.get_bases(),
+                                                          logger)
         if plate_appearance_data['increment_batter']:
             place = increment_lineup_place(place)
         inning.increment_outs(plate_appearance_data['outs'])
@@ -62,7 +65,11 @@ def simulate_half_inning(game, batting_team_info, pitching_team_info, batting_ye
     half_inning_data['place'] = place
     half_inning_data['lineup'] = lineup
     half_inning_data['pitcher'] = pitcher
-    half_inning_data['lob'] = calculate_runners_lob(inning.get_bases())
+    try:
+        inning.set_bases(plate_appearance_data['bases'])
+    except NameError:
+        pass
+    half_inning_data['lob'] = inning.runners_left_on_base()
     inning.reset_outs()
     logger.log('\tDone simulating the ' + str(half_inning) + ' of the ' + str(inning_num) + ' inning: Time = '
                + time_converter(time.time() - start_time))
@@ -71,11 +78,3 @@ def simulate_half_inning(game, batting_team_info, pitching_team_info, batting_ye
 
 def increment_lineup_place(place):
     return place + 1 if place != 8 else 0
-
-
-def calculate_runners_lob(bases):
-    lob = 0
-    for base, runner in bases.items():
-        if runner is not None:
-            lob += 1
-    return lob
