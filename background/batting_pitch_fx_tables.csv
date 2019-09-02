@@ -10,6 +10,7 @@ outcomes_batting
 pitch_count_batting
 pitch_usage_batting
 swing_rate_batting
+contact_rate_batting
 pitch_location_batting
 trajectory_batting
 outcome_by_trajectory_batting

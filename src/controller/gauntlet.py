@@ -19,6 +19,10 @@ def pick_one_or_the_other(probability, choices):
     return choices[random.random() <= probability]
 
 
+def pick_true_or_false(probability):
+    return random.random() <= probability
+
+
 def get_location(mean, standard_deviation):
     """this function gets the location (could be x or y) of a pitch based on the average mean and average standard
     deviation of the hitter and pitcher"""

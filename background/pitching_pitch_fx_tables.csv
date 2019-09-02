@@ -10,6 +10,7 @@ outcomes_pitching
 pitch_count_pitching
 pitch_usage_pitching
 swing_rate_pitching
+contact_rate_pitching
 pitch_location_pitching
 trajectory_pitching
 outcome_by_trajectory_pitching

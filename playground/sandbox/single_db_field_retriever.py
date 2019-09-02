@@ -3,5 +3,5 @@ from ast import literal_eval
 
 
 db = DatabaseConnection(sandbox_mode=True)
-print(literal_eval(db.read('select year_info from years where year = 2017;')[0][0])['league_pitching_stats'].keys())
+print(literal_eval(db.read('select team_info from team_years where teamid = "min" and year = 2017;')[0][0])['batter_stats']['doziebr01']['advanced_batting_stats']['trajectory_batting']['vl']['0-0'])#.keys())
 db.close()
